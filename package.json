@@ -1,7 +1,7 @@
 {
   "name": "@highcharts/grid-pro",
   "description": "Highcharts Grid Pro framework",
-  "homepage": "http://www.highcharts.com/grid",
+  "homepage": "https://www.highcharts.com/blog/products/grid/",
   "version": "2.0.0",
   "author": "Highsoft AS <support@highcharts.com> (http://www.highcharts.com/about)",
   "main": "grid-pro.js",
