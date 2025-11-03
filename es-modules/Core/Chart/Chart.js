@@ -2692,7 +2692,7 @@ class Chart {
                 !allExtremes) {
                 for (const series of axis.series) {
                     const seriesExtremes = series.getExtremes(series.getProcessedData(true).modified
-                        .getColumn('y') || [], true);
+                        .getColumn(series.pointValKey || 'y') || [], true);
                     allExtremes ?? (allExtremes = {
                         dataMin: Number.MAX_VALUE,
                         dataMax: -Number.MAX_VALUE

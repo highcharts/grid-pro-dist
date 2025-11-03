@@ -1,5 +1,5 @@
 /**
- * @license Highcharts Grid Pro v2.0.0
+ * @license Highcharts Grid Pro v2.0.1
  *
  * (c) 2009-2025 Highsoft AS
  *
@@ -113,9 +113,10 @@
     /* Fonts */
 
     /* Global fonts */
+    --ig-default-font-family: -apple-system, "BlinkMacSystemFont", "Segoe UI", "Roboto", "Helvetica", "Arial", "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", sans-serif;
     --ig-font-weight: var(--hcg-font-weight, normal);
     --ig-font-size: var(--hcg-font-size, 1rem);
-    --ig-font-family: var(--hcg-font-family, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", sans-serif);
+    --ig-font-family: var(--hcg-font-family, var(--ig-default-font-family));
     --ig-color: var(--hcg-color, var(--ig-default-color));
     --ig-font: var(--ig-font-weight) var(--ig-font-size) var(--ig-font-family);
     --ig-text-align: var(--hcg-text-align, left);
@@ -789,7 +790,7 @@ th.hcg-column-sortable > .hcg-column-sortable-icon {
 .hcg-table tbody td:focus,
 .hcg-table thead th:focus-visible {
     outline: none;
-    box-shadow: inset 0 0 0 2px var(--ig-focus-ring);
+    box-shadow: inset var(--ig-focus-ring);
 }
 
 /* Header hovered background and color */
@@ -1378,6 +1379,7 @@ th.hcg-column-sortable > .hcg-column-sortable-icon {
     z-index: 1000;
     background-color: var(--hcg-popup-background);
     border: var(--hcg-popup-border);
+    color: var(--ig-color);
     border-radius: 6px;
     box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.08), 0 7px 7px 0 rgba(0, 0, 0, 0.07), 0 17px 10px 0 rgba(0, 0, 0, 0.04), 0 30px 12px 0 rgba(0, 0, 0, 0.01);
     min-width: 200px;
@@ -1395,7 +1397,6 @@ th.hcg-column-sortable > .hcg-column-sortable-icon {
 }
 
 .hcg-menu-header-category {
-    color: var(--ig-color-secondary);
     opacity: 0.5;
     user-select: none;
 }
@@ -1547,7 +1548,8 @@ th.hcg-column-sortable > .hcg-column-sortable-icon {
 
 /* Grid Pro specific styles */
 
-.hcg-container {
+.hcg-container,
+.highcharts-light .hcg-container {
     /* Credits fonts */
     --ig-credits-font-weight: var(--hcg-credits-font-weight, var(--ig-font-weight));
     --ig-credits-font-size: var(--hcg-credits-font-size, 0.9em);
@@ -1621,6 +1623,19 @@ th.hcg-column-sortable > .hcg-column-sortable-icon {
         var(
             --ig-notification-border-width
         ) var(--ig-notification-border-style) var(--ig-notification-border-color);
+
+    /*  Editable cell */
+    --ig-cell-editable-background: #dbeaff;
+}
+
+@media (prefers-color-scheme: dark) {
+    .hcg-container {
+        --ig-cell-editable-background: #2d415e;
+    }
+}
+
+.highcharts-dark .hcg-container {
+    --ig-cell-editable-background: #2d415e;
 }
 
 .hcg-no-padding {
@@ -1639,8 +1654,8 @@ th.hcg-column-sortable > .hcg-column-sortable-icon {
     left: 0;
     padding: inherit;
     z-index: 1;
-    background: #dbeaff;
-    color: #141414;
+    background: var(--ig-cell-editable-background);
+    color: var(--ig-color);
     box-shadow: inset var(--ig-focus-ring);
     display: flex;
     align-items: center;
@@ -1669,6 +1684,10 @@ th.hcg-column-sortable > .hcg-column-sortable-icon {
     height: unset;
     border-radius: unset;
     line-height: inherit;
+}
+
+.hcg-table tbody td.hcg-edited-cell select {
+    appearance: base-select;
 }
 
 .hcg-table tbody td.hcg-edited-cell-error input,

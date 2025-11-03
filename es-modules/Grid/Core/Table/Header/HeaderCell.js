@@ -147,11 +147,10 @@ class HeaderCell extends Cell {
             // Add sorting
             this.initColumnSorting();
         }
+        // Set alignment in column cells based on column data type
+        this.htmlElement.classList[column?.dataType === 'number' ? 'add' : 'remove'](Globals.getClassName('rightAlign'));
+        // Add custom class name from column options
         this.setCustomClassName(options.header?.className);
-        // Add alignment to number column
-        if (column?.dataType === 'number') {
-            this.setCustomClassName(Globals.getClassName('rightAlign'));
-        }
         fireEvent(this, 'afterRender', { column });
     }
     reflow() {

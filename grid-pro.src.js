@@ -1,5 +1,5 @@
 /**
- * @license Highcharts Grid Pro v2.0.0 (2025-10-28)
+ * @license Highcharts Grid Pro v2.0.1 (2025-11-03)
  * @module grid/grid-pro
  *
  * (c) 2009-2025 Highsoft AS
@@ -74,7 +74,7 @@ var Globals;
      *  Constants
      *
      * */
-    Globals.SVG_NS = 'http://www.w3.org/2000/svg', Globals.product = 'Highcharts', Globals.version = '2.0.0', Globals.win = (typeof window !== 'undefined' ?
+    Globals.SVG_NS = 'http://www.w3.org/2000/svg', Globals.product = 'Highcharts', Globals.version = '2.0.1', Globals.win = (typeof window !== 'undefined' ?
         window :
         {}), // eslint-disable-line node/no-unsupported-features/es-builtins
     Globals.doc = Globals.win.document, Globals.svg = !!Globals.doc?.createElementNS?.(Globals.SVG_NS, 'svg')?.createSVGRect, Globals.pageLang = Globals.doc?.documentElement?.closest('[lang]')?.lang, Globals.userAgent = Globals.win.navigator?.userAgent || '', Globals.isChrome = Globals.win.chrome, Globals.isFirefox = Globals.userAgent.indexOf('Firefox') !== -1, Globals.isMS = /(edge|msie|trident)/i.test(Globals.userAgent) && !Globals.win.opera, Globals.isSafari = !Globals.isChrome && Globals.userAgent.indexOf('Safari') !== -1, Globals.isTouchDevice = /(Mobile|Android|Windows Phone)/.test(Globals.userAgent), Globals.isWebKit = Globals.userAgent.indexOf('AppleWebKit') !== -1, Globals.deg2rad = Math.PI * 2 / 360, Globals.marginNames = [
@@ -15912,11 +15912,10 @@ class HeaderCell extends Table_Cell {
             // Add sorting
             this.initColumnSorting();
         }
+        // Set alignment in column cells based on column data type
+        this.htmlElement.classList[column?.dataType === 'number' ? 'add' : 'remove'](Grid_Core_Globals.getClassName('rightAlign'));
+        // Add custom class name from column options
         this.setCustomClassName(options.header?.className);
-        // Add alignment to number column
-        if (column?.dataType === 'number') {
-            this.setCustomClassName(Grid_Core_Globals.getClassName('rightAlign'));
-        }
         HeaderCell_fireEvent(this, 'afterRender', { column });
     }
     reflow() {
@@ -16589,11 +16588,10 @@ class TableCell extends Table_Cell {
             this.content = this.column.createCellContent(this);
         }
         this.htmlElement.setAttribute('data-value', this.value + '');
+        // Set alignment in column cells based on column data type
+        this.htmlElement.classList[this.column.dataType === 'number' ? 'add' : 'remove'](Grid_Core_Globals.getClassName('rightAlign'));
+        // Add custom class name from column options
         this.setCustomClassName(this.column.options.cells?.className);
-        // Add alignment to number column
-        if (this.column.dataType === 'number') {
-            this.setCustomClassName(Grid_Core_Globals.getClassName('rightAlign'));
-        }
         TableCell_fireEvent(this, 'afterRender', { target: this });
     }
     /**

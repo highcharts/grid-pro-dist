@@ -82,11 +82,10 @@ class TableCell extends Cell {
             this.content = this.column.createCellContent(this);
         }
         this.htmlElement.setAttribute('data-value', this.value + '');
+        // Set alignment in column cells based on column data type
+        this.htmlElement.classList[this.column.dataType === 'number' ? 'add' : 'remove'](Globals.getClassName('rightAlign'));
+        // Add custom class name from column options
         this.setCustomClassName(this.column.options.cells?.className);
-        // Add alignment to number column
-        if (this.column.dataType === 'number') {
-            this.setCustomClassName(Globals.getClassName('rightAlign'));
-        }
         fireEvent(this, 'afterRender', { target: this });
     }
     /**
