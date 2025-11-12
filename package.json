@@ -12,7 +12,8 @@
       "import": "./es-modules/masters/grid-pro.src.js",
       "types": "./es-modules/masters/grid-pro.src.d.ts",
       "require": "./grid-pro.js"
-    }
+    },
+    "./*": "./*"
   },
   "repository": {
     "type": "git",
