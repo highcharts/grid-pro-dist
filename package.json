@@ -5,6 +5,15 @@
   "version": "2.0.1",
   "author": "Highsoft AS <support@highcharts.com> (http://www.highcharts.com/about)",
   "main": "grid-pro.js",
+  "module": "./es-modules/masters/grid-pro.src.js",
+  "types": "./es-modules/masters/grid-pro.src.d.ts",
+  "exports": {
+    ".": {
+      "import": "./es-modules/masters/grid-pro.src.js",
+      "types": "./es-modules/masters/grid-pro.src.d.ts",
+      "require": "./grid-pro.js"
+    }
+  },
   "repository": {
     "type": "git",
     "url": "https://github.com/highcharts/grid-pro-dist"
@@ -16,6 +25,5 @@
     "highcharts"
   ],
   "bugs": "https://github.com/highcharts/highcharts/issues",
-  "license": "https://www.highcharts.com/license",
-  "types": "grid-pro.d.ts"
+  "license": "https://www.highcharts.com/license"
 }
