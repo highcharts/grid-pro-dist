@@ -2,7 +2,7 @@ import type Column from '../../../Core/Table/Column';
 import type { EditModeRenderer } from '../../CellEditing/CellEditMode';
 import type TableCell from '../../../Core/Table/Body/TableCell';
 import type { EditModeRendererTypeName } from '../../CellEditing/CellEditingComposition';
-import CellRenderer from '../CellRenderer.js';
+import { CellRenderer, CellRendererOptions } from '../CellRenderer.js';
 import CheckboxContent from '../ContentTypes/CheckboxContent.js';
 /**
  * Renderer for the Checkbox in a column.
@@ -15,32 +15,30 @@ declare class CheckboxRenderer extends CellRenderer implements EditModeRenderer 
     /**
      * Default options for the checkbox renderer.
      */
-    static defaultOptions: CheckboxRenderer.Options;
-    options: CheckboxRenderer.Options;
-    constructor(column: Column, options: Partial<CellRenderer.Options>);
+    static defaultOptions: CheckboxRendererOptions;
+    options: CheckboxRendererOptions;
+    constructor(column: Column, options: Partial<CellRendererOptions>);
     render(cell: TableCell, parentElement?: HTMLElement): CheckboxContent;
 }
-declare namespace CheckboxRenderer {
+/**
+ * Options to control the checkbox renderer content.
+ */
+export interface CheckboxRendererOptions extends CellRendererOptions {
+    type: 'checkbox';
     /**
-     * Options to control the checkbox renderer content.
+     * Whether the checkbox is disabled.
      */
-    interface Options extends CellRenderer.Options {
-        type: 'checkbox';
-        /**
-         * Whether the checkbox is disabled.
-         */
-        disabled?: boolean;
-        /**
-         * Attributes to control the checkbox.
-         */
-        attributes?: CheckboxAttributes;
-    }
+    disabled?: boolean;
     /**
      * Attributes to control the checkbox.
      */
-    interface CheckboxAttributes {
-        checked?: boolean;
-    }
+    attributes?: CheckboxAttributes;
+}
+/**
+ * Attributes to control the checkbox.
+ */
+export interface CheckboxAttributes {
+    checked?: boolean;
 }
 declare module '../CellRendererType' {
     interface CellRendererTypeRegistry {

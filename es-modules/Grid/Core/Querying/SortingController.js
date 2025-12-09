@@ -101,9 +101,8 @@ class SortingController {
      */
     loadOptions() {
         const stateFromOptions = this.getSortingOptions();
-        if (stateFromOptions.columnId !== this.initialSorting?.columnId ||
-            stateFromOptions.order !== this.initialSorting?.order) {
-            this.initialSorting = stateFromOptions;
+        if (stateFromOptions.columnId !== this.currentSorting?.columnId ||
+            stateFromOptions.order !== this.currentSorting?.order) {
             this.setSorting(stateFromOptions.order, stateFromOptions.columnId);
         }
     }

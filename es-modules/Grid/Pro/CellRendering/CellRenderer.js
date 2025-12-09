@@ -21,7 +21,7 @@
 /**
  * Renderer class that initialize all options per column.
  */
-class CellRenderer {
+export class CellRenderer {
     /**
      * Constructs the CellRenderer instance.
      *

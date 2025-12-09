@@ -3,7 +3,7 @@ import ContextMenuButton from './ContextMenuButton.js';
 /**
  * The context menu.
  */
-declare abstract class ContextMenu extends Popup {
+export declare abstract class ContextMenu extends Popup {
     /**
      * The array of buttons in the context menu.
      */

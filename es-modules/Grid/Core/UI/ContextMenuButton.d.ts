@@ -1,9 +1,9 @@
 import type ContextMenu from './ContextMenu';
 import type Button from './Button';
 import type Popup from './Popup';
-import SvgIcons from './SvgIcons.js';
-import Globals from '../Globals.js';
-declare class ContextMenuButton implements Button {
+import { GridIconName } from './SvgIcons.js';
+import { ClassNameKey } from '../Globals.js';
+export declare class ContextMenuButton implements Button {
     /**
      * The wrapper `<li>` element for the button.
      */
@@ -24,7 +24,7 @@ declare class ContextMenuButton implements Button {
     /**
      * The options for the context menu button.
      */
-    protected options: ContextMenuButton.Options;
+    protected options: ContextMenuButtonOptions;
     /**
      * The container for the icon element.
      */
@@ -41,7 +41,7 @@ declare class ContextMenuButton implements Button {
      * The span element for the label.
      */
     private spanEl?;
-    constructor(options: ContextMenuButton.Options);
+    constructor(options: ContextMenuButtonOptions);
     /**
      * Adds the button to the context menu.
      *
@@ -57,7 +57,7 @@ declare class ContextMenuButton implements Button {
      * @param icon
      * The icon to set.
      */
-    setIcon(icon?: SvgIcons.GridIconName): void;
+    setIcon(icon?: GridIconName): void;
     setActive(active: boolean): void;
     setHighlighted(highlighted: boolean): void;
     /**
@@ -84,43 +84,38 @@ declare class ContextMenuButton implements Button {
      */
     private removeEventListeners;
 }
-declare namespace ContextMenuButton {
+export interface ContextMenuButtonOptions {
     /**
-     * Options for the context menu button.
+     * The label for the button.
      */
-    interface Options {
-        /**
-         * The label for the button.
-         */
-        label?: string;
-        /**
-         * The icon for the button.
-         */
-        icon?: SvgIcons.GridIconName;
-        /**
-         * A class name key applied to the `<li>` wrapper of the button.
-         */
-        classNameKey?: Globals.ClassNameKey;
-        /**
-         * The icon for the active state of the button.
-         */
-        activeIcon?: SvgIcons.GridIconName;
-        /**
-         * The icon for the highlighted state of the button.
-         */
-        highlightedIcon?: SvgIcons.GridIconName;
-        /**
-         * The tooltip string for the button.
-         */
-        tooltip?: string;
-        /**
-         * If the chevron icon should be rendered.
-         */
-        chevron?: boolean;
-        /**
-         * The click handler for the button.
-         */
-        onClick?: (event: MouseEvent, button: ContextMenuButton) => void;
-    }
+    label?: string;
+    /**
+     * The icon for the button.
+     */
+    icon?: GridIconName;
+    /**
+     * A class name key applied to the `<li>` wrapper of the button.
+     */
+    classNameKey?: ClassNameKey;
+    /**
+     * The icon for the active state of the button.
+     */
+    activeIcon?: GridIconName;
+    /**
+     * The icon for the highlighted state of the button.
+     */
+    highlightedIcon?: GridIconName;
+    /**
+     * The tooltip string for the button.
+     */
+    tooltip?: string;
+    /**
+     * If the chevron icon should be rendered.
+     */
+    chevron?: boolean;
+    /**
+     * The click handler for the button.
+     */
+    onClick?: (event: MouseEvent, button: ContextMenuButton) => void;
 }
 export default ContextMenuButton;

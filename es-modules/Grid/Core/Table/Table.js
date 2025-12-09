@@ -165,10 +165,10 @@ class Table {
         // instead of the original data table row count.
         const rowCount = Number(grid.dataTable?.rowCount);
         const threshold = rows?.virtualizationThreshold ?? 50;
-        const paginationPageSize = grid.pagination?.currentPageSize;
-        return paginationPageSize ?
-            paginationPageSize >= threshold :
-            rowCount >= threshold;
+        if (grid.pagination) {
+            return grid.querying.pagination.currentPageSize >= threshold;
+        }
+        return rowCount >= threshold;
     }
     /**
      * Loads the columns of the table.
@@ -194,7 +194,7 @@ class Table {
         if (vp.focusCursor) {
             focusedRowId = vp.dataTable.getOriginalRowIndex(vp.focusCursor[0]);
         }
-        vp.grid.pagination?.clampCurrentPage();
+        vp.grid.querying.pagination.clampPage();
         // Update data
         const oldRowsCount = (vp.rows[vp.rows.length - 1]?.index ?? -1) + 1;
         await vp.grid.querying.proceed();
@@ -238,11 +238,14 @@ class Table {
                 });
             }
         }
+        vp.grid.dirtyFlags.delete('rows');
     }
     /**
      * Reflows the table's content dimensions.
      */
     reflow() {
+        // TODO: More `needsReflow` logic can be added in the future to avoid
+        // unnecessary reflows of the table parts.
         this.columnResizing.reflow();
         // Reflow the head
         this.header?.reflow();
@@ -254,6 +257,7 @@ class Table {
         this.grid.popups.forEach((popup) => {
             popup.reflow();
         });
+        this.grid.dirtyFlags.delete('reflow');
     }
     /**
      * Scrolls the table to the specified row.

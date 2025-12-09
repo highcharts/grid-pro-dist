@@ -54,11 +54,15 @@ function compose(GridClass, ColumnClass, HeaderCellClass, TableCellClass) {
     }
     [
         'beforeLoad',
-        'afterLoad'
+        'afterLoad',
+        'beforeUpdate',
+        'afterUpdate',
+        'beforeRedraw',
+        'afterRedraw'
     ].forEach((name) => {
         addEvent(GridClass, name, (e) => {
             const grid = e.target;
-            grid.options?.events?.[name]?.call(grid);
+            grid.options?.events?.[name]?.call(grid, e);
         });
     });
     [

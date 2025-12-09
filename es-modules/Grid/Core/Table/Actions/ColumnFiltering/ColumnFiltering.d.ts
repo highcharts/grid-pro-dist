@@ -1,4 +1,4 @@
-import type Column from '../../Column';
+import type { Column } from '../../Column';
 import type { Condition } from './FilteringTypes';
 import type FilterCell from './FilterCell.js';
 /**

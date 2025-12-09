@@ -3,7 +3,7 @@ import type Button from './Button';
 /**
  * Abstract base class for for Grid popups.
  */
-declare abstract class Popup {
+export declare abstract class Popup {
     /**
      * The popup container element.
      */
@@ -48,7 +48,7 @@ declare abstract class Popup {
      * @param options
      * Popup options.
      */
-    constructor(grid: Grid, button?: Button, options?: Popup.Options);
+    constructor(grid: Grid, button?: Button, options?: PopupOptions);
     /**
      * Renders the popup content.
      *
@@ -124,26 +124,24 @@ declare abstract class Popup {
      */
     private removeEventListeners;
 }
-declare namespace Popup {
-    interface Options {
+export interface PopupOptions {
+    /**
+     * Whether to position the popup next to the anchor element (`true`), or
+     * directly below it (`false`). Defaults to `false`.
+     */
+    nextToAnchor?: boolean;
+    /**
+     * The header of the popup.
+     */
+    header?: {
         /**
-         * Whether to position the popup next to the anchor element (`true`), or
-         * directly below it (`false`). Defaults to `false`.
+         * The prefix of the header label, placed before the label.
          */
-        nextToAnchor?: boolean;
+        category?: string;
         /**
-         * The header of the popup.
+         * The label of the header.
          */
-        header?: {
-            /**
-             * The prefix of the header label, placed before the label.
-             */
-            category?: string;
-            /**
-             * The label of the header.
-             */
-            label: string;
-        };
-    }
+        label: string;
+    };
 }
 export default Popup;

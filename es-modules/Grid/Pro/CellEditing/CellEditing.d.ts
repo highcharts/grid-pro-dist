@@ -69,12 +69,10 @@ declare class CellEditing {
      */
     private destroy;
 }
-declare namespace CellEditing {
-    /**
-     * The class names used by the CellEditing functionality.
-     */
-    const classNames: {
-        readonly cellEditingContainer: string;
-    };
-}
+/**
+ * The class names used by the CellEditing functionality.
+ */
+export declare const classNames: {
+    readonly cellEditingContainer: string;
+};
 export default CellEditing;

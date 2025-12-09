@@ -74,6 +74,4 @@ declare class TableRow extends Row {
      */
     setTranslateY(value: number): void;
 }
-declare namespace TableRow {
-}
 export default TableRow;

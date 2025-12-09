@@ -35,7 +35,16 @@ class PaginationController {
      * The querying controller instance.
      */
     constructor(querying) {
+        /**
+         * The current page (1-based index).
+         */
+        this.currentPage = 1;
+        /**
+         * The current page size.
+         */
+        this.currentPageSize = 10;
         this.querying = querying;
+        this.enabled = !!querying.grid.options?.pagination?.enabled;
     }
     /* *
     *
@@ -43,24 +52,62 @@ class PaginationController {
     *
     * */
     /**
-     * Sets the range options.
+     * Total number of items (rows)
+     */
+    get totalItems() {
+        return this._totalItems ?? this.querying.grid.dataTable?.rowCount ?? 0;
+    }
+    /**
+     * Gets the total number of pages.
+     */
+    get totalPages() {
+        return this.currentPageSize > 0 ? Math.ceil(this.totalItems / this.currentPageSize) : 1;
+    }
+    /**
+     * Clamps the current page to the total number of pages.
+     */
+    clampPage() {
+        if (this.currentPage <= this.totalPages) {
+            return;
+        }
+        this.currentPage = this.totalPages;
+        this.querying.shouldBeUpdated = true;
+    }
+    /**
+     * Sets the page.
      *
      * @param currentPage
      * The current page.
      */
-    setRange(currentPage) {
+    setPage(currentPage) {
         this.currentPage = currentPage;
+        this.clampPage();
+        this.querying.shouldBeUpdated = true;
+    }
+    /**
+     * Sets the page size.
+     *
+     * @param pageSize
+     * The page size.
+     */
+    setPageSize(pageSize) {
+        this.currentPageSize = pageSize;
         this.querying.shouldBeUpdated = true;
     }
     /**
      * Loads range options from the grid options.
      */
     loadOptions() {
-        const pagination = this.querying.grid.pagination;
-        if (pagination?.options.enabled &&
-            this.currentPage !== pagination.currentPage) {
-            this.currentPage = pagination.currentPage;
-            this.setRange(this.currentPage);
+        const options = this.querying.grid.options?.pagination || {};
+        if (this.enabled === !options.enabled) {
+            this.enabled = !!options.enabled;
+            this.querying.shouldBeUpdated = true;
+        }
+        if (this.currentPageSize !== options.pageSize) {
+            this.setPageSize(options.pageSize ?? this.currentPageSize);
+        }
+        if (this.currentPage !== options.page) {
+            this.setPage(options.page ?? this.currentPage);
         }
     }
     /**
@@ -71,26 +118,19 @@ class PaginationController {
      * the original data table.
      */
     createModifier(rowsCountBeforePagination = (this.querying.grid.dataTable?.rowCount || 0)) {
-        const currentPage = this.currentPage || 1; // Start from page 1, not 0
-        const pageSize = this.querying.grid.pagination?.currentPageSize;
-        if (!pageSize) {
+        if (!this.enabled) {
             return;
         }
+        const currentPage = this.currentPage;
+        const pageSize = this.currentPageSize;
         // Calculate the start index (0-based)
         const start = (currentPage - 1) * pageSize;
         const end = Math.min(start + pageSize, rowsCountBeforePagination);
-        this.totalItems = rowsCountBeforePagination;
+        this._totalItems = rowsCountBeforePagination;
         return new RangeModifier({
             start,
             end
         });
-    }
-    /**
-     * Reset the pagination controller.
-     */
-    reset() {
-        delete this.currentPage;
-        this.querying.shouldBeUpdated = true;
     }
 }
 /* *

@@ -1,14 +1,4 @@
 import type Pagination from '../../Core/Pagination/Pagination';
-declare namespace PaginationComposition {
-    /**
-     * Extends the pagination class with events.
-     *
-     * @param PaginationClass
-     * The class to extend.
-     *
-     */
-    function compose(PaginationClass: typeof Pagination): void;
-}
 declare module '../../Core/Pagination/PaginationOptions' {
     interface PaginationOptions {
         /**
@@ -72,4 +62,7 @@ export interface AfterPageSizeChangeEvent {
 export type PaginationEvent = Record<string, number> & {
     target: Pagination;
 };
-export default PaginationComposition;
+declare const _default: {
+    readonly compose: typeof compose;
+};
+export default _default;

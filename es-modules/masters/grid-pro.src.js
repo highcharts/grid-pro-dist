@@ -1,12 +1,11 @@
 /**
- * @license Highcharts Grid Pro v@product.version@ (@product.date@)
+ * @license Highcharts Grid Pro v2.1.0 (2025-12-09)
  * @module grid/grid-pro
  *
  * (c) 2009-2025 Highsoft AS
  *
  * License: www.highcharts.com/license
  */
-'use strict';
 import AST from '../Core/Renderer/HTML/AST.js';
 import Templating from '../Core/Templating.js';
 import ColumnResizing from '../Grid/Core/Table/ColumnResizing/ColumnResizing.js';
@@ -37,6 +36,7 @@ import PaginationComposition from '../Grid/Pro/Pagination/PaginationComposition.
 import Pagination from '../Grid/Core/Pagination/Pagination.js';
 import CellContentPro from '../Grid/Pro/CellRendering/CellContentPro.js';
 import CellRenderer from '../Grid/Pro/CellRendering/CellRenderer.js';
+import Popup from '../Grid/Core/UI/Popup.js';
 /* *
  *
  *  Registers Imports
@@ -75,30 +75,38 @@ import '../Grid/Pro/CellRendering/Renderers/NumberInputRenderer.js';
  *  Namespace
  *
  * */
-const G = Globals;
-G.AST = AST;
-G.classNamePrefix = 'hcg-';
-G.DataConnector = DataConnector;
-G.DataCursor = DataCursor;
-G.DataConverter = DataConverter;
-G.Grid = _Grid;
-G.grid = _Grid.grid;
-G.grids = _Grid.grids;
-G.DataModifier = DataModifier;
-G.DataPool = DataPool;
-G.DataTable = DataTable;
-G.ColumnResizing = ColumnResizing;
-G.defaultOptions = Defaults.defaultOptions;
-G.isHighContrastModeActive = whcm.isHighContrastModeActive;
-G.setOptions = Defaults.setOptions;
-G.Templating = Templating;
-G.product = 'Grid Pro';
-G.merge = Utilities.merge;
-G.Table = G.Table || Table;
-G.Column = G.Column || Column;
-G.HeaderCell = G.HeaderCell || HeaderCell;
-G.TableCell = G.TableCell || TableCell;
-G.Pagination = G.Pagination || Pagination;
+const G = {
+    AST,
+    CellContentPro,
+    CellRenderer,
+    CellRendererRegistry,
+    classNamePrefix: Globals.classNamePrefix,
+    Column,
+    ColumnResizing,
+    DataConnector,
+    DataConverter,
+    DataCursor,
+    DataModifier,
+    DataPool,
+    DataTable,
+    defaultOptions: Defaults.defaultOptions,
+    Grid: _Grid,
+    grid: _Grid.grid,
+    grids: _Grid.grids,
+    HeaderCell,
+    isHighContrastModeActive: whcm.isHighContrastModeActive,
+    merge: Utilities.merge,
+    Pagination,
+    Popup,
+    product: 'Grid Pro',
+    setOptions: Defaults.setOptions,
+    SvgIcons,
+    Table,
+    TableCell,
+    Templating,
+    version: Globals.version,
+    win: Globals.win
+};
 GridEvents.compose(G.Grid, G.Column, G.HeaderCell, G.TableCell);
 CellEditingComposition.compose(G.Table, G.TableCell, G.Column);
 CreditsProComposition.compose(G.Grid);
@@ -106,24 +114,14 @@ ExportingComposition.compose(G.Grid);
 ValidatorComposition.compose(G.Table);
 CellRenderersComposition.compose(G.Column);
 PaginationComposition.compose(G.Pagination);
-G.CellRendererRegistry = G.CellRendererRegistry || CellRendererRegistry;
-G.CellContentPro = CellContentPro;
-G.CellRenderer = CellRenderer;
-G.SvgIcons = SvgIcons;
 /* *
  *
- *  Classic Export
+ * Named Exports
  *
  * */
-if (!G.win.Grid) {
-    G.win.Grid = G;
-}
+export { AST, CellContentPro, CellRenderer, CellRendererRegistry, Column, ColumnResizing, DataConnector, DataConverter, DataCursor, DataModifier, DataPool, DataTable, HeaderCell, Pagination, Popup, SvgIcons, Table, TableCell, Templating };
+export const { classNamePrefix, defaultOptions, Grid, grid, grids, isHighContrastModeActive, merge, product, setOptions, version, win } = G;
 if (G.win.Highcharts) {
     G.CellRendererRegistry.types.sparkline.useHighcharts(G.win.Highcharts);
 }
-/* *
- *
- *  Default Export
- *
- * */
 export default G;

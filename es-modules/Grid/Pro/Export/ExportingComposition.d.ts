@@ -1,15 +1,13 @@
 import type Grid from '../../Core/Grid';
 import Exporting from './Exporting.js';
-declare namespace ExportingComposition {
-    /**
-     * Extends the grid classes with exporting.
-     *
-     * @param GridClass
-     * The class to extend.
-     *
-     */
-    function compose(GridClass: typeof Grid): void;
-}
+/**
+ * Extends the grid classes with exporting.
+ *
+ * @param GridClass
+ * The class to extend.
+ *
+ */
+export declare function compose(GridClass: typeof Grid): void;
 declare module '../../Core/Options' {
     interface Options {
         /**
@@ -65,4 +63,7 @@ declare module '../../Core/Grid' {
         exporting?: Exporting;
     }
 }
-export default ExportingComposition;
+declare const _default: {
+    readonly compose: typeof compose;
+};
+export default _default;

@@ -60,6 +60,4 @@ declare class TableHeader {
      */
     destroy(): void;
 }
-declare namespace TableHeader {
-}
 export default TableHeader;

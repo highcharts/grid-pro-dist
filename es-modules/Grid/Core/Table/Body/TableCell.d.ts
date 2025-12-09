@@ -34,6 +34,14 @@ declare class TableCell extends Cell {
      */
     render(): void;
     /**
+     * Edits the cell value and updates the data table. Call this instead of
+     * `setValue` when you want it to trigger the cell value user change event.
+     *
+     * @param value
+     * The new value to set.
+     */
+    editValue(value: DataTable.CellType): Promise<void>;
+    /**
      * Sets the cell value and updates its content with it.
      *
      * @param value
@@ -60,9 +68,7 @@ declare class TableCell extends Cell {
      * Handles the focus event on the cell.
      */
     protected onFocus(): void;
-    /**
-     * Handles the mouse out event on the cell.
-     */
+    protected onMouseOver(): void;
     protected onMouseOut(): void;
     /**
      * Handles the double click event on the cell.
@@ -77,12 +83,10 @@ declare class TableCell extends Cell {
      */
     destroy(): void;
 }
-declare namespace TableCell {
-    /**
-     * Event interface for table cell events.
-     */
-    interface TableCellEvent {
-        target: TableCell;
-    }
+/**
+ * Event interface for table cell events.
+ */
+export interface TableCellEvent {
+    target: TableCell;
 }
 export default TableCell;

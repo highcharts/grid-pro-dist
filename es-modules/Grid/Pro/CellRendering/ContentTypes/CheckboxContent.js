@@ -38,7 +38,7 @@ class CheckboxContent extends CellContentPro {
                 this.changeHandler(e);
             }
             else {
-                void this.cell.setValue(this.value, true);
+                void this.cell.editValue(this.value);
             }
         };
         this.onKeyDown = (e) => {
@@ -66,6 +66,7 @@ class CheckboxContent extends CellContentPro {
         input.tabIndex = -1;
         input.type = 'checkbox';
         input.name = cell.column.id + '-' + cell.row.id;
+        input.classList.add(Globals.getClassName('input'));
         if (options.attributes) {
             Object.entries(options.attributes).forEach(([key, value]) => {
                 input.setAttribute(key, value);
@@ -73,7 +74,6 @@ class CheckboxContent extends CellContentPro {
         }
         this.update();
         parentElement.appendChild(this.input);
-        input.classList.add(Globals.classNamePrefix + 'field-auto-width');
         input.addEventListener('change', this.onChange);
         input.addEventListener('keydown', this.onKeyDown);
         input.addEventListener('blur', this.onBlur);

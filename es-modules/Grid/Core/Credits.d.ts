@@ -52,6 +52,4 @@ declare class Credits {
      */
     destroy(): void;
 }
-declare namespace Credits {
-}
 export default Credits;

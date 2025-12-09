@@ -48,6 +48,4 @@ declare class HeaderRow extends Row {
      */
     private setRowAttributes;
 }
-declare namespace HeaderRow {
-}
 export default HeaderRow;

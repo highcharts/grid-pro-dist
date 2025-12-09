@@ -7,8 +7,27 @@ import CellContentPro from '../CellContentPro.js';
  * Represents a sparkline type of cell content.
  */
 declare class SparklineContent extends CellContentPro {
+    /**
+     * Highcharts namespace used by the Sparkline Renderer.
+     * This is set to `undefined` by default, and should be set to the
+     * Highcharts namespace before using the Sparkline Renderer.
+     */
+    static H: undefined | typeof HighchartsNamespace;
+    /**
+     * The default chart options for the sparkline content.
+     */
     static defaultChartOptions: DeepPartial<HighchartsNamespace.Options>;
+    /**
+     * The Highcharts chart instance.
+     */
     chart?: HighchartsNamespace.Chart;
+    /**
+     * The parent element for the sparkline content.
+     */
+    private parentElement;
+    /**
+     * The HTML container element for the chart.
+     */
     private chartContainer?;
     constructor(cell: TableCell, renderer: SparklineRenderer, parentElement?: HTMLElement);
     protected add(parentElement?: HTMLElement): void;
@@ -16,13 +35,5 @@ declare class SparklineContent extends CellContentPro {
     destroy(): void;
     private getProcessedOptions;
     private onKeyDown;
-}
-declare namespace SparklineContent {
-    /**
-     * Highcharts namespace used by the Sparkline Renderer.
-     * This is set to `undefined` by default, and should be set to the
-     * Highcharts namespace before using the Sparkline Renderer.
-     */
-    let H: undefined | typeof HighchartsNamespace;
 }
 export default SparklineContent;

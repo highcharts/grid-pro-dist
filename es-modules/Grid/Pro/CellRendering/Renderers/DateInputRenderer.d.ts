@@ -1,9 +1,9 @@
 import type Column from '../../../Core/Table/Column';
-import type DateInputRendererBase from './DateInputRendererBase';
+import type { DateInputRendererBaseOptions } from './DateInputRendererBase';
 import type TableCell from '../../../Core/Table/Body/TableCell';
 import type { EditModeRenderer } from '../../CellEditing/CellEditMode';
 import type { EditModeRendererTypeName } from '../../CellEditing/CellEditingComposition';
-import CellRenderer from '../CellRenderer.js';
+import { CellRenderer, CellRendererOptions } from '../CellRenderer.js';
 import DateInputContent from '../ContentTypes/DateInputContent.js';
 /**
  * Renderer for the Select in a column..
@@ -16,18 +16,16 @@ declare class DateInputRenderer extends CellRenderer implements EditModeRenderer
     /**
      * Default options for the date input renderer.
      */
-    static defaultOptions: DateInputRenderer.Options;
-    options: DateInputRenderer.Options;
-    constructor(column: Column, options: Partial<CellRenderer.Options>);
+    static defaultOptions: DateInputRendererOptions;
+    options: DateInputRendererOptions;
+    constructor(column: Column, options: Partial<CellRendererOptions>);
     render(cell: TableCell, parentElement?: HTMLElement): DateInputContent;
 }
-declare namespace DateInputRenderer {
-    /**
-     * Options to control the date input renderer content.
-     */
-    interface Options extends DateInputRendererBase.Options {
-        type: 'dateInput';
-    }
+/**
+ * Options to control the date input renderer content.
+ */
+export interface DateInputRendererOptions extends DateInputRendererBaseOptions {
+    type: 'dateInput';
 }
 declare module '../CellRendererType' {
     interface CellRendererTypeRegistry {

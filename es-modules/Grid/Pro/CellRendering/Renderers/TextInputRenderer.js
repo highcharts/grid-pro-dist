@@ -14,8 +14,8 @@
  *
  * */
 'use strict';
-import CellRenderer from '../CellRenderer.js';
-import CellRendererRegistry from '../CellRendererRegistry.js';
+import { CellRenderer } from '../CellRenderer.js';
+import { registerRenderer } from '../CellRendererRegistry.js';
 import TextInputContent from '../ContentTypes/TextInputContent.js';
 import U from '../../../../Core/Utilities.js';
 const { merge } = U;
@@ -56,7 +56,7 @@ TextInputRenderer.defaultEditingRenderer = 'textInput';
 TextInputRenderer.defaultOptions = {
     type: 'textInput'
 };
-CellRendererRegistry.registerRenderer('textInput', TextInputRenderer);
+registerRenderer('textInput', TextInputRenderer);
 /* *
  *
  *  Default Export

@@ -30,6 +30,4 @@ declare class CreditsPro extends Credits {
     render(): void;
     destroy(): void;
 }
-declare namespace CreditsPro {
-}
 export default CreditsPro;

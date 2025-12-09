@@ -30,7 +30,7 @@ const { createOptionsProxy } = GridUtils;
 /**
  * Represents a column in the data grid.
  */
-class Column {
+export class Column {
     /* *
     *
     *  Constructor
@@ -207,6 +207,28 @@ class Column {
      */
     format(template) {
         return Templating.format(template, this, this.viewport.grid);
+    }
+    /**
+     * Sets the new column options to the userOptions field.
+     *
+     * @param options
+     * The options to set.
+     *
+     * @param overwrite
+     * Whether to overwrite the existing column options with the new ones.
+     * Default is `false`.
+     *
+     * @returns
+     * The difference between the previous and the new column options in form
+     * of a record of `[column.id]: column.options`.
+     *
+     * @internal
+     */
+    setOptions(options, overwrite = false) {
+        return this.viewport.grid.setColumnOptions([{
+                id: this.id,
+                ...options
+            }], overwrite);
     }
     /**
      * Updates the column with new options.

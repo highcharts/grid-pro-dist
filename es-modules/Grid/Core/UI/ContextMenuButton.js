@@ -13,7 +13,7 @@
  *
  * */
 'use strict';
-import SvgIcons from './SvgIcons.js';
+import { createGridIcon } from './SvgIcons.js';
 import Globals from '../Globals.js';
 import GridUtils from '../GridUtils.js';
 const { makeHTMLElement } = GridUtils;
@@ -22,7 +22,7 @@ const { makeHTMLElement } = GridUtils;
  *  Class
  *
  * */
-class ContextMenuButton {
+export class ContextMenuButton {
     /* *
      *
      *  Constructor
@@ -80,7 +80,7 @@ class ContextMenuButton {
         buttonEl.setAttribute('tabindex', '-1');
         this.refreshState();
         if (cfg.chevron) {
-            chevronEl.appendChild(SvgIcons.createGridIcon('chevronRight'));
+            chevronEl.appendChild(createGridIcon('chevronRight'));
         }
         if (cfg.icon) {
             this.setIcon(cfg.icon);
@@ -111,7 +111,7 @@ class ContextMenuButton {
         if (!icon) {
             return;
         }
-        this.icon = SvgIcons.createGridIcon(icon);
+        this.icon = createGridIcon(icon);
         this.iconWrapper?.appendChild(this.icon);
     }
     setActive(active) {

@@ -26,7 +26,7 @@ const { fireEvent } = U;
 /**
  * Abstract base class for for Grid popups.
  */
-class Popup {
+export class Popup {
     /* *
      *
      *  Constructor
@@ -96,6 +96,7 @@ class Popup {
         if (!this.container) {
             return;
         }
+        fireEvent(this, 'beforeHide');
         this.grid.popups.delete(this);
         this.isVisible = false;
         // Remove event listeners

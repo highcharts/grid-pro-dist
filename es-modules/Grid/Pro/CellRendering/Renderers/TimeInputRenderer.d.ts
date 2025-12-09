@@ -1,9 +1,9 @@
 import type Column from '../../../Core/Table/Column';
-import type TimeInputRendererBase from './DateInputRendererBase';
+import type { DateInputRendererBaseOptions } from './DateInputRendererBase';
 import type TableCell from '../../../Core/Table/Body/TableCell';
 import type { EditModeRenderer } from '../../CellEditing/CellEditMode';
 import type { EditModeRendererTypeName } from '../../CellEditing/CellEditingComposition';
-import CellRenderer from '../CellRenderer.js';
+import { CellRenderer, CellRendererOptions } from '../CellRenderer.js';
 import TimeInputContent from '../ContentTypes/TimeInputContent.js';
 /**
  * Renderer for the Select in a column..
@@ -16,18 +16,16 @@ declare class TimeInputRenderer extends CellRenderer implements EditModeRenderer
     /**
      * Default options for the time input renderer.
      */
-    static defaultOptions: TimeInputRenderer.Options;
-    options: TimeInputRenderer.Options;
-    constructor(column: Column, options: Partial<CellRenderer.Options>);
+    static defaultOptions: TimeInputRendererOptions;
+    options: TimeInputRendererOptions;
+    constructor(column: Column, options: Partial<CellRendererOptions>);
     render(cell: TableCell, parentElement?: HTMLElement): TimeInputContent;
 }
-declare namespace TimeInputRenderer {
-    /**
-     * Options to control the time input renderer content.
-     */
-    interface Options extends TimeInputRendererBase.Options {
-        type: 'timeInput';
-    }
+/**
+ * Options to control the time input renderer content.
+ */
+export interface TimeInputRendererOptions extends DateInputRendererBaseOptions {
+    type: 'timeInput';
 }
 declare module '../CellRendererType' {
     interface CellRendererTypeRegistry {

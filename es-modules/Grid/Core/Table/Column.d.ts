@@ -10,7 +10,7 @@ import TableCell from './Body/TableCell';
 /**
  * Represents a column in the data grid.
  */
-declare class Column {
+export declare class Column {
     /**
      * The viewport (table) the column belongs to.
      */
@@ -18,7 +18,7 @@ declare class Column {
     /**
      * Type of the data in the column.
      */
-    readonly dataType: Column.DataType;
+    readonly dataType: ColumnDataType;
     /**
      * The cells of the column.
      */
@@ -35,7 +35,7 @@ declare class Column {
      * The options of the column as a proxy that provides merged access to
      * original options and defaults if not defined in the individual options.
      */
-    readonly options: Column.Options;
+    readonly options: NoIdColumnOptions;
     /**
      * The index of the column in the viewport.
      */
@@ -126,11 +126,9 @@ declare class Column {
      * The formatted string.
      */
     format(template: string): string;
-    update(options: Column.Options, render?: boolean): void;
-    update(options: Column.Options, render?: true): Promise<void>;
+    update(options: NoIdColumnOptions, render?: boolean): void;
+    update(options: NoIdColumnOptions, render?: true): Promise<void>;
 }
-declare namespace Column {
-    type Options = Omit<IndividualColumnOptions, 'id'>;
-    type DataType = 'string' | 'number' | 'boolean' | 'datetime';
-}
+export type NoIdColumnOptions = Omit<IndividualColumnOptions, 'id'>;
+export type ColumnDataType = 'string' | 'number' | 'boolean' | 'datetime';
 export default Column;

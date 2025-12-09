@@ -12,13 +12,7 @@ declare class SortingController {
     /**
      * The current sorting options: column ID and sorting order.
      */
-    currentSorting?: SortingController.SortingState;
-    /**
-     * The initial sorting options: column ID and sorting order.
-     * This is the sorting that is applied when the data grid is created or
-     * after the whole viewport is reloaded with changed sorting options.
-     */
-    private initialSorting?;
+    currentSorting?: SortingState;
     /**
      * The modifier that is applied to the data table.
      */
@@ -55,13 +49,11 @@ declare class SortingController {
      */
     private createModifier;
 }
-declare namespace SortingController {
-    /**
-     * The sorting state interface.
-     */
-    interface SortingState {
-        columnId?: string;
-        order: ColumnSortingOrder;
-    }
+/**
+ * The sorting state interface.
+ */
+export interface SortingState {
+    columnId?: string;
+    order: ColumnSortingOrder;
 }
 export default SortingController;

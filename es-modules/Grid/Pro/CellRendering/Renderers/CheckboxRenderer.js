@@ -14,8 +14,8 @@
  *
  * */
 'use strict';
-import CellRenderer from '../CellRenderer.js';
-import CellRendererRegistry from '../CellRendererRegistry.js';
+import { CellRenderer } from '../CellRenderer.js';
+import { registerRenderer } from '../CellRendererRegistry.js';
 import CheckboxContent from '../ContentTypes/CheckboxContent.js';
 import U from '../../../../Core/Utilities.js';
 const { merge } = U;
@@ -56,7 +56,7 @@ CheckboxRenderer.defaultEditingRenderer = 'checkbox';
 CheckboxRenderer.defaultOptions = {
     type: 'checkbox'
 };
-CellRendererRegistry.registerRenderer('checkbox', CheckboxRenderer);
+registerRenderer('checkbox', CheckboxRenderer);
 /* *
  *
  *  Default Export

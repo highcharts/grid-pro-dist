@@ -13,7 +13,7 @@
  *
  * */
 'use strict';
-import SvgIcons from './SvgIcons.js';
+import { createGridIcon } from './SvgIcons.js';
 import Globals from '../Globals.js';
 import GridUtils from '../GridUtils.js';
 const { makeHTMLElement } = GridUtils;
@@ -101,7 +101,7 @@ class ToolbarButton {
      */
     setIcon(icon) {
         this.icon?.remove();
-        this.icon = SvgIcons.createGridIcon(icon);
+        this.icon = createGridIcon(icon);
         this.buttonEl?.appendChild(this.icon);
     }
     setActive(active) {
@@ -127,7 +127,8 @@ class ToolbarButton {
         delete this.toolbar;
     }
     /**
-     * Initializes the state of the button.
+     * Refreshes the state of the button.
+     * @internal
      */
     refreshState() {
         // Do nothing, to be overridden by subclasses

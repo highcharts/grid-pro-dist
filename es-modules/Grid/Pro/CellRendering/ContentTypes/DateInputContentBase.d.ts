@@ -1,4 +1,4 @@
-import type DateInputRendererBase from '../Renderers/DateInputRendererBase';
+import type { DateInputRendererBaseOptions } from '../Renderers/DateInputRendererBase';
 import type { EditModeContent } from '../../CellEditing/CellEditMode';
 import type TableCell from '../../../Core/Table/Body/TableCell';
 import CellContentPro from '../CellContentPro.js';
@@ -17,7 +17,7 @@ declare abstract class DateInputContentBase extends CellContentPro implements Ed
     /**
      * Options of the renderer.
      */
-    options: DateInputRendererBase.Options;
+    options: DateInputRendererBaseOptions;
     /**
      * The HTML input element representing the date input.
      */

@@ -1,6 +1,6 @@
 import type Button from '../../../UI/Button';
 import ColumnFiltering from '../../Actions/ColumnFiltering/ColumnFiltering.js';
-import Popup from '../../../UI/Popup.js';
+import Popup, { PopupOptions } from '../../../UI/Popup.js';
 /**
  * The column filtering popup.
  */
@@ -21,7 +21,7 @@ declare class FilterPopup extends Popup {
      * @param options
      * Popup options.
      */
-    constructor(filtering: ColumnFiltering, button: Button, options?: Popup.Options);
+    constructor(filtering: ColumnFiltering, button: Button, options?: PopupOptions);
     show(anchorElement?: HTMLElement): void;
     protected renderContent(contentElement: HTMLElement): void;
     protected onKeyDown(event: KeyboardEvent): void;

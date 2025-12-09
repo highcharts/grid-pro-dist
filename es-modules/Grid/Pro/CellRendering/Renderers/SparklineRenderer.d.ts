@@ -3,12 +3,19 @@ import type TableCell from '../../../Core/Table/Body/TableCell';
 import type DataTable from '../../../../Data/DataTable';
 import type * as HighchartsNamespace from '../../highcharts';
 import type { EditModeRendererTypeName } from '../../CellEditing/CellEditingComposition';
-import CellRenderer from '../CellRenderer.js';
+import { CellRenderer, CellRendererOptions } from '../CellRenderer.js';
 import SparklineContent from '../ContentTypes/SparklineContent.js';
 /**
  * Renderer for the Text in a column..
  */
 declare class SparklineRenderer extends CellRenderer {
+    /**
+     * Imports the Highcharts namespace to be used by the Sparkline Renderer.
+     *
+     * @param H
+     * Highcharts namespace.
+     */
+    static useHighcharts(H: typeof HighchartsNamespace): void;
     /**
      * The default edit mode renderer type names for this view renderer.
      */
@@ -16,26 +23,17 @@ declare class SparklineRenderer extends CellRenderer {
     /**
      * Default options for the sparkline renderer.
      */
-    static defaultOptions: SparklineRenderer.Options;
-    options: SparklineRenderer.Options;
+    static defaultOptions: SparklineRendererOptions;
+    options: SparklineRendererOptions;
     constructor(column: Column);
     render(cell: TableCell): SparklineContent;
 }
-declare namespace SparklineRenderer {
-    /**
-     * Imports the Highcharts namespace to be used by the Sparkline Renderer.
-     *
-     * @param H
-     * Highcharts namespace.
-     */
-    function useHighcharts(H: typeof HighchartsNamespace): void;
-    /**
-     * Options to control the sparkline renderer content.
-     */
-    interface Options extends CellRenderer.Options {
-        type: 'sparkline';
-        chartOptions?: (((data: DataTable.CellType) => HighchartsNamespace.Options) | HighchartsNamespace.Options);
-    }
+/**
+ * Options to control the sparkline renderer content.
+ */
+export interface SparklineRendererOptions extends CellRendererOptions {
+    type: 'sparkline';
+    chartOptions?: (((data: DataTable.CellType) => HighchartsNamespace.Options) | HighchartsNamespace.Options);
 }
 declare module '../CellRendererType' {
     interface CellRendererTypeRegistry {

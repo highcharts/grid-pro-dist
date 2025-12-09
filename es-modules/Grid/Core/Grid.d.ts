@@ -1,5 +1,5 @@
 import type { Options, GroupedHeaderOptions } from './Options';
-import type Column from './Table/Column';
+import type { NoIdColumnOptions } from './Table/Column';
 import type Popup from './UI/Popup.js';
 import Accessibility from './Accessibility/Accessibility.js';
 import DataTable from '../../Data/DataTable.js';
@@ -9,7 +9,7 @@ import Pagination from './Pagination/Pagination.js';
 /**
  * A base class for the Grid.
  */
-declare class Grid {
+export declare class Grid {
     /**
      * Creates a new Grid.
      *
@@ -128,6 +128,14 @@ declare class Grid {
      */
     private dataTableEventDestructors;
     /**
+     * The render target (container) of the Grid.
+     */
+    private renderTo;
+    /**
+     * Whether the Grid is rendered.
+     */
+    private isRendered;
+    /**
      * Constructs a new Grid.
      *
      * @param renderTo
@@ -149,7 +157,7 @@ declare class Grid {
      * The render target (html element or id) of the Grid.
      *
      */
-    private initContainers;
+    private initContainer;
     /**
      * Loads the new user options to all the important fields (`userOptions`,
      * `options` and `columnOptionsMap`).
@@ -161,19 +169,16 @@ declare class Grid {
      * When `false` (default), the existing column options will be merged with
      * the ones that are currently defined in the user options. When `true`,
      * the columns not defined in the new options will be removed.
+     *
+     * @returns
+     * An object of the changed options.
      */
     private loadUserOptions;
     /**
-     * Sets the new column options to the userOptions field.
-     *
-     * @param newColumnOptions
-     * The new column options that should be loaded.
-     *
-     * @param overwrite
-     * Whether to overwrite the existing column options with the new ones.
-     * Default is `false`.
+     * Cleans up and reloads the column options from the `userOptions.columns`.
+     * Generates the internal column options map from the options.columns array.
      */
-    private setColumnOptions;
+    private reloadColumnOptions;
     /**
      * Loads the new column options to the userOptions field in a one-to-one
      * manner. It means that all the columns that are not defined in the new
@@ -181,12 +186,38 @@ declare class Grid {
      *
      * @param newColumnOptions
      * The new column options that should be loaded.
+     *
+     * @returns
+     * The difference between the previous and the new column options in form
+     * of a record of `[column.id]: column.options`.
      */
     private setColumnOptionsOneToOne;
     update(options?: Options, render?: boolean, oneToOne?: boolean): Promise<void>;
     update(options: Options, render: false, oneToOne?: boolean): void;
-    updateColumn(columnId: string, options: Column.Options, render?: boolean, overwrite?: boolean): Promise<void>;
-    updateColumn(columnId: string, options: Column.Options, render?: false, overwrite?: boolean): void;
+    /**
+     * Loads the column option diffs by updating the dirty flags.
+     *
+     * @param vp
+     * The viewport that the column option diffs should be loaded for.
+     *
+     * @param columnId
+     * The ID of the column that should be updated.
+     *
+     * @param columnDiff
+     * The difference between the previous and the new column options in form
+     * of a record of `[column.id]: column.options`. If `null`, assume that
+     * it refers to the column defaults.
+     */
+    private loadColumnOptionDiffs;
+    /**
+     * Redraws the Grid in more optimized way than the regular render method.
+     * It checks what parts of the Grid are marked as dirty and redraws only
+     * them minimizing the number of DOM operations.
+     */
+    redraw(): Promise<void>;
+    updateColumn(columnId: string, options: NoIdColumnOptions, render?: boolean, overwrite?: boolean): Promise<void>;
+    updateColumn(columnId: string, options: NoIdColumnOptions, render?: false, overwrite?: boolean): void;
+    private render;
     /**
      * Hovers the row with the provided index. It removes the hover effect from
      * the previously hovered row.
@@ -254,8 +285,13 @@ declare class Grid {
     getColumnIds(columnsTree: Array<GroupedHeaderOptions | string>, onlyEnabledColumns?: boolean): string[];
     /**
      * Destroys the Grid.
+     *
+     * @param onlyDOM
+     * Whether to destroy the Grid instance completely (`false` - default) or
+     * just the DOM elements (`true`). If `true`, the Grid can be re-rendered
+     * after destruction by calling the `render` method.
      */
-    destroy(): void;
+    destroy(onlyDOM?: boolean): void;
     /**
      * Grey out the Grid and show a loading indicator.
      *
@@ -289,7 +325,5 @@ declare class Grid {
      * Grid options.
      */
     getOptions(onlyUserOptions?: boolean): Partial<Options>;
-}
-declare namespace Grid {
 }
 export default Grid;

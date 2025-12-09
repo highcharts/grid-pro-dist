@@ -13,8 +13,8 @@
  *
  * */
 'use strict';
-import CellRenderer from '../CellRenderer.js';
-import CellRendererRegistry from '../CellRendererRegistry.js';
+import { CellRenderer } from '../CellRenderer.js';
+import { registerRenderer } from '../CellRendererRegistry.js';
 import TimeInputContent from '../ContentTypes/TimeInputContent.js';
 import U from '../../../../Core/Utilities.js';
 const { merge } = U;
@@ -55,7 +55,7 @@ TimeInputRenderer.defaultEditingRenderer = 'timeInput';
 TimeInputRenderer.defaultOptions = {
     type: 'timeInput'
 };
-CellRendererRegistry.registerRenderer('timeInput', TimeInputRenderer);
+registerRenderer('timeInput', TimeInputRenderer);
 /* *
  *
  *  Default Export

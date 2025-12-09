@@ -30,7 +30,7 @@ const { makeHTMLElement } = GridUtils;
 /**
  * The context menu.
  */
-class ContextMenu extends Popup {
+export class ContextMenu extends Popup {
     constructor() {
         /* *
          *

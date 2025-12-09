@@ -14,8 +14,8 @@
  *
  * */
 'use strict';
-import CellRenderer from '../CellRenderer.js';
-import CellRendererRegistry from '../CellRendererRegistry.js';
+import { CellRenderer } from '../CellRenderer.js';
+import { registerRenderer } from '../CellRendererRegistry.js';
 import SparklineContent from '../ContentTypes/SparklineContent.js';
 import U from '../../../../Core/Utilities.js';
 const { merge } = U;
@@ -28,6 +28,17 @@ const { merge } = U;
  * Renderer for the Text in a column..
  */
 class SparklineRenderer extends CellRenderer {
+    /**
+     * Imports the Highcharts namespace to be used by the Sparkline Renderer.
+     *
+     * @param H
+     * Highcharts namespace.
+     */
+    static useHighcharts(H) {
+        if (H && !SparklineContent.H) {
+            SparklineContent.H = H;
+        }
+    }
     /* *
      *
      *  Constructor
@@ -61,26 +72,7 @@ SparklineRenderer.defaultEditingRenderer = 'textInput';
 SparklineRenderer.defaultOptions = {
     type: 'sparkline'
 };
-/* *
- *
- *  Namespace
- *
- * */
-(function (SparklineRenderer) {
-    /**
-     * Imports the Highcharts namespace to be used by the Sparkline Renderer.
-     *
-     * @param H
-     * Highcharts namespace.
-     */
-    function useHighcharts(H) {
-        if (H && !SparklineContent.H) {
-            SparklineContent.H = H;
-        }
-    }
-    SparklineRenderer.useHighcharts = useHighcharts;
-})(SparklineRenderer || (SparklineRenderer = {}));
-CellRendererRegistry.registerRenderer('sparkline', SparklineRenderer);
+registerRenderer('sparkline', SparklineRenderer);
 /* *
  *
  *  Default Export

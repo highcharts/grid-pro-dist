@@ -130,6 +130,26 @@ class ColumnFiltering {
         await this.applyFilter({ value, condition });
     }
     /**
+     * Refreshes the state of the filtering content by updating the select,
+     * input and clear button according to the column filtering options.
+     * @internal
+     */
+    refreshState() {
+        const colFilteringOptions = this.column.options.filtering;
+        if (this.filterSelect) {
+            this.filterSelect.value =
+                colFilteringOptions?.condition ??
+                    conditionsMap[this.column.dataType][0];
+        }
+        if (this.filterInput) {
+            this.filterInput.value = '' + (colFilteringOptions?.value ?? '');
+        }
+        if (this.clearButton) {
+            this.clearButton.disabled = !this.isFilteringApplied();
+        }
+        this.disableInputIfNeeded();
+    }
+    /**
      * Render the filtering content in the container.
      *
      * @param container
@@ -198,8 +218,12 @@ class ColumnFiltering {
                     break;
             }
         }
-        // Update the userOptions.
-        void this.column.update({ filtering: condition }, false);
+        this.column.setOptions({
+            filtering: {
+                condition: condition.condition,
+                value: condition.value
+            }
+        });
         filteringController.addColumnFilterCondition(columnId, condition);
         this.disableInputIfNeeded();
         await querying.proceed();
@@ -224,7 +248,9 @@ class ColumnFiltering {
      */
     renderFilteringInput(inputWrapper, columnType) {
         // Render the input element.
-        this.filterInput = makeHTMLElement('input', {}, inputWrapper);
+        this.filterInput = makeHTMLElement('input', {
+            className: Globals.getClassName('input')
+        }, inputWrapper);
         this.filterInput.setAttribute('tabindex', '-1');
         const column = this.column;
         this.filterInput.setAttribute('id', 'filter-input-' + column.viewport.grid.id + '-' + column.id);
@@ -268,7 +294,9 @@ class ColumnFiltering {
      */
     renderConditionSelect(inputWrapper) {
         // Render the select element.
-        this.filterSelect = makeHTMLElement('select', {}, inputWrapper);
+        this.filterSelect = makeHTMLElement('select', {
+            className: Globals.getClassName('input')
+        }, inputWrapper);
         this.filterSelect.setAttribute('tabindex', '-1');
         const column = this.column;
         this.filterSelect.setAttribute('id', 'filter-select-' + column.viewport.grid.id + '-' + column.id);

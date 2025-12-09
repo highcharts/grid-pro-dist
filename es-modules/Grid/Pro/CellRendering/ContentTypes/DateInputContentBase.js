@@ -14,6 +14,7 @@
  * */
 'use strict';
 import CellContentPro from '../CellContentPro.js';
+import Globals from '../../../Core/Globals.js';
 /* *
  *
  *  Class
@@ -50,7 +51,7 @@ class DateInputContentBase extends CellContentPro {
             }
             if (e.key === 'Enter') {
                 this.cell.htmlElement.focus();
-                void this.cell.setValue(this.value, true);
+                void this.cell.editValue(this.value);
             }
         };
         this.onBlur = (e) => {
@@ -58,7 +59,7 @@ class DateInputContentBase extends CellContentPro {
                 this.blurHandler(e);
                 return;
             }
-            void this.cell.setValue(this.value, true);
+            void this.cell.editValue(this.value);
         };
         this.onCellKeyDown = (e) => {
             if (e.key === ' ') {
@@ -85,6 +86,7 @@ class DateInputContentBase extends CellContentPro {
         input.tabIndex = -1;
         input.type = this.getInputType();
         input.name = cell.column.id + '-' + cell.row.id;
+        input.classList.add(Globals.getClassName('input'));
         if (options.attributes) {
             Object.entries(options.attributes).forEach(([key, value]) => {
                 input.setAttribute(key, value);

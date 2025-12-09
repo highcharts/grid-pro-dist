@@ -47,10 +47,8 @@ declare class ColumnSorting {
      */
     toggle: () => void;
 }
-declare namespace ColumnSorting {
-    interface Event {
-        target: Column;
-        order: ColumnSortingOrder;
-    }
+export interface ColumnSortingEvent {
+    target: Column;
+    order: ColumnSortingOrder;
 }
 export default ColumnSorting;

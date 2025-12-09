@@ -4,11 +4,11 @@ import type CellContent from '../../Core/Table/CellContent/CellContent';
 /**
  * Renderer class that initialize all options per column.
  */
-declare abstract class CellRenderer {
+export declare abstract class CellRenderer {
     /**
      * Options to control the renderer content.
      */
-    abstract options: CellRenderer.Options;
+    abstract options: CellRendererOptions;
     /**
      * The column to which the specific renderer belongs.
      */
@@ -26,25 +26,23 @@ declare abstract class CellRenderer {
      */
     abstract render(cell: TableCell): CellContent;
 }
-declare namespace CellRenderer {
+/**
+ * Options to control the renderer content.
+ */
+export interface CellRendererOptions {
     /**
-     * Options to control the renderer content.
+     * The cell content type.
+     *
+     * Can be one of the following: `'text'`, `'checkbox'`, `'select'`,
+     * `'textInput'`, `'dateInput'`, `'dateTimeInput'`, `'timeInput'`,
+     * `'numberInput'`, `'sparkline'`.
+     *
+     * You can also create your own custom renderer by extending the
+     * `CellRenderer` class and registering it in the
+     * `CellRendererTypeRegistry`.
+     *
+     * @default 'text'
      */
-    interface Options {
-        /**
-         * The cell content type.
-         *
-         * Can be one of the following: `'text'`, `'checkbox'`, `'select'`,
-         * `'textInput'`, `'dateInput'`, `'dateTimeInput'`, `'timeInput'`,
-         * `'numberInput'`, `'sparkline'`.
-         *
-         * You can also create your own custom renderer by extending the
-         * `CellRenderer` class and registering it in the
-         * `CellRendererTypeRegistry`.
-         *
-         * @default 'text'
-         */
-        type: string;
-    }
+    type: string;
 }
 export default CellRenderer;

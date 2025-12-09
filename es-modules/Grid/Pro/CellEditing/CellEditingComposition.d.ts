@@ -1,6 +1,28 @@
 import type CellRendererType from '../CellRendering/CellRendererType';
+import type Column from '../../Core/Table/Column';
+import type { DeepPartial } from '../../../Shared/Types';
 import type { EditModeRenderer } from './CellEditMode';
+import type Options from '../../Core/Options';
+import type Table from '../../Core/Table/Table';
+import type TableCell from '../../Core/Table/Body/TableCell';
 import CellEditing from './CellEditing.js';
+/**
+ * Default options for the cell editing.
+ */
+export declare const defaultOptions: DeepPartial<Options>;
+/**
+ * Extends the grid classes with cell editing functionality.
+ *
+ * @param TableClass
+ * The class to extend.
+ *
+ * @param TableCellClass
+ * The class to extend.
+ *
+ * @param ColumnClass
+ * The class to extend.
+ */
+export declare function compose(TableClass: typeof Table, TableCellClass: typeof TableCell, ColumnClass: typeof Column): void;
 export type EditModeRendererType = Extract<CellRendererType, EditModeRenderer>;
 export type EditModeRendererTypeName = EditModeRendererType['options']['type'];
 /**
@@ -120,4 +142,8 @@ declare module '../../Core/Options' {
  * The possible types of the edit message.
  */
 export type EditMsgType = 'started' | 'edited' | 'cancelled';
-export default CellEditingComposition;
+declare const _default: {
+    compose: typeof compose;
+    defaultOptions: DeepPartial<Options>;
+};
+export default _default;

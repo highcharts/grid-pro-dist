@@ -1,4 +1,4 @@
-import type Column from '../../Column';
+import type { ColumnDataType } from '../../Column';
 /**
  * String filtering conditions.
  */
@@ -19,7 +19,7 @@ export type BooleanCondition = typeof booleanConditions[number];
  * The event object for the 'afterRender' event.
  */
 export type AfterRenderEvent = Event & {
-    column: Column;
+    column: ColumnDataType;
     filtering: boolean;
 };
 /**
@@ -49,4 +49,4 @@ export declare const booleanValueMap: Record<BooleanCondition, 'all' | boolean |
 /**
  * Conditions map for the condition select options.
  */
-export declare const conditionsMap: Record<Column.DataType, readonly Condition[]>;
+export declare const conditionsMap: Record<ColumnDataType, readonly Condition[]>;

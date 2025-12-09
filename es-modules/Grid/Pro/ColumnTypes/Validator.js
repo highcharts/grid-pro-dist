@@ -181,87 +181,72 @@ class Validator {
         this.notifContainer.remove();
     }
 }
-/* *
- *
- *  Namespace
- *
- * */
 /**
- * Namespace for Validation functionality.
+ * The class names used by the validator functionality.
  */
-(function (Validator) {
-    /**
-     * The class names used by the validator functionality.
-     */
-    Validator.classNames = {
-        notifContainer: Globals.classNamePrefix + 'notification',
-        notifError: Globals.classNamePrefix + 'notification-error',
-        notifAnimation: Globals.classNamePrefix + 'notification-animation',
-        editedCellError: Globals.classNamePrefix + 'edited-cell-error'
-    };
-    /* *
-     *
-     *  Variables
-     *
-     * */
-    /**
-     * Definition of default validation rules.
-     */
-    Validator.rulesRegistry = {
-        notEmpty: {
-            validate: ({ value, rawValue }) => (defined(value) && rawValue.length > 0),
-            notification: 'Value cannot be empty.'
+Validator.classNames = {
+    notifContainer: Globals.classNamePrefix + 'notification',
+    notifError: Globals.classNamePrefix + 'notification-error',
+    notifAnimation: Globals.classNamePrefix + 'notification-animation',
+    editedCellError: Globals.classNamePrefix + 'edited-cell-error'
+};
+/**
+ * Definition of default validation rules.
+ */
+Validator.rulesRegistry = {
+    notEmpty: {
+        validate: ({ value, rawValue }) => (defined(value) && rawValue.length > 0),
+        notification: 'Value cannot be empty.'
+    },
+    number: {
+        validate: ({ rawValue }) => !isNaN(+rawValue),
+        notification: 'Value has to be a number.'
+    },
+    datetime: {
+        validate: ({ value }) => !defined(value) || !isNaN(+value),
+        notification: 'Value has to be parsed to a valid timestamp.'
+    },
+    'boolean': {
+        validate: ({ rawValue }) => (rawValue === 'true' || rawValue === 'false' ||
+            Number(rawValue) === 1 || Number(rawValue) === 0),
+        notification: 'Value has to be a boolean.'
+    },
+    ignoreCaseUnique: {
+        validate: function ({ rawValue }) {
+            const oldValue = String(this.value).toLowerCase();
+            const rowValueString = rawValue.toLowerCase();
+            if (oldValue === rowValueString) {
+                return true;
+            }
+            const columnData = this.column.data;
+            const isDuplicate = columnData?.some((value) => String(value).toLowerCase() ===
+                rowValueString);
+            return !isDuplicate;
         },
-        number: {
-            validate: ({ rawValue }) => !isNaN(+rawValue),
-            notification: 'Value has to be a number.'
+        notification: 'Value must be unique within this column (case-insensitive).'
+    },
+    unique: {
+        validate: function ({ rawValue }) {
+            const oldValue = this.value;
+            if (oldValue === rawValue) {
+                return true;
+            }
+            const columnData = this.column.data;
+            const isDuplicate = columnData?.some((value) => value === rawValue);
+            return !isDuplicate;
         },
-        datetime: {
-            validate: ({ value }) => !defined(value) || !isNaN(+value),
-            notification: 'Value has to be parsed to a valid timestamp.'
-        },
-        'boolean': {
-            validate: ({ rawValue }) => (rawValue === 'true' || rawValue === 'false' ||
-                Number(rawValue) === 1 || Number(rawValue) === 0),
-            notification: 'Value has to be a boolean.'
-        },
-        ignoreCaseUnique: {
-            validate: function ({ rawValue }) {
-                const oldValue = String(this.value).toLowerCase();
-                const rowValueString = rawValue.toLowerCase();
-                if (oldValue === rowValueString) {
-                    return true;
-                }
-                const columnData = this.column.data;
-                const isDuplicate = columnData?.some((value) => String(value).toLowerCase() ===
-                    rowValueString);
-                return !isDuplicate;
-            },
-            notification: 'Value must be unique within this column (case-insensitive).'
-        },
-        unique: {
-            validate: function ({ rawValue }) {
-                const oldValue = this.value;
-                if (oldValue === rawValue) {
-                    return true;
-                }
-                const columnData = this.column.data;
-                const isDuplicate = columnData?.some((value) => value === rawValue);
-                return !isDuplicate;
-            },
-            notification: 'Value must be unique within this column (case-sensitive).'
-        }
-    };
-    /**
-     * Default validation rules for each dataType.
-     */
-    Validator.predefinedRules = {
-        'boolean': ['boolean'],
-        datetime: ['datetime'],
-        number: ['number'],
-        string: []
-    };
-})(Validator || (Validator = {}));
+        notification: 'Value must be unique within this column (case-sensitive).'
+    }
+};
+/**
+ * Default validation rules for each dataType.
+ */
+Validator.predefinedRules = {
+    'boolean': ['boolean'],
+    datetime: ['datetime'],
+    number: ['number'],
+    string: []
+};
 /* *
  *
  *  Default Export

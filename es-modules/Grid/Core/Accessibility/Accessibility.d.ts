@@ -64,7 +64,7 @@ declare class Accessibility {
      * @param state
      * The sort state to be set for the column header cell.
      */
-    setColumnSortState(thElement: HTMLElement, state: Accessibility.AriaSortState): void;
+    setColumnSortState(thElement: HTMLElement, state: AriaSortState): void;
     /**
      * Announce the message to the screen reader that the user filtered the
      * column.
@@ -75,7 +75,7 @@ declare class Accessibility {
      * @param filteringApplied
      * Whether the filtering was applied or cleared.
      */
-    userFilteredColumn(filteredColumnValues: Accessibility.FilteredColumnValues, filteringApplied: boolean): void;
+    userFilteredColumn(filteredColumnValues: FilteredColumnValues, filteringApplied: boolean): void;
     /**
      * Adds high contrast CSS class, if the browser is in High Contrast mode.
      */
@@ -99,17 +99,15 @@ declare class Accessibility {
      */
     destroy(): void;
 }
-declare namespace Accessibility {
-    /**
-     * The possible states of the aria-sort attribute.
-     */
-    type AriaSortState = 'ascending' | 'descending' | 'none';
-    /**
-     * The values of the filtered column.
-     */
-    type FilteredColumnValues = FilteringCondition & {
-        columnId: string;
-        rowsCount: number;
-    };
-}
+/**
+ * The possible states of the aria-sort attribute.
+ */
+export type AriaSortState = 'ascending' | 'descending' | 'none';
+/**
+ * The values of the filtered column.
+ */
+export type FilteredColumnValues = FilteringCondition & {
+    columnId: string;
+    rowsCount: number;
+};
 export default Accessibility;

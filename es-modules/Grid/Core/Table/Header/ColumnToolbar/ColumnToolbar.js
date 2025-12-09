@@ -93,6 +93,15 @@ class HeaderCellToolbar {
         });
     }
     /**
+     * Refreshes the state of the toolbar buttons.
+     * @internal
+     */
+    refreshState() {
+        for (const button of this.buttons) {
+            button.refreshState();
+        }
+    }
+    /**
      * Destroys all buttons of the toolbar.
      */
     clearButtons() {
@@ -142,6 +151,7 @@ class HeaderCellToolbar {
             destroyer();
         }
         this.eventListenerDestroyers.length = 0;
+        this.clearButtons();
         this.columnResizeObserver?.disconnect();
         delete this.columnResizeObserver;
     }

@@ -18,7 +18,7 @@ import CellContent from './CellContent.js';
 import GridUtils from '../../GridUtils.js';
 const { setHTMLContent } = GridUtils;
 import Utils from '../../../../Core/Utilities.js';
-const { defined } = Utils;
+const { defined, isString } = Utils;
 /* *
  *
  *  Class
@@ -28,10 +28,20 @@ const { defined } = Utils;
  * Represents a text type of content.
  */
 class TextContent extends CellContent {
+    /* *
+     *
+     *  Constructor
+     *
+     * */
     constructor(cell) {
         super(cell);
         this.add();
     }
+    /* *
+     *
+     *  Methods
+     *
+     * */
     add() {
         this.update();
     }
@@ -66,7 +76,13 @@ class TextContent extends CellContent {
                 (format ? cell.format(format) : value + '');
         }
         else if (isDefaultFormat) {
-            cellContent = formatter?.call(cell).toString() || value + '';
+            const formattedValue = formatter?.call(cell);
+            if (isString(formattedValue)) {
+                cellContent = formattedValue;
+            }
+            else {
+                cellContent = value + '';
+            }
         }
         else if (isDefaultFormatter) {
             cellContent = format ? cell.format(format) : value + '';
@@ -76,20 +92,15 @@ class TextContent extends CellContent {
 }
 /* *
  *
- *  Namespace
+ *  Static Properties
  *
  * */
-(function (TextContent) {
-    /**
-     * Default formats for data types.
-     */
-    TextContent.defaultFormatsForDataTypes = {
-        string: '{value}',
-        number: '{value}',
-        'boolean': '{value}',
-        datetime: '{value:%Y-%m-%d %H:%M:%S}'
-    };
-})(TextContent || (TextContent = {}));
+TextContent.defaultFormatsForDataTypes = {
+    string: '{value}',
+    number: '{value}',
+    'boolean': '{value}',
+    datetime: '{value:%Y-%m-%d %H:%M:%S}'
+};
 /* *
  *
  *  Default Export

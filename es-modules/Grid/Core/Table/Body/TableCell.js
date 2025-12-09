@@ -60,6 +60,21 @@ class TableCell extends Cell {
         void this.setValue();
     }
     /**
+     * Edits the cell value and updates the data table. Call this instead of
+     * `setValue` when you want it to trigger the cell value user change event.
+     *
+     * @param value
+     * The new value to set.
+     */
+    async editValue(value) {
+        if (this.value === value) {
+            return;
+        }
+        fireEvent(this, 'beforeEditValue');
+        await this.setValue(value, true);
+        fireEvent(this, 'afterEditValue');
+    }
+    /**
      * Sets the cell value and updates its content with it.
      *
      * @param value
@@ -120,8 +135,6 @@ class TableCell extends Cell {
     }
     initEvents() {
         this.cellEvents.push(['dblclick', (e) => (this.onDblClick(e))]);
-        this.cellEvents.push(['mouseout', () => this.onMouseOut()]);
-        this.cellEvents.push(['mouseover', () => this.onMouseOver()]);
         this.cellEvents.push(['mousedown', (e) => {
                 this.onMouseDown(e);
             }]);
@@ -155,28 +168,13 @@ class TableCell extends Cell {
             originalEvent: e
         });
     }
-    /**
-     * Handles the mouse over event on the cell.
-     * @internal
-     */
     onMouseOver() {
-        const { grid } = this.row.viewport;
-        grid.hoverRow(this.row.index);
-        grid.hoverColumn(this.column.id);
-        fireEvent(this, 'mouseOver', {
-            target: this
-        });
+        this.row.viewport.grid.hoverRow(this.row.index);
+        super.onMouseOver();
     }
-    /**
-     * Handles the mouse out event on the cell.
-     */
     onMouseOut() {
-        const { grid } = this.row.viewport;
-        grid.hoverRow();
-        grid.hoverColumn();
-        fireEvent(this, 'mouseOut', {
-            target: this
-        });
+        this.row.viewport.grid.hoverRow();
+        super.onMouseOut();
     }
     /**
      * Handles the double click event on the cell.

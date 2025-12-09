@@ -135,7 +135,7 @@ declare class Table {
      * @returns
      * The viewport state metadata.
      */
-    getStateMeta(): Table.ViewportStateMetadata;
+    getStateMeta(): ViewportStateMetadata;
     /**
      * Apply the metadata to the viewport state. It is used to restore the state
      * of the viewport when the data grid is re-rendered.
@@ -143,7 +143,7 @@ declare class Table {
      * @param meta
      * The viewport state metadata.
      */
-    applyStateMeta(meta: Table.ViewportStateMetadata): void;
+    applyStateMeta(meta: ViewportStateMetadata): void;
     /**
      * Sets the focus anchor cell.
      *
@@ -166,16 +166,14 @@ declare class Table {
      */
     getRow(id: number): TableRow | undefined;
 }
-declare namespace Table {
-    /**
-     * Represents the metadata of the viewport state. It is used to save the
-     * state of the viewport and restore it when the data grid is re-rendered.
-     */
-    interface ViewportStateMetadata {
-        scrollTop: number;
-        scrollLeft: number;
-        columnResizing: ColumnResizingMode;
-        focusCursor?: [number, number];
-    }
+/**
+ * Represents the metadata of the viewport state. It is used to save the
+ * state of the viewport and restore it when the data grid is re-rendered.
+ */
+export interface ViewportStateMetadata {
+    scrollTop: number;
+    scrollLeft: number;
+    columnResizing: ColumnResizingMode;
+    focusCursor?: [number, number];
 }
 export default Table;

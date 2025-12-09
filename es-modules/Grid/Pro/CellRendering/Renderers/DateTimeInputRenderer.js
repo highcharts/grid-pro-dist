@@ -13,8 +13,8 @@
  *
  * */
 'use strict';
-import CellRenderer from '../CellRenderer.js';
-import CellRendererRegistry from '../CellRendererRegistry.js';
+import { CellRenderer } from '../CellRenderer.js';
+import { registerRenderer } from '../CellRendererRegistry.js';
 import DateTimeInputContent from '../ContentTypes/DateTimeInputContent.js';
 import U from '../../../../Core/Utilities.js';
 const { merge } = U;
@@ -55,7 +55,7 @@ DateTimeInputRenderer.defaultEditingRenderer = 'dateTimeInput';
 DateTimeInputRenderer.defaultOptions = {
     type: 'dateTimeInput'
 };
-CellRendererRegistry.registerRenderer('dateTimeInput', DateTimeInputRenderer);
+registerRenderer('dateTimeInput', DateTimeInputRenderer);
 /* *
  *
  *  Default Export

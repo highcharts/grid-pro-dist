@@ -36,11 +36,11 @@ declare class Exporting {
      */
     downloadJSON(modified?: boolean): void;
     /**
-     * Creates a CSV string from the data table.
+     * Creates a CSV string from the data grid.
      *
      * @param modified
-     * Whether to return the modified data table (after filtering/sorting/etc.)
-     * or the unmodified, original one. Default value is set to `true`.
+     * Whether to return the data including the modifiers (filtering, sorting,
+     * etc.) or the original data. Default value is set to `true`.
      *
      * @return
      * CSV string representing the data table.

@@ -1,8 +1,8 @@
 import type Toolbar from './Toolbar';
 import type Button from './Button';
 import type Popup from './Popup';
-import SvgIcons from './SvgIcons.js';
-import Globals from '../Globals.js';
+import { GridIconName } from './SvgIcons.js';
+import { ClassNameKey } from '../Globals.js';
 declare class ToolbarButton implements Button {
     /**
      * The wrapper element for the button.
@@ -37,7 +37,7 @@ declare class ToolbarButton implements Button {
      * The active indicator for the button.
      */
     private activeIndicator?;
-    constructor(options: ToolbarButton.Options);
+    constructor(options: ToolbarButtonOptions);
     /**
      * Adds the button to the toolbar.
      *
@@ -53,17 +53,13 @@ declare class ToolbarButton implements Button {
      * @param icon
      * The icon to set.
      */
-    setIcon(icon: SvgIcons.GridIconName): void;
+    setIcon(icon: GridIconName): void;
     setActive(active: boolean): void;
     setHighlighted(highlighted: boolean): void;
     /**
      * Destroys the button.
      */
     destroy(): void;
-    /**
-     * Initializes the state of the button.
-     */
-    protected refreshState(): void;
     /**
      * Handles the click event for the button.
      *
@@ -87,49 +83,47 @@ declare class ToolbarButton implements Button {
      */
     private removeEventListeners;
 }
-declare namespace ToolbarButton {
+/**
+ * Options for the toolbar button.
+ */
+export interface ToolbarButtonOptions {
     /**
-     * Options for the toolbar button.
+     * The icon for the button.
      */
-    interface Options {
-        /**
-         * The icon for the button.
-         */
-        icon: SvgIcons.GridIconName;
-        /**
-         * The class name key for the button.
-         */
-        classNameKey?: Globals.ClassNameKey;
-        /**
-         * The tooltip string for the button.
-         */
-        tooltip?: string;
-        /**
-         * Whether the button should be always visible.
-         */
-        alwaysVisible?: boolean;
-        /**
-         * The accessibility options for the button.
-         */
-        accessibility?: ToolbarButtonA11yOptions;
-        /**
-         * The click handler for the button.
-         */
-        onClick?: (event: MouseEvent, button: ToolbarButton) => void;
-    }
-    interface ToolbarButtonA11yOptions {
-        /**
-         * The aria label attribute for the button.
-         */
-        ariaLabel?: string;
-        /**
-         * The aria expanded attribute for the button.
-         */
-        ariaExpanded?: boolean;
-        /**
-         * The aria controls attribute for the button.
-         */
-        ariaControls?: string;
-    }
+    icon: GridIconName;
+    /**
+     * The class name key for the button.
+     */
+    classNameKey?: ClassNameKey;
+    /**
+     * The tooltip string for the button.
+     */
+    tooltip?: string;
+    /**
+     * Whether the button should be always visible.
+     */
+    alwaysVisible?: boolean;
+    /**
+     * The accessibility options for the button.
+     */
+    accessibility?: ToolbarButtonA11yOptions;
+    /**
+     * The click handler for the button.
+     */
+    onClick?: (event: MouseEvent, button: ToolbarButton) => void;
+}
+export interface ToolbarButtonA11yOptions {
+    /**
+     * The aria label attribute for the button.
+     */
+    ariaLabel?: string;
+    /**
+     * The aria expanded attribute for the button.
+     */
+    ariaExpanded?: boolean;
+    /**
+     * The aria controls attribute for the button.
+     */
+    ariaControls?: string;
 }
 export default ToolbarButton;

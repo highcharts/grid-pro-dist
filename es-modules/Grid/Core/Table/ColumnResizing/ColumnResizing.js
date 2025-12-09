@@ -19,50 +19,50 @@ import IndependentResizingMode from './IndependentResizingMode.js';
 import DistributedResizingMode from './DistributedResizingMode.js';
 /* *
  *
- *  Namespace
+ *  Definitions
  *
  * */
-var ColumnResizing;
-(function (ColumnResizing) {
-    /**
-     * Abstract class representing a column resizing mode.
-     */
-    ColumnResizing.AbstractStrategy = ResizingMode;
-    /**
-     * Registry of column resizing modes.
-     */
-    ColumnResizing.types = {
-        adjacent: AdjacentResizingMode,
-        distributed: DistributedResizingMode,
-        independent: IndependentResizingMode
-    };
-    /**
-     * Creates a new column resizing mode instance based on the
-     * viewport's options.
-     *
-     * @param viewport
-     * The table that the column resizing mode is applied to.
-     *
-     * @returns
-     * The proper column resizing mode.
-     */
-    function initMode(viewport) {
-        const modeName = viewport.grid.options?.rendering?.columns?.resizing?.mode ||
-            'adjacent';
-        let ModeConstructor = ColumnResizing.types[modeName];
-        if (!ModeConstructor) {
-            // eslint-disable-next-line no-console
-            console.warn(`Unknown column resizing mode: '${modeName}'. Applied ` +
-                'default \'adjacent\' mode.');
-            ModeConstructor = ColumnResizing.types.adjacent;
-        }
-        return new ModeConstructor(viewport);
+/**
+ * Abstract class representing a column resizing mode.
+ */
+export const AbstractStrategy = ResizingMode;
+/**
+ * Registry of column resizing modes.
+ */
+export const types = {
+    adjacent: AdjacentResizingMode,
+    distributed: DistributedResizingMode,
+    independent: IndependentResizingMode
+};
+/**
+ * Creates a new column resizing mode instance based on the
+ * viewport's options.
+ *
+ * @param viewport
+ * The table that the column resizing mode is applied to.
+ *
+ * @returns
+ * The proper column resizing mode.
+ */
+export function initMode(viewport) {
+    const modeName = viewport.grid.options?.rendering?.columns?.resizing?.mode ||
+        'adjacent';
+    let ModeConstructor = types[modeName];
+    if (!ModeConstructor) {
+        // eslint-disable-next-line no-console
+        console.warn(`Unknown column resizing mode: '${modeName}'. Applied ` +
+            'default \'adjacent\' mode.');
+        ModeConstructor = types.adjacent;
     }
-    ColumnResizing.initMode = initMode;
-})(ColumnResizing || (ColumnResizing = {}));
+    return new ModeConstructor(viewport);
+}
 /* *
  *
  *  Default Export
  *
  * */
-export default ColumnResizing;
+export default {
+    initMode,
+    types,
+    AbstractStrategy
+};

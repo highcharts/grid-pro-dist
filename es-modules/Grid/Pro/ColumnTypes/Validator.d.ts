@@ -1,4 +1,4 @@
-import type Column from '../../Core/Table/Column';
+import type { ColumnDataType } from '../../Core/Table/Column';
 import type { EditModeContent } from '../CellEditing/CellEditMode';
 import type Table from '../../Core/Table/Table';
 import type TableCell from '../../Core/Table/Body/TableCell';
@@ -7,6 +7,23 @@ import Cell from '../../Core/Table/Cell.js';
  * Class for validating cell content.
  */
 declare class Validator {
+    /**
+     * The class names used by the validator functionality.
+     */
+    static readonly classNames: {
+        readonly notifContainer: string;
+        readonly notifError: string;
+        readonly notifAnimation: string;
+        readonly editedCellError: string;
+    };
+    /**
+     * Definition of default validation rules.
+     */
+    static readonly rulesRegistry: RulesRegistryType;
+    /**
+     * Default validation rules for each dataType.
+     */
+    static readonly predefinedRules: Record<ColumnDataType, RuleKey[]>;
     viewport: Table;
     /**
      * The cell that has an error.
@@ -63,56 +80,34 @@ declare class Validator {
     destroy(): void;
 }
 /**
- * Namespace for Validation functionality.
+ * Callback function that checks if field is valid.
  */
-declare namespace Validator {
-    /**
-     * The class names used by the validator functionality.
-     */
-    const classNames: {
-        readonly notifContainer: string;
-        readonly notifError: string;
-        readonly notifAnimation: string;
-        readonly editedCellError: string;
-    };
-    /**
-     * Callback function that checks if field is valid.
-     */
-    type ValidateFunction = (this: TableCell, content: EditModeContent) => boolean;
-    /**
-     * Callback function that returns a error message.
-     */
-    type ValidationErrorFunction = (this: TableCell, content?: EditModeContent) => string;
-    /**
-     * Definition of the validation rule that should container validate method
-     * and error message displayed in notification.
-     */
-    interface RuleDefinition {
-        validate: RulesRegistryType | ValidateFunction;
-        notification: string | ValidationErrorFunction;
-    }
-    /**
-     *  Definition of default validation rules.
-     */
-    interface RulesRegistryType {
-        boolean: RuleDefinition;
-        datetime: RuleDefinition;
-        notEmpty: RuleDefinition;
-        number: RuleDefinition;
-        ignoreCaseUnique: RuleDefinition;
-        unique: RuleDefinition;
-    }
-    /**
-     * Type of rule: `notEmpty`, `number` or `boolean`.
-     */
-    type RuleKey = keyof RulesRegistryType;
-    /**
-     * Definition of default validation rules.
-     */
-    const rulesRegistry: RulesRegistryType;
-    /**
-     * Default validation rules for each dataType.
-     */
-    const predefinedRules: Record<Column.DataType, RuleKey[]>;
+export type ValidateFunction = (this: TableCell, content: EditModeContent) => boolean;
+/**
+ * Callback function that returns a error message.
+ */
+export type ValidationErrorFunction = (this: TableCell, content?: EditModeContent) => string;
+/**
+ * Definition of the validation rule that should container validate method
+ * and error message displayed in notification.
+ */
+export interface RuleDefinition {
+    validate: RulesRegistryType | ValidateFunction;
+    notification: string | ValidationErrorFunction;
 }
+/**
+ *  Definition of default validation rules.
+ */
+export interface RulesRegistryType {
+    boolean: RuleDefinition;
+    datetime: RuleDefinition;
+    notEmpty: RuleDefinition;
+    number: RuleDefinition;
+    ignoreCaseUnique: RuleDefinition;
+    unique: RuleDefinition;
+}
+/**
+ * Type of rule: `notEmpty`, `number` or `boolean`.
+ */
+export type RuleKey = keyof RulesRegistryType;
 export default Validator;

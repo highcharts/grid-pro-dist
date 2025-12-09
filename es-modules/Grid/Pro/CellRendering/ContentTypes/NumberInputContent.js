@@ -15,6 +15,7 @@
 'use strict';
 import CellContentPro from '../CellContentPro.js';
 import U from '../../../../Core/Utilities.js';
+import Globals from '../../../Core/Globals.js';
 const { defined } = U;
 /* *
  *
@@ -45,7 +46,7 @@ class NumberInputContent extends CellContentPro {
                 this.changeHandler(e);
                 return;
             }
-            void this.cell.setValue(this.value, true);
+            void this.cell.editValue(this.value);
         };
         this.onKeyDown = (e) => {
             e.stopPropagation();
@@ -90,6 +91,7 @@ class NumberInputContent extends CellContentPro {
         input.type = 'number';
         input.tabIndex = -1;
         input.name = cell.column.id + '-' + cell.row.id;
+        input.classList.add(Globals.getClassName('input'));
         if (options.attributes) {
             Object.entries(options.attributes).forEach(([key, value]) => {
                 input.setAttribute(key, value);

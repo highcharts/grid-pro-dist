@@ -16,6 +16,7 @@
 'use strict';
 import CellContentPro from '../CellContentPro.js';
 import AST from '../../../../Core/Renderer/HTML/AST.js';
+import Globals from '../../../Core/Globals.js';
 /* *
  *
  *  Class
@@ -46,7 +47,7 @@ class SelectContent extends CellContentPro {
             }
             else {
                 this.cell.htmlElement.focus();
-                void this.cell.setValue(this.value, true);
+                void this.cell.editValue(this.value);
             }
         };
         this.onKeyDown = (e) => {
@@ -86,6 +87,7 @@ class SelectContent extends CellContentPro {
         const select = this.select = document.createElement('select');
         select.tabIndex = -1;
         select.name = cell.column.id + '-' + cell.row.id;
+        select.classList.add(Globals.getClassName('input'));
         if (options.attributes) {
             Object.entries(options.attributes).forEach(([key, value]) => {
                 select.setAttribute(key, value);

@@ -4,7 +4,7 @@ import type Popup from './Popup.js';
  * `Toolbar`.
  * @private
  */
-interface Button {
+export interface Button {
     /**
      * Focuses the button.
      */

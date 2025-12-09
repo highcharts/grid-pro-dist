@@ -46,11 +46,11 @@ class AdjacentResizingMode extends ResizingMode {
         const newW = Math.round(Math.max(colW + diff, minWidth) * 10) / 10;
         this.columnWidths[column.id] = newW;
         this.columnWidthUnits[column.id] = 0; // Always save in px
-        column.update({ width: newW }, false);
+        column.setOptions({ width: newW });
         if (nextCol) {
             const newNextW = this.columnWidths[nextCol.id] = Math.round(Math.max((resizer.nextColumnStartWidth ?? 0) + colW - newW, minWidth) * 10) / 10;
             this.columnWidthUnits[nextCol.id] = 0; // Always save in px
-            nextCol.update({ width: newNextW }, false);
+            nextCol.setOptions({ width: newNextW });
         }
     }
 }

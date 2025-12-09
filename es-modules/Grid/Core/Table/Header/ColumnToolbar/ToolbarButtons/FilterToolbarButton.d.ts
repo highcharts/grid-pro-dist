@@ -5,7 +5,7 @@ declare class FilterToolbarButton extends ToolbarButton {
     toolbar?: ColumnToolbar;
     popup?: FilterPopup;
     constructor();
-    protected refreshState(): void;
+    refreshState(): void;
     protected addEventListeners(): void;
     protected clickHandler(event: MouseEvent): void;
 }

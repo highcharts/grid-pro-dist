@@ -15,6 +15,8 @@
  * */
 'use strict';
 import Templating from '../../../Core/Templating.js';
+import U from '../../../Core/Utilities.js';
+const { fireEvent } = U;
 /* *
  *
  *  Abstract Class of Cell
@@ -76,6 +78,12 @@ class Cell {
             }]);
         this.cellEvents.push(['keydown', (e) => {
                 this.onKeyDown(e);
+            }]);
+        this.cellEvents.push(['mouseout', () => {
+                this.onMouseOut();
+            }]);
+        this.cellEvents.push(['mouseover', () => {
+                this.onMouseOver();
             }]);
         this.cellEvents.forEach((pair) => {
             this.htmlElement.addEventListener(pair[0], pair[1]);
@@ -149,6 +157,28 @@ class Cell {
                 nextRow.cells[column.index + dir[1]]?.htmlElement.focus();
             }
         }
+    }
+    /**
+     * Handles the mouse over event on the cell.
+     * @internal
+     */
+    onMouseOver() {
+        const { grid } = this.row.viewport;
+        grid.hoverColumn(this.column?.id);
+        fireEvent(this, 'mouseOver', {
+            target: this
+        });
+    }
+    /**
+     * Handles the mouse out event on the cell.
+     * @internal
+     */
+    onMouseOut() {
+        const { grid } = this.row.viewport;
+        grid.hoverColumn();
+        fireEvent(this, 'mouseOut', {
+            target: this
+        });
     }
     /**
      * Renders the cell by appending the HTML element to the row.

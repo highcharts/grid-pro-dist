@@ -14,13 +14,13 @@ declare class Pagination {
      */
     private paginationContainer?;
     /**
+     * The pagination controller instance.
+     */
+    private readonly controller;
+    /**
      * The Grid Table instance which the pagination belongs to.
      */
     grid: Grid;
-    /**
-     * The options for the pagination.
-     */
-    options: PaginationOptions;
     /**
      * The content container of the Pagination.
      */
@@ -50,33 +50,13 @@ declare class Pagination {
      */
     pageSizeSelect?: HTMLSelectElement;
     /**
-     * Mobile page selector dropdown
+     * Page selector dropdown
      */
-    mobilePageSelector?: HTMLSelectElement;
-    /**
-     * Mobile page size selector dropdown
-     */
-    mobilePageSizeSelector?: HTMLSelectElement;
+    dropdownPageSelector?: HTMLSelectElement;
     /**
      * Page info text element
      */
     pageInfoElement?: HTMLElement;
-    /**
-     * Current page number, starting from 1.
-     */
-    currentPage: number;
-    /**
-     * Available items per page options
-     */
-    pageSizeOptions: Array<number>;
-    /**
-     * Current items per page setting
-     */
-    currentPageSize: number;
-    /**
-     * Language options for pagination text
-     */
-    lang: PaginationLangOptions;
     /**
      * Old total number of items (rows) to compare with the current total items.
      */
@@ -86,23 +66,20 @@ declare class Pagination {
      *
      * @param grid
      * The Grid Table instance which the pagination controller belongs to.
-     *
-     * @param options
-     * The Pagination user options.
-     *
-     * @param state
-     * The Pagination state. Used to restore the previous state after the Grid
-     * is destroyed.
      */
-    constructor(grid: Grid, options: PaginationOptions, state?: Pagination.PaginationState);
+    constructor(grid: Grid);
     /**
-     * Total number of items (rows)
+     * Returns the reference to the pagination options.
      */
-    get totalItems(): number;
+    get options(): PaginationOptions | undefined;
     /**
-     * Total number of pages
+     * Returns the language options for pagination text.
      */
-    get totalPages(): number;
+    get lang(): PaginationLangOptions | undefined;
+    /**
+     * Returns the page size selector options.
+     */
+    get pageSizeSelectorOptions(): number[];
     /**
      * Render the pagination container.
      *
@@ -137,10 +114,6 @@ declare class Pagination {
      * Render the controls buttons and page numbers.
      */
     renderControls(): void;
-    /**
-     * Update the pagination controls.
-     */
-    updateControls(): void;
     /**
      * Render the first page button.
      *
@@ -200,6 +173,13 @@ declare class Pagination {
      */
     renderPageSizeSelector(): void;
     /**
+     * Sets the new options for the pagination.
+     *
+     * @param newOptions
+     * The new options to set.
+     */
+    private setOptions;
+    /**
      * Set the page size and recalculate pagination.
      *
      * @param newPageSize
@@ -214,9 +194,9 @@ declare class Pagination {
      */
     goToPage(pageNumber: number): Promise<void>;
     /**
-     * Ensures the current page is within valid range.
+     * Update the grid's pagination state.
      */
-    clampCurrentPage(): void;
+    updateGridPagination(): Promise<void>;
     /**
      * Update button states based on current page.
      */
@@ -248,19 +228,16 @@ declare class Pagination {
      */
     destroy(): void;
     /**
-     * Render the mobile page selector (select dropdown).
+     * Render the dropdown page selector (select dropdown).
      *
      * @param container
-     * The container element for the mobile page selector.
+     * The container element for the dropdown page selector.
      */
-    renderMobilePageSelector(container: HTMLElement): void;
+    renderDropdownPageSelector(container: HTMLElement): void;
     /**
-     * Render the mobile page size selector (select dropdown).
-     *
-     * @param container
-     * The container element for the mobile page size selector.
+     * Updates the dropdown page selector DOM elements.
      */
-    renderMobilePageSizeSelector(container: HTMLElement): void;
+    private updateDropdownPageSelector;
     /**
      * Update the row count for a11y.
      *
@@ -269,10 +246,8 @@ declare class Pagination {
      */
     updateA11yRowsCount(currentPageSize: number): void;
 }
-declare namespace Pagination {
-    type PaginationState = {
-        currentPage?: number;
-        currentPageSize?: number;
-    };
+export interface PaginationState {
+    currentPage?: number;
+    currentPageSize?: number;
 }
 export default Pagination;

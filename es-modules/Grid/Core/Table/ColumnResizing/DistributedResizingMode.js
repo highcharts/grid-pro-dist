@@ -42,7 +42,7 @@ class DistributedResizingMode extends ResizingMode {
         // Set the width of the resized column.
         const width = this.columnWidths[column.id] = Math.round(Math.max((resizer.columnStartWidth || 0) + diff, ResizingMode.getMinWidth(column)) * 10) / 10;
         this.columnWidthUnits[column.id] = 0; // Set to px
-        column.update({ width }, false);
+        column.setOptions({ width });
     }
 }
 /* *

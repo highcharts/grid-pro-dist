@@ -37,7 +37,8 @@ class SparklineContent extends CellContentPro {
         this.onKeyDown = () => {
             this.cell.htmlElement.focus();
         };
-        this.add(parentElement);
+        this.parentElement = parentElement ?? this.cell.htmlElement;
+        this.add(this.parentElement);
     }
     /* *
      *
@@ -49,15 +50,22 @@ class SparklineContent extends CellContentPro {
         if (!H || !defined(this.cell.value)) {
             return;
         }
+        this.parentElement = parentElement;
         this.chartContainer = document.createElement('div');
-        parentElement.classList.add(Globals.getClassName('noPadding'));
-        parentElement.appendChild(this.chartContainer);
+        this.parentElement.classList.add(Globals.getClassName('noPadding'));
+        this.parentElement.appendChild(this.chartContainer);
         this.chart = H.Chart.chart(this.chartContainer, merge(SparklineContent.defaultChartOptions, this.getProcessedOptions()));
         this.chartContainer.addEventListener('click', this.onKeyDown);
     }
     update() {
-        const chartOptions = this.getProcessedOptions();
-        this.chart?.update(chartOptions, true, false, chartOptions.chart?.animation);
+        if (this.chart) {
+            const chartOptions = this.getProcessedOptions();
+            this.chart.update(chartOptions, true, false, chartOptions.chart?.animation);
+        }
+        else {
+            this.destroy();
+            this.add(this.parentElement);
+        }
     }
     destroy() {
         this.chartContainer?.removeEventListener('keydown', this.onKeyDown);
@@ -65,7 +73,7 @@ class SparklineContent extends CellContentPro {
         this.chartContainer?.remove();
         delete this.chart;
         delete this.chartContainer;
-        this.cell.htmlElement.classList.remove(Globals.getClassName('noPadding'));
+        this.parentElement.classList.remove(Globals.getClassName('noPadding'));
     }
     getProcessedOptions() {
         const renderer = this.renderer;
@@ -89,6 +97,9 @@ class SparklineContent extends CellContentPro {
         return options;
     }
 }
+/**
+ * The default chart options for the sparkline content.
+ */
 SparklineContent.defaultChartOptions = {
     chart: {
         height: 40,
@@ -142,13 +153,6 @@ SparklineContent.defaultChartOptions = {
         }
     }
 };
-/* *
- *
- *  Namespace
- *
- * */
-(function (SparklineContent) {
-})(SparklineContent || (SparklineContent = {}));
 /* *
  *
  *  Default Export

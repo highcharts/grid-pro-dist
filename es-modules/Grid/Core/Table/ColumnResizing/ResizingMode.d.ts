@@ -1,4 +1,4 @@
-import type { ColumnResizingMode } from '../../Options';
+import type { ColumnResizingMode } from './ColumnResizing';
 import type Table from '../Table';
 import type Column from '../Column.js';
 import type ColumnsResizer from '../Actions/ColumnsResizer';
@@ -30,6 +30,11 @@ declare abstract class ResizingMode {
      * should be maintained when the table is destroyed and recreated.
      */
     invalidated?: boolean;
+    /**
+     * Whether the column distribution strategy is dirty. This flag is used to
+     * determine whether the column widths should be re-loaded.
+     */
+    isDirty?: boolean;
     /**
      * Creates a new column distribution strategy.
      *

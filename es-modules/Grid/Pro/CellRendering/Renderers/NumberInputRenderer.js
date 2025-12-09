@@ -13,8 +13,8 @@
  *
  * */
 'use strict';
-import CellRenderer from '../CellRenderer.js';
-import CellRendererRegistry from '../CellRendererRegistry.js';
+import { CellRenderer } from '../CellRenderer.js';
+import { registerRenderer } from '../CellRendererRegistry.js';
 import NumberInputContent from '../ContentTypes/NumberInputContent.js';
 import U from '../../../../Core/Utilities.js';
 const { merge } = U;
@@ -55,7 +55,7 @@ NumberInputRenderer.defaultEditingRenderer = 'numberInput';
 NumberInputRenderer.defaultOptions = {
     type: 'numberInput'
 };
-CellRendererRegistry.registerRenderer('numberInput', NumberInputRenderer);
+registerRenderer('numberInput', NumberInputRenderer);
 /* *
  *
  *  Default Export

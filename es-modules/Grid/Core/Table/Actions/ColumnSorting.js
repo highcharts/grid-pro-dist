@@ -110,11 +110,7 @@ class ColumnSorting {
     updateColumnOptions(col) {
         const order = col.viewport.grid.querying.sorting.currentSorting?.order;
         if (col.id === this.column.id && order) {
-            col.update({
-                sorting: {
-                    order
-                }
-            }, false);
+            col.setOptions({ sorting: { order } });
         }
         else {
             delete col.options.sorting?.order;

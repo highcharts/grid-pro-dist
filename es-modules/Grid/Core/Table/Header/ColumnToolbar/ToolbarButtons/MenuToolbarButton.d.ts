@@ -6,7 +6,7 @@ declare class MenuToolbarButton extends ToolbarButton {
     popup?: MenuPopup;
     constructor();
     protected clickHandler(event: MouseEvent): void;
-    protected refreshState(): void;
+    refreshState(): void;
     protected addEventListeners(): void;
 }
 export default MenuToolbarButton;

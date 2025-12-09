@@ -1,15 +1,13 @@
 import type Grid from '../../Core/Grid';
 import CreditsPro from './CreditsPro.js';
-declare namespace CreditsProComposition {
-    /**
-     * Extends the grid classes with customizable credits.
-     *
-     * @param GridClass
-     * The class to extend.
-     *
-     */
-    function compose(GridClass: typeof Grid): void;
-}
+/**
+ * Extends the grid classes with customizable credits.
+ *
+ * @param GridClass
+ * The class to extend.
+ *
+ */
+export declare function compose(GridClass: typeof Grid): void;
 declare module '../../Core/Options' {
     interface Options {
         /**
@@ -25,4 +23,7 @@ declare module '../../Core/Grid' {
         credits?: CreditsPro;
     }
 }
-export default CreditsProComposition;
+declare const _default: {
+    readonly compose: typeof compose;
+};
+export default _default;

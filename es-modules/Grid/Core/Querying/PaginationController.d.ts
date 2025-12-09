@@ -9,13 +9,21 @@ declare class PaginationController {
      */
     private querying;
     /**
-     * The current page.
+     * Whether the pagination is enabled.
      */
-    currentPage?: number;
+    enabled: boolean;
+    /**
+     * The current page (1-based index).
+     */
+    currentPage: number;
+    /**
+     * The current page size.
+     */
+    currentPageSize: number;
     /**
      * The number of rows before pagination.
      */
-    totalItems?: number;
+    private _totalItems?;
     /**
      * Constructs the PaginationController instance.
      *
@@ -24,12 +32,31 @@ declare class PaginationController {
      */
     constructor(querying: QueryingController);
     /**
-     * Sets the range options.
+     * Total number of items (rows)
+     */
+    get totalItems(): number;
+    /**
+     * Gets the total number of pages.
+     */
+    get totalPages(): number;
+    /**
+     * Clamps the current page to the total number of pages.
+     */
+    clampPage(): void;
+    /**
+     * Sets the page.
      *
      * @param currentPage
      * The current page.
      */
-    setRange(currentPage: number): void;
+    setPage(currentPage: number): void;
+    /**
+     * Sets the page size.
+     *
+     * @param pageSize
+     * The page size.
+     */
+    setPageSize(pageSize: number): void;
     /**
      * Loads range options from the grid options.
      */
@@ -42,9 +69,5 @@ declare class PaginationController {
      * the original data table.
      */
     createModifier(rowsCountBeforePagination?: number): RangeModifier | undefined;
-    /**
-     * Reset the pagination controller.
-     */
-    reset(): void;
 }
 export default PaginationController;

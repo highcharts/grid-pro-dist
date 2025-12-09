@@ -13,8 +13,8 @@
  *
  * */
 'use strict';
-import CellRenderer from '../CellRenderer.js';
-import CellRendererRegistry from '../CellRendererRegistry.js';
+import { CellRenderer } from '../CellRenderer.js';
+import { registerRenderer } from '../CellRendererRegistry.js';
 import TextContent from '../../../Core/Table/CellContent/TextContent.js';
 import U from '../../../../Core/Utilities.js';
 const { merge } = U;
@@ -65,7 +65,7 @@ TextRenderer.defaultEditingRenderer = {
 TextRenderer.defaultOptions = {
     type: 'text'
 };
-CellRendererRegistry.registerRenderer('text', TextRenderer);
+registerRenderer('text', TextRenderer);
 /* *
  *
  *  Default Export

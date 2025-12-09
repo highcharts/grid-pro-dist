@@ -14,8 +14,8 @@
  *
  * */
 'use strict';
-import CellRenderer from '../CellRenderer.js';
-import CellRendererRegistry from '../CellRendererRegistry.js';
+import { CellRenderer } from '../CellRenderer.js';
+import { registerRenderer } from '../CellRendererRegistry.js';
 import SelectContent from '../ContentTypes/SelectContent.js';
 import U from '../../../../Core/Utilities.js';
 const { merge } = U;
@@ -57,7 +57,7 @@ SelectRenderer.defaultOptions = {
     type: 'select',
     options: []
 };
-CellRendererRegistry.registerRenderer('select', SelectRenderer);
+registerRenderer('select', SelectRenderer);
 /* *
  *
  *  Default Export

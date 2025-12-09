@@ -50,9 +50,9 @@ class IndependentResizingMode extends ResizingMode {
             const rcWidth = this.columnWidths[rightCol.id] =
                 rightCol.getWidth();
             this.columnWidthUnits[rightCol.id] = 0; // Set to px
-            rightCol.update({ width: rcWidth }, false);
+            rightCol.setOptions({ width: rcWidth });
         }
-        column.update({ width }, false);
+        column.setOptions({ width });
     }
 }
 /* *

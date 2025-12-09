@@ -14,8 +14,8 @@
  *
  * */
 'use strict';
-import CellRenderer from '../CellRenderer.js';
-import CellRendererRegistry from '../CellRendererRegistry.js';
+import { CellRenderer } from '../CellRenderer.js';
+import { registerRenderer } from '../CellRendererRegistry.js';
 import DateInputContent from '../ContentTypes/DateInputContent.js';
 import U from '../../../../Core/Utilities.js';
 const { merge } = U;
@@ -56,7 +56,7 @@ DateInputRenderer.defaultEditingRenderer = 'dateInput';
 DateInputRenderer.defaultOptions = {
     type: 'dateInput'
 };
-CellRendererRegistry.registerRenderer('dateInput', DateInputRenderer);
+registerRenderer('dateInput', DateInputRenderer);
 /* *
  *
  *  Default Export

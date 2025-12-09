@@ -1,5 +1,5 @@
 /**
- * @license Highcharts Grid Pro v2.0.1 (2025-11-03)
+ * @license Highcharts Grid Pro v2.1.0 (2025-12-09)
  * @module grid/grid-pro
  *
  * (c) 2009-2025 Highsoft AS
@@ -47,6 +47,8 @@ __webpack_require__.d(__webpack_exports__, {
   "default": () => (/* binding */ grid_pro_src)
 });
 
+// UNUSED EXPORTS: AST, CellContentPro, CellRenderer, CellRendererRegistry, Column, ColumnResizing, DataConnector, DataConverter, DataCursor, DataModifier, DataPool, DataTable, Grid, HeaderCell, Pagination, Popup, SvgIcons, Table, TableCell, Templating, classNamePrefix, defaultOptions, grid, grids, isHighContrastModeActive, merge, product, setOptions, version, win
+
 ;// ./code/grid/es-modules/Core/Globals.js
 /* *
  *
@@ -74,7 +76,7 @@ var Globals;
      *  Constants
      *
      * */
-    Globals.SVG_NS = 'http://www.w3.org/2000/svg', Globals.product = 'Highcharts', Globals.version = '2.0.1', Globals.win = (typeof window !== 'undefined' ?
+    Globals.SVG_NS = 'http://www.w3.org/2000/svg', Globals.product = 'Highcharts', Globals.version = '2.1.0', Globals.win = (typeof window !== 'undefined' ?
         window :
         {}), // eslint-disable-line node/no-unsupported-features/es-builtins
     Globals.doc = Globals.win.document, Globals.svg = !!Globals.doc?.createElementNS?.(Globals.SVG_NS, 'svg')?.createSVGRect, Globals.pageLang = Globals.doc?.documentElement?.closest('[lang]')?.lang, Globals.userAgent = Globals.win.navigator?.userAgent || '', Globals.isChrome = Globals.win.chrome, Globals.isFirefox = Globals.userAgent.indexOf('Firefox') !== -1, Globals.isMS = /(edge|msie|trident)/i.test(Globals.userAgent) && !Globals.win.opera, Globals.isSafari = !Globals.isChrome && Globals.userAgent.indexOf('Safari') !== -1, Globals.isTouchDevice = /(Mobile|Android|Windows Phone)/.test(Globals.userAgent), Globals.isWebKit = Globals.userAgent.indexOf('AppleWebKit') !== -1, Globals.deg2rad = Math.PI * 2 / 360, Globals.marginNames = [
@@ -8177,12 +8179,13 @@ function dateFormat(format, timestamp, upperCaseFirst) {
  *         The formatted string.
  */
 function format(str = '', ctx, owner) {
-    // Notice: using u flag will require a refactor for ES5 (#22450).
-    const regex = /\{([a-zA-Z\u00C0-\u017F\d:\.,;\-\/<>\[\]%_@+"'’= #\(\)]+)\}/g, // eslint-disable-line max-len
+    // eslint-disable-next-line prefer-regex-literals
+    const regex = new RegExp('\\{([\\p{L}\\d:\\.,;\\-\\/<>\\[\\]%_@+"\'’= #\\(\\)]+)\\}', 'gu'), 
     // The sub expression regex is the same as the top expression regex,
     // but except parens and block helpers (#), and surrounded by parens
     // instead of curly brackets.
-    subRegex = /\(([a-zA-Z\u00C0-\u017F\d:\.,;\-\/<>\[\]%_@+"'= ]+)\)/g, matches = [], floatRegex = /f$/, decRegex = /\.(\d)/, lang = owner?.options?.lang || Templating_defaultOptions.lang, time = owner?.time || Templating_defaultTime, numberFormatter = owner?.numberFormatter || numberFormat.bind(owner);
+    // eslint-disable-next-line prefer-regex-literals
+    subRegex = new RegExp('\\(([\\p{L}\\d:\\.,;\\-\\/<>\\[\\]%_@+"\'= ]+)\\)', 'gu'), matches = [], floatRegex = /f$/, decRegex = /\.(\d)/, lang = owner?.options?.lang || Templating_defaultOptions.lang, time = owner?.time || Templating_defaultTime, numberFormatter = owner?.numberFormatter || numberFormat.bind(owner);
     /*
      * Get a literal or variable value inside a template expression. May be
      * extended with other types like string or null if needed, but keep it
@@ -8317,11 +8320,9 @@ function format(str = '', ctx, owner) {
                 [expression] : expression.split(':');
             replacement = resolveProperty(valueAndFormat.shift() || '');
             // Format the replacement
-            const isFloat = replacement % 1 !== 0;
-            if (typeof replacement === 'number' &&
-                (valueAndFormat.length || isFloat)) {
+            if (valueAndFormat.length && typeof replacement === 'number') {
                 const segment = valueAndFormat.join(':');
-                if (floatRegex.test(segment) || isFloat) { // Float
+                if (floatRegex.test(segment)) { // Float
                     const decimals = parseInt((segment.match(decRegex) || ['', '-1'])[1], 10);
                     if (replacement !== null) {
                         replacement = numberFormatter(replacement, decimals, lang.decimalPoint, segment.indexOf(',') > -1 ? lang.thousandsSep : '');
@@ -8722,11 +8723,11 @@ class AdjacentResizingMode extends ColumnResizing_ResizingMode {
         const newW = Math.round(Math.max(colW + diff, minWidth) * 10) / 10;
         this.columnWidths[column.id] = newW;
         this.columnWidthUnits[column.id] = 0; // Always save in px
-        column.update({ width: newW }, false);
+        column.setOptions({ width: newW });
         if (nextCol) {
             const newNextW = this.columnWidths[nextCol.id] = Math.round(Math.max((resizer.nextColumnStartWidth ?? 0) + colW - newW, minWidth) * 10) / 10;
             this.columnWidthUnits[nextCol.id] = 0; // Always save in px
-            nextCol.update({ width: newNextW }, false);
+            nextCol.setOptions({ width: newNextW });
         }
     }
 }
@@ -8790,9 +8791,9 @@ class IndependentResizingMode extends ColumnResizing_ResizingMode {
             const rcWidth = this.columnWidths[rightCol.id] =
                 rightCol.getWidth();
             this.columnWidthUnits[rightCol.id] = 0; // Set to px
-            rightCol.update({ width: rcWidth }, false);
+            rightCol.setOptions({ width: rcWidth });
         }
-        column.update({ width }, false);
+        column.setOptions({ width });
     }
 }
 /* *
@@ -8847,7 +8848,7 @@ class DistributedResizingMode extends ColumnResizing_ResizingMode {
         // Set the width of the resized column.
         const width = this.columnWidths[column.id] = Math.round(Math.max((resizer.columnStartWidth || 0) + diff, ColumnResizing_ResizingMode.getMinWidth(column)) * 10) / 10;
         this.columnWidthUnits[column.id] = 0; // Set to px
-        column.update({ width }, false);
+        column.setOptions({ width });
     }
 }
 /* *
@@ -8879,53 +8880,53 @@ class DistributedResizingMode extends ColumnResizing_ResizingMode {
 
 /* *
  *
- *  Namespace
+ *  Definitions
  *
  * */
-var ColumnResizing;
-(function (ColumnResizing) {
-    /**
-     * Abstract class representing a column resizing mode.
-     */
-    ColumnResizing.AbstractStrategy = ColumnResizing_ResizingMode;
-    /**
-     * Registry of column resizing modes.
-     */
-    ColumnResizing.types = {
-        adjacent: ColumnResizing_AdjacentResizingMode,
-        distributed: ColumnResizing_DistributedResizingMode,
-        independent: ColumnResizing_IndependentResizingMode
-    };
-    /**
-     * Creates a new column resizing mode instance based on the
-     * viewport's options.
-     *
-     * @param viewport
-     * The table that the column resizing mode is applied to.
-     *
-     * @returns
-     * The proper column resizing mode.
-     */
-    function initMode(viewport) {
-        const modeName = viewport.grid.options?.rendering?.columns?.resizing?.mode ||
-            'adjacent';
-        let ModeConstructor = ColumnResizing.types[modeName];
-        if (!ModeConstructor) {
-            // eslint-disable-next-line no-console
-            console.warn(`Unknown column resizing mode: '${modeName}'. Applied ` +
-                'default \'adjacent\' mode.');
-            ModeConstructor = ColumnResizing.types.adjacent;
-        }
-        return new ModeConstructor(viewport);
+/**
+ * Abstract class representing a column resizing mode.
+ */
+const AbstractStrategy = ColumnResizing_ResizingMode;
+/**
+ * Registry of column resizing modes.
+ */
+const types = {
+    adjacent: ColumnResizing_AdjacentResizingMode,
+    distributed: ColumnResizing_DistributedResizingMode,
+    independent: ColumnResizing_IndependentResizingMode
+};
+/**
+ * Creates a new column resizing mode instance based on the
+ * viewport's options.
+ *
+ * @param viewport
+ * The table that the column resizing mode is applied to.
+ *
+ * @returns
+ * The proper column resizing mode.
+ */
+function initMode(viewport) {
+    const modeName = viewport.grid.options?.rendering?.columns?.resizing?.mode ||
+        'adjacent';
+    let ModeConstructor = types[modeName];
+    if (!ModeConstructor) {
+        // eslint-disable-next-line no-console
+        console.warn(`Unknown column resizing mode: '${modeName}'. Applied ` +
+            'default \'adjacent\' mode.');
+        ModeConstructor = types.adjacent;
     }
-    ColumnResizing.initMode = initMode;
-})(ColumnResizing || (ColumnResizing = {}));
+    return new ModeConstructor(viewport);
+}
 /* *
  *
  *  Default Export
  *
  * */
-/* harmony default export */ const ColumnResizing_ColumnResizing = (ColumnResizing);
+/* harmony default export */ const ColumnResizing = ({
+    initMode,
+    types,
+    AbstractStrategy
+});
 
 ;// ./code/grid/es-modules/Data/Modifiers/DataModifier.js
 /* *
@@ -9518,16 +9519,25 @@ class DataTableCore {
      * @emits #afterSetRows
      */
     setRow(row, rowIndex = this.rowCount, insert, eventDetail) {
-        const { columns } = this, indexRowCount = insert ? this.rowCount + 1 : rowIndex + 1;
-        DataTableCore_objectEach(row, (cellValue, columnId) => {
-            let column = columns[columnId] ||
-                eventDetail?.addColumns !== false && new Array(indexRowCount);
+        const { columns } = this, indexRowCount = insert ? this.rowCount + 1 : rowIndex + 1, rowKeys = Object.keys(row);
+        if (eventDetail?.addColumns !== false) {
+            for (let i = 0, iEnd = rowKeys.length; i < iEnd; i++) {
+                const key = rowKeys[i];
+                if (!columns[key]) {
+                    columns[key] = [];
+                }
+            }
+        }
+        DataTableCore_objectEach(columns, (column, columnId) => {
+            if (!column && eventDetail?.addColumns !== false) {
+                column = new Array(indexRowCount);
+            }
             if (column) {
                 if (insert) {
-                    column = splice(column, rowIndex, 0, true, [cellValue]).array;
+                    column = splice(column, rowIndex, 0, true, [row[columnId] ?? null]).array;
                 }
                 else {
-                    column[rowIndex] = cellValue;
+                    column[rowIndex] = row[columnId] ?? null;
                 }
                 columns[columnId] = column;
             }
@@ -9678,6 +9688,7 @@ class DataTable extends Data_DataTableCore {
             tableClone.originalRowIndexes = table.originalRowIndexes;
             tableClone.localRowIndexes = table.localRowIndexes;
         }
+        tableClone.metadata = { ...table.metadata };
         table.emit({
             type: 'afterCloneTable',
             detail: eventDetail,
@@ -10427,7 +10438,7 @@ class DataTable extends Data_DataTableCore {
      * Cell values to set.
      *
      * @param {number} [rowIndex]
-     * Index of the row to set. Leave `undefind` to add as a new row.
+     * Index of the row to set. Leave `undefined` to add as a new row.
      *
      * @param {boolean} [insert]
      * Whether to insert the row at the given index, or to overwrite the row.
@@ -10491,7 +10502,7 @@ class DataTable extends Data_DataTableCore {
                 }
             }
             else {
-                super.setRow(row, i2, void 0, { silent: true });
+                super.setRow(row, i2, insert, { silent: true });
             }
         }
         const indexRowCount = insert ?
@@ -10588,7 +10599,7 @@ class DataConnector {
         let dataTableIndex = 0;
         if (options.options) {
             // eslint-disable-next-line no-console
-            console.error('The `DataConnectorOptions.options` property was removed in Dashboards v4.0.0. Check how to upgrade your connector to use the new options structure here: https://api.highcharts.com/dashboards/#interfaces/Data_DataTableOptions.DataTableOptions-1');
+            console.error('The `DataConnectorOptions.options` property was removed in Dashboards v4.0.0. Check how to upgrade your connector to use the new options structure here: https://api.highcharts.com/dashboards/#interfaces/Data_DataTableOptions.DataTableOptions');
         }
         if (dataTables && dataTables?.length > 0) {
             for (let i = 0, iEnd = dataTables.length; i < iEnd; ++i) {
@@ -10600,9 +10611,10 @@ class DataConnector {
                     dataTableIndex++;
                 }
             }
-            // If user options dataTables is not defined, generate a default table.
         }
         else {
+            // If user options dataTables is not defined, generate a default
+            // table.
             this.dataTables[0] = new Data_DataTable({
                 id: options.id // Required by DataTableCore
             });
@@ -11977,124 +11989,111 @@ const whcm = {
 
 /* *
  *
- *  Class
+ *  Constants
  *
  * */
-/**
- * Globals Grid namespace.
- */
-var Globals_Globals;
-(function (Globals) {
-    /* *
-     *
-     *  Declarations
-     *
-     * */
-    /* *
-     *
-     *  Constants
-     *
-     * */
-    Globals.classNamePrefix = 'hcg-';
-    Globals.rawClassNames = {
-        container: 'container',
-        tableElement: 'table',
-        captionElement: 'caption',
-        descriptionElement: 'description',
-        theadElement: 'thead',
-        tbodyElement: 'tbody',
-        rowElement: 'row',
-        rowEven: 'row-even',
-        rowOdd: 'row-odd',
-        hoveredRow: 'hovered-row',
-        columnElement: 'column',
-        hoveredCell: 'hovered-cell',
-        hoveredColumn: 'hovered-column',
-        syncedRow: 'synced-row',
-        syncedCell: 'synced-cell',
-        syncedColumn: 'synced-column',
-        editedCell: 'edited-cell',
-        mockedRow: 'mocked-row',
-        rowsContentNowrap: 'rows-content-nowrap',
-        virtualization: 'virtualization',
-        scrollableContent: 'scrollable-content',
-        headerCell: 'header-cell',
-        headerCellContainer: 'header-cell-container',
-        headerCellContent: 'header-cell-content',
-        headerCellFilterIcon: 'header-cell-filter-icon',
-        headerCellIcons: 'header-cell-icons',
-        headerCellSortIcon: 'header-cell-sort-icon',
-        headerCellMenuIcon: 'header-cell-menu-icon',
-        headerRow: 'head-row-content',
-        noData: 'no-data',
-        noPadding: 'no-padding',
-        columnFirst: 'column-first',
-        columnSortable: 'column-sortable',
-        columnSortableIcon: 'column-sortable-icon',
-        columnSortedAsc: 'column-sorted-asc',
-        columnSortedDesc: 'column-sorted-desc',
-        resizableContent: 'resizable-content',
-        resizerHandles: 'column-resizer',
-        resizedColumn: 'column-resized',
-        creditsContainer: 'credits-container',
-        creditsText: 'credits',
-        creditsPro: 'credits-pro',
-        visuallyHidden: 'visually-hidden',
-        lastHeaderCellInRow: 'last-header-cell-in-row',
-        loadingWrapper: 'loading-wrapper',
-        loadingSpinner: 'spinner',
-        loadingMessage: 'loading-message',
-        popup: 'popup',
-        button: 'button',
-        icon: 'icon',
-        iconSearch: 'icon-search',
-        popupContent: 'popup-content',
-        columnFilterWrapper: 'column-filter-wrapper',
-        toolbarButtonActiveIndicator: 'active-indicator',
-        menuContainer: 'menu-container',
-        menuItem: 'menu-item',
-        menuHeader: 'menu-header',
-        menuHeaderCategory: 'menu-header-category',
-        menuHeaderName: 'menu-header-name',
-        menuItemIcon: 'menu-item-icon',
-        menuItemLabel: 'menu-item-label',
-        menuDivider: 'menu-divider',
-        clearFilterButton: 'clear-filter-button',
-        paginationWrapper: 'pagination-wrapper',
-        paginationContainer: 'pagination-container',
-        paginationPageInfo: 'pagination-info',
-        paginationControls: 'pagination-controls',
-        paginationButton: 'pagination-btn',
-        paginationButtonDisabled: 'pagination-btn-disabled',
-        paginationFirstButton: 'pagination-first',
-        paginationPrevButton: 'pagination-prev',
-        paginationNextButton: 'pagination-next',
-        paginationLastButton: 'pagination-last',
-        paginationPageButton: 'pagination-page',
-        paginationPageButtonActive: 'pagination-page-active',
-        paginationEllipsis: 'pagination-ellipsis',
-        paginationMobileSelector: 'pagination-mobile-selector',
-        paginationMobilePageSizeSelector: 'pagination-mobile-page-size-selector',
-        paginationPageSizeContainer: 'pagination-page-size-container',
-        paginationPageSizeSelect: 'pagination-page-size-select',
-        noWidth: 'no-width',
-        rightAlign: 'right',
-        centerAlign: 'center',
-        leftAlign: 'left'
-    };
-    Globals.win = window;
-    Globals.composed = [];
-    Globals.userAgent = (Globals.win.navigator && Globals.win.navigator.userAgent) || '';
-    Globals.isChrome = Globals.userAgent.indexOf('Chrome') !== -1;
-    Globals.isSafari = !Globals.isChrome && Globals.userAgent.indexOf('Safari') !== -1;
-    Globals.getClassName = (classNameKey) => Globals.classNamePrefix + Globals.rawClassNames[classNameKey];
-})(Globals_Globals || (Globals_Globals = {}));
+const classNamePrefix = 'hcg-';
+const version = '2.1.0';
+const rawClassNames = {
+    container: 'container',
+    tableElement: 'table',
+    captionElement: 'caption',
+    descriptionElement: 'description',
+    theadElement: 'thead',
+    tbodyElement: 'tbody',
+    rowElement: 'row',
+    rowEven: 'row-even',
+    rowOdd: 'row-odd',
+    hoveredRow: 'hovered-row',
+    columnElement: 'column',
+    hoveredCell: 'hovered-cell',
+    hoveredColumn: 'hovered-column',
+    syncedRow: 'synced-row',
+    syncedCell: 'synced-cell',
+    syncedColumn: 'synced-column',
+    editedCell: 'edited-cell',
+    mockedRow: 'mocked-row',
+    rowsContentNowrap: 'rows-content-nowrap',
+    virtualization: 'virtualization',
+    scrollableContent: 'scrollable-content',
+    headerCell: 'header-cell',
+    headerCellContainer: 'header-cell-container',
+    headerCellContent: 'header-cell-content',
+    headerCellFilterIcon: 'header-cell-filter-icon',
+    headerCellIcons: 'header-cell-icons',
+    headerCellSortIcon: 'header-cell-sort-icon',
+    headerCellMenuIcon: 'header-cell-menu-icon',
+    headerRow: 'head-row-content',
+    noData: 'no-data',
+    noPadding: 'no-padding',
+    columnFirst: 'column-first',
+    columnSortable: 'column-sortable',
+    columnSortableIcon: 'column-sortable-icon',
+    columnSortedAsc: 'column-sorted-asc',
+    columnSortedDesc: 'column-sorted-desc',
+    resizableContent: 'resizable-content',
+    resizerHandles: 'column-resizer',
+    resizedColumn: 'column-resized',
+    creditsContainer: 'credits-container',
+    creditsText: 'credits',
+    creditsPro: 'credits-pro',
+    visuallyHidden: 'visually-hidden',
+    lastHeaderCellInRow: 'last-header-cell-in-row',
+    loadingWrapper: 'loading-wrapper',
+    loadingSpinner: 'spinner',
+    loadingMessage: 'loading-message',
+    popup: 'popup',
+    button: 'button',
+    buttonSelected: 'button-selected',
+    input: 'input',
+    icon: 'icon',
+    iconSearch: 'icon-search',
+    popupContent: 'popup-content',
+    columnFilterWrapper: 'column-filter-wrapper',
+    toolbarButtonActiveIndicator: 'active-indicator',
+    menuContainer: 'menu-container',
+    menuItem: 'menu-item',
+    menuHeader: 'menu-header',
+    menuHeaderCategory: 'menu-header-category',
+    menuHeaderName: 'menu-header-name',
+    menuItemIcon: 'menu-item-icon',
+    menuItemLabel: 'menu-item-label',
+    menuDivider: 'menu-divider',
+    clearFilterButton: 'clear-filter-button',
+    paginationWrapper: 'pagination-wrapper',
+    paginationContainer: 'pagination-container',
+    paginationPageInfo: 'pagination-info',
+    paginationControlsContainer: 'pagination-controls-container',
+    paginationNavButtonsContainer: 'pagination-nav-buttons-container',
+    paginationNavDropdown: 'pagination-nav-dropdown',
+    paginationPageSize: 'pagination-page-size',
+    noWidth: 'no-width',
+    rightAlign: 'right',
+    centerAlign: 'center',
+    leftAlign: 'left'
+};
+const Globals_win = window;
+const composed = [];
+const userAgent = (Globals_win.navigator && Globals_win.navigator.userAgent) || '';
+const isChrome = userAgent.indexOf('Chrome') !== -1;
+const isSafari = !isChrome && userAgent.indexOf('Safari') !== -1;
+const getClassName = (classNameKey) => classNamePrefix + rawClassNames[classNameKey];
 /* *
  *
  *  Default Export
  *
  * */
-/* harmony default export */ const Grid_Core_Globals = (Globals_Globals);
+/* harmony default export */ const Grid_Core_Globals = ({
+    classNamePrefix,
+    version,
+    rawClassNames,
+    win: Globals_win,
+    composed,
+    userAgent,
+    isChrome,
+    isSafari,
+    getClassName
+});
 
 ;// ./code/grid/es-modules/Grid/Core/GridUtils.js
 /* *
@@ -12117,177 +12116,165 @@ const { isObject: GridUtils_isObject } = Core_Utilities;
 HTML_AST.allowedAttributes.push('srcset', 'media');
 HTML_AST.allowedTags.push('picture', 'source');
 /* *
+*
+*  Functions
+*
+* */
+/**
+ * Creates a HTML element with the provided options.
  *
- *  Namespace
+ * @param tagName
+ * The tag name of the element.
  *
- * */
-var GridUtils;
-(function (GridUtils) {
-    /* *
-     *
-     *  Declarations
-     *
-     * */
-    /* *
-     *
-     *  Functions
-     *
-     * */
-    /**
-     * Creates a HTML element with the provided options.
-     *
-     * @param tagName
-     * The tag name of the element.
-     *
-     * @param params
-     * The parameters of the element.
-     *
-     * @param parent
-     * The parent element.
-     */
-    function makeHTMLElement(tagName, params, parent) {
-        const element = document.createElement(tagName);
-        if (params) {
-            const paramsKeys = Object.keys(params);
-            for (let i = 0; i < paramsKeys.length; i++) {
-                const key = paramsKeys[i];
-                const value = params[key];
-                if (value !== void 0) {
-                    if (key === 'style') {
-                        Object.assign(element.style, value);
-                    }
-                    else {
-                        element[key] = value;
-                    }
+ * @param params
+ * The parameters of the element.
+ *
+ * @param parent
+ * The parent element.
+ */
+function makeHTMLElement(tagName, params, parent) {
+    const element = document.createElement(tagName);
+    if (params) {
+        const paramsKeys = Object.keys(params);
+        for (let i = 0; i < paramsKeys.length; i++) {
+            const key = paramsKeys[i];
+            const value = params[key];
+            if (value !== void 0) {
+                if (key === 'style') {
+                    Object.assign(element.style, value);
+                }
+                else {
+                    element[key] = value;
                 }
             }
         }
-        if (parent) {
-            parent.appendChild(element);
-        }
-        return element;
     }
-    GridUtils.makeHTMLElement = makeHTMLElement;
-    /**
-     * Creates a div element with the provided class name and id.
-     *
-     * @param className
-     * The class name of the div.
-     *
-     * @param id
-     * The id of the element.
-     */
-    function makeDiv(className, id) {
-        return makeHTMLElement('div', { className, id });
+    if (parent) {
+        parent.appendChild(element);
     }
-    GridUtils.makeDiv = makeDiv;
-    /**
-     * Check if there's a possibility that the given string is an HTML
-     * (contains '<').
-     *
-     * @param str
-     * Text to verify.
-     */
-    function isHTML(str) {
-        return str.indexOf('<') !== -1;
+    return element;
+}
+/**
+ * Creates a div element with the provided class name and id.
+ *
+ * @param className
+ * The class name of the div.
+ *
+ * @param id
+ * The id of the element.
+ */
+function makeDiv(className, id) {
+    return makeHTMLElement('div', { className, id });
+}
+/**
+ * Check if there's a possibility that the given string is an HTML
+ * (contains '<').
+ *
+ * @param str
+ * Text to verify.
+ */
+function isHTML(str) {
+    return str.indexOf('<') !== -1;
+}
+/**
+ * Returns a string containing plain text format by removing HTML tags
+ *
+ * @param text
+ * String to be sanitized
+ *
+ * @returns
+ * Sanitized plain text string
+ */
+function sanitizeText(text) {
+    try {
+        return new DOMParser().parseFromString(text, 'text/html')
+            .body.textContent || '';
     }
-    GridUtils.isHTML = isHTML;
-    /**
-     * Returns a string containing plain text format by removing HTML tags
-     *
-     * @param text
-     * String to be sanitized
-     *
-     * @returns
-     * Sanitized plain text string
-     */
-    function sanitizeText(text) {
-        try {
-            return new DOMParser().parseFromString(text, 'text/html')
-                .body.textContent || '';
-        }
-        catch {
-            return '';
-        }
+    catch {
+        return '';
     }
-    GridUtils.sanitizeText = sanitizeText;
-    /**
-     * Sets an element's content, checking whether it is HTML or plain text.
-     * Should be used instead of element.innerText when the content can be HTML.
-     *
-     * @param element
-     * Parent element where the content should be.
-     *
-     * @param content
-     * Content to render.
-     */
-    function setHTMLContent(element, content) {
-        if (isHTML(content)) {
-            element.innerHTML = HTML_AST.emptyHTML;
-            const formattedNodes = new HTML_AST(content);
-            formattedNodes.addToDOM(element);
-        }
-        else {
-            element.innerText = content;
-        }
+}
+/**
+ * Sets an element's content, checking whether it is HTML or plain text.
+ * Should be used instead of element.innerText when the content can be HTML.
+ *
+ * @param element
+ * Parent element where the content should be.
+ *
+ * @param content
+ * Content to render.
+ */
+function setHTMLContent(element, content) {
+    if (isHTML(content)) {
+        element.innerHTML = HTML_AST.emptyHTML;
+        const formattedNodes = new HTML_AST(content);
+        formattedNodes.addToDOM(element);
     }
-    GridUtils.setHTMLContent = setHTMLContent;
-    /**
-     * Creates a proxy that, when reading a property, first returns the value
-     * from the original options of a given entity; if it is not defined, it
-     * falls back to the value from the defaults (default options), recursively
-     * for nested objects. Setting values on the proxy will change the original
-     * options object (1st argument), not the defaults (2nd argument).
-     *
-     * @param options
-     * The specific options object.
-     *
-     * @param defaultOptions
-     * The default options to fall back to.
-     *
-     * @returns
-     * A proxy that provides merged access to options and defaults.
-     */
-    function createOptionsProxy(options, defaultOptions = {}) {
-        const handler = (defaults = {}) => ({
-            get(target, prop) {
-                const targetValue = target[prop];
-                const defaultValue = defaults[prop];
-                if (GridUtils_isObject(targetValue, true)) {
-                    return new Proxy(targetValue, handler(defaultValue ?? {}));
-                }
-                return targetValue ?? defaultValue;
-            },
-            set(target, prop, value) {
-                target[prop] = value;
-                return true;
-            },
-            deleteProperty(target, prop) {
-                delete target[prop];
-                return true;
+    else {
+        element.innerText = content;
+    }
+}
+/**
+ * Creates a proxy that, when reading a property, first returns the value
+ * from the original options of a given entity; if it is not defined, it
+ * falls back to the value from the defaults (default options), recursively
+ * for nested objects. Setting values on the proxy will change the original
+ * options object (1st argument), not the defaults (2nd argument).
+ *
+ * @param options
+ * The specific options object.
+ *
+ * @param defaultOptions
+ * The default options to fall back to.
+ *
+ * @returns
+ * A proxy that provides merged access to options and defaults.
+ */
+function createOptionsProxy(options, defaultOptions = {}) {
+    const handler = (defaults = {}) => ({
+        get(target, prop) {
+            const targetValue = target[prop];
+            const defaultValue = defaults[prop];
+            if (GridUtils_isObject(targetValue, true)) {
+                return new Proxy(targetValue, handler(defaultValue ?? {}));
             }
-        });
-        return new Proxy(options, handler(defaultOptions));
-    }
-    GridUtils.createOptionsProxy = createOptionsProxy;
-    /**
-     * Format text with placeholders. Used for lang texts.
-     *
-     * @param template The text template with placeholders
-     * @param values Object containing values to replace placeholders
-     * @returns Formatted text
-     */
-    function formatText(template, values) {
-        return template.replace(/\{(\w+)\}/g, (match, key) => (values[key] !== void 0 ? String(values[key]) : match));
-    }
-    GridUtils.formatText = formatText;
-})(GridUtils || (GridUtils = {}));
+            return targetValue ?? defaultValue;
+        },
+        set(target, prop, value) {
+            target[prop] = value;
+            return true;
+        },
+        deleteProperty(target, prop) {
+            delete target[prop];
+            return true;
+        }
+    });
+    return new Proxy(options, handler(defaultOptions));
+}
+/**
+ * Format text with placeholders. Used for lang texts.
+ *
+ * @param template The text template with placeholders
+ * @param values Object containing values to replace placeholders
+ * @returns Formatted text
+ */
+function formatText(template, values) {
+    return template.replace(/\{(\w+)\}/g, (match, key) => (values[key] !== void 0 ? String(values[key]) : match));
+}
 /* *
  *
  *  Default Export
  *
  * */
-/* harmony default export */ const Core_GridUtils = (GridUtils);
+/* harmony default export */ const GridUtils = ({
+    makeHTMLElement,
+    makeDiv,
+    isHTML,
+    sanitizeText,
+    setHTMLContent,
+    createOptionsProxy,
+    formatText
+});
 
 ;// ./code/grid/es-modules/Grid/Core/Table/Actions/ColumnFiltering/FilteringTypes.js
 /* *
@@ -12395,7 +12382,7 @@ const conditionsMap = {
 
 
 const { defined: ColumnFiltering_defined, fireEvent: ColumnFiltering_fireEvent } = Core_Utilities;
-const { makeHTMLElement } = Core_GridUtils;
+const { makeHTMLElement: ColumnFiltering_makeHTMLElement } = GridUtils;
 /* *
  *
  *  Class
@@ -12505,6 +12492,26 @@ class ColumnFiltering {
         await this.applyFilter({ value, condition });
     }
     /**
+     * Refreshes the state of the filtering content by updating the select,
+     * input and clear button according to the column filtering options.
+     * @internal
+     */
+    refreshState() {
+        const colFilteringOptions = this.column.options.filtering;
+        if (this.filterSelect) {
+            this.filterSelect.value =
+                colFilteringOptions?.condition ??
+                    conditionsMap[this.column.dataType][0];
+        }
+        if (this.filterInput) {
+            this.filterInput.value = '' + (colFilteringOptions?.value ?? '');
+        }
+        if (this.clearButton) {
+            this.clearButton.disabled = !this.isFilteringApplied();
+        }
+        this.disableInputIfNeeded();
+    }
+    /**
      * Render the filtering content in the container.
      *
      * @param container
@@ -12517,7 +12524,7 @@ class ColumnFiltering {
             return;
         }
         // Render the input wrapper.
-        const inputWrapper = makeHTMLElement('div', {
+        const inputWrapper = ColumnFiltering_makeHTMLElement('div', {
             className: Grid_Core_Globals.getClassName('columnFilterWrapper')
         }, container);
         this.renderConditionSelect(inputWrapper);
@@ -12573,8 +12580,12 @@ class ColumnFiltering {
                     break;
             }
         }
-        // Update the userOptions.
-        void this.column.update({ filtering: condition }, false);
+        this.column.setOptions({
+            filtering: {
+                condition: condition.condition,
+                value: condition.value
+            }
+        });
         filteringController.addColumnFilterCondition(columnId, condition);
         this.disableInputIfNeeded();
         await querying.proceed();
@@ -12599,7 +12610,9 @@ class ColumnFiltering {
      */
     renderFilteringInput(inputWrapper, columnType) {
         // Render the input element.
-        this.filterInput = makeHTMLElement('input', {}, inputWrapper);
+        this.filterInput = ColumnFiltering_makeHTMLElement('input', {
+            className: Grid_Core_Globals.getClassName('input')
+        }, inputWrapper);
         this.filterInput.setAttribute('tabindex', '-1');
         const column = this.column;
         this.filterInput.setAttribute('id', 'filter-input-' + column.viewport.grid.id + '-' + column.id);
@@ -12643,7 +12656,9 @@ class ColumnFiltering {
      */
     renderConditionSelect(inputWrapper) {
         // Render the select element.
-        this.filterSelect = makeHTMLElement('select', {}, inputWrapper);
+        this.filterSelect = ColumnFiltering_makeHTMLElement('select', {
+            className: Grid_Core_Globals.getClassName('input')
+        }, inputWrapper);
         this.filterSelect.setAttribute('tabindex', '-1');
         const column = this.column;
         this.filterSelect.setAttribute('id', 'filter-select-' + column.viewport.grid.id + '-' + column.id);
@@ -12673,7 +12688,7 @@ class ColumnFiltering {
         });
     }
     renderClearButton(inputWrapper) {
-        this.clearButton = makeHTMLElement('button', {
+        this.clearButton = ColumnFiltering_makeHTMLElement('button', {
             className: Grid_Core_Globals.getClassName('clearFilterButton'),
             innerText: 'Clear filter' // TODO: Lang
         }, inputWrapper);
@@ -12746,7 +12761,7 @@ class ColumnFiltering {
 
 
 
-const { formatText } = Core_GridUtils;
+const { formatText: Accessibility_formatText } = GridUtils;
 /**
  *  Representing the accessibility functionalities for the Data Grid.
  */
@@ -12879,14 +12894,14 @@ class Accessibility {
                 condition === 'notEmpty' ||
                 condition === 'false' ||
                 condition === 'true') {
-                msg = formatText(announcementsLang?.emptyFilterApplied || '', {
+                msg = Accessibility_formatText(announcementsLang?.emptyFilterApplied || '', {
                     columnId,
                     condition: parsedCondition,
                     rowsCount: rowsCount
                 });
             }
             else {
-                msg = formatText(announcementsLang?.filterApplied || '', {
+                msg = Accessibility_formatText(announcementsLang?.filterApplied || '', {
                     columnId,
                     condition: parsedCondition,
                     value: value?.toString() || '',
@@ -12895,7 +12910,7 @@ class Accessibility {
             }
         }
         else {
-            msg = formatText(announcementsLang?.filterCleared || '', {
+            msg = Accessibility_formatText(announcementsLang?.filterCleared || '', {
                 columnId,
                 rowsCount: rowsCount
             });
@@ -12958,6 +12973,853 @@ class Accessibility {
  * */
 /* harmony default export */ const Accessibility_Accessibility = (Accessibility);
 
+;// ./code/grid/es-modules/Grid/Core/Pagination/Icons.js
+const icons = {
+    first: '<svg xmlns="http://www.w3.org/2000/svg" width="10" height="10" viewBox="0 0 10 10" fill="none"><path d="M5 9L1 5L5 1M9 9L5 5L9 1" stroke="currentColor" stroke-width="1.34" stroke-linecap="round" stroke-linejoin="round"/></svg>',
+    previous: '<svg xmlns="http://www.w3.org/2000/svg" width="10" height="10" viewBox="0 0 8 10" fill="none"><path d="M5 9L1 5L5 1" stroke="currentColor" stroke-width="1.34" stroke-linecap="round" stroke-linejoin="round"/></svg>',
+    next: '<svg xmlns="http://www.w3.org/2000/svg" width="10" height="10" viewBox="0 0 4 10" fill="none"><path d="M1 1L5 5L1 9" stroke="currentColor" stroke-width="1.34" stroke-linecap="round" stroke-linejoin="round"/></svg>',
+    last: '<svg xmlns="http://www.w3.org/2000/svg" width="10" height="10" viewBox="0 0 10 10" fill="none"><path d="M5 1L9 5L5 9M1 1L5 5L1 9" stroke="currentColor" stroke-width="1.34" stroke-linecap="round" stroke-linejoin="round"/></svg>'
+};
+/* harmony default export */ const Icons = (icons);
+
+;// ./code/grid/es-modules/Grid/Core/Pagination/Pagination.js
+/* *
+ *
+ *  Grid Pagination class
+ *
+ *  (c) 2020-2025 Highsoft AS
+ *
+ *  License: www.highcharts.com/license
+ *
+ *  !!!!!!! SOURCE GETS TRANSPILED BY TYPESCRIPT. EDIT TS FILE ONLY. !!!!!!!
+ *
+ *  Authors:
+ *  - Sebastian Bochan
+ *
+ * */
+
+
+
+
+
+
+const { makeHTMLElement: Pagination_makeHTMLElement, formatText: Pagination_formatText } = GridUtils;
+const { defined: Pagination_defined, fireEvent: Pagination_fireEvent, isObject: Pagination_isObject, merge: Pagination_merge } = Core_Utilities;
+/**
+ *  Representing the pagination functionalities for the Grid.
+ */
+class Pagination {
+    /* *
+    *
+    *  Constructor
+    *
+    * */
+    /**
+     * Construct the pagination object.
+     *
+     * @param grid
+     * The Grid Table instance which the pagination controller belongs to.
+     */
+    constructor(grid) {
+        this.grid = grid;
+        this.controller = grid.querying.pagination;
+    }
+    /* *
+    *
+    *  Methods
+    *
+    * */
+    /**
+     * Returns the reference to the pagination options.
+     */
+    get options() {
+        return this.grid.options?.pagination;
+    }
+    /**
+     * Returns the language options for pagination text.
+     */
+    get lang() {
+        return this.grid.options?.lang?.pagination;
+    }
+    /**
+     * Returns the page size selector options.
+     */
+    get pageSizeSelectorOptions() {
+        const raw = this.options?.controls?.pageSizeSelector;
+        if (Pagination_isObject(raw)) {
+            return raw.options ?? [];
+        }
+        return (Pagination.defaultOptions
+            .controls?.pageSizeSelector).options ?? [];
+    }
+    /**
+     * Internal method to set the dirty flags for the pagination based on the
+     * options differences.
+     *
+     * @param diff
+     * The differences between the previous and the new options.
+     *
+     * @internal
+     */
+    update(diff) {
+        if ('page' in diff ||
+            'pageSize' in diff) {
+            this.isDirtyQuerying = true;
+            delete diff.page;
+            delete diff.pageSize;
+        }
+        // TODO: Optimize more options here.
+        if (Object.keys(diff).length > 0) {
+            this.grid.dirtyFlags.add('grid');
+        }
+    }
+    /**
+     * Render the pagination container.
+     *
+     * The pagination container is positioned based on the `position` option:
+     * - `'top'`: Rendered before the table
+     * - `'bottom'`: Rendered after the table (default)
+     * - `'footer'`: Rendered inside a tfoot element
+     * - `'#id'` or any string: Rendered inside a custom container with
+     * the specified ID.
+     */
+    render() {
+        const position = this.options?.position;
+        const grid = this.grid;
+        this.oldTotalItems = this.controller.totalItems;
+        // Set row count for a11y
+        grid.tableElement?.setAttribute('aria-current', 'page');
+        this.updateA11yRowsCount(this.controller.currentPageSize);
+        // Render pagination container
+        if (typeof position === 'string' && position.startsWith('#')) {
+            this.renderCustomContainer(position);
+        }
+        else {
+            if (position === 'footer') {
+                this.renderFooter();
+            }
+            this.contentWrapper = Pagination_makeHTMLElement('nav', {
+                className: Grid_Core_Globals.getClassName('paginationWrapper')
+            }, position === 'footer' ?
+                this.paginationContainer : grid.contentWrapper);
+            this.contentWrapper.setAttribute('aria-label', 'Results pagination');
+        }
+        // Render all components
+        this.renderPageInfo();
+        this.renderControls();
+        this.renderPageSizeSelector();
+        // Update button states after rendering
+        this.updateButtonStates();
+    }
+    /**
+     * Render pagination in a tfoot element.
+     */
+    renderFooter() {
+        const tableElement = this.grid.tableElement;
+        if (!tableElement) {
+            return;
+        }
+        // Create tfoot element
+        const tfootElement = Pagination_makeHTMLElement('tfoot', {}, tableElement);
+        // Create tfoot row
+        const tfootRow = Pagination_makeHTMLElement('tr', {}, tfootElement);
+        // Create tfoot cell with colspan and store it in paginationContainer
+        this.paginationContainer = Pagination_makeHTMLElement('td', {}, tfootRow);
+        this.paginationContainer.setAttribute('colSpan', (this.grid.enabledColumns || []).length.toString());
+        this.reflow();
+    }
+    /**
+     * Render pagination in a custom container by ID.
+     *
+     * @param id
+     * The ID of the custom container.
+     */
+    renderCustomContainer(id) {
+        const customContainer = document.querySelector(id);
+        if (!customContainer) {
+            console.warn(`Pagination: Custom container with ID "${id}" not found.`); // eslint-disable-line no-console
+            return;
+        }
+        this.paginationContainer = customContainer;
+        // Set content wrapper to the custom container
+        this.contentWrapper = Pagination_makeHTMLElement('div', {
+            className: Grid_Core_Globals.getClassName('paginationContainer')
+        }, customContainer);
+    }
+    /**
+     * Render the page information text.
+     */
+    renderPageInfo() {
+        const pageInfo = this.options?.controls?.pageInfo;
+        if (pageInfo === false ||
+            (Pagination_isObject(pageInfo) && pageInfo.enabled === false)) {
+            return;
+        }
+        this.pageInfoElement = Pagination_makeHTMLElement('div', {
+            className: Grid_Core_Globals.getClassName('paginationPageInfo')
+        }, this.contentWrapper);
+        this.updatePageInfo();
+    }
+    /**
+     * Update the page information text.
+     */
+    updatePageInfo() {
+        if (!this.pageInfoElement) {
+            return;
+        }
+        const { currentPage, currentPageSize, totalItems, totalPages } = this.controller;
+        const startItem = (currentPage - 1) * currentPageSize + 1;
+        const endItem = Math.min(currentPage * currentPageSize, totalItems);
+        const pageInfoText = Pagination_formatText(this.lang?.pageInfo ?? '', {
+            start: startItem,
+            end: endItem,
+            total: totalItems,
+            currentPage: currentPage,
+            totalPages: totalPages
+        });
+        this.pageInfoElement.innerHTML = pageInfoText;
+    }
+    /**
+     * Render the controls buttons and page numbers.
+     */
+    renderControls() {
+        const navContainer = Pagination_makeHTMLElement('div', {
+            className: Grid_Core_Globals.getClassName('paginationControlsContainer')
+        }, this.contentWrapper);
+        const controls = this.options?.controls || {};
+        // Render first/previous buttons
+        if (controls.firstLastButtons) {
+            this.renderFirstButton(navContainer);
+        }
+        // Render previous button
+        if (controls.previousNextButtons) {
+            this.renderPrevButton(navContainer);
+        }
+        // Render page numbers
+        if (controls.pageButtons) {
+            this.renderPageNumbers(navContainer);
+        }
+        // Render dropdown page selector
+        this.renderDropdownPageSelector(navContainer);
+        // Render next button
+        if (controls.previousNextButtons) {
+            this.renderNextButton(navContainer);
+        }
+        // Render last/first buttons
+        if (controls.firstLastButtons) {
+            this.renderLastButton(navContainer);
+        }
+    }
+    /**
+     * Update the pagination controls.
+     *
+     * @param force
+     * Whether to force update the controls.
+     *
+     * @internal
+     */
+    updateControls(force = false) {
+        const { totalItems, currentPageSize } = this.controller;
+        if (this.oldTotalItems === this.controller.totalItems && !force) {
+            return;
+        }
+        this.updatePageInfo();
+        this.updatePageNumbers();
+        this.updateButtonStates();
+        this.updateA11yRowsCount(currentPageSize);
+        this.oldTotalItems = totalItems;
+    }
+    /**
+     * Render the first page button.
+     *
+     * @param container
+     * The container element for the first page button.
+     *
+     */
+    renderFirstButton(container) {
+        const firstLastButtons = this.options?.controls?.firstLastButtons;
+        if (firstLastButtons === false ||
+            (Pagination_isObject(firstLastButtons) && firstLastButtons.enabled === false)) {
+            return;
+        }
+        // Create first button
+        this.firstButton = Pagination_makeHTMLElement('button', {
+            className: Grid_Core_Globals.getClassName('button'),
+            innerHTML: Icons.first
+        }, container);
+        this.firstButton.title = this.lang?.firstPage ?? '';
+        // Set aria-label for a11y
+        this.firstButton.setAttribute('aria-label', this.lang?.firstPage ?? '');
+        // Add click event
+        this.firstButton.addEventListener('click', () => {
+            void this.goToPage(1);
+        });
+        this.setButtonState(this.firstButton, this.controller.currentPage === 1);
+    }
+    /**
+     * Render the previous page button.
+     *
+     * @param container
+     * The container element for the previous page button.
+     */
+    renderPrevButton(container) {
+        const previousNextButtons = this.options?.controls?.previousNextButtons;
+        if (previousNextButtons === false ||
+            (Pagination_isObject(previousNextButtons) &&
+                previousNextButtons.enabled === false)) {
+            return;
+        }
+        // Create previous button
+        this.prevButton = Pagination_makeHTMLElement('button', {
+            className: Grid_Core_Globals.getClassName('button'),
+            innerHTML: Icons.previous
+        }, container);
+        this.prevButton.title = this.lang?.previousPage ?? '';
+        // Set aria-label for a11y
+        this.prevButton.setAttribute('aria-label', this.lang?.previousPage ?? '');
+        // Add click event
+        this.prevButton.addEventListener('click', () => {
+            void this.goToPage(this.controller.currentPage - 1);
+        });
+        this.setButtonState(this.prevButton, this.controller.currentPage === 1);
+    }
+    /**
+     * Render the next page button.
+     *
+     * @param container
+     * The container element for the next page button.
+     */
+    renderNextButton(container) {
+        const previousNextButtons = this.options?.controls?.previousNextButtons;
+        if (previousNextButtons === false ||
+            (Pagination_isObject(previousNextButtons) &&
+                previousNextButtons.enabled === false)) {
+            return;
+        }
+        // Create next button
+        this.nextButton = Pagination_makeHTMLElement('button', {
+            className: Grid_Core_Globals.getClassName('button'),
+            innerHTML: Icons.next
+        }, container);
+        this.nextButton.title = this.lang?.nextPage ?? '';
+        // Set aria-label for a11y
+        this.nextButton.setAttribute('aria-label', this.lang?.nextPage ?? '');
+        // Add click event
+        this.nextButton.addEventListener('click', () => {
+            void this.goToPage(this.controller.currentPage + 1);
+        });
+        this.setButtonState(this.nextButton, this.controller.currentPage >= this.controller.totalPages);
+    }
+    /**
+     * Render the last page button.
+     *
+     * @param container
+     * The container element for the last page button.
+     */
+    renderLastButton(container) {
+        const firstLastButtons = this.options?.controls?.firstLastButtons;
+        if (firstLastButtons === false ||
+            (Pagination_isObject(firstLastButtons) && firstLastButtons.enabled === false)) {
+            return;
+        }
+        // Create last button
+        this.lastButton = Pagination_makeHTMLElement('button', {
+            className: Grid_Core_Globals.getClassName('button'),
+            innerHTML: Icons.last
+        }, container);
+        this.lastButton.title = this.lang?.lastPage ?? '';
+        // Set aria-label for a11y
+        this.lastButton.setAttribute('aria-label', this.lang?.lastPage ?? '');
+        // Add click event
+        this.lastButton.addEventListener('click', () => {
+            void this.goToPage(this.controller.totalPages);
+        });
+        this.setButtonState(this.lastButton, this.controller.currentPage >= this.controller.totalPages);
+    }
+    /**
+     * Render page number buttons with ellipsis.
+     *
+     * @param container
+     * The container element for the page number buttons.
+     */
+    renderPageNumbers(container) {
+        const pageButtons = this.options?.controls?.pageButtons;
+        if (pageButtons === false ||
+            (Pagination_isObject(pageButtons) && pageButtons.enabled === false)) {
+            return;
+        }
+        this.pageNumbersContainer = Pagination_makeHTMLElement('div', {
+            className: Grid_Core_Globals.getClassName('paginationNavButtonsContainer')
+        }, container);
+        this.updatePageNumbers();
+    }
+    /**
+     * Update page number buttons based on current page and total pages.
+     */
+    updatePageNumbers() {
+        if (!this.pageNumbersContainer) {
+            return;
+        }
+        // Clear existing page numbers
+        this.pageNumbersContainer.innerHTML = HTML_AST.emptyHTML;
+        const pageButtons = this.options?.controls?.pageButtons;
+        const maxPageNumbers = Pagination_isObject(pageButtons) ?
+            pageButtons.count :
+            (Pagination.defaultOptions.controls?.pageButtons).count; // eslint-disable-line
+        if (!maxPageNumbers) {
+            return;
+        }
+        const { totalPages, currentPage } = this.controller;
+        if (totalPages <= maxPageNumbers) {
+            // Show all page numbers if total pages is less than max
+            for (let i = 1; i <= totalPages; i++) {
+                this.createPageButton(i, i === currentPage);
+            }
+        }
+        else {
+            const elements = [];
+            // Determine layout based on current page position
+            const isNearStart = currentPage <= 3;
+            const isNearEnd = currentPage >= totalPages - 2;
+            if (isNearStart) {
+                // -2 for ellipsis and last page
+                const pagesToShow = maxPageNumbers - 2;
+                const maxPages = Math.min(pagesToShow, totalPages - 1);
+                for (let i = 1; i <= maxPages; i++) {
+                    elements.push({ type: 'button', page: i });
+                }
+                if (totalPages > pagesToShow + 1) {
+                    elements.push({ type: 'ellipsis' });
+                    elements.push({ type: 'button', page: totalPages });
+                }
+            }
+            else if (isNearEnd) {
+                // -2 for first page and ellipsis
+                const pagesToShow = maxPageNumbers - 2;
+                let i = totalPages - pagesToShow + 1;
+                elements.push({ type: 'button', page: 1 });
+                elements.push({ type: 'ellipsis' });
+                for (i; i <= totalPages; i++) {
+                    elements.push({ type: 'button', page: i });
+                }
+            }
+            else {
+                // Always add first page
+                elements.push({ type: 'button', page: 1 });
+                // -4 for first, last, and two ellipsis
+                const maxMiddlePages = maxPageNumbers - 4;
+                const halfMiddle = Math.floor(maxMiddlePages / 2);
+                let startPage = Math.max(2, currentPage - halfMiddle);
+                let endPage = Math.min(totalPages - 1, currentPage + halfMiddle);
+                // Adjust to ensure we have exactly maxMiddlePages
+                if (endPage - startPage + 1 > maxMiddlePages) {
+                    if (startPage === 2) {
+                        endPage = startPage + maxMiddlePages - 1;
+                    }
+                    else {
+                        startPage = endPage - maxMiddlePages + 1;
+                    }
+                }
+                // Check if we actually need ellipsis
+                const needFirstEllipsis = startPage > 2;
+                const needLastEllipsis = endPage < totalPages - 1;
+                if (!needFirstEllipsis && !needLastEllipsis) {
+                    // -2 for first and last
+                    const availableSlots = maxPageNumbers - 2;
+                    startPage = 2;
+                    endPage = Math.min(totalPages - 1, startPage + availableSlots - 1);
+                }
+                else if (!needFirstEllipsis) {
+                    // -3 for first, last, and one ellipsis
+                    const availableSlots = maxPageNumbers - 3;
+                    startPage = 2;
+                    endPage = Math.min(totalPages - 1, startPage + availableSlots - 1);
+                }
+                else if (!needLastEllipsis) {
+                    // -3 for first, last, and one ellipsis
+                    const availableSlots = maxPageNumbers - 3;
+                    endPage = totalPages - 1;
+                    startPage = Math.max(2, endPage - availableSlots + 1);
+                }
+                // Add first ellipsis
+                if (needFirstEllipsis) {
+                    elements.push({ type: 'ellipsis' });
+                }
+                // Add middle pages
+                for (let i = startPage; i <= endPage; i++) {
+                    elements.push({ type: 'button', page: i });
+                }
+                // Add last ellipsis
+                if (needLastEllipsis) {
+                    elements.push({ type: 'ellipsis' });
+                }
+                // Always add last page
+                elements.push({ type: 'button', page: totalPages });
+            }
+            // Render all elements
+            elements.forEach((element) => {
+                if (element.type === 'button' && Pagination_defined(element.page)) {
+                    this.createPageButton(element.page, element.page === currentPage);
+                }
+                else if (element.type === 'ellipsis') {
+                    this.createEllipsis();
+                }
+            });
+        }
+        // Update dropdown selector if it exists
+        this.updateDropdownPageSelector();
+    }
+    /**
+     * Create a page number button.
+     *
+     * @param pageNumber
+     * The page number to create a button for.
+     *
+     * @param isActive
+     * Whether the page number button is active.
+     */
+    createPageButton(pageNumber, isActive) {
+        if (!this.pageNumbersContainer) {
+            return;
+        }
+        const button = Pagination_makeHTMLElement('button', {
+            className: Grid_Core_Globals.getClassName('button'),
+            innerHTML: pageNumber.toString()
+        }, this.pageNumbersContainer);
+        if (isActive) {
+            button.classList.add(Grid_Core_Globals.getClassName('buttonSelected'));
+            button.setAttribute('aria-current', 'page');
+        }
+        button.title = Pagination_formatText(this.lang?.pageNumber ?? '', { page: pageNumber });
+        // Set aria-label for a11y
+        button.setAttribute('aria-label', Pagination_formatText(this.lang?.pageNumber ?? '', { page: pageNumber }));
+        // Add click event
+        button.addEventListener('click', () => {
+            void this.goToPage(pageNumber);
+        });
+    }
+    /**
+     * Create an ellipsis element.
+     */
+    createEllipsis() {
+        if (!this.pageNumbersContainer) {
+            return;
+        }
+        const ellipsisElement = Pagination_makeHTMLElement('span', {
+            innerHTML: '...'
+        }, this.pageNumbersContainer);
+        ellipsisElement.title = this.lang?.ellipsis ?? '';
+        // Set aria-label for a11y
+        ellipsisElement.setAttribute('aria-hidden', true);
+    }
+    /**
+     * Render the page size selector.
+     */
+    renderPageSizeSelector() {
+        const pageSizeSelector = this.options?.controls?.pageSizeSelector;
+        if (pageSizeSelector === false ||
+            (Pagination_isObject(pageSizeSelector) &&
+                pageSizeSelector.enabled === false)) {
+            return;
+        }
+        const container = Pagination_makeHTMLElement('div', {
+            className: Grid_Core_Globals.getClassName('paginationPageSize')
+        }, this.contentWrapper);
+        Pagination_makeHTMLElement('span', {
+            innerHTML: this.lang?.pageSizeLabel ?? ''
+        }, container);
+        this.pageSizeSelect = Pagination_makeHTMLElement('select', {
+            className: Grid_Core_Globals.getClassName('input'),
+            id: Grid_Core_Globals.getClassName('paginationPageSize')
+        }, container);
+        this.pageSizeSelectorOptions.forEach((option) => {
+            const optionElement = document.createElement('option');
+            optionElement.value = option.toString();
+            optionElement.innerHTML = option.toString();
+            if (option === this.controller.currentPageSize) {
+                optionElement.selected = true;
+            }
+            this.pageSizeSelect?.appendChild(optionElement);
+        });
+        this.pageSizeSelect.addEventListener('change', () => {
+            if (!this.pageSizeSelect) {
+                return;
+            }
+            void this.setPageSize(parseInt(this.pageSizeSelect.value, 10));
+        });
+    }
+    /**
+     * Sets the new options for the pagination.
+     *
+     * @param newOptions
+     * The new options to set.
+     */
+    setOptions(newOptions) {
+        var _a,
+            _b,
+            _c;
+        const userOptions = (_a = this.grid.userOptions).pagination ?? (_a.pagination = {});
+        const options = ((_c = ((_b = this.grid).options ?? (_b.options = {}))).pagination ?? (_c.pagination = {}));
+        Pagination_merge(true, userOptions, newOptions);
+        Pagination_merge(true, options, newOptions);
+    }
+    /**
+     * Set the page size and recalculate pagination.
+     *
+     * @param newPageSize
+     * The new page size to set.
+     */
+    async setPageSize(newPageSize) {
+        const oldPageSize = this.controller.currentPageSize;
+        const langAccessibility = this.grid.options?.lang?.accessibility;
+        Pagination_fireEvent(this, 'beforePageSizeChange', {
+            pageSize: oldPageSize,
+            newPageSize: newPageSize
+        });
+        this.controller.setPageSize(newPageSize);
+        this.controller.setPage(1);
+        this.setOptions({
+            pageSize: newPageSize,
+            page: 1
+        });
+        // Update the grid's pagination range
+        await this.updateGridPagination();
+        // Update UI
+        this.updatePageInfo();
+        this.updatePageNumbers();
+        this.updateButtonStates();
+        // Update row count for a11y
+        this.updateA11yRowsCount(this.controller.currentPageSize);
+        // Announce the page size change
+        this.grid.accessibility?.announce(langAccessibility?.pagination?.announcements?.pageSizeChange +
+            ' ' + newPageSize);
+        Pagination_fireEvent(this, 'afterPageSizeChange', {
+            pageSize: newPageSize,
+            previousPageSize: oldPageSize
+        });
+    }
+    /**
+     * Navigate to a specific page.
+     *
+     * @param pageNumber
+     * The page number to navigate to.
+     */
+    async goToPage(pageNumber) {
+        const langAccessibility = this.grid.options?.lang?.accessibility;
+        const { totalPages, currentPage, currentPageSize } = this.controller;
+        if (pageNumber < 1 ||
+            pageNumber > totalPages ||
+            pageNumber === currentPage) {
+            return;
+        }
+        const previousPage = currentPage;
+        Pagination_fireEvent(this, 'beforePageChange', {
+            currentPage: currentPage,
+            nextPage: pageNumber,
+            pageSize: currentPageSize
+        });
+        this.controller.setPage(pageNumber);
+        const newPage = this.controller.currentPage; // Take clamped page
+        this.setOptions({
+            page: newPage
+        });
+        await this.updateGridPagination();
+        this.updatePageInfo();
+        this.updatePageNumbers();
+        this.updateButtonStates();
+        // Announce the page change
+        this.grid.accessibility?.announce(langAccessibility?.pagination?.announcements?.pageChange +
+            ' ' + newPage);
+        Pagination_fireEvent(this, 'afterPageChange', {
+            currentPage: newPage,
+            previousPage: previousPage,
+            pageSize: currentPageSize
+        });
+    }
+    /**
+     * Update the grid's pagination state.
+     */
+    async updateGridPagination() {
+        // Update the viewport to reflect the new data
+        await this.grid.viewport?.updateRows();
+        // Scroll to top after page change
+        const tBody = this.grid.viewport?.tbodyElement;
+        if (tBody) {
+            tBody.scrollTop = 0;
+        }
+    }
+    /**
+     * Update button states based on current page.
+     */
+    updateButtonStates() {
+        const { currentPage, totalPages } = this.controller;
+        if (this.firstButton) {
+            this.setButtonState(this.firstButton, currentPage === 1);
+        }
+        if (this.prevButton) {
+            this.setButtonState(this.prevButton, currentPage === 1);
+        }
+        if (this.nextButton) {
+            this.setButtonState(this.nextButton, currentPage >= totalPages);
+        }
+        if (this.lastButton) {
+            this.setButtonState(this.lastButton, currentPage >= totalPages);
+        }
+    }
+    /**
+     * Call modifier to replace items with new ones.
+     *
+     * @param isNextPage
+     * Declare prev or next action triggered by button.
+     * @returns
+     */
+    async updatePage(isNextPage = true) {
+        const { currentPage } = this.controller;
+        const newPage = isNextPage ? currentPage + 1 : currentPage - 1;
+        await this.goToPage(newPage);
+    }
+    /**
+     * Set button state (enabled/disabled).
+     *
+     * @param button
+     * The button to set the state for.
+     *
+     * @param disabled
+     * Whether the button should be disabled.
+     */
+    setButtonState(button, disabled) {
+        if (disabled) {
+            button.setAttribute('disabled', 'disabled');
+        }
+        else {
+            button.removeAttribute('disabled');
+        }
+    }
+    /**
+     * Reflow the pagination container.
+     */
+    reflow() {
+        const position = this.options?.position;
+        if (!this.paginationContainer) {
+            return;
+        }
+        if (position === 'footer') {
+            // Set the width to match the table width
+            this.paginationContainer.style.width =
+                this.grid.tableElement?.offsetWidth + 'px';
+            return;
+        }
+    }
+    /**
+     * Destroy the pagination instance.
+     */
+    destroy() {
+        const position = this.options?.position;
+        if (position === 'footer') {
+            // For footer position, remove the entire tfoot element.
+            this.paginationContainer?.parentElement?.parentElement?.remove();
+        }
+        else {
+            this.contentWrapper?.remove();
+        }
+    }
+    /**
+     * Render the dropdown page selector (select dropdown).
+     *
+     * @param container
+     * The container element for the dropdown page selector.
+     */
+    renderDropdownPageSelector(container) {
+        if (this.controller.totalPages <= 1) {
+            return;
+        }
+        const wrapper = Pagination_makeHTMLElement('div', {
+            className: Grid_Core_Globals.getClassName('paginationNavDropdown')
+        }, container);
+        const select = Pagination_makeHTMLElement('select', {
+            className: Grid_Core_Globals.getClassName('input'),
+            id: Grid_Core_Globals.getClassName('paginationNavDropdown')
+        }, wrapper);
+        this.dropdownPageSelector = select;
+        this.updateDropdownPageSelector();
+        // Add event listener for page change
+        select.addEventListener('change', () => {
+            const newPage = parseInt(select.value, 10);
+            if (newPage !== this.controller.currentPage) {
+                void this.goToPage(newPage);
+            }
+        });
+    }
+    /**
+     * Updates the dropdown page selector DOM elements.
+     */
+    updateDropdownPageSelector() {
+        const select = this.dropdownPageSelector;
+        if (!select) {
+            return;
+        }
+        const { totalPages, currentPage } = this.controller;
+        select.innerHTML = HTML_AST.emptyHTML;
+        // Add options for each page
+        for (let i = 1; i <= totalPages; i++) {
+            const option = Pagination_makeHTMLElement('option', {}, select);
+            option.value = i.toString();
+            option.textContent = `Page ${i} of ${totalPages}`;
+        }
+        // Set current page as selected
+        select.value = currentPage.toString();
+    }
+    /**
+     * Update the row count for a11y.
+     *
+     * @param currentPageSize
+     * The current page size.
+     */
+    updateA11yRowsCount(currentPageSize) {
+        const grid = this.grid;
+        grid.tableElement?.setAttribute('aria-rowcount', currentPageSize || this.controller.totalItems);
+    }
+}
+/* *
+*
+*  Static Properties
+*
+* */
+/**
+ * Default options of the pagination.
+ */
+Pagination.defaultOptions = {
+    enabled: false,
+    page: 1,
+    pageSize: 10,
+    position: 'bottom',
+    controls: {
+        pageSizeSelector: {
+            enabled: true,
+            options: [10, 20, 50, 100]
+        },
+        pageInfo: {
+            enabled: true
+        },
+        firstLastButtons: {
+            enabled: true
+        },
+        previousNextButtons: {
+            enabled: true
+        },
+        pageButtons: {
+            enabled: true,
+            count: 7
+        }
+    }
+};
+/* *
+ *
+ *  Default Export
+ *
+ * */
+/* harmony default export */ const Pagination_Pagination = (Pagination);
+
 ;// ./code/grid/es-modules/Grid/Core/Defaults.js
 /* *
  *
@@ -12976,137 +13838,139 @@ class Accessibility {
  * */
 
 
+
 const { merge: Core_Defaults_merge } = Core_Utilities;
 /**
- * Namespace for default options.
+ * Default language options for the Grid.
  */
-var Defaults_Defaults;
-(function (Defaults) {
-    /**
-     * Default options for the Grid.
-     */
-    Defaults.defaultOptions = {
-        accessibility: {
-            enabled: true,
-            highContrastMode: 'auto',
+const defaultLangOptions = {
+    accessibility: {
+        sorting: {
+            sortable: 'Sortable.',
             announcements: {
-                sorting: true,
-                filtering: true
+                ascending: 'Sorted ascending.',
+                descending: 'Sorted descending.',
+                none: 'Not sorted.'
             }
         },
-        lang: {
-            accessibility: {
-                sorting: {
-                    sortable: 'Sortable.',
-                    announcements: {
-                        ascending: 'Sorted ascending.',
-                        descending: 'Sorted descending.',
-                        none: 'Not sorted.'
-                    }
-                },
-                pagination: {
-                    announcements: {
-                        pageSizeChange: 'Page size changed to',
-                        pageChange: 'Page changed to'
-                    }
-                },
-                filtering: {
-                    announcements: {
-                        filterApplied: 'Filter applied for {columnId}, ' +
-                            '{condition} {value}. {rowsCount} results found.',
-                        emptyFilterApplied: 'Filter applied for {columnId}, ' +
-                            '{condition} values. {rowsCount} results found.',
-                        filterCleared: 'Filter cleared for {columnId}. ' +
-                            '{rowsCount} results found.'
-                    }
-                }
-            },
-            loading: 'Loading...',
-            noData: 'No data to display',
-            filter: 'Filter',
-            sortAscending: 'Sort ascending',
-            sortDescending: 'Sort descending',
-            column: 'Column',
-            setFilter: 'Set filter',
-            pagination: {
-                pageInfo: 'Showing {start} - {end} of {total} ' +
-                    '(page {currentPage} of {totalPages})',
-                pageSizeLabel: 'rows per page',
-                firstPage: 'First page',
-                previousPage: 'Previous page',
-                nextPage: 'Next page',
-                lastPage: 'Last page',
-                pageNumber: 'Page {page}',
-                ellipsis: 'More pages'
-            },
-            columnFilteringConditions: {
-                contains: 'Contains',
-                doesNotContain: 'Does not contain',
-                equals: 'Equals',
-                doesNotEqual: 'Does not equal',
-                beginsWith: 'Begins with',
-                endsWith: 'Ends with',
-                empty: 'Empty',
-                notEmpty: 'Not empty',
-                greaterThan: 'Greater than',
-                greaterThanOrEqualTo: 'Greater than or equal to',
-                lessThan: 'Less than',
-                lessThanOrEqualTo: 'Less than or equal to',
-                before: 'Before',
-                after: 'After',
-                all: 'All',
-                'true': 'True',
-                'false': 'False'
+        pagination: {
+            announcements: {
+                pageSizeChange: 'Page size changed to',
+                pageChange: 'Page changed to'
             }
         },
-        time: {
-            timezone: 'UTC'
-        },
-        rendering: {
-            rows: {
-                bufferSize: 10,
-                minVisibleRows: 2,
-                strictHeights: false,
-                virtualizationThreshold: 50
-            },
-            header: {
-                enabled: true
-            },
-            columns: {
-                resizing: {
-                    enabled: true,
-                    mode: 'adjacent'
-                }
-            },
-            theme: 'hcg-theme-default'
-        },
-        columnDefaults: {
-            sorting: {
-                sortable: true
-            },
-            filtering: {
-                inline: false
+        filtering: {
+            announcements: {
+                filterApplied: 'Filter applied for {columnId}, ' +
+                    '{condition} {value}. {rowsCount} results found.',
+                emptyFilterApplied: 'Filter applied for {columnId}, ' +
+                    '{condition} values. {rowsCount} results found.',
+                filterCleared: 'Filter cleared for {columnId}. ' +
+                    '{rowsCount} results found.'
             }
         }
-    };
-    /**
-     * Merge the default options with custom options. Commonly used for defining
-     * reusable templates.
-     *
-     * @param options
-     * The new custom chart options.
-     */
-    function setOptions(options) {
-        Core_Defaults_merge(true, Defaults.defaultOptions, options);
+    },
+    loading: 'Loading...',
+    noData: 'No data to display',
+    filter: 'Filter',
+    sortAscending: 'Sort ascending',
+    sortDescending: 'Sort descending',
+    column: 'Column',
+    setFilter: 'Set filter',
+    pagination: {
+        pageInfo: 'Showing {start} - {end} of {total} ' +
+            '(page {currentPage} of {totalPages})',
+        pageSizeLabel: 'rows per page',
+        firstPage: 'First page',
+        previousPage: 'Previous page',
+        nextPage: 'Next page',
+        lastPage: 'Last page',
+        pageNumber: 'Page {page}',
+        ellipsis: 'More pages'
+    },
+    columnFilteringConditions: {
+        contains: 'Contains',
+        doesNotContain: 'Does not contain',
+        equals: 'Equals',
+        doesNotEqual: 'Does not equal',
+        beginsWith: 'Begins with',
+        endsWith: 'Ends with',
+        empty: 'Empty',
+        notEmpty: 'Not empty',
+        greaterThan: 'Greater than',
+        greaterThanOrEqualTo: 'Greater than or equal to',
+        lessThan: 'Less than',
+        lessThanOrEqualTo: 'Less than or equal to',
+        before: 'Before',
+        after: 'After',
+        all: 'All',
+        'true': 'True',
+        'false': 'False'
     }
-    Defaults.setOptions = setOptions;
-})(Defaults_Defaults || (Defaults_Defaults = {}));
+};
+/**
+ * Default options for the Grid.
+ */
+const Defaults_defaultOptions = {
+    accessibility: {
+        enabled: true,
+        highContrastMode: 'auto',
+        announcements: {
+            sorting: true,
+            filtering: true
+        }
+    },
+    time: {
+        timezone: 'UTC'
+    },
+    rendering: {
+        rows: {
+            bufferSize: 10,
+            minVisibleRows: 2,
+            strictHeights: false,
+            virtualizationThreshold: 50
+        },
+        header: {
+            enabled: true
+        },
+        columns: {
+            resizing: {
+                enabled: true,
+                mode: 'adjacent'
+            }
+        },
+        theme: 'hcg-theme-default'
+    },
+    columnDefaults: {
+        sorting: {
+            sortable: true
+        },
+        filtering: {
+            inline: false
+        }
+    },
+    pagination: Pagination_Pagination.defaultOptions,
+    lang: defaultLangOptions
+};
+/**
+ * Merge the default options with custom options. Commonly used for defining
+ * reusable templates.
+ *
+ * @param options
+ * The new custom grid options.
+ */
+function Defaults_setOptions(options) {
+    Core_Defaults_merge(true, Defaults_defaultOptions, options);
+}
 /* *
  *
  *  Default Export
  *
  * */
-/* harmony default export */ const Core_Defaults = (Defaults_Defaults);
+/* harmony default export */ const Core_Defaults = ({
+    defaultOptions: Defaults_defaultOptions,
+    setOptions: Defaults_setOptions
+});
 
 ;// ./code/grid/es-modules/Grid/Core/Table/CellContent/CellContent.js
 /* *
@@ -13169,9 +14033,9 @@ class CellContent {
 
 
 
-const { setHTMLContent } = Core_GridUtils;
+const { setHTMLContent: TextContent_setHTMLContent } = GridUtils;
 
-const { defined: TextContent_defined } = Core_Utilities;
+const { defined: TextContent_defined, isString: TextContent_isString } = Core_Utilities;
 /* *
  *
  *  Class
@@ -13181,10 +14045,20 @@ const { defined: TextContent_defined } = Core_Utilities;
  * Represents a text type of content.
  */
 class TextContent extends CellContent_CellContent {
+    /* *
+     *
+     *  Constructor
+     *
+     * */
     constructor(cell) {
         super(cell);
         this.add();
     }
+    /* *
+     *
+     *  Methods
+     *
+     * */
     add() {
         this.update();
     }
@@ -13192,7 +14066,7 @@ class TextContent extends CellContent_CellContent {
         this.cell.htmlElement.innerHTML = HTML_AST.emptyHTML;
     }
     update() {
-        setHTMLContent(this.cell.htmlElement, this.format());
+        TextContent_setHTMLContent(this.cell.htmlElement, this.format());
     }
     /**
      * Returns the formatted value of the cell.
@@ -13219,7 +14093,13 @@ class TextContent extends CellContent_CellContent {
                 (format ? cell.format(format) : value + '');
         }
         else if (isDefaultFormat) {
-            cellContent = formatter?.call(cell).toString() || value + '';
+            const formattedValue = formatter?.call(cell);
+            if (TextContent_isString(formattedValue)) {
+                cellContent = formattedValue;
+            }
+            else {
+                cellContent = value + '';
+            }
         }
         else if (isDefaultFormatter) {
             cellContent = format ? cell.format(format) : value + '';
@@ -13229,20 +14109,15 @@ class TextContent extends CellContent_CellContent {
 }
 /* *
  *
- *  Namespace
+ *  Static Properties
  *
  * */
-(function (TextContent) {
-    /**
-     * Default formats for data types.
-     */
-    TextContent.defaultFormatsForDataTypes = {
-        string: '{value}',
-        number: '{value}',
-        'boolean': '{value}',
-        datetime: '{value:%Y-%m-%d %H:%M:%S}'
-    };
-})(TextContent || (TextContent = {}));
+TextContent.defaultFormatsForDataTypes = {
+    string: '{value}',
+    number: '{value}',
+    'boolean': '{value}',
+    datetime: '{value:%Y-%m-%d %H:%M:%S}'
+};
 /* *
  *
  *  Default Export
@@ -13274,7 +14149,7 @@ class TextContent extends CellContent_CellContent {
 
 
 const { defined: Column_defined, fireEvent: Column_fireEvent } = Core_Utilities;
-const { createOptionsProxy } = Core_GridUtils;
+const { createOptionsProxy: Column_createOptionsProxy } = GridUtils;
 /* *
  *
  *  Class
@@ -13323,7 +14198,7 @@ class Column {
                 options: columnOptions
             };
         }
-        this.options = createOptionsProxy(grid.columnOptionsMap?.[id]?.options ?? {}, grid.options?.columnDefaults);
+        this.options = Column_createOptionsProxy(grid.columnOptionsMap?.[id]?.options ?? {}, grid.options?.columnDefaults);
         if (this.options.filtering?.enabled) {
             this.filtering = new ColumnFiltering_ColumnFiltering(this);
         }
@@ -13462,6 +14337,28 @@ class Column {
         return Core_Templating.format(template, this, this.viewport.grid);
     }
     /**
+     * Sets the new column options to the userOptions field.
+     *
+     * @param options
+     * The options to set.
+     *
+     * @param overwrite
+     * Whether to overwrite the existing column options with the new ones.
+     * Default is `false`.
+     *
+     * @returns
+     * The difference between the previous and the new column options in form
+     * of a record of `[column.id]: column.options`.
+     *
+     * @internal
+     */
+    setOptions(options, overwrite = false) {
+        return this.viewport.grid.setColumnOptions([{
+                id: this.id,
+                ...options
+            }], overwrite);
+    }
+    /**
      * Updates the column with new options.
      *
      * @param newOptions
@@ -13500,7 +14397,7 @@ class Column {
  * */
 
 
-const { makeHTMLElement: Row_makeHTMLElement } = Core_GridUtils;
+const { makeHTMLElement: Row_makeHTMLElement } = GridUtils;
 /* *
  *
  *  Abstract Class of Row
@@ -13633,6 +14530,8 @@ class Row {
  * */
 
 
+
+const { fireEvent: Cell_fireEvent } = Core_Utilities;
 /* *
  *
  *  Abstract Class of Cell
@@ -13694,6 +14593,12 @@ class Cell {
             }]);
         this.cellEvents.push(['keydown', (e) => {
                 this.onKeyDown(e);
+            }]);
+        this.cellEvents.push(['mouseout', () => {
+                this.onMouseOut();
+            }]);
+        this.cellEvents.push(['mouseover', () => {
+                this.onMouseOver();
             }]);
         this.cellEvents.forEach((pair) => {
             this.htmlElement.addEventListener(pair[0], pair[1]);
@@ -13767,6 +14672,28 @@ class Cell {
                 nextRow.cells[column.index + dir[1]]?.htmlElement.focus();
             }
         }
+    }
+    /**
+     * Handles the mouse over event on the cell.
+     * @internal
+     */
+    onMouseOver() {
+        const { grid } = this.row.viewport;
+        grid.hoverColumn(this.column?.id);
+        Cell_fireEvent(this, 'mouseOver', {
+            target: this
+        });
+    }
+    /**
+     * Handles the mouse out event on the cell.
+     * @internal
+     */
+    onMouseOut() {
+        const { grid } = this.row.viewport;
+        grid.hoverColumn();
+        Cell_fireEvent(this, 'mouseOut', {
+            target: this
+        });
     }
     /**
      * Renders the cell by appending the HTML element to the row.
@@ -13953,11 +14880,7 @@ class ColumnSorting {
     updateColumnOptions(col) {
         const order = col.viewport.grid.querying.sorting.currentSorting?.order;
         if (col.id === this.column.id && order) {
-            col.update({
-                sorting: {
-                    order
-                }
-            }, false);
+            col.setOptions({ sorting: { order } });
         }
         else {
             delete col.options.sorting?.order;
@@ -14036,141 +14959,132 @@ class ColumnSorting {
  *
  * */
 
-/* *
- *
- *  Constants
- *
- * */
 /**
- * Registry of all Grid Svg icons with their SVG path data.
- * Icons are designed for a 24x24 viewBox and use stroke-based rendering.
+ * The registry of all Grid Svg icons with their SVG path data.
  */
-var SvgIcons;
-(function (SvgIcons) {
-    /**
-     * The registry of all Grid Svg icons with their SVG path data.
-     */
-    SvgIcons.icons = {
-        filter: {
-            width: 16,
-            height: 14,
-            children: [{
-                    d: 'M2.2571 2.77791C1.75287 2.21437 1.50076 1.93259 1.49125 1.69312C1.48299 1.48509 1.57238 1.28515 1.73292 1.15259C1.91773 1 2.29583 1 3.05202 1H12.9473C13.7035 1 14.0816 1 14.2664 1.15259C14.427 1.28515 14.5163 1.48509 14.5081 1.69312C14.4986 1.93259 14.2465 2.21437 13.7422 2.77791L9.93808 7.02962C9.83756 7.14196 9.78731 7.19813 9.75147 7.26205C9.71969 7.31875 9.69637 7.37978 9.68225 7.44323C9.66633 7.51476 9.66633 7.59013 9.66633 7.74087V11.3056C9.66633 11.436 9.66633 11.5011 9.64531 11.5575C9.62673 11.6073 9.59651 11.6519 9.55717 11.6877C9.51265 11.7281 9.45213 11.7524 9.33108 11.8008L7.06441 12.7074C6.81938 12.8054 6.69687 12.8545 6.59852 12.834C6.51251 12.8161 6.43704 12.765 6.3885 12.6918C6.333 12.6081 6.333 12.4762 6.333 12.2122V7.74087C6.333 7.59013 6.333 7.51476 6.31708 7.44323C6.30296 7.37978 6.27964 7.31875 6.24786 7.26205C6.21203 7.19813 6.16177 7.14196 6.06126 7.02962L2.2571 2.77791Z'
-                }]
-        },
-        menu: {
-            width: 4,
-            height: 12,
-            children: [{
-                    d: 'M2.00016 6.66675C2.36835 6.66675 2.66683 6.36827 2.66683 6.00008C2.66683 5.63189 2.36835 5.33341 2.00016 5.33341C1.63197 5.33341 1.3335 5.63189 1.3335 6.00008C1.3335 6.36827 1.63197 6.66675 2.00016 6.66675Z'
-                }, {
-                    d: 'M2.00016 2.00008C2.36835 2.00008 2.66683 1.7016 2.66683 1.33341C2.66683 0.965225 2.36835 0.666748 2.00016 0.666748C1.63197 0.666748 1.3335 0.965225 1.3335 1.33341C1.3335 1.7016 1.63197 2.00008 2.00016 2.00008Z'
-                }, {
-                    d: 'M2.00016 11.3334C2.36835 11.3334 2.66683 11.0349 2.66683 10.6667C2.66683 10.2986 2.36835 10.0001 2.00016 10.0001C1.63197 10.0001 1.3335 10.2986 1.3335 10.6667C1.3335 11.0349 1.63197 11.3334 2.00016 11.3334Z'
-                }]
-        },
-        chevronRight: {
-            width: 6,
-            height: 10,
-            children: [{
-                    d: 'M1 9L5 5L1 1',
-                    'stroke-width': 1.34
-                }]
-        },
-        checkmark: {
-            width: 12,
-            height: 9,
-            children: [{
-                    d: 'M11.3332 1L3.99984 8.33333L0.666504 5'
-                }]
-        },
-        upDownArrows: {
-            width: 14,
-            height: 12,
-            children: [{
-                    d: 'M3.66667 0.666748V11.3334M3.66667 11.3334L1 8.66675M3.66667 11.3334L6.33333 8.66675M10.3333 11.3334V0.666748M10.3333 0.666748L7.66667 3.33341M10.3333 0.666748L13 3.33341'
-                }]
-        },
-        sortAsc: {
-            width: 14,
-            height: 12,
-            children: [{
-                    d: 'M3.66667 0.666748V11.3334M3.66667 11.3334L1 8.66675M3.66667 11.3334L6.33333 8.66675',
-                    opacity: 0.2
-                }, {
-                    d: 'M 10.3333 11.3334 V 0.6667 M 10.3333 0.6667 L 7.6667 3.3334 M 10.3333 0.6667 L 13 3.3334'
-                }]
-        },
-        sortDesc: {
-            width: 14,
-            height: 12,
-            children: [{
-                    d: 'M3.66667 0.666748V11.3334M3.66667 11.3334L1 8.66675M3.66667 11.3334L6.33333 8.66675'
-                }, {
-                    d: 'M 10.3333 11.3334 V 0.6667 M 10.3333 0.6667 L 7.6667 3.3334 M 10.3333 0.6667 L 13 3.3334',
-                    opacity: 0.2
-                }]
-        }
-    };
-    /**
-     * The default path definitions for the Grid Svg icons.
-     */
-    SvgIcons.pathDefaults = {
-        stroke: 'currentColor',
-        'stroke-width': 1.33,
-        'stroke-linecap': 'round',
-        'stroke-linejoin': 'round'
-    };
-    /* *
-    *
-    *  Functions
-    *
-    * */
-    /**
-     * Creates an SVG icon element from the SvgIcons registry.
-     *
-     * @param name
-     * The name of the icon from SvgIcons registry
-     *
-     * @param className
-     * CSS class name for the SVG element (default: 'hcg-icon')
-     *
-     * @returns
-     * SVG element with the specified icon
-     */
-    function createGridIcon(name, className = Grid_Core_Globals.getClassName('icon')) {
-        const createElement = (type) => document.createElementNS('http://www.w3.org/2000/svg', type);
-        const { width = 16, height = 16, viewBox, fill, children } = SvgIcons.icons[name];
-        const svg = createElement('svg');
-        svg.setAttribute('width', width.toString());
-        svg.setAttribute('height', height.toString());
-        svg.setAttribute('viewBox', viewBox ?? `0 0 ${width} ${height}`);
-        svg.setAttribute('fill', fill ?? 'none');
-        for (const childDefinition of children ?? []) {
-            const path = createElement('path');
-            const attrKeys = new Set([
-                ...Object.keys(childDefinition),
-                ...Object.keys(SvgIcons.pathDefaults)
-            ]);
-            for (const attr of attrKeys) {
-                const value = childDefinition[attr] ?? SvgIcons.pathDefaults[attr];
-                if (value !== void 0) {
-                    path.setAttribute(attr, value.toString());
-                }
-            }
-            svg.appendChild(path);
-        }
-        svg.classList.add(className);
-        return svg;
+const SvgIcons_icons = {
+    filter: {
+        width: 16,
+        height: 14,
+        children: [{
+                d: 'M2.2571 2.77791C1.75287 2.21437 1.50076 1.93259 1.49125 1.69312C1.48299 1.48509 1.57238 1.28515 1.73292 1.15259C1.91773 1 2.29583 1 3.05202 1H12.9473C13.7035 1 14.0816 1 14.2664 1.15259C14.427 1.28515 14.5163 1.48509 14.5081 1.69312C14.4986 1.93259 14.2465 2.21437 13.7422 2.77791L9.93808 7.02962C9.83756 7.14196 9.78731 7.19813 9.75147 7.26205C9.71969 7.31875 9.69637 7.37978 9.68225 7.44323C9.66633 7.51476 9.66633 7.59013 9.66633 7.74087V11.3056C9.66633 11.436 9.66633 11.5011 9.64531 11.5575C9.62673 11.6073 9.59651 11.6519 9.55717 11.6877C9.51265 11.7281 9.45213 11.7524 9.33108 11.8008L7.06441 12.7074C6.81938 12.8054 6.69687 12.8545 6.59852 12.834C6.51251 12.8161 6.43704 12.765 6.3885 12.6918C6.333 12.6081 6.333 12.4762 6.333 12.2122V7.74087C6.333 7.59013 6.333 7.51476 6.31708 7.44323C6.30296 7.37978 6.27964 7.31875 6.24786 7.26205C6.21203 7.19813 6.16177 7.14196 6.06126 7.02962L2.2571 2.77791Z'
+            }]
+    },
+    menu: {
+        width: 4,
+        height: 12,
+        children: [{
+                d: 'M2.00016 6.66675C2.36835 6.66675 2.66683 6.36827 2.66683 6.00008C2.66683 5.63189 2.36835 5.33341 2.00016 5.33341C1.63197 5.33341 1.3335 5.63189 1.3335 6.00008C1.3335 6.36827 1.63197 6.66675 2.00016 6.66675Z'
+            }, {
+                d: 'M2.00016 2.00008C2.36835 2.00008 2.66683 1.7016 2.66683 1.33341C2.66683 0.965225 2.36835 0.666748 2.00016 0.666748C1.63197 0.666748 1.3335 0.965225 1.3335 1.33341C1.3335 1.7016 1.63197 2.00008 2.00016 2.00008Z'
+            }, {
+                d: 'M2.00016 11.3334C2.36835 11.3334 2.66683 11.0349 2.66683 10.6667C2.66683 10.2986 2.36835 10.0001 2.00016 10.0001C1.63197 10.0001 1.3335 10.2986 1.3335 10.6667C1.3335 11.0349 1.63197 11.3334 2.00016 11.3334Z'
+            }]
+    },
+    chevronRight: {
+        width: 6,
+        height: 10,
+        children: [{
+                d: 'M1 9L5 5L1 1',
+                'stroke-width': 1.34
+            }]
+    },
+    checkmark: {
+        width: 12,
+        height: 9,
+        children: [{
+                d: 'M11.3332 1L3.99984 8.33333L0.666504 5'
+            }]
+    },
+    upDownArrows: {
+        width: 14,
+        height: 12,
+        children: [{
+                d: 'M3.66667 0.666748V11.3334M3.66667 11.3334L1 8.66675M3.66667 11.3334L6.33333 8.66675M10.3333 11.3334V0.666748M10.3333 0.666748L7.66667 3.33341M10.3333 0.666748L13 3.33341'
+            }]
+    },
+    sortAsc: {
+        width: 14,
+        height: 12,
+        children: [{
+                d: 'M3.66667 0.666748V11.3334M3.66667 11.3334L1 8.66675M3.66667 11.3334L6.33333 8.66675',
+                opacity: 0.2
+            }, {
+                d: 'M 10.3333 11.3334 V 0.6667 M 10.3333 0.6667 L 7.6667 3.3334 M 10.3333 0.6667 L 13 3.3334'
+            }]
+    },
+    sortDesc: {
+        width: 14,
+        height: 12,
+        children: [{
+                d: 'M3.66667 0.666748V11.3334M3.66667 11.3334L1 8.66675M3.66667 11.3334L6.33333 8.66675'
+            }, {
+                d: 'M 10.3333 11.3334 V 0.6667 M 10.3333 0.6667 L 7.6667 3.3334 M 10.3333 0.6667 L 13 3.3334',
+                opacity: 0.2
+            }]
     }
-    SvgIcons.createGridIcon = createGridIcon;
-})(SvgIcons || (SvgIcons = {}));
+};
+/**
+ * The default path definitions for the Grid Svg icons.
+ */
+const pathDefaults = {
+    stroke: 'currentColor',
+    'stroke-width': 1.33,
+    'stroke-linecap': 'round',
+    'stroke-linejoin': 'round'
+};
+/* *
+*
+*  Functions
+*
+* */
+/**
+ * Creates an SVG icon element from the SvgIcons registry.
+ *
+ * @param name
+ * The name of the icon from SvgIcons registry
+ *
+ * @param className
+ * CSS class name for the SVG element (default: 'hcg-icon')
+ *
+ * @returns
+ * SVG element with the specified icon
+ */
+function createGridIcon(name, className = Grid_Core_Globals.getClassName('icon')) {
+    const createElement = (type) => document.createElementNS('http://www.w3.org/2000/svg', type);
+    const { width = 16, height = 16, viewBox, fill, children } = SvgIcons_icons[name];
+    const svg = createElement('svg');
+    svg.setAttribute('width', width.toString());
+    svg.setAttribute('height', height.toString());
+    svg.setAttribute('viewBox', viewBox ?? `0 0 ${width} ${height}`);
+    svg.setAttribute('fill', fill ?? 'none');
+    for (const childDefinition of children ?? []) {
+        const path = createElement('path');
+        const attrKeys = new Set([
+            ...Object.keys(childDefinition),
+            ...Object.keys(pathDefaults)
+        ]);
+        for (const attr of attrKeys) {
+            const value = childDefinition[attr] ?? pathDefaults[attr];
+            if (value !== void 0) {
+                path.setAttribute(attr, value.toString());
+            }
+        }
+        svg.appendChild(path);
+    }
+    svg.classList.add(className);
+    return svg;
+}
 /* *
  *
  *  Default Export
  *
  * */
-/* harmony default export */ const UI_SvgIcons = (SvgIcons);
+/* harmony default export */ const SvgIcons = ({
+    createGridIcon,
+    icons: SvgIcons_icons,
+    pathDefaults
+});
 
 ;// ./code/grid/es-modules/Grid/Core/UI/ToolbarButton.js
 /* *
@@ -14191,7 +15105,7 @@ var SvgIcons;
 
 
 
-const { makeHTMLElement: ToolbarButton_makeHTMLElement } = Core_GridUtils;
+const { makeHTMLElement: ToolbarButton_makeHTMLElement } = GridUtils;
 /* *
  *
  *  Class
@@ -14276,7 +15190,7 @@ class ToolbarButton {
      */
     setIcon(icon) {
         this.icon?.remove();
-        this.icon = UI_SvgIcons.createGridIcon(icon);
+        this.icon = createGridIcon(icon);
         this.buttonEl?.appendChild(this.icon);
     }
     setActive(active) {
@@ -14302,7 +15216,8 @@ class ToolbarButton {
         delete this.toolbar;
     }
     /**
-     * Initializes the state of the button.
+     * Refreshes the state of the button.
+     * @internal
      */
     refreshState() {
         // Do nothing, to be overridden by subclasses
@@ -14386,51 +15301,49 @@ class ToolbarButton {
  *  Namespace
  *
  * */
-var StateHelpers;
-(function (StateHelpers) {
-    /**
-     * Checks if the column is filtered.
-     *
-     * @param column
-     * The column to check.
-     */
-    function isFiltered(column) {
-        const { condition, value } = column.options.filtering || {};
-        return !!(condition && (['empty', 'notEmpty', 'true', 'false'].includes(condition) ||
-            (value !== void 0 && value !== '') // Accept null and 0
-        ));
+/**
+ * Checks if the column is filtered.
+ *
+ * @param column
+ * The column to check.
+ */
+function isFiltered(column) {
+    const { condition, value } = column.options.filtering || {};
+    return !!(condition && (['empty', 'notEmpty', 'true', 'false'].includes(condition) ||
+        (value !== void 0 && value !== '') // Accept null and 0
+    ));
+}
+/**
+ * Checks if the column is sorted.
+ *
+ * @param column
+ * The column to check.
+ *
+ * @param order
+ * Optional sorting order to check for.
+ *
+ * @returns
+ * True if the column is sorted. In case of `order` is provided, true
+ * only if the column is sorted in the provided order.
+ */
+function isSorted(column, order) {
+    const { currentSorting } = column.viewport.grid.querying.sorting || {};
+    if (currentSorting?.columnId !== column.id) {
+        return false;
     }
-    StateHelpers.isFiltered = isFiltered;
-    /**
-     * Checks if the column is sorted.
-     *
-     * @param column
-     * The column to check.
-     *
-     * @param order
-     * Optional sorting order to check for.
-     *
-     * @returns
-     * True if the column is sorted. In case of `order` is provided, true
-     * only if the column is sorted in the provided order.
-     */
-    function isSorted(column, order) {
-        const { currentSorting } = column.viewport.grid.querying.sorting || {};
-        if (currentSorting?.columnId !== column.id) {
-            return false;
-        }
-        return order ?
-            currentSorting?.order === order :
-            !!currentSorting?.order;
-    }
-    StateHelpers.isSorted = isSorted;
-})(StateHelpers || (StateHelpers = {}));
+    return order ?
+        currentSorting?.order === order :
+        !!currentSorting?.order;
+}
 /* *
  *
  *  Default Export
  *
  * */
-/* harmony default export */ const ColumnToolbar_StateHelpers = (StateHelpers);
+/* harmony default export */ const StateHelpers = ({
+    isFiltered,
+    isSorted
+});
 
 ;// ./code/grid/es-modules/Grid/Core/Table/Header/ColumnToolbar/ToolbarButtons/SortToolbarButton.js
 /* *
@@ -14486,7 +15399,7 @@ class SortToolbarButton extends UI_ToolbarButton {
         if (!column) {
             return;
         }
-        if (!ColumnToolbar_StateHelpers.isSorted(column)) {
+        if (!StateHelpers.isSorted(column)) {
             this.setActive(false);
             this.setIcon('upDownArrows');
             return;
@@ -14534,7 +15447,7 @@ class SortToolbarButton extends UI_ToolbarButton {
 
 
 
-const { makeHTMLElement: Popup_makeHTMLElement } = Core_GridUtils;
+const { makeHTMLElement: Popup_makeHTMLElement } = GridUtils;
 const { fireEvent: Popup_fireEvent } = Core_Utilities;
 /* *
  *
@@ -14614,6 +15527,7 @@ class Popup {
         if (!this.container) {
             return;
         }
+        Popup_fireEvent(this, 'beforeHide');
         this.grid.popups.delete(this);
         this.isVisible = false;
         // Remove event listeners
@@ -14918,7 +15832,7 @@ class FilterToolbarButton extends UI_ToolbarButton {
     refreshState() {
         const column = this.toolbar?.column;
         if (column) {
-            this.setActive(ColumnToolbar_StateHelpers.isFiltered(column));
+            this.setActive(StateHelpers.isFiltered(column));
         }
     }
     addEventListeners() {
@@ -14974,7 +15888,7 @@ class FilterToolbarButton extends UI_ToolbarButton {
 
 
 
-const { makeHTMLElement: ContextMenu_makeHTMLElement } = Core_GridUtils;
+const { makeHTMLElement: ContextMenu_makeHTMLElement } = GridUtils;
 /* *
  *
  *  Class
@@ -15103,7 +16017,7 @@ class ContextMenu extends UI_Popup {
 
 
 
-const { makeHTMLElement: ContextMenuButton_makeHTMLElement } = Core_GridUtils;
+const { makeHTMLElement: ContextMenuButton_makeHTMLElement } = GridUtils;
 /* *
  *
  *  Class
@@ -15167,7 +16081,7 @@ class ContextMenuButton {
         buttonEl.setAttribute('tabindex', '-1');
         this.refreshState();
         if (cfg.chevron) {
-            chevronEl.appendChild(UI_SvgIcons.createGridIcon('chevronRight'));
+            chevronEl.appendChild(createGridIcon('chevronRight'));
         }
         if (cfg.icon) {
             this.setIcon(cfg.icon);
@@ -15198,7 +16112,7 @@ class ContextMenuButton {
         if (!icon) {
             return;
         }
-        this.icon = UI_SvgIcons.createGridIcon(icon);
+        this.icon = createGridIcon(icon);
         this.iconWrapper?.appendChild(this.icon);
     }
     setActive(active) {
@@ -15316,7 +16230,7 @@ class FilterMenuButton_FilterToolbarButton extends UI_ContextMenuButton {
     refreshState() {
         const column = this.contextMenu?.button.toolbar?.column;
         if (column) {
-            this.setActive(ColumnToolbar_StateHelpers.isFiltered(column));
+            this.setActive(StateHelpers.isFiltered(column));
         }
     }
     addEventListeners() {
@@ -15396,7 +16310,7 @@ class SortMenuButton extends UI_ContextMenuButton {
         if (!column) {
             return;
         }
-        this.setActive(ColumnToolbar_StateHelpers.isSorted(column, this.direction));
+        this.setActive(StateHelpers.isSorted(column, this.direction));
     }
     addEventListeners() {
         super.addEventListeners();
@@ -15550,8 +16464,8 @@ class MenuToolbarButton extends UI_ToolbarButton {
         if (!column) {
             return;
         }
-        this.setActive(ColumnToolbar_StateHelpers.isSorted(column) ||
-            ColumnToolbar_StateHelpers.isFiltered(column));
+        this.setActive(StateHelpers.isSorted(column) ||
+            StateHelpers.isFiltered(column));
     }
     addEventListeners() {
         super.addEventListeners();
@@ -15595,7 +16509,7 @@ class MenuToolbarButton extends UI_ToolbarButton {
 
 
 
-const { makeHTMLElement: ColumnToolbar_makeHTMLElement } = Core_GridUtils;
+const { makeHTMLElement: ColumnToolbar_makeHTMLElement } = GridUtils;
 const { getStyle: ColumnToolbar_getStyle } = Core_Utilities;
 /* *
  *
@@ -15669,6 +16583,15 @@ class HeaderCellToolbar {
         });
     }
     /**
+     * Refreshes the state of the toolbar buttons.
+     * @internal
+     */
+    refreshState() {
+        for (const button of this.buttons) {
+            button.refreshState();
+        }
+    }
+    /**
      * Destroys all buttons of the toolbar.
      */
     clearButtons() {
@@ -15718,6 +16641,7 @@ class HeaderCellToolbar {
             destroyer();
         }
         this.eventListenerDestroyers.length = 0;
+        this.clearButtons();
         this.columnResizeObserver?.disconnect();
         delete this.columnResizeObserver;
     }
@@ -15785,7 +16709,7 @@ HeaderCellToolbar.MINIMIZED_COLUMN_WIDTH = 120;
 
 
 
-const { makeHTMLElement: HeaderCell_makeHTMLElement, setHTMLContent: HeaderCell_setHTMLContent, createOptionsProxy: HeaderCell_createOptionsProxy } = Core_GridUtils;
+const { makeHTMLElement: HeaderCell_makeHTMLElement, setHTMLContent: HeaderCell_setHTMLContent, createOptionsProxy: HeaderCell_createOptionsProxy } = GridUtils;
 const { fireEvent: HeaderCell_fireEvent, isString: HeaderCell_isString } = Core_Utilities;
 /* *
  *
@@ -16566,6 +17490,21 @@ class TableCell extends Table_Cell {
         void this.setValue();
     }
     /**
+     * Edits the cell value and updates the data table. Call this instead of
+     * `setValue` when you want it to trigger the cell value user change event.
+     *
+     * @param value
+     * The new value to set.
+     */
+    async editValue(value) {
+        if (this.value === value) {
+            return;
+        }
+        TableCell_fireEvent(this, 'beforeEditValue');
+        await this.setValue(value, true);
+        TableCell_fireEvent(this, 'afterEditValue');
+    }
+    /**
      * Sets the cell value and updates its content with it.
      *
      * @param value
@@ -16626,8 +17565,6 @@ class TableCell extends Table_Cell {
     }
     initEvents() {
         this.cellEvents.push(['dblclick', (e) => (this.onDblClick(e))]);
-        this.cellEvents.push(['mouseout', () => this.onMouseOut()]);
-        this.cellEvents.push(['mouseover', () => this.onMouseOver()]);
         this.cellEvents.push(['mousedown', (e) => {
                 this.onMouseDown(e);
             }]);
@@ -16661,28 +17598,13 @@ class TableCell extends Table_Cell {
             originalEvent: e
         });
     }
-    /**
-     * Handles the mouse over event on the cell.
-     * @internal
-     */
     onMouseOver() {
-        const { grid } = this.row.viewport;
-        grid.hoverRow(this.row.index);
-        grid.hoverColumn(this.column.id);
-        TableCell_fireEvent(this, 'mouseOver', {
-            target: this
-        });
+        this.row.viewport.grid.hoverRow(this.row.index);
+        super.onMouseOver();
     }
-    /**
-     * Handles the mouse out event on the cell.
-     */
     onMouseOut() {
-        const { grid } = this.row.viewport;
-        grid.hoverRow();
-        grid.hoverColumn();
-        TableCell_fireEvent(this, 'mouseOut', {
-            target: this
-        });
+        this.row.viewport.grid.hoverRow();
+        super.onMouseOut();
     }
     /**
      * Handles the double click event on the cell.
@@ -17282,7 +18204,7 @@ class RowsVirtualizer {
 
 
 
-const { makeHTMLElement: ColumnsResizer_makeHTMLElement } = Core_GridUtils;
+const { makeHTMLElement: ColumnsResizer_makeHTMLElement } = GridUtils;
 const { fireEvent: ColumnsResizer_fireEvent } = Core_Utilities;
 /* *
  *
@@ -17471,7 +18393,7 @@ class ColumnsResizer {
 
 
 
-const { makeHTMLElement: Table_makeHTMLElement } = Core_GridUtils;
+const { makeHTMLElement: Table_makeHTMLElement } = GridUtils;
 const { fireEvent: Table_fireEvent, getStyle: Table_getStyle, defined: Table_defined } = Core_Utilities;
 /* *
  *
@@ -17536,7 +18458,7 @@ class Table {
         this.dataTable = this.grid.presentationTable;
         const dgOptions = grid.options;
         const customClassName = dgOptions?.rendering?.table?.className;
-        this.columnResizing = ColumnResizing_ColumnResizing.initMode(this);
+        this.columnResizing = ColumnResizing.initMode(this);
         this.virtualRows = this.shouldVirtualizeRows();
         if (dgOptions?.rendering?.header?.enabled) {
             this.theadElement = Table_makeHTMLElement('thead', {}, tableElement);
@@ -17614,10 +18536,10 @@ class Table {
         // instead of the original data table row count.
         const rowCount = Number(grid.dataTable?.rowCount);
         const threshold = rows?.virtualizationThreshold ?? 50;
-        const paginationPageSize = grid.pagination?.currentPageSize;
-        return paginationPageSize ?
-            paginationPageSize >= threshold :
-            rowCount >= threshold;
+        if (grid.pagination) {
+            return grid.querying.pagination.currentPageSize >= threshold;
+        }
+        return rowCount >= threshold;
     }
     /**
      * Loads the columns of the table.
@@ -17643,7 +18565,7 @@ class Table {
         if (vp.focusCursor) {
             focusedRowId = vp.dataTable.getOriginalRowIndex(vp.focusCursor[0]);
         }
-        vp.grid.pagination?.clampCurrentPage();
+        vp.grid.querying.pagination.clampPage();
         // Update data
         const oldRowsCount = (vp.rows[vp.rows.length - 1]?.index ?? -1) + 1;
         await vp.grid.querying.proceed();
@@ -17687,11 +18609,14 @@ class Table {
                 });
             }
         }
+        vp.grid.dirtyFlags.delete('rows');
     }
     /**
      * Reflows the table's content dimensions.
      */
     reflow() {
+        // TODO: More `needsReflow` logic can be added in the future to avoid
+        // unnecessary reflows of the table parts.
         this.columnResizing.reflow();
         // Reflow the head
         this.header?.reflow();
@@ -17703,6 +18628,7 @@ class Table {
         this.grid.popups.forEach((popup) => {
             popup.reflow();
         });
+        this.grid.dirtyFlags.delete('reflow');
     }
     /**
      * Scrolls the table to the specified row.
@@ -18330,9 +19256,8 @@ class SortingController {
      */
     loadOptions() {
         const stateFromOptions = this.getSortingOptions();
-        if (stateFromOptions.columnId !== this.initialSorting?.columnId ||
-            stateFromOptions.order !== this.initialSorting?.order) {
-            this.initialSorting = stateFromOptions;
+        if (stateFromOptions.columnId !== this.currentSorting?.columnId ||
+            stateFromOptions.order !== this.currentSorting?.order) {
             this.setSorting(stateFromOptions.order, stateFromOptions.columnId);
         }
     }
@@ -18932,7 +19857,16 @@ class PaginationController {
      * The querying controller instance.
      */
     constructor(querying) {
+        /**
+         * The current page (1-based index).
+         */
+        this.currentPage = 1;
+        /**
+         * The current page size.
+         */
+        this.currentPageSize = 10;
         this.querying = querying;
+        this.enabled = !!querying.grid.options?.pagination?.enabled;
     }
     /* *
     *
@@ -18940,24 +19874,62 @@ class PaginationController {
     *
     * */
     /**
-     * Sets the range options.
+     * Total number of items (rows)
+     */
+    get totalItems() {
+        return this._totalItems ?? this.querying.grid.dataTable?.rowCount ?? 0;
+    }
+    /**
+     * Gets the total number of pages.
+     */
+    get totalPages() {
+        return this.currentPageSize > 0 ? Math.ceil(this.totalItems / this.currentPageSize) : 1;
+    }
+    /**
+     * Clamps the current page to the total number of pages.
+     */
+    clampPage() {
+        if (this.currentPage <= this.totalPages) {
+            return;
+        }
+        this.currentPage = this.totalPages;
+        this.querying.shouldBeUpdated = true;
+    }
+    /**
+     * Sets the page.
      *
      * @param currentPage
      * The current page.
      */
-    setRange(currentPage) {
+    setPage(currentPage) {
         this.currentPage = currentPage;
+        this.clampPage();
+        this.querying.shouldBeUpdated = true;
+    }
+    /**
+     * Sets the page size.
+     *
+     * @param pageSize
+     * The page size.
+     */
+    setPageSize(pageSize) {
+        this.currentPageSize = pageSize;
         this.querying.shouldBeUpdated = true;
     }
     /**
      * Loads range options from the grid options.
      */
     loadOptions() {
-        const pagination = this.querying.grid.pagination;
-        if (pagination?.options.enabled &&
-            this.currentPage !== pagination.currentPage) {
-            this.currentPage = pagination.currentPage;
-            this.setRange(this.currentPage);
+        const options = this.querying.grid.options?.pagination || {};
+        if (this.enabled === !options.enabled) {
+            this.enabled = !!options.enabled;
+            this.querying.shouldBeUpdated = true;
+        }
+        if (this.currentPageSize !== options.pageSize) {
+            this.setPageSize(options.pageSize ?? this.currentPageSize);
+        }
+        if (this.currentPage !== options.page) {
+            this.setPage(options.page ?? this.currentPage);
         }
     }
     /**
@@ -18968,26 +19940,19 @@ class PaginationController {
      * the original data table.
      */
     createModifier(rowsCountBeforePagination = (this.querying.grid.dataTable?.rowCount || 0)) {
-        const currentPage = this.currentPage || 1; // Start from page 1, not 0
-        const pageSize = this.querying.grid.pagination?.currentPageSize;
-        if (!pageSize) {
+        if (!this.enabled) {
             return;
         }
+        const currentPage = this.currentPage;
+        const pageSize = this.currentPageSize;
         // Calculate the start index (0-based)
         const start = (currentPage - 1) * pageSize;
         const end = Math.min(start + pageSize, rowsCountBeforePagination);
-        this.totalItems = rowsCountBeforePagination;
+        this._totalItems = rowsCountBeforePagination;
         return new Modifiers_RangeModifier({
             start,
             end
         });
-    }
-    /**
-     * Reset the pagination controller.
-     */
-    reset() {
-        delete this.currentPage;
-        this.querying.shouldBeUpdated = true;
     }
 }
 /* *
@@ -19126,859 +20091,6 @@ class QueryingController {
  * */
 /* harmony default export */ const Querying_QueryingController = (QueryingController);
 
-;// ./code/grid/es-modules/Grid/Core/Pagination/Icons.js
-const icons = {
-    first: '<svg xmlns="http://www.w3.org/2000/svg" width="10" height="10" viewBox="0 0 10 10" fill="none"><path d="M5 9L1 5L5 1M9 9L5 5L9 1" stroke="currentColor" stroke-width="1.34" stroke-linecap="round" stroke-linejoin="round"/></svg>',
-    previous: '<svg xmlns="http://www.w3.org/2000/svg" width="10" height="10" viewBox="0 0 8 10" fill="none"><path d="M5 9L1 5L5 1" stroke="currentColor" stroke-width="1.34" stroke-linecap="round" stroke-linejoin="round"/></svg>',
-    next: '<svg xmlns="http://www.w3.org/2000/svg" width="10" height="10" viewBox="0 0 4 10" fill="none"><path d="M1 1L5 5L1 9" stroke="currentColor" stroke-width="1.34" stroke-linecap="round" stroke-linejoin="round"/></svg>',
-    last: '<svg xmlns="http://www.w3.org/2000/svg" width="10" height="10" viewBox="0 0 10 10" fill="none"><path d="M5 1L9 5L5 9M1 1L5 5L1 9" stroke="currentColor" stroke-width="1.34" stroke-linecap="round" stroke-linejoin="round"/></svg>'
-};
-/* harmony default export */ const Icons = (icons);
-
-;// ./code/grid/es-modules/Grid/Core/Pagination/Pagination.js
-/* *
- *
- *  Grid Pagination class
- *
- *  (c) 2020-2025 Highsoft AS
- *
- *  License: www.highcharts.com/license
- *
- *  !!!!!!! SOURCE GETS TRANSPILED BY TYPESCRIPT. EDIT TS FILE ONLY. !!!!!!!
- *
- *  Authors:
- *  - Sebastian Bochan
- *
- * */
-
-
-
-
-
-
-
-const { makeHTMLElement: Pagination_makeHTMLElement, formatText: Pagination_formatText } = Core_GridUtils;
-const { merge: Pagination_merge, fireEvent: Pagination_fireEvent, isObject: Pagination_isObject, defined: Pagination_defined } = Core_Utilities;
-/**
- *  Representing the pagination functionalities for the Grid.
- */
-class Pagination {
-    /* *
-    *
-    *  Constructor
-    *
-    * */
-    /**
-     * Construct the pagination object.
-     *
-     * @param grid
-     * The Grid Table instance which the pagination controller belongs to.
-     *
-     * @param options
-     * The Pagination user options.
-     *
-     * @param state
-     * The Pagination state. Used to restore the previous state after the Grid
-     * is destroyed.
-     */
-    constructor(grid, options, state = {}) {
-        /**
-         * Current page number, starting from 1.
-         */
-        this.currentPage = 1;
-        this.grid = grid;
-        this.options = Pagination_merge(Pagination.defaultOptions, options);
-        const pageSizeSelector = this.options.controls.pageSizeSelector;
-        this.pageSizeOptions = Pagination_isObject(pageSizeSelector) ?
-            pageSizeSelector.options :
-            Pagination.defaultOptions.controls.pageSizeSelector.options; // eslint-disable-line
-        this.currentPageSize =
-            state.currentPageSize ||
-                this.options.pageSize ||
-                this.pageSizeOptions[0];
-        // Lang pack
-        this.lang = Pagination_merge(Core_Defaults.defaultOptions.pagination, this.grid.options?.lang?.pagination);
-        // Set state
-        if (state.currentPage) {
-            this.currentPage = state.currentPage;
-        }
-    }
-    /* *
-    *
-    *  Methods
-    *
-    * */
-    /**
-     * Total number of items (rows)
-     */
-    get totalItems() {
-        return this.grid.querying.pagination.totalItems || 0;
-    }
-    /**
-     * Total number of pages
-     */
-    get totalPages() {
-        return Math.ceil(this.totalItems / this.currentPageSize) || 1;
-    }
-    /**
-     * Render the pagination container.
-     *
-     * The pagination container is positioned based on the `position` option:
-     * - `'top'`: Rendered before the table
-     * - `'bottom'`: Rendered after the table (default)
-     * - `'footer'`: Rendered inside a tfoot element
-     * - `'#id'` or any string: Rendered inside a custom container with
-     * the specified ID.
-     */
-    render() {
-        const position = this.options.position;
-        const grid = this.grid;
-        this.oldTotalItems = this.totalItems;
-        // Set row count for a11y
-        grid.tableElement?.setAttribute('aria-current', 'page');
-        this.updateA11yRowsCount(this.currentPageSize);
-        // Render pagination container
-        if (typeof position === 'string' && position.startsWith('#')) {
-            this.renderCustomContainer(position);
-        }
-        else {
-            if (position === 'footer') {
-                this.renderFooter();
-            }
-            this.contentWrapper = Pagination_makeHTMLElement('nav', {
-                className: Grid_Core_Globals.getClassName('paginationWrapper')
-            }, position === 'footer' ?
-                this.paginationContainer : grid.contentWrapper);
-            this.contentWrapper.setAttribute('aria-label', 'Results pagination');
-        }
-        // Clamps the current page to the valid range
-        this.clampCurrentPage();
-        // Render all components
-        this.renderPageInfo();
-        this.renderControls();
-        this.renderPageSizeSelector();
-        // Update button states after rendering
-        this.updateButtonStates();
-    }
-    /**
-     * Render pagination in a tfoot element.
-     */
-    renderFooter() {
-        const tableElement = this.grid.tableElement;
-        if (!tableElement) {
-            return;
-        }
-        // Create tfoot element
-        const tfootElement = Pagination_makeHTMLElement('tfoot', {}, tableElement);
-        // Create tfoot row
-        const tfootRow = Pagination_makeHTMLElement('tr', {}, tfootElement);
-        // Create tfoot cell with colspan and store it in paginationContainer
-        this.paginationContainer = Pagination_makeHTMLElement('td', {}, tfootRow);
-        this.paginationContainer.setAttribute('colSpan', (this.grid.enabledColumns || []).length.toString());
-        this.reflow();
-    }
-    /**
-     * Render pagination in a custom container by ID.
-     *
-     * @param id
-     * The ID of the custom container.
-     */
-    renderCustomContainer(id) {
-        const customContainer = document.querySelector(id);
-        if (!customContainer) {
-            console.warn(`Pagination: Custom container with ID "${id}" not found.`); // eslint-disable-line no-console
-            return;
-        }
-        this.paginationContainer = customContainer;
-        // Set content wrapper to the custom container
-        this.contentWrapper = Pagination_makeHTMLElement('div', {
-            className: Grid_Core_Globals.getClassName('paginationContainer')
-        }, customContainer);
-    }
-    /**
-     * Render the page information text.
-     */
-    renderPageInfo() {
-        const pageInfo = this.options.controls?.pageInfo;
-        if (pageInfo === false ||
-            (Pagination_isObject(pageInfo) && pageInfo.enabled === false)) {
-            return;
-        }
-        this.pageInfoElement = Pagination_makeHTMLElement('div', {
-            className: Grid_Core_Globals.getClassName('paginationPageInfo')
-        }, this.contentWrapper);
-        this.updatePageInfo();
-    }
-    /**
-     * Update the page information text.
-     */
-    updatePageInfo() {
-        if (!this.pageInfoElement) {
-            return;
-        }
-        const startItem = (this.currentPage - 1) * this.currentPageSize + 1;
-        const endItem = Math.min(this.currentPage * this.currentPageSize, this.totalItems);
-        const pageInfoText = Pagination_formatText(this.lang.pageInfo, {
-            start: startItem,
-            end: endItem,
-            total: this.totalItems,
-            currentPage: this.currentPage,
-            totalPages: this.totalPages
-        });
-        this.pageInfoElement.innerHTML = pageInfoText;
-    }
-    /**
-     * Render the controls buttons and page numbers.
-     */
-    renderControls() {
-        const navContainer = Pagination_makeHTMLElement('div', {
-            className: Grid_Core_Globals.getClassName('paginationControls')
-        }, this.contentWrapper);
-        // Render first/previous buttons
-        if (this.options.controls?.firstLastButtons) {
-            this.renderFirstButton(navContainer);
-        }
-        // Render previous button
-        if (this.options.controls?.previousNextButtons) {
-            this.renderPrevButton(navContainer);
-        }
-        // Render page numbers
-        if (this.options.controls?.pageButtons) {
-            this.renderPageNumbers(navContainer);
-        }
-        // Render mobile page selector
-        this.renderMobilePageSelector(navContainer);
-        // Render next button
-        if (this.options.controls?.previousNextButtons) {
-            this.renderNextButton(navContainer);
-        }
-        // Render last/first buttons
-        if (this.options.controls?.firstLastButtons) {
-            this.renderLastButton(navContainer);
-        }
-    }
-    /**
-     * Update the pagination controls.
-     */
-    updateControls() {
-        if (this.oldTotalItems === this.totalItems) {
-            return;
-        }
-        this.updatePageInfo();
-        this.updatePageNumbers();
-        this.updateButtonStates();
-        this.updateA11yRowsCount(this.currentPageSize);
-        this.oldTotalItems = this.totalItems;
-    }
-    /**
-     * Render the first page button.
-     *
-     * @param container
-     * The container element for the first page button.
-     *
-     */
-    renderFirstButton(container) {
-        const firstLastButtons = this.options.controls?.firstLastButtons;
-        if (firstLastButtons === false ||
-            (Pagination_isObject(firstLastButtons) && firstLastButtons.enabled === false)) {
-            return;
-        }
-        // Create first button
-        this.firstButton = Pagination_makeHTMLElement('button', {
-            innerHTML: Icons.first,
-            className: Grid_Core_Globals.getClassName('paginationButton') + ' ' +
-                Grid_Core_Globals.getClassName('paginationFirstButton')
-        }, container);
-        this.firstButton.title = this.lang.firstPage;
-        // Set aria-label for a11y
-        this.firstButton.setAttribute('aria-label', this.lang.firstPage);
-        // Add click event
-        this.firstButton.addEventListener('click', () => {
-            void this.goToPage(1);
-        });
-        this.setButtonState(this.firstButton, this.currentPage === 1);
-    }
-    /**
-     * Render the previous page button.
-     *
-     * @param container
-     * The container element for the previous page button.
-     */
-    renderPrevButton(container) {
-        const previousNextButtons = this.options.controls?.previousNextButtons;
-        if (previousNextButtons === false ||
-            (Pagination_isObject(previousNextButtons) &&
-                previousNextButtons.enabled === false)) {
-            return;
-        }
-        // Create previous button
-        this.prevButton = Pagination_makeHTMLElement('button', {
-            innerHTML: Icons.previous,
-            className: Grid_Core_Globals.getClassName('paginationButton') + ' ' +
-                Grid_Core_Globals.getClassName('paginationPrevButton')
-        }, container);
-        this.prevButton.title = this.lang.previousPage;
-        // Set aria-label for a11y
-        this.prevButton.setAttribute('aria-label', this.lang.previousPage);
-        // Add click event
-        this.prevButton.addEventListener('click', () => {
-            void this.goToPage(this.currentPage - 1);
-        });
-        this.setButtonState(this.prevButton, this.currentPage === 1);
-    }
-    /**
-     * Render the next page button.
-     *
-     * @param container
-     * The container element for the next page button.
-     */
-    renderNextButton(container) {
-        const previousNextButtons = this.options.controls?.previousNextButtons;
-        if (previousNextButtons === false ||
-            (Pagination_isObject(previousNextButtons) &&
-                previousNextButtons.enabled === false)) {
-            return;
-        }
-        // Create next button
-        this.nextButton = Pagination_makeHTMLElement('button', {
-            innerHTML: Icons.next,
-            className: Grid_Core_Globals.getClassName('paginationButton') + ' ' +
-                Grid_Core_Globals.getClassName('paginationNextButton')
-        }, container);
-        this.nextButton.title = this.lang.nextPage;
-        // Set aria-label for a11y
-        this.nextButton.setAttribute('aria-label', this.lang.nextPage);
-        // Add click event
-        this.nextButton.addEventListener('click', () => {
-            void this.goToPage(this.currentPage + 1);
-        });
-        this.setButtonState(this.nextButton, this.currentPage >= this.totalPages);
-    }
-    /**
-     * Render the last page button.
-     *
-     * @param container
-     * The container element for the last page button.
-     */
-    renderLastButton(container) {
-        const firstLastButtons = this.options.controls?.firstLastButtons;
-        if (firstLastButtons === false ||
-            (Pagination_isObject(firstLastButtons) && firstLastButtons.enabled === false)) {
-            return;
-        }
-        // Create last button
-        this.lastButton = Pagination_makeHTMLElement('button', {
-            innerHTML: Icons.last,
-            className: Grid_Core_Globals.getClassName('paginationButton') + ' ' +
-                Grid_Core_Globals.getClassName('paginationLastButton')
-        }, container);
-        this.lastButton.title = this.lang.lastPage;
-        // Set aria-label for a11y
-        this.lastButton.setAttribute('aria-label', this.lang.lastPage);
-        // Add click event
-        this.lastButton.addEventListener('click', () => {
-            void this.goToPage(this.totalPages);
-        });
-        this.setButtonState(this.lastButton, this.currentPage >= this.totalPages);
-    }
-    /**
-     * Render page number buttons with ellipsis.
-     *
-     * @param container
-     * The container element for the page number buttons.
-     */
-    renderPageNumbers(container) {
-        const pageButtons = this.options.controls?.pageButtons;
-        if (pageButtons === false ||
-            (Pagination_isObject(pageButtons) && pageButtons.enabled === false)) {
-            return;
-        }
-        this.pageNumbersContainer = Pagination_makeHTMLElement('div', {
-            className: Grid_Core_Globals.getClassName('paginationPageButton')
-        }, container);
-        this.updatePageNumbers();
-    }
-    /**
-     * Update page number buttons based on current page and total pages.
-     */
-    updatePageNumbers() {
-        if (!this.pageNumbersContainer) {
-            return;
-        }
-        // Clear existing page numbers
-        this.pageNumbersContainer.innerHTML = HTML_AST.emptyHTML;
-        const pageButtons = this.options.controls?.pageButtons;
-        const maxPageNumbers = Pagination_isObject(pageButtons) ?
-            pageButtons.count :
-            Pagination.defaultOptions.controls.pageButtons.count; // eslint-disable-line
-        const totalPages = this.totalPages;
-        const currentPage = this.currentPage;
-        if (totalPages <= maxPageNumbers) {
-            // Show all page numbers if total pages is less than max
-            for (let i = 1; i <= totalPages; i++) {
-                this.createPageButton(i, i === currentPage);
-            }
-        }
-        else {
-            const elements = [];
-            // Determine layout based on current page position
-            const isNearStart = currentPage <= 3;
-            const isNearEnd = currentPage >= totalPages - 2;
-            if (isNearStart) {
-                // -2 for ellipsis and last page
-                const pagesToShow = maxPageNumbers - 2;
-                const maxPages = Math.min(pagesToShow, totalPages - 1);
-                for (let i = 1; i <= maxPages; i++) {
-                    elements.push({ type: 'button', page: i });
-                }
-                if (totalPages > pagesToShow + 1) {
-                    elements.push({ type: 'ellipsis' });
-                    elements.push({ type: 'button', page: totalPages });
-                }
-            }
-            else if (isNearEnd) {
-                // -2 for first page and ellipsis
-                const pagesToShow = maxPageNumbers - 2;
-                let i = totalPages - pagesToShow + 1;
-                elements.push({ type: 'button', page: 1 });
-                elements.push({ type: 'ellipsis' });
-                for (i; i <= totalPages; i++) {
-                    elements.push({ type: 'button', page: i });
-                }
-            }
-            else {
-                // Always add first page
-                elements.push({ type: 'button', page: 1 });
-                // -4 for first, last, and two ellipsis
-                const maxMiddlePages = maxPageNumbers - 4;
-                const halfMiddle = Math.floor(maxMiddlePages / 2);
-                let startPage = Math.max(2, currentPage - halfMiddle);
-                let endPage = Math.min(totalPages - 1, currentPage + halfMiddle);
-                // Adjust to ensure we have exactly maxMiddlePages
-                if (endPage - startPage + 1 > maxMiddlePages) {
-                    if (startPage === 2) {
-                        endPage = startPage + maxMiddlePages - 1;
-                    }
-                    else {
-                        startPage = endPage - maxMiddlePages + 1;
-                    }
-                }
-                // Check if we actually need ellipsis
-                const needFirstEllipsis = startPage > 2;
-                const needLastEllipsis = endPage < totalPages - 1;
-                if (!needFirstEllipsis && !needLastEllipsis) {
-                    // -2 for first and last
-                    const availableSlots = maxPageNumbers - 2;
-                    startPage = 2;
-                    endPage = Math.min(totalPages - 1, startPage + availableSlots - 1);
-                }
-                else if (!needFirstEllipsis) {
-                    // -3 for first, last, and one ellipsis
-                    const availableSlots = maxPageNumbers - 3;
-                    startPage = 2;
-                    endPage = Math.min(totalPages - 1, startPage + availableSlots - 1);
-                }
-                else if (!needLastEllipsis) {
-                    // -3 for first, last, and one ellipsis
-                    const availableSlots = maxPageNumbers - 3;
-                    endPage = totalPages - 1;
-                    startPage = Math.max(2, endPage - availableSlots + 1);
-                }
-                // Add first ellipsis
-                if (needFirstEllipsis) {
-                    elements.push({ type: 'ellipsis' });
-                }
-                // Add middle pages
-                for (let i = startPage; i <= endPage; i++) {
-                    elements.push({ type: 'button', page: i });
-                }
-                // Add last ellipsis
-                if (needLastEllipsis) {
-                    elements.push({ type: 'ellipsis' });
-                }
-                // Always add last page
-                elements.push({ type: 'button', page: totalPages });
-            }
-            // Render all elements
-            elements.forEach((element) => {
-                if (element.type === 'button' && Pagination_defined(element.page)) {
-                    this.createPageButton(element.page, element.page === currentPage);
-                }
-                else if (element.type === 'ellipsis') {
-                    this.createEllipsis();
-                }
-            });
-        }
-        // Update mobile selector if it exists
-        if (this.mobilePageSelector) {
-            this.mobilePageSelector.value = this.currentPage.toString();
-        }
-    }
-    /**
-     * Create a page number button.
-     *
-     * @param pageNumber
-     * The page number to create a button for.
-     *
-     * @param isActive
-     * Whether the page number button is active.
-     */
-    createPageButton(pageNumber, isActive) {
-        if (!this.pageNumbersContainer) {
-            return;
-        }
-        const button = Pagination_makeHTMLElement('button', {
-            innerHTML: pageNumber.toString(),
-            className: Grid_Core_Globals.getClassName(isActive ? 'paginationPageButtonActive' : 'paginationPageButton')
-        }, this.pageNumbersContainer);
-        button.title = Pagination_formatText(this.lang.pageNumber, { page: pageNumber });
-        // Set aria-label for a11y
-        button.setAttribute('aria-label', Pagination_formatText(this.lang.pageNumber, { page: pageNumber }));
-        // Add click event
-        button.addEventListener('click', () => {
-            void this.goToPage(pageNumber);
-        });
-    }
-    /**
-     * Create an ellipsis element.
-     */
-    createEllipsis() {
-        if (!this.pageNumbersContainer) {
-            return;
-        }
-        const ellipsisElement = Pagination_makeHTMLElement('span', {
-            innerHTML: '...',
-            className: Grid_Core_Globals.getClassName('paginationEllipsis')
-        }, this.pageNumbersContainer);
-        ellipsisElement.title = this.lang.ellipsis;
-        // Set aria-label for a11y
-        ellipsisElement.setAttribute('aria-hidden', true);
-    }
-    /**
-     * Render the page size selector.
-     */
-    renderPageSizeSelector() {
-        const pageSizeSelector = this.options.controls.pageSizeSelector;
-        if (pageSizeSelector === false ||
-            (Pagination_isObject(pageSizeSelector) &&
-                pageSizeSelector.enabled === false)) {
-            return;
-        }
-        const container = Pagination_makeHTMLElement('div', {
-            className: Grid_Core_Globals.getClassName('paginationPageSizeContainer')
-        }, this.contentWrapper);
-        Pagination_makeHTMLElement('span', {
-            innerHTML: this.lang.pageSizeLabel
-        }, container);
-        this.pageSizeSelect = Pagination_makeHTMLElement('select', {
-            className: Grid_Core_Globals.getClassName('paginationPageSizeSelect')
-        }, container);
-        this.pageSizeOptions.forEach((option) => {
-            const optionElement = document.createElement('option');
-            optionElement.value = option.toString();
-            optionElement.innerHTML = option.toString();
-            if (option === this.currentPageSize) {
-                optionElement.selected = true;
-            }
-            this.pageSizeSelect?.appendChild(optionElement);
-        });
-        this.pageSizeSelect.addEventListener('change', () => {
-            if (!this.pageSizeSelect) {
-                return;
-            }
-            void this.setPageSize(parseInt(this.pageSizeSelect.value, 10));
-        });
-        // Render mobile page size selector in the same container
-        this.renderMobilePageSizeSelector(container);
-    }
-    /**
-     * Set the page size and recalculate pagination.
-     *
-     * @param newPageSize
-     * The new page size to set.
-     */
-    async setPageSize(newPageSize) {
-        const pageSize = this.currentPageSize;
-        const langAccessibility = this.grid.options?.lang?.accessibility;
-        Pagination_fireEvent(this, 'beforePageSizeChange', {
-            pageSize: pageSize,
-            newPageSize: newPageSize
-        });
-        this.currentPageSize = newPageSize;
-        // Reset to first page when changing page size
-        this.currentPage = 1;
-        // Update the grid's pagination range
-        await this.updateGridPagination();
-        // Update UI
-        this.updatePageInfo();
-        this.updatePageNumbers();
-        this.updateButtonStates();
-        // Update row count for a11y
-        this.updateA11yRowsCount(this.currentPageSize);
-        // Announce the page size change
-        this.grid.accessibility?.announce(langAccessibility?.pagination?.announcements?.pageSizeChange +
-            ' ' + newPageSize);
-        // Update mobile page size selector if it exists
-        if (this.mobilePageSizeSelector) {
-            this.mobilePageSizeSelector.value = this.currentPageSize.toString();
-        }
-        Pagination_fireEvent(this, 'afterPageSizeChange', {
-            pageSize: newPageSize,
-            previousPageSize: pageSize
-        });
-    }
-    /**
-     * Navigate to a specific page.
-     *
-     * @param pageNumber
-     * The page number to navigate to.
-     */
-    async goToPage(pageNumber) {
-        const langAccessibility = this.grid.options?.lang?.accessibility;
-        if (pageNumber < 1 ||
-            pageNumber > this.totalPages ||
-            pageNumber === this.currentPage) {
-            return;
-        }
-        const previousPage = this.currentPage;
-        Pagination_fireEvent(this, 'beforePageChange', {
-            currentPage: this.currentPage,
-            nextPage: pageNumber,
-            pageSize: this.currentPageSize
-        });
-        this.currentPage = pageNumber;
-        await this.updateGridPagination();
-        this.updatePageInfo();
-        this.updatePageNumbers();
-        this.updateButtonStates();
-        // Announce the page change
-        this.grid.accessibility?.announce(langAccessibility?.pagination?.announcements?.pageChange +
-            ' ' + this.currentPage);
-        Pagination_fireEvent(this, 'afterPageChange', {
-            currentPage: this.currentPage,
-            previousPage: previousPage,
-            pageSize: this.currentPageSize
-        });
-    }
-    /**
-     * Update the grid's pagination state.
-     *
-     * @param ignoreDataRange
-     * Whether to ignore the data range update. Used when updating the data
-     * range is not needed, for example when updating the data range from
-     * the server.
-     * @internal
-     */
-    async updateGridPagination(ignoreDataRange = false) {
-        if (!this.grid.querying?.pagination) {
-            return;
-        }
-        this.grid.querying.pagination.setRange(ignoreDataRange ? 1 : this.currentPage);
-        // Trigger the grid to update its data and viewport
-        this.grid.querying.shouldBeUpdated = true;
-        // Force the querying controller to proceed with updates
-        await this.grid.querying.proceed(true);
-        // Update the viewport to reflect the new data
-        await this.grid.viewport?.updateRows();
-        this.grid.viewport?.header?.reflow();
-        // Scroll to top after page change
-        const tBody = this.grid.viewport?.tbodyElement;
-        if (tBody) {
-            tBody.scrollTop = 0;
-        }
-    }
-    /**
-     * Ensures the current page is within valid range.
-     */
-    clampCurrentPage() {
-        if (this.currentPage > this.totalPages) {
-            this.currentPage = this.totalPages;
-            this.grid.querying.pagination.setRange(this.currentPage);
-        }
-    }
-    /**
-     * Update button states based on current page.
-     */
-    updateButtonStates() {
-        if (this.firstButton) {
-            this.setButtonState(this.firstButton, this.currentPage === 1);
-        }
-        if (this.prevButton) {
-            this.setButtonState(this.prevButton, this.currentPage === 1);
-        }
-        if (this.nextButton) {
-            this.setButtonState(this.nextButton, this.currentPage >= this.totalPages);
-        }
-        if (this.lastButton) {
-            this.setButtonState(this.lastButton, this.currentPage >= this.totalPages);
-        }
-    }
-    /**
-     * Call modifier to replace items with new ones.
-     *
-     * @param isNextPage
-     * Declare prev or next action triggered by button.
-     * @returns
-     */
-    async updatePage(isNextPage = true) {
-        const newPage = isNextPage ? this.currentPage + 1 : this.currentPage - 1;
-        await this.goToPage(newPage);
-    }
-    /**
-     * Set button state (enabled/disabled).
-     *
-     * @param button
-     * The button to set the state for.
-     *
-     * @param disabled
-     * Whether the button should be disabled.
-     */
-    setButtonState(button, disabled) {
-        if (disabled) {
-            button.classList.add(Grid_Core_Globals.getClassName('paginationButtonDisabled'));
-            button.setAttribute('disabled', 'disabled');
-        }
-        else {
-            button.classList.remove(Grid_Core_Globals.getClassName('paginationButtonDisabled'));
-            button.removeAttribute('disabled');
-        }
-    }
-    /**
-     * Reflow the pagination container.
-     */
-    reflow() {
-        const position = this.options.position;
-        if (!this.paginationContainer) {
-            return;
-        }
-        if (position === 'footer') {
-            // Set the width to match the table width
-            this.paginationContainer.style.width =
-                this.grid.tableElement?.offsetWidth + 'px';
-            return;
-        }
-    }
-    /**
-     * Destroy the pagination instance.
-     */
-    destroy() {
-        const position = this.options.position;
-        if (position === 'footer') {
-            // For footer position, remove the entire tfoot element.
-            this.paginationContainer?.parentElement?.parentElement?.remove();
-        }
-        else {
-            this.contentWrapper?.remove();
-        }
-        this.grid.querying.pagination.reset();
-    }
-    /**
-     * Render the mobile page selector (select dropdown).
-     *
-     * @param container
-     * The container element for the mobile page selector.
-     */
-    renderMobilePageSelector(container) {
-        const totalPages = this.totalPages;
-        if (totalPages <= 1) {
-            return;
-        }
-        const mobileSelect = Pagination_makeHTMLElement('select', {
-            className: Grid_Core_Globals.getClassName('paginationMobileSelector')
-        }, container);
-        // Add options for each page
-        for (let i = 1; i <= totalPages; i++) {
-            const option = Pagination_makeHTMLElement('option', {}, mobileSelect);
-            option.value = i.toString();
-            option.textContent = `Page ${i} of ${totalPages}`;
-        }
-        // Set current page as selected
-        mobileSelect.value = this.currentPage.toString();
-        this.mobilePageSelector = mobileSelect;
-        // Add event listener for page change
-        mobileSelect.addEventListener('change', () => {
-            const newPage = parseInt(mobileSelect.value, 10);
-            if (newPage !== this.currentPage) {
-                void this.goToPage(newPage);
-            }
-        });
-    }
-    /**
-     * Render the mobile page size selector (select dropdown).
-     *
-     * @param container
-     * The container element for the mobile page size selector.
-     */
-    renderMobilePageSizeSelector(container) {
-        const mobilePageSizeSelect = Pagination_makeHTMLElement('select', {
-            className: Grid_Core_Globals.getClassName('paginationMobilePageSizeSelector')
-        }, container);
-        this.pageSizeOptions.forEach((option) => {
-            const optionElement = Pagination_makeHTMLElement('option', {}, mobilePageSizeSelect);
-            optionElement.value = option.toString();
-            optionElement.textContent = `${option} ${this.lang.pageSizeLabel}`;
-            if (option === this.currentPageSize) {
-                optionElement.selected = true;
-            }
-        });
-        this.mobilePageSizeSelector = mobilePageSizeSelect;
-        mobilePageSizeSelect.addEventListener('change', () => {
-            if (!this.mobilePageSizeSelector) {
-                return;
-            }
-            void this.setPageSize(parseInt(this.mobilePageSizeSelector.value, 10));
-        });
-    }
-    /**
-     * Update the row count for a11y.
-     *
-     * @param currentPageSize
-     * The current page size.
-     */
-    updateA11yRowsCount(currentPageSize) {
-        const grid = this.grid;
-        grid.tableElement?.setAttribute('aria-rowcount', currentPageSize || this.totalItems);
-    }
-}
-/* *
-*
-*  Static Properties
-*
-* */
-/**
- * Default options of the pagination.
- */
-Pagination.defaultOptions = {
-    enabled: false,
-    pageSize: 10,
-    position: 'bottom',
-    controls: {
-        pageSizeSelector: {
-            enabled: true,
-            options: [10, 20, 50, 100]
-        },
-        pageInfo: {
-            enabled: true
-        },
-        firstLastButtons: {
-            enabled: true
-        },
-        previousNextButtons: {
-            enabled: true
-        },
-        pageButtons: {
-            enabled: true,
-            count: 7
-        }
-    }
-};
-/* *
- *
- *  Default Export
- *
- * */
-/* harmony default export */ const Pagination_Pagination = (Pagination);
-
 ;// ./code/grid/es-modules/Grid/Core/Grid.js
 /* *
  *
@@ -20007,8 +20119,8 @@ Pagination.defaultOptions = {
 
 
 
-const { makeHTMLElement: Grid_makeHTMLElement, setHTMLContent: Grid_setHTMLContent } = Core_GridUtils;
-const { extend: Grid_extend, fireEvent: Grid_fireEvent, getStyle: Grid_getStyle, merge: Grid_merge, pick: Grid_pick, isObject: Grid_isObject } = Core_Utilities;
+const { makeHTMLElement: Grid_makeHTMLElement, setHTMLContent: Grid_setHTMLContent } = GridUtils;
+const { defined: Grid_defined, diffObjects: Grid_diffObjects, extend: Grid_extend, fireEvent: Grid_fireEvent, getStyle: Grid_getStyle, merge: Grid_merge, pick: Grid_pick } = Core_Utilities;
 /* *
  *
  *  Class
@@ -20072,6 +20184,17 @@ class Grid {
          * that need to be removed when the grid is destroyed.
          */
         this.dataTableEventDestructors = [];
+        /**
+         * Whether the Grid is rendered.
+         */
+        this.isRendered = false;
+        /**
+         * The flags that indicate which parts of the Grid are dirty and need to be
+         * re-rendered.
+         * @internal
+         */
+        this.dirtyFlags = new Set();
+        this.renderTo = renderTo;
         this.loadUserOptions(options);
         this.id = this.options?.id || Core_Utilities.uniqueKey();
         this.querying = new Querying_QueryingController(this);
@@ -20079,13 +20202,7 @@ class Grid {
         this.time = new Shared_TimeBase(Grid_extend(this.options?.time, { locale: this.locale }), this.options?.lang);
         Grid_fireEvent(this, 'beforeLoad');
         Grid.grids.push(this);
-        this.initContainers(renderTo);
-        this.initAccessibility();
-        this.initPagination();
-        this.loadDataTable();
-        this.querying.loadOptions();
-        void this.querying.proceed().then(() => {
-            this.renderViewport();
+        void this.render().then(() => {
             afterLoadCallback?.(this);
             Grid_fireEvent(this, 'afterLoad');
         });
@@ -20109,22 +20226,10 @@ class Grid {
      * Initializes the pagination.
      */
     initPagination() {
-        let state;
-        if (this.pagination) {
-            const { currentPageSize, currentPage } = this.pagination || {};
-            state = {
-                currentPageSize,
-                currentPage
-            };
-        }
         this.pagination?.destroy();
         delete this.pagination;
-        const rawOptions = this.options?.pagination;
-        const options = Grid_isObject(rawOptions) ? rawOptions : {
-            enabled: rawOptions
-        };
-        if (options?.enabled) {
-            this.pagination = new Pagination_Pagination(this, options, state);
+        if (this.options?.pagination?.enabled) {
+            this.pagination = new Pagination_Pagination(this);
         }
     }
     /**
@@ -20134,17 +20239,13 @@ class Grid {
      * The render target (html element or id) of the Grid.
      *
      */
-    initContainers(renderTo) {
+    initContainer(renderTo) {
         const container = (typeof renderTo === 'string') ?
             Grid_Core_Globals.win.document.getElementById(renderTo) : renderTo;
         // Display an error if the renderTo is wrong
         if (!container) {
-            // eslint-disable-next-line no-console
-            console.error(`
-                Rendering div not found. It is unable to find the HTML element
-                to render the Grid in.
-            `);
-            return;
+            throw new Error('Rendering div not found. It is unable to find the HTML ' +
+                'element to render the Grid in.');
         }
         this.initialContainerHeight = Grid_getStyle(container, 'height', true) || 0;
         this.container = container;
@@ -20164,31 +20265,52 @@ class Grid {
      * When `false` (default), the existing column options will be merged with
      * the ones that are currently defined in the user options. When `true`,
      * the columns not defined in the new options will be removed.
+     *
+     * @returns
+     * An object of the changed options.
      */
     loadUserOptions(newOptions, oneToOne = false) {
         // Operate on a copy of the options argument
         newOptions = Grid_merge(newOptions);
+        const diff = {};
         if (newOptions.columns) {
             if (oneToOne) {
-                this.setColumnOptionsOneToOne(newOptions.columns);
+                diff.columns = this.setColumnOptionsOneToOne(newOptions.columns);
             }
             else {
-                this.setColumnOptions(newOptions.columns);
+                diff.columns = this.setColumnOptions(newOptions.columns);
             }
             delete newOptions.columns;
         }
+        if (diff.columns && Object.keys(diff.columns).length < 1) {
+            // Remove the columns property if it is empty object
+            delete diff.columns;
+        }
+        Grid_merge(true, diff, Grid_diffObjects(newOptions, this.userOptions));
         this.userOptions = Grid_merge(this.userOptions, newOptions);
-        this.options = Grid_merge(this.options ?? Core_Defaults.defaultOptions, this.userOptions);
-        // Generate column options map
-        const columnOptionsArray = this.options?.columns;
-        if (!columnOptionsArray) {
+        this.options = Grid_merge(this.options ?? Defaults_defaultOptions, this.userOptions);
+        return diff;
+    }
+    /**
+     * Cleans up and reloads the column options from the `userOptions.columns`.
+     * Generates the internal column options map from the options.columns array.
+     */
+    reloadColumnOptions() {
+        const colOptions = this.userOptions.columns;
+        if (!colOptions) {
+            this.columnOptionsMap = {};
+            return;
+        }
+        if (colOptions.length < 1) {
+            delete this.userOptions.columns;
+            this.columnOptionsMap = {};
             return;
         }
         const columnOptionsMap = {};
-        for (let i = 0, iEnd = columnOptionsArray?.length ?? 0; i < iEnd; ++i) {
-            columnOptionsMap[columnOptionsArray[i].id] = {
+        for (let i = 0, iEnd = colOptions.length; i < iEnd; ++i) {
+            columnOptionsMap[colOptions[i].id] = {
                 index: i,
-                options: columnOptionsArray[i]
+                options: colOptions[i]
             };
         }
         this.columnOptionsMap = columnOptionsMap;
@@ -20202,8 +20324,15 @@ class Grid {
      * @param overwrite
      * Whether to overwrite the existing column options with the new ones.
      * Default is `false`.
+     *
+     * @returns
+     * An object of the changed column options in form of a record of
+     * `[column.id]: column.options`.
+     *
+     * @internal
      */
     setColumnOptions(newColumnOptions, overwrite = false) {
+        const columnDiffOptions = {};
         if (!this.userOptions.columns) {
             this.userOptions.columns = this.options?.columns ?? [];
         }
@@ -20214,23 +20343,33 @@ class Grid {
             // If the new column options contain only the id.
             if (Object.keys(newOptions).length < 2) {
                 if (overwrite && colOptionsIndex !== -1) {
+                    columnDiffOptions[newOptions.id] = Grid_diffObjects(columnOptions[colOptionsIndex], { id: newOptions.id }, true);
                     columnOptions.splice(colOptionsIndex, 1);
                 }
                 continue;
             }
+            let diff;
             if (colOptionsIndex === -1) {
+                diff = Grid_merge(newOptions);
                 columnOptions.push(newOptions);
             }
             else if (overwrite) {
+                const prevOptions = columnOptions[colOptionsIndex];
+                diff = Grid_merge(Grid_diffObjects(prevOptions, newOptions, true), Grid_diffObjects(newOptions, prevOptions));
                 columnOptions[colOptionsIndex] = newOptions;
             }
             else {
-                Grid_merge(true, columnOptions[colOptionsIndex], newOptions);
+                const prevOptions = columnOptions[colOptionsIndex];
+                diff = Grid_diffObjects(newOptions, prevOptions);
+                Grid_merge(true, prevOptions, newOptions);
+            }
+            delete diff.id;
+            if (Object.keys(diff).length > 0) {
+                columnDiffOptions[newOptions.id] = diff;
             }
         }
-        if (columnOptions.length < 1) {
-            delete this.userOptions.columns;
-        }
+        this.reloadColumnOptions();
+        return columnDiffOptions;
     }
     /**
      * Loads the new column options to the userOptions field in a one-to-one
@@ -20239,10 +20378,15 @@ class Grid {
      *
      * @param newColumnOptions
      * The new column options that should be loaded.
+     *
+     * @returns
+     * The difference between the previous and the new column options in form
+     * of a record of `[column.id]: column.options`.
      */
     setColumnOptionsOneToOne(newColumnOptions) {
         const prevColumnOptions = this.userOptions.columns;
         const columnOptions = [];
+        const columnDiffOptions = {};
         let prevOptions;
         for (let i = 0, iEnd = newColumnOptions.length; i < iEnd; ++i) {
             const newOptions = newColumnOptions[i];
@@ -20250,12 +20394,19 @@ class Grid {
             if (indexInPrevOptions !== void 0 && indexInPrevOptions !== -1) {
                 prevOptions = prevColumnOptions?.[indexInPrevOptions];
             }
+            const diffOptions = Grid_diffObjects(newOptions, prevOptions ?? {});
+            if (Object.keys(diffOptions).length > 0) {
+                delete diffOptions.id;
+                columnDiffOptions[newOptions.id] = diffOptions;
+            }
             const resultOptions = Grid_merge(prevOptions ?? {}, newOptions);
             if (Object.keys(resultOptions).length > 1) {
                 columnOptions.push(resultOptions);
             }
         }
         this.userOptions.columns = columnOptions;
+        this.reloadColumnOptions();
+        return columnDiffOptions;
     }
     /**
      * Updates the Grid with new options.
@@ -20265,36 +20416,221 @@ class Grid {
      * the update will be proceeded based on the `this.userOptions` property.
      * The `column` options are merged using the `id` property as a key.
      *
-     * @param render
-     * Whether to re-render the Grid after updating the options.
+     * @param redraw
+     * Whether to redraw the Grid after updating the options.
      *
      * @param oneToOne
      * When `false` (default), the existing column options will be merged with
      * the ones that are currently defined in the user options. When `true`,
      * the columns not defined in the new options will be removed.
      */
-    async update(options = {}, render = true, oneToOne = false) {
-        this.loadUserOptions(options, oneToOne);
-        if (!this.dataTable || options.dataTable) {
-            this.userOptions.dataTable = options.dataTable;
-            (this.options ?? {}).dataTable = options.dataTable;
-            this.loadDataTable();
-            this.querying.shouldBeUpdated = true;
+    async update(options = {}, redraw = true, oneToOne = false) {
+        Grid_fireEvent(this, 'beforeUpdate', {
+            scope: 'grid',
+            options,
+            redraw,
+            oneToOne
+        });
+        const { viewport } = this;
+        const diff = this.loadUserOptions(options, oneToOne);
+        const flags = this.dirtyFlags;
+        if (viewport) {
+            if (!this.dataTable || 'dataTable' in diff) {
+                this.userOptions.dataTable = options.dataTable;
+                (this.options ?? {}).dataTable = options.dataTable;
+                this.loadDataTable();
+                // TODO: Sometimes it can be too much, so we need to check if
+                // the columns have changed or just their data. If just their
+                // data, we can just mark the grid.table as dirty instead of the
+                // whole grid.
+                flags.add('grid');
+            }
+            if ('columns' in diff) {
+                const ids = Object.keys(diff.columns ?? {});
+                for (const id of ids) {
+                    // TODO: Move this to the column update method.
+                    this.loadColumnOptionDiffs(viewport, id, diff.columns?.[id]);
+                    delete diff.columns?.[id];
+                }
+                delete diff.columns;
+            }
+            if ('columnDefaults' in diff) {
+                this.loadColumnOptionDiffs(viewport, null, diff.columnDefaults);
+                delete diff.columnDefaults;
+            }
+            if (diff.lang) {
+                const langDiff = diff.lang;
+                if ('locale' in langDiff) {
+                    this.locale = langDiff.locale;
+                    this.time.update({ locale: this.locale });
+                }
+                delete langDiff.locale;
+                // TODO: Add more lang diff checks here.
+                if (Object.keys(langDiff).length > 0) {
+                    flags.add('grid');
+                }
+            }
+            delete diff.lang;
+            if ('time' in diff) {
+                this.time.update(diff.time);
+                delete diff.time;
+            }
+            if (diff.pagination) {
+                const paginationDiff = diff.pagination;
+                if ('enabled' in paginationDiff) {
+                    if (!this.pagination && paginationDiff.enabled) {
+                        this.pagination = new Pagination_Pagination(this);
+                    }
+                }
+                this.pagination?.update(paginationDiff);
+            }
+            delete diff.pagination;
+            // TODO: Add more options that can be optimized here.
+            if (Object.keys(diff).length > 0) {
+                flags.add('grid');
+            }
         }
-        if (!render) {
+        else {
+            flags.add('grid');
+        }
+        if (redraw) {
+            await this.redraw();
+        }
+        Grid_fireEvent(this, 'afterUpdate', {
+            scope: 'grid',
+            options,
+            redraw,
+            oneToOne
+        });
+    }
+    /**
+     * Loads the column option diffs by updating the dirty flags.
+     *
+     * @param vp
+     * The viewport that the column option diffs should be loaded for.
+     *
+     * @param columnId
+     * The ID of the column that should be updated.
+     *
+     * @param columnDiff
+     * The difference between the previous and the new column options in form
+     * of a record of `[column.id]: column.options`. If `null`, assume that
+     * it refers to the column defaults.
+     */
+    loadColumnOptionDiffs(vp, columnId, columnDiff = {}) {
+        if (Object.keys(columnDiff).length < 1) {
             return;
         }
-        this.initAccessibility();
-        this.initPagination();
-        this.querying.loadOptions();
-        // Update locale.
-        const locale = options.lang?.locale;
-        if (locale) {
-            this.locale = locale;
-            this.time.update(Grid_extend(options.time || {}, { locale: this.locale }));
+        const flags = this.dirtyFlags;
+        const column = columnId ? this.viewport?.getColumn(columnId) : null;
+        if (column !== null && ( // Column null = column defaults
+        (!column && columnDiff.enabled !== false) ||
+            (column && columnDiff.enabled === false))) {
+            flags.add('grid');
         }
-        await this.querying.proceed();
-        this.renderViewport();
+        delete columnDiff.enabled;
+        if ('cells' in columnDiff) {
+            const cellsDiff = columnDiff.cells ?? {};
+            if ('format' in cellsDiff ||
+                'formatter' in cellsDiff ||
+                'className' in cellsDiff // TODO: check if this too
+            ) {
+                // Optimization idea: list of columns to update
+                flags.add('rows');
+            }
+            delete cellsDiff.format;
+            delete cellsDiff.formatter;
+            delete cellsDiff.className;
+            if (Object.keys(cellsDiff).length > 0) {
+                flags.add('rows');
+            }
+        }
+        delete columnDiff.cells;
+        if ('width' in columnDiff) {
+            vp.columnResizing.isDirty = true;
+        }
+        delete columnDiff.width;
+        if ('sorting' in columnDiff) {
+            const sortingDiff = columnDiff.sorting ?? {};
+            if ('compare' in sortingDiff ||
+                'order' in sortingDiff) {
+                flags.add('sorting');
+            }
+            delete sortingDiff.compare;
+            delete sortingDiff.order;
+            // Idea: sortable - redraw only header cell
+            if (Object.keys(sortingDiff).length > 0) {
+                flags.add('grid');
+            }
+        }
+        delete columnDiff.sorting;
+        if ('filtering' in columnDiff) {
+            const filteringDiff = columnDiff.filtering ?? {};
+            if ('condition' in filteringDiff ||
+                'value' in filteringDiff) {
+                flags.add('filtering');
+            }
+            delete filteringDiff.condition;
+            delete filteringDiff.value;
+            if (Object.keys(filteringDiff).length > 0) {
+                flags.add('grid');
+            }
+        }
+        delete columnDiff.filtering;
+        if (Object.keys(columnDiff).length > 0) {
+            flags.add('grid');
+        }
+    }
+    /**
+     * Redraws the Grid in more optimized way than the regular render method.
+     * It checks what parts of the Grid are marked as dirty and redraws only
+     * them minimizing the number of DOM operations.
+     */
+    async redraw() {
+        Grid_fireEvent(this, 'beforeRedraw');
+        const flags = this.dirtyFlags;
+        if (flags.has('grid')) {
+            return await this.render();
+        }
+        const { viewport: vp, pagination } = this;
+        const colResizing = vp?.columnResizing;
+        if (flags.has('sorting') ||
+            flags.has('filtering') ||
+            pagination?.isDirtyQuerying) {
+            this.querying.loadOptions();
+        }
+        if (colResizing?.isDirty) {
+            colResizing.loadColumns();
+        }
+        if (flags.has('rows') ||
+            flags.has('sorting') ||
+            flags.has('filtering') ||
+            pagination?.isDirtyQuerying) {
+            await vp?.updateRows();
+        }
+        else if (flags.has('reflow') ||
+            colResizing?.isDirty) {
+            vp?.reflow();
+        }
+        const columns = vp?.columns ?? [];
+        if (flags.has('sorting') ||
+            flags.has('filtering')) {
+            for (const column of columns) {
+                column.header?.toolbar?.refreshState();
+            }
+        }
+        if (flags.has('filtering')) {
+            for (const column of columns) {
+                column.filtering?.refreshState();
+            }
+        }
+        if (pagination?.isDirtyQuerying) {
+            pagination.updateControls(true);
+        }
+        delete pagination?.isDirtyQuerying;
+        delete colResizing?.isDirty;
+        flags.clear();
+        Grid_fireEvent(this, 'afterRedraw');
     }
     /**
      * Updates the column of the Grid with new options.
@@ -20306,19 +20642,54 @@ class Grid {
      * The options of the columns that should be updated. If null,
      * column options for this column ID will be removed.
      *
-     * @param render
-     * Whether to re-render the Grid after updating the columns.
+     * @param redraw
+     * Whether to redraw the Grid after updating the columns.
      *
      * @param overwrite
      * If true, the column options will be updated by replacing the existing
      * options with the new ones instead of merging them.
      */
-    async updateColumn(columnId, options, render = true, overwrite = false) {
-        this.setColumnOptions([{
+    async updateColumn(columnId, options, redraw = true, overwrite = false) {
+        Grid_fireEvent(this, 'beforeUpdate', {
+            scope: 'column',
+            options,
+            redraw,
+            overwrite,
+            columnId
+        });
+        const vp = this.viewport;
+        const diffs = this.setColumnOptions([{
                 id: columnId,
                 ...options
             }], overwrite);
-        await this.update(void 0, render);
+        const diff = diffs?.[columnId];
+        if (diff && vp) {
+            this.loadColumnOptionDiffs(vp, columnId, diff);
+        }
+        if (redraw) {
+            await this.redraw();
+        }
+        Grid_fireEvent(this, 'afterUpdate', {
+            scope: 'column',
+            options,
+            redraw,
+            overwrite,
+            columnId
+        });
+    }
+    async render() {
+        if (this.isRendered) {
+            this.destroy(true);
+        }
+        this.loadDataTable();
+        this.initContainer(this.renderTo);
+        this.initAccessibility();
+        this.initPagination();
+        this.querying.loadOptions();
+        await this.querying.proceed();
+        this.renderViewport();
+        this.isRendered = true;
+        this.dirtyFlags.clear();
     }
     /**
      * Hovers the row with the provided index. It removes the hover effect from
@@ -20467,7 +20838,7 @@ class Grid {
     renderViewport() {
         const viewportMeta = this.viewport?.getStateMeta();
         const pagination = this.pagination;
-        const paginationPosition = pagination?.options.position;
+        const paginationPosition = pagination?.options?.position;
         this.enabledColumns = this.getEnabledColumnIDs();
         this.credits?.destroy();
         this.viewport?.destroy();
@@ -20551,6 +20922,7 @@ class Grid {
      * reference, it should be used instead of creating a new one.
      */
     loadDataTable() {
+        this.querying.shouldBeUpdated = true;
         // Unregister all events attached to the previous data table.
         this.dataTableEventDestructors.forEach((fn) => fn());
         const tableOptions = this.options?.dataTable;
@@ -20605,14 +20977,25 @@ class Grid {
     }
     /**
      * Destroys the Grid.
+     *
+     * @param onlyDOM
+     * Whether to destroy the Grid instance completely (`false` - default) or
+     * just the DOM elements (`true`). If `true`, the Grid can be re-rendered
+     * after destruction by calling the `render` method.
      */
-    destroy() {
+    destroy(onlyDOM = false) {
+        this.isRendered = false;
         const dgIndex = Grid.grids.findIndex((dg) => dg === this);
         this.dataTableEventDestructors.forEach((fn) => fn());
+        this.accessibility?.destroy();
+        this.pagination?.destroy();
         this.viewport?.destroy();
         if (this.container) {
             this.container.innerHTML = HTML_AST.emptyHTML;
             this.container.classList.remove(Grid_Core_Globals.getClassName('container'));
+        }
+        if (onlyDOM) {
+            return;
         }
         // Clear all properties
         Object.keys(this).forEach((key) => {
@@ -20662,17 +21045,36 @@ class Grid {
      * JSON representation of the data
      */
     getData(modified = true) {
-        const dataTable = modified ? this.viewport?.dataTable : this.dataTable;
-        const columns = dataTable?.columns;
-        if (!this.enabledColumns || !columns) {
+        const dataTable = modified ? this.presentationTable : this.dataTable;
+        const tableColumns = dataTable?.columns;
+        const outputColumns = {};
+        if (!this.enabledColumns || !tableColumns) {
             return '{}';
         }
-        for (const key of Object.keys(columns)) {
-            if (this.enabledColumns.indexOf(key) === -1) {
-                delete columns[key];
+        const typeParser = (type) => {
+            const TypeMap = {
+                number: Number,
+                datetime: Number,
+                string: String,
+                'boolean': Boolean
+            };
+            return (value) => (Grid_defined(value) ? TypeMap[type](value) : null);
+        };
+        for (const columnId of Object.keys(tableColumns)) {
+            const column = this.viewport?.getColumn(columnId);
+            if (column) {
+                const columnData = tableColumns[columnId];
+                const parser = typeParser(column.dataType);
+                outputColumns[columnId] = (() => {
+                    const result = [];
+                    for (let i = 0, iEnd = columnData.length; i < iEnd; ++i) {
+                        result.push(parser(columnData[i]));
+                    }
+                    return result;
+                })();
             }
         }
-        return JSON.stringify(columns, null, 2);
+        return JSON.stringify(outputColumns, null, 2);
     }
     /**
      * Returns the current Grid options.
@@ -21027,11 +21429,15 @@ function compose(GridClass, ColumnClass, HeaderCellClass, TableCellClass) {
     }
     [
         'beforeLoad',
-        'afterLoad'
+        'afterLoad',
+        'beforeUpdate',
+        'afterUpdate',
+        'beforeRedraw',
+        'afterRedraw'
     ].forEach((name) => {
         GridEvents_addEvent(GridClass, name, (e) => {
             const grid = e.target;
-            grid.options?.events?.[name]?.call(grid);
+            grid.options?.events?.[name]?.call(grid, e);
         });
     });
     [
@@ -21245,8 +21651,7 @@ class CellEditing {
         }
         this.containerElement = this.containerElement ||
             document.createElement('div');
-        this.containerElement.className =
-            CellEditing.classNames.cellEditingContainer;
+        this.containerElement.className = classNames.cellEditingContainer;
         this.editedCell?.htmlElement.appendChild(this.containerElement);
         this.editModeContent = cell.column.editModeRenderer?.render(cell, this.containerElement);
         this.editModeContent.getMainElement().focus();
@@ -21274,17 +21679,15 @@ class CellEditing {
 }
 /* *
  *
- *  Namespace
+ *  Declarations
  *
  * */
-(function (CellEditing) {
-    /**
-     * The class names used by the CellEditing functionality.
-     */
-    CellEditing.classNames = {
-        cellEditingContainer: Grid_Core_Globals.classNamePrefix + 'cell-editing-container'
-    };
-})(CellEditing || (CellEditing = {}));
+/**
+ * The class names used by the CellEditing functionality.
+ */
+const classNames = {
+    cellEditingContainer: Grid_Core_Globals.classNamePrefix + 'cell-editing-container'
+};
 /* *
  *
  *  Default Export
@@ -21310,47 +21713,41 @@ class CellEditing {
 
 /* *
  *
- *  Namespace
+ *  Constants
  *
  * */
-var CellRendererRegistry;
-(function (CellRendererRegistry) {
-    /* *
-     *
-     *  Constants
-     *
-     * */
-    /**
-     * Record of cell renderer classes
-     */
-    CellRendererRegistry.types = {};
-    /* *
-     *
-     *  Functions
-     *
-     * */
-    /**
-     * Method used to register new cell renderer classes.
-     *
-     * @param key
-     * Registry key of the cell renderer class.
-     *
-     * @param CellRendererClass
-     * Cell renderer class (aka class constructor) to register.
-     */
-    function registerRenderer(key, CellRendererClass) {
-        return (!!key &&
-            !CellRendererRegistry.types[key] &&
-            !!(CellRendererRegistry.types[key] = CellRendererClass));
-    }
-    CellRendererRegistry.registerRenderer = registerRenderer;
-})(CellRendererRegistry || (CellRendererRegistry = {}));
+/**
+ * Record of cell renderer classes
+ */
+const CellRendererRegistry_types = {};
+/* *
+ *
+ *  Functions
+ *
+ * */
+/**
+ * Method used to register new cell renderer classes.
+ *
+ * @param key
+ * Registry key of the cell renderer class.
+ *
+ * @param CellRendererClass
+ * Cell renderer class (aka class constructor) to register.
+ */
+function registerRenderer(key, CellRendererClass) {
+    return (!!key &&
+        !CellRendererRegistry_types[key] &&
+        !!(CellRendererRegistry_types[key] = CellRendererClass));
+}
 /* *
  *
  *  Default Export
  *
  * */
-/* harmony default export */ const CellRendering_CellRendererRegistry = (CellRendererRegistry);
+/* harmony default export */ const CellRendererRegistry = ({
+    types: CellRendererRegistry_types,
+    registerRenderer
+});
 
 ;// ./code/grid/es-modules/Grid/Pro/CellEditing/CellEditingComposition.js
 /* *
@@ -21375,7 +21772,7 @@ var CellRendererRegistry;
 
 
 
-const { makeHTMLElement: CellEditingComposition_makeHTMLElement } = Core_GridUtils;
+const { makeHTMLElement: CellEditingComposition_makeHTMLElement } = GridUtils;
 const { addEvent: CellEditingComposition_addEvent, merge: CellEditingComposition_merge, pushUnique: CellEditingComposition_pushUnique } = Core_Utilities;
 /* *
  *
@@ -21383,174 +21780,174 @@ const { addEvent: CellEditingComposition_addEvent, merge: CellEditingComposition
  *
  * */
 /**
- * @internal
+ * Default options for the cell editing.
  */
-var CellEditingComposition;
-(function (CellEditingComposition) {
-    /**
-     * Default options for the cell editing.
-     */
-    const defaultOptions = {
+const CellEditingComposition_defaultOptions = {
+    accessibility: {
+        announcements: {
+            cellEditing: true
+        }
+    },
+    lang: {
         accessibility: {
-            announcements: {
-                cellEditing: true
-            }
-        },
-        lang: {
-            accessibility: {
-                cellEditing: {
-                    editable: 'Editable.',
-                    announcements: {
-                        started: 'Entered cell editing mode.',
-                        edited: 'Edited cell value.',
-                        cancelled: 'Editing canceled.',
-                        notValid: 'Provided value is not valid.'
-                    }
+            cellEditing: {
+                editable: 'Editable.',
+                announcements: {
+                    started: 'Entered cell editing mode.',
+                    edited: 'Edited cell value.',
+                    cancelled: 'Editing canceled.',
+                    notValid: 'Provided value is not valid.'
                 }
             }
         }
-    };
-    /**
-     * Extends the grid classes with cell editing functionality.
-     *
-     * @param TableClass
-     * The class to extend.
-     *
-     * @param TableCellClass
-     * The class to extend.
-     *
-     * @param ColumnClass
-     * The class to extend.
-     */
-    function compose(TableClass, TableCellClass, ColumnClass) {
-        if (!CellEditingComposition_pushUnique(Grid_Core_Globals.composed, 'CellEditing')) {
-            return;
-        }
-        CellEditingComposition_merge(true, Core_Defaults.defaultOptions, defaultOptions);
-        CellEditingComposition_addEvent(ColumnClass, 'afterInit', afterColumnInit);
-        CellEditingComposition_addEvent(TableClass, 'beforeInit', initTable);
-        CellEditingComposition_addEvent(TableCellClass, 'keyDown', onCellKeyDown);
-        CellEditingComposition_addEvent(TableCellClass, 'dblClick', onCellDblClick);
-        CellEditingComposition_addEvent(TableCellClass, 'afterRender', addEditableCellA11yHint);
-        CellEditingComposition_addEvent(TableCellClass, 'startedEditing', function () {
-            announceA11yUserEditedCell(this, 'started');
-        });
-        CellEditingComposition_addEvent(TableCellClass, 'stoppedEditing', function (e) {
-            if (e.submit) {
-                this.column.options.cells?.events?.afterEdit?.call(this);
-            }
-            announceA11yUserEditedCell(this, e.submit ? 'edited' : 'cancelled');
-        });
     }
-    CellEditingComposition.compose = compose;
-    /**
-     * Callback function called before table initialization.
-     */
-    function initTable() {
-        this.cellEditing = new CellEditing_CellEditing(this);
+};
+/**
+ * Extends the grid classes with cell editing functionality.
+ *
+ * @param TableClass
+ * The class to extend.
+ *
+ * @param TableCellClass
+ * The class to extend.
+ *
+ * @param ColumnClass
+ * The class to extend.
+ */
+function CellEditingComposition_compose(TableClass, TableCellClass, ColumnClass) {
+    if (!CellEditingComposition_pushUnique(Grid_Core_Globals.composed, 'CellEditing')) {
+        return;
     }
-    /**
-     * Creates the edit mode renderer for the column.
-     *
-     * @param column
-     * The column to create the edit mode renderer for.
-     */
-    function createEditModeRenderer(column) {
-        const editModeOptions = column.options.cells?.editMode;
-        const selectedEditModeRendererTypeName = editModeOptions?.renderer?.type;
-        const viewRendererTypeName = column.options?.cells?.renderer?.type || 'text';
-        if (selectedEditModeRendererTypeName) {
-            return new CellRendering_CellRendererRegistry.types[selectedEditModeRendererTypeName](column, editModeOptions?.renderer || {});
+    CellEditingComposition_merge(true, Defaults_defaultOptions, CellEditingComposition_defaultOptions);
+    CellEditingComposition_addEvent(ColumnClass, 'afterInit', afterColumnInit);
+    CellEditingComposition_addEvent(TableClass, 'beforeInit', initTable);
+    CellEditingComposition_addEvent(TableCellClass, 'keyDown', onCellKeyDown);
+    CellEditingComposition_addEvent(TableCellClass, 'dblClick', onCellDblClick);
+    CellEditingComposition_addEvent(TableCellClass, 'afterRender', addEditableCellA11yHint);
+    CellEditingComposition_addEvent(TableCellClass, 'startedEditing', function () {
+        announceA11yUserEditedCell(this, 'started');
+    });
+    CellEditingComposition_addEvent(TableCellClass, 'stoppedEditing', function (e) {
+        if (e.submit) {
+            this.column.options.cells?.events?.afterEdit?.call(this);
         }
-        const ViewRendererType = CellRendering_CellRendererRegistry.types[viewRendererTypeName] ||
-            CellRendering_CellRendererRegistry.types.text;
-        let editModeRendererTypeName = ViewRendererType.defaultEditingRenderer;
-        if (typeof editModeRendererTypeName !== 'string') {
-            editModeRendererTypeName =
-                editModeRendererTypeName[column.dataType] || 'textInput';
-        }
-        return new CellRendering_CellRendererRegistry.types[editModeRendererTypeName](column, editModeRendererTypeName === viewRendererTypeName ? CellEditingComposition_merge(column.options.cells?.renderer, { disabled: false }) || {} : {});
+        announceA11yUserEditedCell(this, e.submit ? 'edited' : 'cancelled');
+    });
+    CellEditingComposition_addEvent(TableCellClass, 'afterEditValue', function () {
+        this.column.options.cells?.events?.afterEdit?.call(this);
+        announceA11yUserEditedCell(this, 'edited');
+    });
+}
+/**
+ * Callback function called before table initialization.
+ */
+function initTable() {
+    this.cellEditing = new CellEditing_CellEditing(this);
+}
+/**
+ * Creates the edit mode renderer for the column.
+ *
+ * @param column
+ * The column to create the edit mode renderer for.
+ */
+function createEditModeRenderer(column) {
+    const editModeOptions = column.options.cells?.editMode;
+    const selectedEditModeRendererTypeName = editModeOptions?.renderer?.type;
+    const viewRendererTypeName = column.options?.cells?.renderer?.type || 'text';
+    if (selectedEditModeRendererTypeName) {
+        return new CellRendererRegistry.types[selectedEditModeRendererTypeName](column, editModeOptions?.renderer || {});
     }
-    /**
-     * Callback function called after column initialization.
-     */
-    function afterColumnInit() {
-        const { options } = this;
-        if (options?.cells?.editMode?.enabled) {
-            this.editModeRenderer = createEditModeRenderer(this);
-        }
+    const ViewRendererType = CellRendererRegistry.types[viewRendererTypeName] ||
+        CellRendererRegistry.types.text;
+    let editModeRendererTypeName = ViewRendererType.defaultEditingRenderer;
+    if (typeof editModeRendererTypeName !== 'string') {
+        editModeRendererTypeName =
+            editModeRendererTypeName[column.dataType] || 'textInput';
     }
-    /**
-     * Callback function called when a key is pressed on a cell.
-     *
-     * @param e
-     * The event object.
-     */
-    function onCellKeyDown(e) {
-        if (e.originalEvent?.key !== 'Enter' ||
-            !this.column.editModeRenderer) {
-            return;
-        }
+    return new CellRendererRegistry.types[editModeRendererTypeName](column, editModeRendererTypeName === viewRendererTypeName ? CellEditingComposition_merge(column.options.cells?.renderer, { disabled: false }) || {} : {});
+}
+/**
+ * Callback function called after column initialization.
+ */
+function afterColumnInit() {
+    const { options } = this;
+    if (options?.cells?.editMode?.enabled) {
+        this.editModeRenderer = createEditModeRenderer(this);
+    }
+}
+/**
+ * Callback function called when a key is pressed on a cell.
+ *
+ * @param e
+ * The event object.
+ */
+function onCellKeyDown(e) {
+    if (e.originalEvent?.key !== 'Enter' ||
+        !this.column.editModeRenderer) {
+        return;
+    }
+    this.row.viewport.cellEditing?.startEditing(this);
+}
+/**
+ * Callback function called when a cell is double clicked.
+ */
+function onCellDblClick() {
+    if (this.column.editModeRenderer) {
         this.row.viewport.cellEditing?.startEditing(this);
     }
-    /**
-     * Callback function called when a cell is double clicked.
-     */
-    function onCellDblClick() {
-        if (this.column.editModeRenderer) {
-            this.row.viewport.cellEditing?.startEditing(this);
-        }
+}
+/**
+ * Add the 'editable' hint span element for the editable cell.
+ */
+function addEditableCellA11yHint() {
+    const a11y = this.row.viewport.grid.accessibility;
+    if (!a11y || this.a11yEditableHint?.isConnected) {
+        return;
     }
-    /**
-     * Add the 'editable' hint span element for the editable cell.
-     */
-    function addEditableCellA11yHint() {
-        const a11y = this.row.viewport.grid.accessibility;
-        if (!a11y || this.a11yEditableHint?.isConnected) {
-            return;
-        }
-        const editableLang = this.row.viewport.grid.options
-            ?.lang?.accessibility?.cellEditing?.editable;
-        if (!this.column.options.cells?.editMode?.enabled || !editableLang) {
-            return;
-        }
-        this.a11yEditableHint = CellEditingComposition_makeHTMLElement('span', {
-            className: Grid_Core_Globals.getClassName('visuallyHidden'),
-            innerText: ', ' + editableLang
-        }, this.htmlElement);
+    const editableLang = this.row.viewport.grid.options
+        ?.lang?.accessibility?.cellEditing?.editable;
+    if (!this.column.options.cells?.editMode?.enabled || !editableLang) {
+        return;
     }
-    /**
-     * Announce that the cell editing started.
-     *
-     * @param cell
-     * The cell that is being edited.
-     *
-     * @param msgType
-     * The type of the message.
-     */
-    function announceA11yUserEditedCell(cell, msgType) {
-        const a11y = cell.row.viewport.grid.accessibility;
-        if (!a11y) {
-            return;
-        }
-        const { options } = a11y.grid;
-        if (!options?.accessibility?.announcements?.cellEditing) {
-            return;
-        }
-        const lang = options?.lang?.accessibility?.cellEditing?.announcements;
-        const msg = lang?.[msgType];
-        if (!msg) {
-            return;
-        }
-        a11y.announce(msg);
+    this.a11yEditableHint = CellEditingComposition_makeHTMLElement('span', {
+        className: Grid_Core_Globals.getClassName('visuallyHidden'),
+        innerText: ', ' + editableLang
+    }, this.htmlElement);
+}
+/**
+ * Announce that the cell editing started.
+ *
+ * @param cell
+ * The cell that is being edited.
+ *
+ * @param msgType
+ * The type of the message.
+ */
+function announceA11yUserEditedCell(cell, msgType) {
+    const a11y = cell.row.viewport.grid.accessibility;
+    if (!a11y) {
+        return;
     }
-})(CellEditingComposition || (CellEditingComposition = {}));
+    const { options } = a11y.grid;
+    if (!options?.accessibility?.announcements?.cellEditing) {
+        return;
+    }
+    const lang = options?.lang?.accessibility?.cellEditing?.announcements;
+    const msg = lang?.[msgType];
+    if (!msg) {
+        return;
+    }
+    a11y.announce(msg);
+}
 /* *
  *
  *  Default Export
  *
  * */
-/* harmony default export */ const CellEditing_CellEditingComposition = (CellEditingComposition);
+/* harmony default export */ const CellEditingComposition = ({
+    compose: CellEditingComposition_compose,
+    defaultOptions: CellEditingComposition_defaultOptions
+});
 
 ;// ./code/grid/es-modules/Grid/Core/Credits.js
 /* *
@@ -21571,7 +21968,7 @@ var CellEditingComposition;
 
 
 
-const { makeHTMLElement: Credits_makeHTMLElement, setHTMLContent: Credits_setHTMLContent } = Core_GridUtils;
+const { makeHTMLElement: Credits_makeHTMLElement, setHTMLContent: Credits_setHTMLContent } = GridUtils;
 /* *
  *
  *  Class
@@ -21699,7 +22096,7 @@ Credits.defaultOptions = {
 
 
 
-const { setHTMLContent: CreditsPro_setHTMLContent } = Core_GridUtils;
+const { setHTMLContent: CreditsPro_setHTMLContent } = GridUtils;
 /* *
  *
  *  Class
@@ -21817,44 +22214,42 @@ class CreditsPro extends Core_Credits {
 const { addEvent: CreditsProComposition_addEvent, merge: CreditsProComposition_merge, pushUnique: CreditsProComposition_pushUnique } = Core_Utilities;
 /* *
  *
- *  Class Namespace
+ *  Composition
  *
  * */
-var CreditsProComposition;
-(function (CreditsProComposition) {
-    /**
-     * Extends the grid classes with customizable credits.
-     *
-     * @param GridClass
-     * The class to extend.
-     *
-     */
-    function compose(GridClass) {
-        if (!CreditsProComposition_pushUnique(Grid_Core_Globals.composed, 'CreditsPro')) {
-            return;
-        }
-        CreditsProComposition_merge(true, Core_Defaults.defaultOptions, {
-            credits: Credits_CreditsPro.defaultOptions
-        });
-        // TODO: Change to `beforeLoad` after upgrading grid update.
-        CreditsProComposition_addEvent(GridClass, 'afterRenderViewport', initCredits);
+/**
+ * Extends the grid classes with customizable credits.
+ *
+ * @param GridClass
+ * The class to extend.
+ *
+ */
+function CreditsProComposition_compose(GridClass) {
+    if (!CreditsProComposition_pushUnique(Grid_Core_Globals.composed, 'CreditsPro')) {
+        return;
     }
-    CreditsProComposition.compose = compose;
-    /**
-     * Init configurable credits.
-     * @param this
-     * Reference to Grid.
-     */
-    function initCredits() {
-        this.credits = new Credits_CreditsPro(this, this.options?.credits);
-    }
-})(CreditsProComposition || (CreditsProComposition = {}));
+    CreditsProComposition_merge(true, Defaults_defaultOptions, {
+        credits: Credits_CreditsPro.defaultOptions
+    });
+    // TODO: Change to `beforeLoad` after upgrading grid update.
+    CreditsProComposition_addEvent(GridClass, 'afterRenderViewport', initCredits);
+}
+/**
+ * Init configurable credits.
+ * @param this
+ * Reference to Grid.
+ */
+function initCredits() {
+    this.credits = new Credits_CreditsPro(this, this.options?.credits);
+}
 /* *
  *
  *  Default Export
  *
  * */
-/* harmony default export */ const Credits_CreditsProComposition = (CreditsProComposition);
+/* harmony default export */ const CreditsProComposition = ({
+    compose: CreditsProComposition_compose
+});
 
 ;// ./code/grid/es-modules/Shared/DownloadURL.js
 /* *
@@ -21875,7 +22270,7 @@ var CreditsProComposition;
  *
  * */
 
-const { isSafari, win: DownloadURL_win, win: { document: DownloadURL_doc } } = Core_Globals;
+const { isSafari: DownloadURL_isSafari, win: DownloadURL_win, win: { document: DownloadURL_doc } } = Core_Globals;
 
 const { error: DownloadURL_error } = Core_Utilities;
 /* *
@@ -21950,7 +22345,7 @@ function downloadURL(dataURL, filename) {
     // to Blob or fall back. Edge always needs that blob.
     isOldEdgeBrowser = /Edge\/\d+/.test(nav.userAgent), 
     // Safari on iOS needs Blob in order to download PDF
-    safariBlob = (isSafari &&
+    safariBlob = (DownloadURL_isSafari &&
         typeof dataURL === 'string' &&
         dataURL.indexOf('data:application/pdf') === 0);
     if (safariBlob || isOldEdgeBrowser || dataURL.length > 2000000) {
@@ -22073,7 +22468,9 @@ const DownloadURL = {
  * */
 
 
+
 const { downloadURL: Exporting_downloadURL, getBlobFromContent: Exporting_getBlobFromContent } = Shared_DownloadURL;
+const { defined: Exporting_defined } = Core_Utilities;
 /* *
  *
  *  Class
@@ -22127,19 +22524,18 @@ class Exporting {
             'data:application/json,\uFEFF' + encodeURIComponent(json), this.getFilename() + '.json');
     }
     /**
-     * Creates a CSV string from the data table.
+     * Creates a CSV string from the data grid.
      *
      * @param modified
-     * Whether to return the modified data table (after filtering/sorting/etc.)
-     * or the unmodified, original one. Default value is set to `true`.
+     * Whether to return the data including the modifiers (filtering, sorting,
+     * etc.) or the original data. Default value is set to `true`.
      *
      * @return
      * CSV string representing the data table.
      */
     getCSV(modified = true) {
-        const dataTable = modified ?
-            this.grid.viewport?.dataTable :
-            this.grid.dataTable;
+        const { grid } = this;
+        const dataTable = modified ? grid.presentationTable : grid.dataTable;
         if (!dataTable) {
             return '';
         }
@@ -22155,49 +22551,54 @@ class Exporting {
         if (!itemDelimiter) {
             itemDelimiter = (decimalPoint === ',' ? ';' : ',');
         }
-        const columns = dataTable.getColumns();
-        const columnIds = Object.keys(columns);
+        const columnIds = grid.enabledColumns ?? [];
+        const columnsCount = columnIds?.length;
         const csvRows = [];
-        const columnsCount = columnIds.length;
         const rowArray = [];
         // Add the names as the first row if they should be exported
         if (exportNames) {
             csvRows.push(columnIds.map((columnId) => `"${columnId}"`).join(itemDelimiter));
         }
+        const typeParser = (type) => {
+            switch (type) {
+                case 'number':
+                case 'datetime':
+                    return (val) => (Exporting_defined(val) ?
+                        String(val).replace('.', decimalPoint) :
+                        '');
+                case 'string':
+                    return (val) => (Exporting_defined(val) ?
+                        `"${val}"` :
+                        '');
+                case 'boolean':
+                    return (val) => (Exporting_defined(val) ?
+                        (val ? 'TRUE' : 'FALSE') :
+                        '');
+            }
+        };
         for (let columnIndex = 0; columnIndex < columnsCount; columnIndex++) {
-            const columnId = columnIds[columnIndex], column = columns[columnId], columnLength = column.length;
-            let columnDataType;
+            const columnId = columnIds[columnIndex], column = grid.viewport?.getColumn(columnId), colType = column?.dataType, columnArray = dataTable.getColumn(columnId) ?? [], columnLength = columnArray?.length, parser = typeParser(colType ?? 'string');
             for (let rowIndex = 0; rowIndex < columnLength; rowIndex++) {
-                let cellValue = column[rowIndex];
-                if (!rowArray[rowIndex]) {
-                    rowArray[rowIndex] = [];
+                let row = rowArray[rowIndex];
+                if (!row) {
+                    row = rowArray[rowIndex] = [];
                 }
-                // Prefer datatype from metadata
-                if (columnDataType === 'string') {
-                    cellValue = '"' + cellValue + '"';
-                }
-                else if (typeof cellValue === 'number') {
-                    cellValue = String(cellValue).replace('.', decimalPoint);
-                }
-                else if (typeof cellValue === 'string') {
-                    cellValue = `"${cellValue}"`;
-                }
-                rowArray[rowIndex][columnIndex] = cellValue;
+                row[columnIndex] = parser(columnArray[rowIndex]);
                 // On the final column, push the row to the CSV
                 if (columnIndex === columnsCount - 1) {
                     // Trim repeated undefined values starting at the end
                     // Currently, we export the first "comma" even if the
                     // second value is undefined
                     let i = columnIndex;
-                    while (rowArray[rowIndex].length > 2) {
-                        const cellVal = rowArray[rowIndex][i];
+                    while (row.length > 2) {
+                        const cellVal = row[i];
                         if (cellVal !== void 0) {
                             break;
                         }
-                        rowArray[rowIndex].pop();
+                        row.pop();
                         i--;
                     }
-                    csvRows.push(rowArray[rowIndex].join(itemDelimiter));
+                    csvRows.push(row.join(itemDelimiter));
                 }
             }
         }
@@ -22283,39 +22684,37 @@ Exporting.defaultOptions = {
 const { addEvent: ExportingComposition_addEvent, pushUnique: ExportingComposition_pushUnique } = Core_Utilities;
 /* *
  *
- *  Class Namespace
+ *  Composition
  *
  * */
-var ExportingComposition;
-(function (ExportingComposition) {
-    /**
-     * Extends the grid classes with exporting.
-     *
-     * @param GridClass
-     * The class to extend.
-     *
-     */
-    function compose(GridClass) {
-        if (!ExportingComposition_pushUnique(Grid_Core_Globals.composed, 'Exporting')) {
-            return;
-        }
-        Core_Defaults.defaultOptions.exporting = Export_Exporting.defaultOptions;
-        ExportingComposition_addEvent(GridClass, 'beforeLoad', initExporting);
+/**
+ * Extends the grid classes with exporting.
+ *
+ * @param GridClass
+ * The class to extend.
+ *
+ */
+function ExportingComposition_compose(GridClass) {
+    if (!ExportingComposition_pushUnique(Grid_Core_Globals.composed, 'Exporting')) {
+        return;
     }
-    ExportingComposition.compose = compose;
-    /**
-     * Init exporting
-     */
-    function initExporting() {
-        this.exporting = new Export_Exporting(this);
-    }
-})(ExportingComposition || (ExportingComposition = {}));
+    Defaults_defaultOptions.exporting = Export_Exporting.defaultOptions;
+    ExportingComposition_addEvent(GridClass, 'beforeLoad', initExporting);
+}
+/**
+ * Init exporting
+ */
+function initExporting() {
+    this.exporting = new Export_Exporting(this);
+}
 /* *
  *
  *  Default Export
  *
  * */
-/* harmony default export */ const Export_ExportingComposition = (ExportingComposition);
+/* harmony default export */ const ExportingComposition = ({
+    compose: ExportingComposition_compose
+});
 
 ;// ./code/grid/es-modules/Grid/Pro/ColumnTypes/Validator.js
 /* *
@@ -22337,7 +22736,7 @@ var ExportingComposition;
 
 
 
-const { makeDiv, setHTMLContent: Validator_setHTMLContent } = Core_GridUtils;
+const { makeDiv: Validator_makeDiv, setHTMLContent: Validator_setHTMLContent } = GridUtils;
 const { defined: Validator_defined } = Core_Utilities;
 /* *
  *
@@ -22355,7 +22754,7 @@ class Validator {
      * */
     constructor(viewport) {
         this.viewport = viewport;
-        this.notifContainer = makeDiv(Validator.classNames.notifContainer);
+        this.notifContainer = Validator_makeDiv(Validator.classNames.notifContainer);
         this.viewport.grid.contentWrapper?.appendChild(this.notifContainer);
     }
     /* *
@@ -22501,87 +22900,72 @@ class Validator {
         this.notifContainer.remove();
     }
 }
-/* *
- *
- *  Namespace
- *
- * */
 /**
- * Namespace for Validation functionality.
+ * The class names used by the validator functionality.
  */
-(function (Validator) {
-    /**
-     * The class names used by the validator functionality.
-     */
-    Validator.classNames = {
-        notifContainer: Grid_Core_Globals.classNamePrefix + 'notification',
-        notifError: Grid_Core_Globals.classNamePrefix + 'notification-error',
-        notifAnimation: Grid_Core_Globals.classNamePrefix + 'notification-animation',
-        editedCellError: Grid_Core_Globals.classNamePrefix + 'edited-cell-error'
-    };
-    /* *
-     *
-     *  Variables
-     *
-     * */
-    /**
-     * Definition of default validation rules.
-     */
-    Validator.rulesRegistry = {
-        notEmpty: {
-            validate: ({ value, rawValue }) => (Validator_defined(value) && rawValue.length > 0),
-            notification: 'Value cannot be empty.'
+Validator.classNames = {
+    notifContainer: Grid_Core_Globals.classNamePrefix + 'notification',
+    notifError: Grid_Core_Globals.classNamePrefix + 'notification-error',
+    notifAnimation: Grid_Core_Globals.classNamePrefix + 'notification-animation',
+    editedCellError: Grid_Core_Globals.classNamePrefix + 'edited-cell-error'
+};
+/**
+ * Definition of default validation rules.
+ */
+Validator.rulesRegistry = {
+    notEmpty: {
+        validate: ({ value, rawValue }) => (Validator_defined(value) && rawValue.length > 0),
+        notification: 'Value cannot be empty.'
+    },
+    number: {
+        validate: ({ rawValue }) => !isNaN(+rawValue),
+        notification: 'Value has to be a number.'
+    },
+    datetime: {
+        validate: ({ value }) => !Validator_defined(value) || !isNaN(+value),
+        notification: 'Value has to be parsed to a valid timestamp.'
+    },
+    'boolean': {
+        validate: ({ rawValue }) => (rawValue === 'true' || rawValue === 'false' ||
+            Number(rawValue) === 1 || Number(rawValue) === 0),
+        notification: 'Value has to be a boolean.'
+    },
+    ignoreCaseUnique: {
+        validate: function ({ rawValue }) {
+            const oldValue = String(this.value).toLowerCase();
+            const rowValueString = rawValue.toLowerCase();
+            if (oldValue === rowValueString) {
+                return true;
+            }
+            const columnData = this.column.data;
+            const isDuplicate = columnData?.some((value) => String(value).toLowerCase() ===
+                rowValueString);
+            return !isDuplicate;
         },
-        number: {
-            validate: ({ rawValue }) => !isNaN(+rawValue),
-            notification: 'Value has to be a number.'
+        notification: 'Value must be unique within this column (case-insensitive).'
+    },
+    unique: {
+        validate: function ({ rawValue }) {
+            const oldValue = this.value;
+            if (oldValue === rawValue) {
+                return true;
+            }
+            const columnData = this.column.data;
+            const isDuplicate = columnData?.some((value) => value === rawValue);
+            return !isDuplicate;
         },
-        datetime: {
-            validate: ({ value }) => !Validator_defined(value) || !isNaN(+value),
-            notification: 'Value has to be parsed to a valid timestamp.'
-        },
-        'boolean': {
-            validate: ({ rawValue }) => (rawValue === 'true' || rawValue === 'false' ||
-                Number(rawValue) === 1 || Number(rawValue) === 0),
-            notification: 'Value has to be a boolean.'
-        },
-        ignoreCaseUnique: {
-            validate: function ({ rawValue }) {
-                const oldValue = String(this.value).toLowerCase();
-                const rowValueString = rawValue.toLowerCase();
-                if (oldValue === rowValueString) {
-                    return true;
-                }
-                const columnData = this.column.data;
-                const isDuplicate = columnData?.some((value) => String(value).toLowerCase() ===
-                    rowValueString);
-                return !isDuplicate;
-            },
-            notification: 'Value must be unique within this column (case-insensitive).'
-        },
-        unique: {
-            validate: function ({ rawValue }) {
-                const oldValue = this.value;
-                if (oldValue === rawValue) {
-                    return true;
-                }
-                const columnData = this.column.data;
-                const isDuplicate = columnData?.some((value) => value === rawValue);
-                return !isDuplicate;
-            },
-            notification: 'Value must be unique within this column (case-sensitive).'
-        }
-    };
-    /**
-     * Default validation rules for each dataType.
-     */
-    Validator.predefinedRules = {
-        'boolean': ['boolean'],
-        datetime: ['datetime'],
-        number: ['number'],
-        string: []
-    };
-})(Validator || (Validator = {}));
+        notification: 'Value must be unique within this column (case-sensitive).'
+    }
+};
+/**
+ * Default validation rules for each dataType.
+ */
+Validator.predefinedRules = {
+    'boolean': ['boolean'],
+    datetime: ['datetime'],
+    number: ['number'],
+    string: []
+};
 /* *
  *
  *  Default Export
@@ -22615,44 +22999,39 @@ const { addEvent: ValidatorComposition_addEvent, pushUnique: ValidatorCompositio
  *
  * */
 /**
- * @internal
+ * Extends the grid classes with cell editing functionality.
+ *
+ * @param TableClass
+ * The class to extend.
+ *
  */
-var ValidatorComposition;
-(function (ValidatorComposition) {
-    /**
-     * Extends the grid classes with cell editing functionality.
-     *
-     * @param TableClass
-     * The class to extend.
-     *
-     */
-    function compose(TableClass) {
-        if (!ValidatorComposition_pushUnique(Grid_Core_Globals.composed, 'Validator')) {
-            return;
-        }
-        ValidatorComposition_addEvent(TableClass, 'afterInit', initValidatorComposition);
-        ValidatorComposition_addEvent(TableClass, 'afterDestroy', destroy);
+function ValidatorComposition_compose(TableClass) {
+    if (!ValidatorComposition_pushUnique(Grid_Core_Globals.composed, 'Validator')) {
+        return;
     }
-    ValidatorComposition.compose = compose;
-    /**
-     * Callback function called after table initialization.
-     */
-    function initValidatorComposition() {
-        this.validator = new ColumnTypes_Validator(this);
-    }
-    /**
-     * Callback function called after table destroy.
-     */
-    function destroy() {
-        this.validator.destroy();
-    }
-})(ValidatorComposition || (ValidatorComposition = {}));
+    ValidatorComposition_addEvent(TableClass, 'afterInit', initValidatorComposition);
+    ValidatorComposition_addEvent(TableClass, 'afterDestroy', destroy);
+}
+/**
+ * Callback function called after table initialization.
+ */
+function initValidatorComposition() {
+    this.validator = new ColumnTypes_Validator(this);
+}
+/**
+ * Callback function called after table destroy.
+ */
+function destroy() {
+    this.validator.destroy();
+}
 /* *
  *
  *  Default Export
  *
  * */
-/* harmony default export */ const ColumnTypes_ValidatorComposition = (ValidatorComposition);
+/* harmony default export */ const ValidatorComposition = ({
+    compose: ValidatorComposition_compose
+});
 
 ;// ./code/grid/es-modules/Grid/Pro/CellRendering/CellRenderersComposition.js
 /* *
@@ -22680,60 +23059,55 @@ const { addEvent: CellRenderersComposition_addEvent, pushUnique: CellRenderersCo
  *
  * */
 /**
- * @internal
+ * Extends the grid classes with cell editing functionality.
+ *
+ * @param ColumnClass
+ * The class to extend.
  */
-var CellRenderersComposition;
-(function (CellRenderersComposition) {
-    /**
-     * Extends the grid classes with cell editing functionality.
-     *
-     * @param ColumnClass
-     * The class to extend.
-     */
-    function compose(ColumnClass) {
-        if (!CellRenderersComposition_pushUnique(Grid_Core_Globals.composed, 'CellRenderers')) {
-            return;
-        }
-        CellRenderersComposition_addEvent(ColumnClass, 'afterInit', afterColumnInit);
-        ColumnClass.prototype.createCellContent = createCellContent;
+function CellRenderersComposition_compose(ColumnClass) {
+    if (!CellRenderersComposition_pushUnique(Grid_Core_Globals.composed, 'CellRenderers')) {
+        return;
     }
-    CellRenderersComposition.compose = compose;
-    /**
-     * Init a type of content for a column.
-     * @param this
-     * Current column.
-     */
-    function afterColumnInit() {
-        const rendererType = this.options.cells?.renderer?.type || 'text';
-        let Renderer = CellRendering_CellRendererRegistry.types[rendererType];
-        if (!Renderer) {
-            // eslint-disable-next-line no-console
-            console.warn(`The cell renderer of type "${rendererType}" is not registered. Using default text renderer instead.`);
-            Renderer = CellRendering_CellRendererRegistry.types.text;
-        }
-        this.cellRenderer = new Renderer(this, this.options.cells?.renderer || {});
+    CellRenderersComposition_addEvent(ColumnClass, 'afterInit', CellRenderersComposition_afterColumnInit);
+    ColumnClass.prototype.createCellContent = createCellContent;
+}
+/**
+ * Init a type of content for a column.
+ * @param this
+ * Current column.
+ */
+function CellRenderersComposition_afterColumnInit() {
+    const rendererType = this.options.cells?.renderer?.type || 'text';
+    let Renderer = CellRendererRegistry.types[rendererType];
+    if (!Renderer) {
+        // eslint-disable-next-line no-console
+        console.warn(`The cell renderer of type "${rendererType}" is not registered. Using default text renderer instead.`);
+        Renderer = CellRendererRegistry.types.text;
     }
-    /**
-     * Render content of cell.
-     * @param this
-     * Current column.
-     *
-     * @param cell
-     * Current cell.
-     *
-     * @returns
-     * Formatted cell content.
-     */
-    function createCellContent(cell) {
-        return this.cellRenderer.render(cell);
-    }
-})(CellRenderersComposition || (CellRenderersComposition = {}));
+    this.cellRenderer = new Renderer(this, this.options.cells?.renderer || {});
+}
+/**
+ * Render content of cell.
+ * @param this
+ * Current column.
+ *
+ * @param cell
+ * Current cell.
+ *
+ * @returns
+ * Formatted cell content.
+ */
+function createCellContent(cell) {
+    return this.cellRenderer.render(cell);
+}
 /* *
  *
  *  Default Export
  *
  * */
-/* harmony default export */ const CellRendering_CellRenderersComposition = (CellRenderersComposition);
+/* harmony default export */ const CellRenderersComposition = ({
+    compose: CellRenderersComposition_compose
+});
 
 ;// ./code/grid/es-modules/Grid/Pro/Pagination/PaginationComposition.js
 /* *
@@ -22756,62 +23130,61 @@ var CellRenderersComposition;
 const { addEvent: PaginationComposition_addEvent, pushUnique: PaginationComposition_pushUnique } = Core_Utilities;
 /* *
  *
- *  Class Namespace
+ *  Composition
  *
  * */
-var PaginationComposition;
-(function (PaginationComposition) {
-    /**
-     * Extends the pagination class with events.
-     *
-     * @param PaginationClass
-     * The class to extend.
-     *
-     */
-    function compose(PaginationClass) {
-        if (!PaginationComposition_pushUnique(Core_Globals.composed, 'PaginationPro')) {
-            return;
-        }
-        // Register pagination events
-        PaginationComposition_addEvent(PaginationClass, 'beforePageChange', (e) => {
-            const { target, currentPage, nextPage, pageSize } = e;
-            target.options.events?.beforePageChange?.call(target, {
-                currentPage: currentPage,
-                nextPage: nextPage,
-                pageSize: pageSize
-            });
-        });
-        PaginationComposition_addEvent(PaginationClass, 'afterPageChange', (e) => {
-            const { target, currentPage, previousPage, pageSize } = e;
-            target.options.events?.afterPageChange?.call(target, {
-                currentPage: currentPage,
-                previousPage: previousPage,
-                pageSize: pageSize
-            });
-        });
-        PaginationComposition_addEvent(PaginationClass, 'beforePageSizeChange', (e) => {
-            const { target, newPageSize, pageSize } = e;
-            target.options.events?.beforePageSizeChange?.call(target, {
-                pageSize: pageSize,
-                newPageSize: newPageSize
-            });
-        });
-        PaginationComposition_addEvent(PaginationClass, 'afterPageSizeChange', (e) => {
-            const { target, previousPageSize, pageSize } = e;
-            target.options.events?.afterPageSizeChange?.call(target, {
-                pageSize: pageSize,
-                previousPageSize: previousPageSize
-            });
-        });
+/**
+ * Extends the pagination class with events.
+ *
+ * @param PaginationClass
+ * The class to extend.
+ *
+ * @internal
+ */
+function PaginationComposition_compose(PaginationClass) {
+    if (!PaginationComposition_pushUnique(Core_Globals.composed, 'PaginationPro')) {
+        return;
     }
-    PaginationComposition.compose = compose;
-})(PaginationComposition || (PaginationComposition = {}));
+    // Register pagination events
+    PaginationComposition_addEvent(PaginationClass, 'beforePageChange', (e) => {
+        const { target, currentPage, nextPage, pageSize } = e;
+        target.options?.events?.beforePageChange?.call(target, {
+            currentPage: currentPage,
+            nextPage: nextPage,
+            pageSize: pageSize
+        });
+    });
+    PaginationComposition_addEvent(PaginationClass, 'afterPageChange', (e) => {
+        const { target, currentPage, previousPage, pageSize } = e;
+        target.options?.events?.afterPageChange?.call(target, {
+            currentPage: currentPage,
+            previousPage: previousPage,
+            pageSize: pageSize
+        });
+    });
+    PaginationComposition_addEvent(PaginationClass, 'beforePageSizeChange', (e) => {
+        const { target, newPageSize, pageSize } = e;
+        target.options?.events?.beforePageSizeChange?.call(target, {
+            pageSize: pageSize,
+            newPageSize: newPageSize
+        });
+    });
+    PaginationComposition_addEvent(PaginationClass, 'afterPageSizeChange', (e) => {
+        const { target, previousPageSize, pageSize } = e;
+        target.options?.events?.afterPageSizeChange?.call(target, {
+            pageSize: pageSize,
+            previousPageSize: previousPageSize
+        });
+    });
+}
 /* *
  *
  *  Default Export
  *
  * */
-/* harmony default export */ const Pagination_PaginationComposition = (PaginationComposition);
+/* harmony default export */ const PaginationComposition = ({
+    compose: PaginationComposition_compose
+});
 
 ;// ./code/grid/es-modules/Grid/Pro/CellRendering/CellContentPro.js
 /* *
@@ -24826,7 +25199,7 @@ const { merge: TextRenderer_merge } = Core_Utilities;
 /**
  * Renderer for the Text in a column..
  */
-class TextRenderer extends CellRendering_CellRenderer {
+class TextRenderer extends CellRenderer {
     /* *
      *
      *  Constructor
@@ -24865,7 +25238,7 @@ TextRenderer.defaultEditingRenderer = {
 TextRenderer.defaultOptions = {
     type: 'text'
 };
-CellRendering_CellRendererRegistry.registerRenderer('text', TextRenderer);
+registerRenderer('text', TextRenderer);
 /* *
  *
  *  Default Export
@@ -24914,7 +25287,7 @@ class CheckboxContent extends CellRendering_CellContentPro {
                 this.changeHandler(e);
             }
             else {
-                void this.cell.setValue(this.value, true);
+                void this.cell.editValue(this.value);
             }
         };
         this.onKeyDown = (e) => {
@@ -24942,6 +25315,7 @@ class CheckboxContent extends CellRendering_CellContentPro {
         input.tabIndex = -1;
         input.type = 'checkbox';
         input.name = cell.column.id + '-' + cell.row.id;
+        input.classList.add(Grid_Core_Globals.getClassName('input'));
         if (options.attributes) {
             Object.entries(options.attributes).forEach(([key, value]) => {
                 input.setAttribute(key, value);
@@ -24949,7 +25323,6 @@ class CheckboxContent extends CellRendering_CellContentPro {
         }
         this.update();
         parentElement.appendChild(this.input);
-        input.classList.add(Grid_Core_Globals.classNamePrefix + 'field-auto-width');
         input.addEventListener('change', this.onChange);
         input.addEventListener('keydown', this.onKeyDown);
         input.addEventListener('blur', this.onBlur);
@@ -25027,7 +25400,7 @@ const { merge: CheckboxRenderer_merge } = Core_Utilities;
 /**
  * Renderer for the Checkbox in a column.
  */
-class CheckboxRenderer extends CellRendering_CellRenderer {
+class CheckboxRenderer extends CellRenderer {
     /* *
      *
      *  Constructor
@@ -25056,7 +25429,7 @@ CheckboxRenderer.defaultEditingRenderer = 'checkbox';
 CheckboxRenderer.defaultOptions = {
     type: 'checkbox'
 };
-CellRendering_CellRendererRegistry.registerRenderer('checkbox', CheckboxRenderer);
+registerRenderer('checkbox', CheckboxRenderer);
 /* *
  *
  *  Default Export
@@ -25080,6 +25453,7 @@ CellRendering_CellRendererRegistry.registerRenderer('checkbox', CheckboxRenderer
  *  - Sebastian Bochan
  *
  * */
+
 
 
 
@@ -25113,7 +25487,7 @@ class SelectContent extends CellRendering_CellContentPro {
             }
             else {
                 this.cell.htmlElement.focus();
-                void this.cell.setValue(this.value, true);
+                void this.cell.editValue(this.value);
             }
         };
         this.onKeyDown = (e) => {
@@ -25153,6 +25527,7 @@ class SelectContent extends CellRendering_CellContentPro {
         const select = this.select = document.createElement('select');
         select.tabIndex = -1;
         select.name = cell.column.id + '-' + cell.row.id;
+        select.classList.add(Grid_Core_Globals.getClassName('input'));
         if (options.attributes) {
             Object.entries(options.attributes).forEach(([key, value]) => {
                 select.setAttribute(key, value);
@@ -25269,7 +25644,7 @@ const { merge: SelectRenderer_merge } = Core_Utilities;
 /**
  * Renderer for the Select in a column..
  */
-class SelectRenderer extends CellRendering_CellRenderer {
+class SelectRenderer extends CellRenderer {
     /* *
      *
      *  Constructor
@@ -25299,7 +25674,7 @@ SelectRenderer.defaultOptions = {
     type: 'select',
     options: []
 };
-CellRendering_CellRendererRegistry.registerRenderer('select', SelectRenderer);
+registerRenderer('select', SelectRenderer);
 /* *
  *
  *  Default Export
@@ -25323,6 +25698,7 @@ CellRendering_CellRendererRegistry.registerRenderer('select', SelectRenderer);
  *  - Sebastian Bochan
  *
  * */
+
 
 
 
@@ -25352,7 +25728,7 @@ class TextInputContent extends CellRendering_CellContentPro {
                 this.changeHandler(e);
                 return;
             }
-            void this.cell.setValue(e.target.value, true);
+            void this.cell.editValue(e.target.value);
         };
         this.onKeyDown = (e) => {
             e.stopPropagation();
@@ -25396,6 +25772,7 @@ class TextInputContent extends CellRendering_CellContentPro {
         const { options } = this.renderer;
         input.tabIndex = -1;
         input.name = cell.column.id + '-' + cell.row.id;
+        input.classList.add(Grid_Core_Globals.getClassName('input'));
         if (options.attributes) {
             Object.entries(options.attributes).forEach(([key, value]) => {
                 input.setAttribute(key, value);
@@ -25507,7 +25884,7 @@ const { merge: TextInputRenderer_merge } = Core_Utilities;
 /**
  * Renderer for the Select in a column..
  */
-class TextInputRenderer extends CellRendering_CellRenderer {
+class TextInputRenderer extends CellRenderer {
     /* *
      *
      *  Constructor
@@ -25536,7 +25913,7 @@ TextInputRenderer.defaultEditingRenderer = 'textInput';
 TextInputRenderer.defaultOptions = {
     type: 'textInput'
 };
-CellRendering_CellRendererRegistry.registerRenderer('textInput', TextInputRenderer);
+registerRenderer('textInput', TextInputRenderer);
 /* *
  *
  *  Default Export
@@ -25559,6 +25936,7 @@ CellRendering_CellRendererRegistry.registerRenderer('textInput', TextInputRender
  *  - Dawid Dragula
  *
  * */
+
 
 
 /* *
@@ -25597,7 +25975,7 @@ class DateInputContentBase extends CellRendering_CellContentPro {
             }
             if (e.key === 'Enter') {
                 this.cell.htmlElement.focus();
-                void this.cell.setValue(this.value, true);
+                void this.cell.editValue(this.value);
             }
         };
         this.onBlur = (e) => {
@@ -25605,7 +25983,7 @@ class DateInputContentBase extends CellRendering_CellContentPro {
                 this.blurHandler(e);
                 return;
             }
-            void this.cell.setValue(this.value, true);
+            void this.cell.editValue(this.value);
         };
         this.onCellKeyDown = (e) => {
             if (e.key === ' ') {
@@ -25632,6 +26010,7 @@ class DateInputContentBase extends CellRendering_CellContentPro {
         input.tabIndex = -1;
         input.type = this.getInputType();
         input.name = cell.column.id + '-' + cell.row.id;
+        input.classList.add(Grid_Core_Globals.getClassName('input'));
         if (options.attributes) {
             Object.entries(options.attributes).forEach(([key, value]) => {
                 input.setAttribute(key, value);
@@ -25762,7 +26141,7 @@ const { merge: DateInputRenderer_merge } = Core_Utilities;
 /**
  * Renderer for the Select in a column..
  */
-class DateInputRenderer extends CellRendering_CellRenderer {
+class DateInputRenderer extends CellRenderer {
     /* *
      *
      *  Constructor
@@ -25791,7 +26170,7 @@ DateInputRenderer.defaultEditingRenderer = 'dateInput';
 DateInputRenderer.defaultOptions = {
     type: 'dateInput'
 };
-CellRendering_CellRendererRegistry.registerRenderer('dateInput', DateInputRenderer);
+registerRenderer('dateInput', DateInputRenderer);
 /* *
  *
  *  Default Export
@@ -25868,7 +26247,7 @@ const { merge: DateTimeInputRenderer_merge } = Core_Utilities;
 /**
  * Renderer for the Select in a column..
  */
-class DateTimeInputRenderer extends CellRendering_CellRenderer {
+class DateTimeInputRenderer extends CellRenderer {
     /* *
      *
      *  Constructor
@@ -25897,7 +26276,7 @@ DateTimeInputRenderer.defaultEditingRenderer = 'dateTimeInput';
 DateTimeInputRenderer.defaultOptions = {
     type: 'dateTimeInput'
 };
-CellRendering_CellRendererRegistry.registerRenderer('dateTimeInput', DateTimeInputRenderer);
+registerRenderer('dateTimeInput', DateTimeInputRenderer);
 /* *
  *
  *  Default Export
@@ -25977,7 +26356,7 @@ const { merge: TimeInputRenderer_merge } = Core_Utilities;
 /**
  * Renderer for the Select in a column..
  */
-class TimeInputRenderer extends CellRendering_CellRenderer {
+class TimeInputRenderer extends CellRenderer {
     /* *
      *
      *  Constructor
@@ -26006,7 +26385,7 @@ TimeInputRenderer.defaultEditingRenderer = 'timeInput';
 TimeInputRenderer.defaultOptions = {
     type: 'timeInput'
 };
-CellRendering_CellRendererRegistry.registerRenderer('timeInput', TimeInputRenderer);
+registerRenderer('timeInput', TimeInputRenderer);
 /* *
  *
  *  Default Export
@@ -26054,7 +26433,8 @@ class SparklineContent extends CellRendering_CellContentPro {
         this.onKeyDown = () => {
             this.cell.htmlElement.focus();
         };
-        this.add(parentElement);
+        this.parentElement = parentElement ?? this.cell.htmlElement;
+        this.add(this.parentElement);
     }
     /* *
      *
@@ -26066,15 +26446,22 @@ class SparklineContent extends CellRendering_CellContentPro {
         if (!H || !SparklineContent_defined(this.cell.value)) {
             return;
         }
+        this.parentElement = parentElement;
         this.chartContainer = document.createElement('div');
-        parentElement.classList.add(Grid_Core_Globals.getClassName('noPadding'));
-        parentElement.appendChild(this.chartContainer);
+        this.parentElement.classList.add(Grid_Core_Globals.getClassName('noPadding'));
+        this.parentElement.appendChild(this.chartContainer);
         this.chart = H.Chart.chart(this.chartContainer, SparklineContent_merge(SparklineContent.defaultChartOptions, this.getProcessedOptions()));
         this.chartContainer.addEventListener('click', this.onKeyDown);
     }
     update() {
-        const chartOptions = this.getProcessedOptions();
-        this.chart?.update(chartOptions, true, false, chartOptions.chart?.animation);
+        if (this.chart) {
+            const chartOptions = this.getProcessedOptions();
+            this.chart.update(chartOptions, true, false, chartOptions.chart?.animation);
+        }
+        else {
+            this.destroy();
+            this.add(this.parentElement);
+        }
     }
     destroy() {
         this.chartContainer?.removeEventListener('keydown', this.onKeyDown);
@@ -26082,7 +26469,7 @@ class SparklineContent extends CellRendering_CellContentPro {
         this.chartContainer?.remove();
         delete this.chart;
         delete this.chartContainer;
-        this.cell.htmlElement.classList.remove(Grid_Core_Globals.getClassName('noPadding'));
+        this.parentElement.classList.remove(Grid_Core_Globals.getClassName('noPadding'));
     }
     getProcessedOptions() {
         const renderer = this.renderer;
@@ -26106,6 +26493,9 @@ class SparklineContent extends CellRendering_CellContentPro {
         return options;
     }
 }
+/**
+ * The default chart options for the sparkline content.
+ */
 SparklineContent.defaultChartOptions = {
     chart: {
         height: 40,
@@ -26161,13 +26551,6 @@ SparklineContent.defaultChartOptions = {
 };
 /* *
  *
- *  Namespace
- *
- * */
-(function (SparklineContent) {
-})(SparklineContent || (SparklineContent = {}));
-/* *
- *
  *  Default Export
  *
  * */
@@ -26203,7 +26586,18 @@ const { merge: SparklineRenderer_merge } = Core_Utilities;
 /**
  * Renderer for the Text in a column..
  */
-class SparklineRenderer extends CellRendering_CellRenderer {
+class SparklineRenderer extends CellRenderer {
+    /**
+     * Imports the Highcharts namespace to be used by the Sparkline Renderer.
+     *
+     * @param H
+     * Highcharts namespace.
+     */
+    static useHighcharts(H) {
+        if (H && !ContentTypes_SparklineContent.H) {
+            ContentTypes_SparklineContent.H = H;
+        }
+    }
     /* *
      *
      *  Constructor
@@ -26237,26 +26631,7 @@ SparklineRenderer.defaultEditingRenderer = 'textInput';
 SparklineRenderer.defaultOptions = {
     type: 'sparkline'
 };
-/* *
- *
- *  Namespace
- *
- * */
-(function (SparklineRenderer) {
-    /**
-     * Imports the Highcharts namespace to be used by the Sparkline Renderer.
-     *
-     * @param H
-     * Highcharts namespace.
-     */
-    function useHighcharts(H) {
-        if (H && !ContentTypes_SparklineContent.H) {
-            ContentTypes_SparklineContent.H = H;
-        }
-    }
-    SparklineRenderer.useHighcharts = useHighcharts;
-})(SparklineRenderer || (SparklineRenderer = {}));
-CellRendering_CellRendererRegistry.registerRenderer('sparkline', SparklineRenderer);
+registerRenderer('sparkline', SparklineRenderer);
 /* *
  *
  *  Default Export
@@ -26279,6 +26654,7 @@ CellRendering_CellRendererRegistry.registerRenderer('sparkline', SparklineRender
  *  - Sebastian Bochan
  *
  * */
+
 
 
 
@@ -26312,7 +26688,7 @@ class NumberInputContent extends CellRendering_CellContentPro {
                 this.changeHandler(e);
                 return;
             }
-            void this.cell.setValue(this.value, true);
+            void this.cell.editValue(this.value);
         };
         this.onKeyDown = (e) => {
             e.stopPropagation();
@@ -26357,6 +26733,7 @@ class NumberInputContent extends CellRendering_CellContentPro {
         input.type = 'number';
         input.tabIndex = -1;
         input.name = cell.column.id + '-' + cell.row.id;
+        input.classList.add(Grid_Core_Globals.getClassName('input'));
         if (options.attributes) {
             Object.entries(options.attributes).forEach(([key, value]) => {
                 input.setAttribute(key, value);
@@ -26453,7 +26830,7 @@ const { merge: NumberInputRenderer_merge } = Core_Utilities;
 /**
  * Renderer for the Select in a column..
  */
-class NumberInputRenderer extends CellRendering_CellRenderer {
+class NumberInputRenderer extends CellRenderer {
     /* *
      *
      *  Constructor
@@ -26482,7 +26859,7 @@ NumberInputRenderer.defaultEditingRenderer = 'numberInput';
 NumberInputRenderer.defaultOptions = {
     type: 'numberInput'
 };
-CellRendering_CellRendererRegistry.registerRenderer('numberInput', NumberInputRenderer);
+registerRenderer('numberInput', NumberInputRenderer);
 /* *
  *
  *  Default Export
@@ -26561,57 +26938,55 @@ CellRendering_CellRendererRegistry.registerRenderer('numberInput', NumberInputRe
  *  Namespace
  *
  * */
-const G = Grid_Core_Globals;
-G.AST = HTML_AST;
-G.classNamePrefix = 'hcg-';
-G.DataConnector = Connectors_DataConnector;
-G.DataCursor = Data_DataCursor;
-G.DataConverter = Converters_DataConverter;
-G.Grid = Core_Grid;
-G.grid = Core_Grid.grid;
-G.grids = Core_Grid.grids;
-G.DataModifier = Modifiers_DataModifier;
-G.DataPool = Data_DataPool;
-G.DataTable = Data_DataTable;
-G.ColumnResizing = ColumnResizing_ColumnResizing;
-G.defaultOptions = Core_Defaults.defaultOptions;
-G.isHighContrastModeActive = HighContrastMode.isHighContrastModeActive;
-G.setOptions = Core_Defaults.setOptions;
-G.Templating = Core_Templating;
-G.product = 'Grid Pro';
-G.merge = Core_Utilities.merge;
-G.Table = G.Table || Table_Table;
-G.Column = G.Column || Table_Column;
-G.HeaderCell = G.HeaderCell || Header_HeaderCell;
-G.TableCell = G.TableCell || Body_TableCell;
-G.Pagination = G.Pagination || Pagination_Pagination;
+const G = {
+    AST: HTML_AST,
+    CellContentPro: CellRendering_CellContentPro,
+    CellRenderer: CellRendering_CellRenderer,
+    CellRendererRegistry: CellRendererRegistry,
+    classNamePrefix: Grid_Core_Globals.classNamePrefix,
+    Column: Table_Column,
+    ColumnResizing: ColumnResizing,
+    DataConnector: Connectors_DataConnector,
+    DataConverter: Converters_DataConverter,
+    DataCursor: Data_DataCursor,
+    DataModifier: Modifiers_DataModifier,
+    DataPool: Data_DataPool,
+    DataTable: Data_DataTable,
+    defaultOptions: Core_Defaults.defaultOptions,
+    Grid: Core_Grid,
+    grid: Core_Grid.grid,
+    grids: Core_Grid.grids,
+    HeaderCell: Header_HeaderCell,
+    isHighContrastModeActive: HighContrastMode.isHighContrastModeActive,
+    merge: Core_Utilities.merge,
+    Pagination: Pagination_Pagination,
+    Popup: UI_Popup,
+    product: 'Grid Pro',
+    setOptions: Core_Defaults.setOptions,
+    SvgIcons: SvgIcons,
+    Table: Table_Table,
+    TableCell: Body_TableCell,
+    Templating: Core_Templating,
+    version: Grid_Core_Globals.version,
+    win: Grid_Core_Globals.win
+};
 GridEvents.compose(G.Grid, G.Column, G.HeaderCell, G.TableCell);
-CellEditing_CellEditingComposition.compose(G.Table, G.TableCell, G.Column);
-Credits_CreditsProComposition.compose(G.Grid);
-Export_ExportingComposition.compose(G.Grid);
-ColumnTypes_ValidatorComposition.compose(G.Table);
-CellRendering_CellRenderersComposition.compose(G.Column);
-Pagination_PaginationComposition.compose(G.Pagination);
-G.CellRendererRegistry = G.CellRendererRegistry || CellRendering_CellRendererRegistry;
-G.CellContentPro = CellRendering_CellContentPro;
-G.CellRenderer = CellRendering_CellRenderer;
-G.SvgIcons = UI_SvgIcons;
+CellEditingComposition.compose(G.Table, G.TableCell, G.Column);
+CreditsProComposition.compose(G.Grid);
+ExportingComposition.compose(G.Grid);
+ValidatorComposition.compose(G.Table);
+CellRenderersComposition.compose(G.Column);
+PaginationComposition.compose(G.Pagination);
 /* *
  *
- *  Classic Export
+ * Named Exports
  *
  * */
-if (!G.win.Grid) {
-    G.win.Grid = G;
-}
+
+const { classNamePrefix: grid_pro_src_classNamePrefix, defaultOptions: grid_pro_src_defaultOptions, Grid: grid_pro_src_Grid, grid, grids, isHighContrastModeActive: grid_pro_src_isHighContrastModeActive, merge: grid_pro_src_merge, product, setOptions: grid_pro_src_setOptions, version: grid_pro_src_version, win: grid_pro_src_win } = G;
 if (G.win.Highcharts) {
     G.CellRendererRegistry.types.sparkline.useHighcharts(G.win.Highcharts);
 }
-/* *
- *
- *  Default Export
- *
- * */
 /* harmony default export */ const grid_pro_src = (G);
 
 __webpack_exports__ = __webpack_exports__["default"];
