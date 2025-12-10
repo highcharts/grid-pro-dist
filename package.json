@@ -2,7 +2,7 @@
   "name": "@highcharts/grid-pro",
   "description": "Highcharts Grid Pro framework",
   "homepage": "https://www.highcharts.com/products/grid/",
-  "version": "2.1.0",
+  "version": "2.1.1",
   "author": "Highsoft AS <support@highcharts.com> (http://www.highcharts.com/about)",
   "main": "grid-pro.js",
   "module": "./es-modules/masters/grid-pro.src.js",

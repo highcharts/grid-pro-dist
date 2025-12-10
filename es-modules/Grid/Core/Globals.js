@@ -18,7 +18,7 @@
  *
  * */
 export const classNamePrefix = 'hcg-';
-export const version = '2.1.0';
+export const version = '2.1.1';
 export const rawClassNames = {
     container: 'container',
     tableElement: 'table',

@@ -3,7 +3,7 @@ export type DeepRequired<T> = {
 };
 export type ClassNameKey = keyof typeof rawClassNames;
 export declare const classNamePrefix: string;
-export declare const version = "2.1.0";
+export declare const version = "2.1.1";
 export declare const rawClassNames: {
     readonly container: "container";
     readonly tableElement: "table";
@@ -90,7 +90,7 @@ export declare const isSafari: boolean;
 export declare const getClassName: (classNameKey: ClassNameKey) => string;
 declare const _default: {
     readonly classNamePrefix: string;
-    readonly version: "2.1.0";
+    readonly version: "2.1.1";
     readonly rawClassNames: {
         readonly container: "container";
         readonly tableElement: "table";
