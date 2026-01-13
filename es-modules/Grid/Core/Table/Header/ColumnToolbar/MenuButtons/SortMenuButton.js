@@ -2,11 +2,11 @@
  *
  *  Grid Sort Context Menu Button class
  *
- *  (c) 2020-2025 Highsoft AS
+ *  (c) 2020-2026 Highsoft AS
  *
- *  License: www.highcharts.com/license
+ *  A commercial license may be required depending on use.
+ *  See www.highcharts.com/license
  *
- *  !!!!!!! SOURCE GETS TRANSPILED BY TYPESCRIPT. EDIT TS FILE ONLY. !!!!!!!
  *
  *  Authors:
  *  - Dawid Dragula
@@ -31,7 +31,8 @@ class SortMenuButton extends ContextMenuButton {
     constructor(langOptions, direction) {
         super({ icon: direction === 'asc' ? 'sortAsc' : 'sortDesc' });
         this.direction = direction;
-        this.options.label = langOptions[direction === 'asc' ? 'sortAscending' : 'sortDescending'];
+        this.baseLabel = langOptions[direction === 'asc' ? 'sortAscending' : 'sortDescending'] || '';
+        this.options.label = this.baseLabel;
     }
     /* *
      *
@@ -43,7 +44,35 @@ class SortMenuButton extends ContextMenuButton {
         if (!column) {
             return;
         }
-        this.setActive(StateHelpers.isSorted(column, this.direction));
+        const isSorted = StateHelpers.isSorted(column, this.direction);
+        this.setActive(isSorted);
+        // Update label with priority if multi-column sorting is active
+        this.updateLabelWithPriority(isSorted ? column : void 0);
+    }
+    /**
+     * Updates the label to include the sort priority when multi-column
+     * sorting is active.
+     *
+     * @param column
+     * The column to get the priority from, or undefined to reset the label.
+     */
+    updateLabelWithPriority(column) {
+        if (!column) {
+            this.setLabel(this.baseLabel);
+            return;
+        }
+        const { currentSortings } = column.viewport.grid.querying.sorting;
+        const sortings = currentSortings || [];
+        const sortIndex = sortings.findIndex((sorting) => sorting.columnId === column.id);
+        const priority = (sortings.length > 1 && sortIndex !== -1 ?
+            sortIndex + 1 :
+            void 0);
+        if (priority) {
+            this.setLabel(`${this.baseLabel} (${priority})`);
+        }
+        else {
+            this.setLabel(this.baseLabel);
+        }
     }
     addEventListeners() {
         super.addEventListeners();
@@ -60,7 +89,7 @@ class SortMenuButton extends ContextMenuButton {
         if (!sorting) {
             return;
         }
-        void sorting.setOrder(this.isActive ? null : this.direction);
+        void sorting.setOrder(this.isActive ? null : this.direction, !!event?.shiftKey);
     }
 }
 /* *

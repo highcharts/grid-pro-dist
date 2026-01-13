@@ -2,11 +2,11 @@
  *
  *  Grid Header Cell Toolbar class
  *
- *  (c) 2020-2025 Highsoft AS
+ *  (c) 2020-2026 Highsoft AS
  *
- *  License: www.highcharts.com/license
+ *  A commercial license may be required depending on use.
+ *  See www.highcharts.com/license
  *
- *  !!!!!!! SOURCE GETS TRANSPILED BY TYPESCRIPT. EDIT TS FILE ONLY. !!!!!!!
  *
  *  Authors:
  *  - Dawid Dragula
@@ -51,7 +51,9 @@ class HeaderCellToolbar {
      */
     renderFull() {
         const columnOptions = this.column.options;
-        if (columnOptions.sorting?.sortable) {
+        const sortingEnabled = columnOptions.sorting?.enabled ??
+            columnOptions.sorting?.sortable;
+        if (sortingEnabled) {
             new SortToolbarButton().add(this);
         }
         if (columnOptions.filtering?.enabled &&
@@ -61,7 +63,9 @@ class HeaderCellToolbar {
     }
     renderMinimized() {
         const columnOptions = this.column.options;
-        if (columnOptions.sorting?.sortable || (columnOptions.filtering?.enabled &&
+        const sortingEnabled = columnOptions.sorting?.enabled ??
+            columnOptions.sorting?.sortable;
+        if (sortingEnabled || (columnOptions.filtering?.enabled &&
             !columnOptions.filtering.inline)) {
             new MenuToolbarButton().add(this);
         }
@@ -127,6 +131,11 @@ class HeaderCellToolbar {
             }
         }
         if (!shouldBeMinimized) {
+            // Ensure we reset any "minimized only" header state. This can
+            // happen if the grid was initialized in a hidden container
+            // (e.g. display:none) where widths measure as 0. (#24002)
+            this.isMenuCentered = void 0;
+            this.column.header?.container?.classList.remove(Globals.getClassName('noWidth'));
             return;
         }
         const parent = this.column.header?.htmlElement;

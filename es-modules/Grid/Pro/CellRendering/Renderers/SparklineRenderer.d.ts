@@ -1,7 +1,7 @@
+import type { AnyRecord } from '../../../../Shared/Types';
 import type Column from '../../../Core/Table/Column';
 import type TableCell from '../../../Core/Table/Body/TableCell';
 import type DataTable from '../../../../Data/DataTable';
-import type * as HighchartsNamespace from '../../highcharts';
 import type { EditModeRendererTypeName } from '../../CellEditing/CellEditingComposition';
 import { CellRenderer, CellRendererOptions } from '../CellRenderer.js';
 import SparklineContent from '../ContentTypes/SparklineContent.js';
@@ -15,7 +15,7 @@ declare class SparklineRenderer extends CellRenderer {
      * @param H
      * Highcharts namespace.
      */
-    static useHighcharts(H: typeof HighchartsNamespace): void;
+    static useHighcharts(H: AnyRecord): void;
     /**
      * The default edit mode renderer type names for this view renderer.
      */
@@ -33,7 +33,7 @@ declare class SparklineRenderer extends CellRenderer {
  */
 export interface SparklineRendererOptions extends CellRendererOptions {
     type: 'sparkline';
-    chartOptions?: (((data: DataTable.CellType) => HighchartsNamespace.Options) | HighchartsNamespace.Options);
+    chartOptions?: (((this: TableCell, data: DataTable.CellType) => AnyRecord) | AnyRecord);
 }
 declare module '../CellRendererType' {
     interface CellRendererTypeRegistry {

@@ -8,7 +8,7 @@ declare class FilterCell extends HeaderCell {
     column: Column;
     constructor(row: Row, column: Column);
     render(): void;
-    protected onKeyDown(e: KeyboardEvent): void;
-    protected onClick(e: MouseEvent): void;
+    onKeyDown(e: KeyboardEvent): void;
+    onClick(e: MouseEvent): void;
 }
 export default FilterCell;

@@ -1,9 +1,28 @@
 import type DataModifierOptions from './DataModifierOptions';
 import type DataTable from '../DataTable';
 /**
- * Options to configure the modifier.
+ * Definition of a sorting level when sorting by multiple columns.
  */
-export interface SortModifierOptions extends DataModifierOptions {
+export interface SortModifierOrderByOption {
+    /**
+     * Column ID with values to order by.
+     */
+    column: string;
+    /**
+     * Direction of sorting for this level. If not set, the modifier-level
+     * `direction` is used.
+     */
+    direction?: ('asc' | 'desc');
+    /**
+     * Custom compare function for this level. If not set, the modifier-level
+     * `compare` is used.
+     */
+    compare?: (a: DataTable.CellType, b: DataTable.CellType) => number;
+}
+/**
+ * Base options shared by sorting modifiers.
+ */
+export interface SortModifierBaseOptions extends DataModifierOptions {
     /**
      * Name of the related modifier for these options.
      */
@@ -31,14 +50,32 @@ export interface SortModifierOptions extends DataModifierOptions {
      */
     compare?: (a: DataTable.CellType, b: DataTable.CellType) => number;
     /**
+     * Column to update with order index instead of change order of rows.
+     */
+    orderInColumn?: string;
+}
+/**
+ * Options to configure a single-column sort modifier.
+ */
+export interface SingleSortModifierOptions extends SortModifierBaseOptions {
+    /**
      * Column with values to order.
      *
      * @default "y"
      */
     orderByColumn: string;
-    /**
-     * Column to update with order index instead of change order of rows.
-     */
-    orderInColumn?: string;
 }
+/**
+ * Options to configure a multi-column sort modifier.
+ */
+export interface MultiSortModifierOptions extends SortModifierBaseOptions {
+    /**
+     * Columns and directions to order by, in priority order.
+     */
+    columns: SortModifierOrderByOption[];
+}
+/**
+ * Options to configure the modifier.
+ */
+export type SortModifierOptions = SingleSortModifierOptions | MultiSortModifierOptions;
 export default SortModifierOptions;

@@ -44,6 +44,16 @@ declare class TableRow extends Row {
      */
     update(): void;
     /**
+     * Reuses the row instance for a new index.
+     *
+     * @param index
+     * The index of the row in the data table.
+     *
+     * @param doReflow
+     * Whether to reflow the row after updating the cells.
+     */
+    reuse(index: number, doReflow?: boolean): void;
+    /**
      * Adds or removes the hovered CSS class to the row element.
      *
      * @param hovered
@@ -66,6 +76,14 @@ declare class TableRow extends Row {
      * lifecycle.
      */
     updateRowAttributes(): void;
+    /**
+     * Updates the row parity class based on index.
+     */
+    private updateParityClass;
+    /**
+     * Updates the hovered and synced classes based on grid state.
+     */
+    private updateStateClasses;
     /**
      * Sets the vertical translation of the row. Used for virtual scrolling.
      *

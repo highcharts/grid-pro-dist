@@ -2,11 +2,11 @@
  *
  *  Grid class
  *
- *  (c) 2020-2025 Highsoft AS
+ *  (c) 2020-2026 Highsoft AS
  *
- *  License: www.highcharts.com/license
+ *  A commercial license may be required depending on use.
+ *  See www.highcharts.com/license
  *
- *  !!!!!!! SOURCE GETS TRANSPILED BY TYPESCRIPT. EDIT TS FILE ONLY. !!!!!!!
  *
  *  Authors:
  *  - Dawid Dragula
@@ -133,12 +133,19 @@ class TableCell extends Cell {
         await vp.updateRows();
         return true;
     }
+    /**
+     * Initialize event listeners for table body cells.
+     *
+     * Most events (click, dblclick, keydown, mousedown, mouseover, mouseout)
+     * are delegated to Table for better performance with virtualization.
+     * Only focus/blur remain on individual cells for focus management.
+     */
     initEvents() {
-        this.cellEvents.push(['dblclick', (e) => (this.onDblClick(e))]);
-        this.cellEvents.push(['mousedown', (e) => {
-                this.onMouseDown(e);
-            }]);
-        super.initEvents();
+        this.cellEvents.push(['blur', () => this.onBlur()]);
+        this.cellEvents.push(['focus', () => this.onFocus()]);
+        this.cellEvents.forEach((pair) => {
+            this.htmlElement.addEventListener(pair[0], pair[1]);
+        });
     }
     /**
      * Handles the focus event on the cell.

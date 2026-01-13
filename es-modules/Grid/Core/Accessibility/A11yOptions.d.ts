@@ -1,3 +1,4 @@
+import type Grid from '../Grid';
 /**
  * Accessibility options for the Grid.
  */
@@ -17,6 +18,10 @@ export interface A11yOptions {
      * VoiceOver announcer options for Grid actions.
      */
     announcements?: A11yAnnouncementsOptions;
+    /**
+     * Options for screen reader sections before and after the Grid.
+     */
+    screenReaderSection?: ScreenReaderSectionOptions;
 }
 /**
  * VoiceOver announcer options for Grid actions.
@@ -51,6 +56,10 @@ export interface LangAccessibilityOptions {
      * Language options for the accessibility descriptions in filtering.
      */
     filtering?: FilteringLangA11yOptions;
+    /**
+     * Language options for screen reader sections before and after the Grid.
+     */
+    screenReaderSection?: ScreenReaderSectionLangOptions;
 }
 /**
  * Accessibility options for the Grid sorting functionality.
@@ -86,6 +95,13 @@ export interface SortingLangA11yOptions {
          */
         none?: string;
     };
+    /**
+     * The message for multi-column sort priority. Use `{priority}` to insert
+     * the priority index.
+     *
+     * @default 'Priority {priority}.'
+     */
+    priority?: string;
 }
 /**
  * Accessibility options for the Grid pagination functionality.
@@ -145,4 +161,65 @@ export interface HeaderCellA11yOptions {
      * The aria description of the header cell.
      */
     description?: string;
+}
+/**
+ * Options for screen reader sections before and after the Grid.
+ */
+export interface ScreenReaderSectionOptions {
+    /**
+     * A formatter function to create the HTML contents of the hidden screen
+     * reader information region before the Grid.
+     */
+    beforeGridFormatter?: ScreenReaderFormatterCallback;
+    /**
+     * Format for the screen reader information region before the Grid.
+     * Supported HTML tags are h1-h6, p, div. Attributes are not supported.
+     *
+     * Available template variables:
+     * - {gridTitle}: The Grid caption/title.
+     * - {gridDescription}: The Grid description.
+     * - {rowCount}: Number of rows in the Grid.
+     * - {columnCount}: Number of columns in the Grid.
+     *
+     * @default '<div>{gridTitle}</div><div>{gridDescription}</div><div>Grid with {rowCount} rows and {columnCount} columns.</div>'
+     */
+    beforeGridFormat?: string;
+    /**
+     * A formatter function to create the HTML contents of the hidden screen
+     * reader information region after the Grid.
+     */
+    afterGridFormatter?: ScreenReaderFormatterCallback;
+    /**
+     * Format for the screen reader information region after the Grid.
+     *
+     * @default 'End of Grid.'
+     */
+    afterGridFormat?: string;
+}
+/**
+ * Formatter callback function for screen reader sections.
+ *
+ * @param grid
+ * A Grid instance.
+ *
+ * @returns
+ * A string with the HTML content of the region.
+ */
+export type ScreenReaderFormatterCallback = (grid: Grid) => string;
+/**
+ * Language options for screen reader sections.
+ */
+export interface ScreenReaderSectionLangOptions {
+    /**
+     * Text for the aria-label attribute of the before screen reader region.
+     *
+     * @default ''
+     */
+    beforeRegionLabel?: string;
+    /**
+     * Text for the aria-label attribute of the after screen reader region.
+     *
+     * @default ''
+     */
+    afterRegionLabel?: string;
 }

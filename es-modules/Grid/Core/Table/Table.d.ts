@@ -116,6 +116,36 @@ declare class Table {
      */
     private onScroll;
     /**
+     * Delegated click handler for cells.
+     * @param e Mouse event
+     */
+    private onCellClick;
+    /**
+     * Delegated double-click handler for cells.
+     * @param e Mouse event
+     */
+    private onCellDblClick;
+    /**
+     * Delegated mousedown handler for cells.
+     * @param e Mouse event
+     */
+    private onCellMouseDown;
+    /**
+     * Delegated mouseover handler for cells.
+     * @param e Mouse event
+     */
+    private onCellMouseOver;
+    /**
+     * Delegated mouseout handler for cells.
+     * @param e Mouse event
+     */
+    private onCellMouseOut;
+    /**
+     * Delegated keydown handler for cells.
+     * @param e Keyboard event
+     */
+    private onCellKeyDown;
+    /**
      * Scrolls the table to the specified row.
      *
      * @param index

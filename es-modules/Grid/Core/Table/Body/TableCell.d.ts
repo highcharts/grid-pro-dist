@@ -63,13 +63,20 @@ declare class TableCell extends Cell {
      * the cell's content.
      */
     private updateDataTable;
+    /**
+     * Initialize event listeners for table body cells.
+     *
+     * Most events (click, dblclick, keydown, mousedown, mouseover, mouseout)
+     * are delegated to Table for better performance with virtualization.
+     * Only focus/blur remain on individual cells for focus management.
+     */
     initEvents(): void;
     /**
      * Handles the focus event on the cell.
      */
     protected onFocus(): void;
-    protected onMouseOver(): void;
-    protected onMouseOut(): void;
+    onMouseOver(): void;
+    onMouseOut(): void;
     /**
      * Handles the double click event on the cell.
      *

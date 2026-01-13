@@ -3,7 +3,7 @@ export type DeepRequired<T> = {
 };
 export type ClassNameKey = keyof typeof rawClassNames;
 export declare const classNamePrefix: string;
-export declare const version = "2.1.1";
+export declare const version = "2.2.0";
 export declare const rawClassNames: {
     readonly container: "container";
     readonly tableElement: "table";
@@ -15,7 +15,6 @@ export declare const rawClassNames: {
     readonly rowEven: "row-even";
     readonly rowOdd: "row-odd";
     readonly hoveredRow: "hovered-row";
-    readonly columnElement: "column";
     readonly hoveredCell: "hovered-cell";
     readonly hoveredColumn: "hovered-column";
     readonly syncedRow: "synced-row";
@@ -41,6 +40,7 @@ export declare const rawClassNames: {
     readonly columnSortableIcon: "column-sortable-icon";
     readonly columnSortedAsc: "column-sorted-asc";
     readonly columnSortedDesc: "column-sorted-desc";
+    readonly sortPriorityIndicator: "sort-priority-indicator";
     readonly resizableContent: "resizable-content";
     readonly resizerHandles: "column-resizer";
     readonly resizedColumn: "column-resized";
@@ -90,7 +90,7 @@ export declare const isSafari: boolean;
 export declare const getClassName: (classNameKey: ClassNameKey) => string;
 declare const _default: {
     readonly classNamePrefix: string;
-    readonly version: "2.1.1";
+    readonly version: "2.2.0";
     readonly rawClassNames: {
         readonly container: "container";
         readonly tableElement: "table";
@@ -102,7 +102,6 @@ declare const _default: {
         readonly rowEven: "row-even";
         readonly rowOdd: "row-odd";
         readonly hoveredRow: "hovered-row";
-        readonly columnElement: "column";
         readonly hoveredCell: "hovered-cell";
         readonly hoveredColumn: "hovered-column";
         readonly syncedRow: "synced-row";
@@ -128,6 +127,7 @@ declare const _default: {
         readonly columnSortableIcon: "column-sortable-icon";
         readonly columnSortedAsc: "column-sorted-asc";
         readonly columnSortedDesc: "column-sorted-desc";
+        readonly sortPriorityIndicator: "sort-priority-indicator";
         readonly resizableContent: "resizable-content";
         readonly resizerHandles: "column-resizer";
         readonly resizedColumn: "column-resized";

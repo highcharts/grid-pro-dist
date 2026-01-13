@@ -1,7 +1,6 @@
-import type { DeepPartial } from '../../../../Shared/Types';
+import type { AnyRecord } from '../../../../Shared/Types';
 import type SparklineRenderer from '../Renderers/SparklineRenderer';
 import type TableCell from '../../../Core/Table/Body/TableCell';
-import * as HighchartsNamespace from '../../highcharts';
 import CellContentPro from '../CellContentPro.js';
 /**
  * Represents a sparkline type of cell content.
@@ -12,15 +11,18 @@ declare class SparklineContent extends CellContentPro {
      * This is set to `undefined` by default, and should be set to the
      * Highcharts namespace before using the Sparkline Renderer.
      */
-    static H: undefined | typeof HighchartsNamespace;
+    static H: undefined | AnyRecord;
     /**
      * The default chart options for the sparkline content.
      */
-    static defaultChartOptions: DeepPartial<HighchartsNamespace.Options>;
+    static defaultChartOptions: AnyRecord;
     /**
      * The Highcharts chart instance.
      */
-    chart?: HighchartsNamespace.Chart;
+    chart?: {
+        update: (options: AnyRecord, force?: boolean, redraw?: boolean, animation?: boolean) => void;
+        destroy: () => void;
+    };
     /**
      * The parent element for the sparkline content.
      */

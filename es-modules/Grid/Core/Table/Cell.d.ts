@@ -53,13 +53,6 @@ declare abstract class Cell {
      */
     protected onBlur(): void;
     /**
-     * Handles user keydown on the cell.
-     *
-     * @param e
-     * Keyboard event object.
-     */
-    protected onKeyDown(e: KeyboardEvent): void;
-    /**
      * Renders the cell by appending the HTML element to the row.
      */
     render(): void;

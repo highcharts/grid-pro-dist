@@ -21,6 +21,14 @@ declare class Accessibility {
      */
     private announcerTimeout?;
     /**
+     * The before Grid screen reader section element.
+     */
+    private beforeGridElement;
+    /**
+     * The after Grid screen reader section element.
+     */
+    private afterGridElement;
+    /**
      * Construct the accessibility object.
      *
      * @param grid
@@ -94,6 +102,65 @@ declare class Accessibility {
      * Set a11y options for the Grid.
      */
     setA11yOptions(): void;
+    /**
+     * Adds the screen reader section before or after the Grid.
+     *
+     * @param placement
+     * Either 'before' or 'after'.
+     */
+    addScreenReaderSection(placement: 'before' | 'after'): void;
+    /**
+     * Sets the accessibility attributes for the screen reader section.
+     *
+     * @param sectionElement
+     * The section element.
+     *
+     * @param placement
+     * Either 'before' or 'after'.
+     */
+    setScreenReaderSectionAttributes(sectionElement: HTMLElement, placement: 'before' | 'after'): void;
+    /**
+     * Gets the default formatter for the before-Grid screen reader section.
+     * @private
+     */
+    private defaultBeforeFormatter;
+    /**
+     * Checks if a string is already wrapped in a heading tag (h1-h6).
+     * @private
+     *
+     * @param text
+     * The text to check.
+     *
+     * @returns
+     * True if the text is wrapped in a heading tag.
+     */
+    private isWrappedInHeadingTag;
+    /**
+     * Formats a string with template variables.
+     *
+     * @param format
+     * The format string.
+     *
+     * @param context
+     * The context object.
+     *
+     * @private
+     */
+    private formatTemplateString;
+    /**
+     * Gets the default formatter for the after-Grid screen reader section.
+     * @private
+     */
+    private defaultAfterFormatter;
+    /**
+     * Strips empty HTML tags from a string recursively.
+     *
+     * @param string
+     * The string to strip empty HTML tags from.
+     *
+     * @private
+     */
+    private stripEmptyHTMLTags;
     /**
      * Destroy the accessibility controller.
      */

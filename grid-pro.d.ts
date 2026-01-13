@@ -1,13 +1,13 @@
 /**
- * @license Highcharts Grid Pro v2.1.1 (2025-12-10)
+ * @license Highcharts Grid Pro v2.2.0 (2026-01-13)
  * @module grid/grid-pro
  *
- * (c) 2009-2025 Highsoft AS
+ * (c) 2009-2026 Highsoft AS
  *
- * License: www.highcharts.com/license
+ * A commercial license may be required depending on use.
+ * See www.highcharts.com/license
  */
 import type _Options from './es-modules/Grid/Core/Options';
-import type * as H from './es-modules/Grid/Pro/highcharts';
 import AST from './es-modules/Core/Renderer/HTML/AST.js';
 import Templating from './es-modules/Core/Templating.js';
 import ColumnResizing from './es-modules/Grid/Core/Table/ColumnResizing/ColumnResizing.js';
@@ -105,19 +105,14 @@ declare const G: {
         helpers: Record<string, Function>;
         numberFormat: (this: Templating.Owner | void, number: number, decimals: number, decimalPoint?: string, thousandsSep?: string) => string;
     };
-    readonly version: "2.1.1";
+    readonly version: "2.2.0";
     readonly win: Window & typeof globalThis;
 };
-export { AST, CellContentPro, CellRenderer, CellRendererRegistry, Column, ColumnResizing, DataConnector, DataConverter, DataCursor, DataModifier, DataPool, DataTable, HeaderCell, Pagination, Popup, SvgIcons, Table, TableCell, Templating };
-export declare const classNamePrefix: string, defaultOptions: import("./es-modules/Shared/Types").DeepPartial<_Options>, Grid: typeof _Grid, grid: typeof _Grid.grid, grids: (_Grid | undefined)[], isHighContrastModeActive: () => boolean, merge: {
+export { AST, CellContentPro, CellRenderer, CellRendererRegistry, Column, ColumnResizing, DataConnector, DataConverter, DataCursor, DataModifier, DataPool, DataTable, _Grid as Grid, HeaderCell, _Options as Options, Pagination, Popup, SvgIcons, Table, TableCell, Templating };
+export declare const classNamePrefix: string, defaultOptions: import("./es-modules/Shared/Types").DeepPartial<_Options>, grid: typeof _Grid.grid, grids: (_Grid | undefined)[], isHighContrastModeActive: () => boolean, merge: {
     <T = object>(extend: true, a?: T, ...n: Array<import("./es-modules/Shared/Types").DeepPartial<T> | undefined>): (T);
     <T1 extends object = object, T2 = unknown, T3 = unknown, T4 = unknown, T5 = unknown, T6 = unknown, T7 = unknown, T8 = unknown, T9 = unknown>(a?: T1, b?: T2, c?: T3, d?: T4, e?: T5, f?: T6, g?: T7, h?: T8, i?: T9): (T1 & T2 & T3 & T4 & T5 & T6 & T7 & T8 & T9);
-}, product: "Grid Pro", setOptions: typeof import("./es-modules/Grid/Core/Defaults.js").setOptions, version: "2.1.1", win: Window & typeof globalThis;
-declare global {
-    interface Window {
-        Highcharts?: typeof H;
-    }
-}
+}, product: "Grid Pro", setOptions: typeof import("./es-modules/Grid/Core/Defaults.js").setOptions, version: "2.2.0", win: Window & typeof globalThis;
 declare namespace G {
     type Options = _Options;
 }

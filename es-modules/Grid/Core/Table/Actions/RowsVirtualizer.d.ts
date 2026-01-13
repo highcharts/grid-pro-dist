@@ -36,6 +36,19 @@ declare class RowsVirtualizer {
      */
     rowSettings?: RowsSettings;
     /**
+     * Reuse pool for rows that are currently out of viewport.
+     */
+    private readonly rowPool;
+    /**
+     * Maximum number of rows to keep in the reuse pool.
+     */
+    private static readonly MAX_POOL_SIZE;
+    /**
+     * Flag indicating if a scroll update is queued for the next animation
+     * frame.
+     */
+    private scrollQueued;
+    /**
      * Constructs an instance of the rows virtualizer.
      *
      * @param viewport
@@ -56,6 +69,10 @@ declare class RowsVirtualizer {
      * is enabled.
      */
     scroll(): void;
+    /**
+     * Applies the scroll logic for virtualized rows.
+     */
+    private applyScroll;
     /**
      * Adjusts the visible row heights from the bottom of the viewport.
      */
@@ -79,8 +96,28 @@ declare class RowsVirtualizer {
      */
     reflowRows(): void;
     /**
+     * Gets a row from the pool or creates a new one for the given index.
+     *
+     * @param index
+     * The row index in the data table.
+     *
+     * @returns
+     * A TableRow instance ready for use.
+     */
+    private getOrCreateRow;
+    /**
+     * Adds a row to the reuse pool, or destroys it if the pool is full.
+     *
+     * @param row
+     * The row to pool.
+     */
+    private poolRow;
+    /**
      * Returns the default height of a row. This method should be called only
      * once on initialization.
+     *
+     * @returns
+     * The default height of a row.
      */
     private getDefaultRowHeight;
 }

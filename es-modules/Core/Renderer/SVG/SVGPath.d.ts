@@ -1,47 +1,18 @@
-/* *
- *
- *  (c) 2010-2025 Torstein Honsi
- *
- *  License: www.highcharts.com/license
- *
- *  !!!!!!! SOURCE GETS TRANSPILED BY TYPESCRIPT. EDIT TS FILE ONLY. !!!!!!!
- *
- * */
-
-/* *
- *
- *  Declarations
- *
- * */
-
 export interface SVGPath extends globalThis.Array<SVGPath.Segment> {
     isFlat?: boolean;
     xBounds?: Array<number>;
     yBounds?: Array<number>;
-    xMap?: Array<number|null>;
+    xMap?: Array<number | null>;
 }
-
-/* *
- *
- *  Namespace
- *
- * */
-
-export namespace SVGPath {
-
-    /* *
-     *
-     *  Declarations
-     *
-     * */
+export declare namespace SVGPath {
     type ArcParams = {
-        cx: number,
-        cy: number,
-        start: number,
-        end: number
+        cx: number;
+        cy: number;
+        start: number;
+        end: number;
     };
     type ArcArray = [
-        'A'|'a',
+        'A' | 'a',
         number,
         number,
         number,
@@ -51,12 +22,11 @@ export namespace SVGPath {
         number
     ];
     export interface Arc extends ArcArray {
-        params?: ArcParams
+        params?: ArcParams;
     }
-
-    export type Close = ['Z'|'z'];
+    export type Close = ['Z' | 'z'];
     export type CurveTo = [
-        'C'|'c',
+        'C' | 'c',
         number,
         number,
         number,
@@ -64,14 +34,13 @@ export namespace SVGPath {
         number,
         number
     ];
-    export type HorizontalLineTo = ['H'|'h', number];
-    export type LineTo = ['L'|'l', number, number];
-    export type MoveTo = ['M'|'m', number, number];
-    export type QuadTo = ['Q'|'q', number, number, number, number];
-    export type CurveSmoothTo = ['S'|'s', number, number, number, number];
-    export type QuadSmoothTo = ['T'|'t', number, number];
-    export type VerticalLineTo = ['V'|'v', number];
-
+    export type HorizontalLineTo = ['H' | 'h', number];
+    export type LineTo = ['L' | 'l', number, number];
+    export type MoveTo = ['M' | 'm', number, number];
+    export type QuadTo = ['Q' | 'q', number, number, number, number];
+    export type CurveSmoothTo = ['S' | 's', number, number, number, number];
+    export type QuadSmoothTo = ['T' | 't', number, number];
+    export type VerticalLineTo = ['V' | 'v', number];
     export type Segment = SegmentRegistry[keyof SegmentRegistry];
     export interface SegmentRegistry {
         Arc: Arc;
@@ -85,13 +54,6 @@ export namespace SVGPath {
         QuadTo: QuadTo;
         VerticalLineTo: VerticalLineTo;
     }
-
+    export {};
 }
-
-/* *
- *
- *  Default Export
- *
- * */
-
 export default SVGPath;

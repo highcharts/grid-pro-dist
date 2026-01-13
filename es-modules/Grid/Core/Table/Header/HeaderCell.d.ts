@@ -55,8 +55,8 @@ declare class HeaderCell extends Cell {
      */
     render(): void;
     reflow(): void;
-    protected onKeyDown(e: KeyboardEvent): void;
-    protected onClick(e: MouseEvent): void;
+    onKeyDown(e: KeyboardEvent): void;
+    onClick(e: MouseEvent): void;
     /**
      * Add sorting option to the column.
      */

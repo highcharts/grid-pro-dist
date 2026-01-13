@@ -2,6 +2,7 @@ import type { ColumnDataType } from '../../Core/Table/Column';
 import type { EditModeContent } from '../CellEditing/CellEditMode';
 import type Table from '../../Core/Table/Table';
 import type TableCell from '../../Core/Table/Body/TableCell';
+import type { CellRendererTypeRegistry } from '../CellRendering/CellRendererType';
 import Cell from '../../Core/Table/Cell.js';
 /**
  * Class for validating cell content.
@@ -23,7 +24,12 @@ declare class Validator {
     /**
      * Default validation rules for each dataType.
      */
-    static readonly predefinedRules: Record<ColumnDataType, RuleKey[]>;
+    static readonly predefinedRules: {
+        dataType: Record<ColumnDataType, RuleKey[]>;
+        renderer: {
+            [K in keyof CellRendererTypeRegistry]?: RuleKey[];
+        };
+    };
     viewport: Table;
     /**
      * The cell that has an error.
@@ -105,6 +111,9 @@ export interface RulesRegistryType {
     number: RuleDefinition;
     ignoreCaseUnique: RuleDefinition;
     unique: RuleDefinition;
+    arrayNumber: RuleDefinition;
+    json: RuleDefinition;
+    sparkline: RuleDefinition;
 }
 /**
  * Type of rule: `notEmpty`, `number` or `boolean`.

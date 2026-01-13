@@ -5,6 +5,7 @@ import type { ColumnDataType } from './Table/Column';
 import type DataTable from '../../Data/DataTable';
 import type DataTableOptions from '../../Data/DataTableOptions';
 import type Cell from './Table/Cell';
+import type Column from './Table/Column';
 import type { LangOptionsCore } from '../../Shared/LangOptionsCore';
 import type { Condition as ColumnFilteringCondition } from './Table/Actions/ColumnFiltering/FilteringTypes';
 /**
@@ -12,6 +13,11 @@ import type { Condition as ColumnFilteringCondition } from './Table/Actions/Colu
  * formatted cell's string.
  */
 export type CellFormatterCallback = (this: Cell) => string;
+/**
+ * Callback function to be called when a header event is triggered. Returns a
+ * formatted header's string.
+ */
+export type HeaderFormatterCallback = (this: Column) => string;
 /**
  * Column sorting order type.
  */
@@ -337,7 +343,7 @@ export interface ColumnHeaderOptions {
      * @return
      * A string to be set as a header cell's content.
      */
-    formatter?: CellFormatterCallback;
+    formatter?: HeaderFormatterCallback;
 }
 /**
  * Column sorting options available for applying to all columns at once.
@@ -354,6 +360,11 @@ export interface ColumnSortingOptions {
      * Try it: {@link https://jsfiddle.net/gh/get/library/pure/highcharts/highcharts/tree/master/samples/grid-pro/basic/sorting-options | Sorting options}
      *
      * @default true
+     */
+    enabled?: boolean;
+    /**
+     * @deprecated
+     * Use `enabled` instead
      */
     sortable?: boolean;
     /**
@@ -384,6 +395,11 @@ export interface IndividualColumnSortingOptions extends ColumnSortingOptions {
      * @default null
      */
     order?: ColumnSortingOrder;
+    /**
+     * Priority of this column when multiple columns are sorted. Lower numbers
+     * have higher priority.
+     */
+    priority?: number;
 }
 /**
  * Column options that can be set for each column individually.

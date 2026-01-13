@@ -2,11 +2,11 @@
  *
  *  Grid default options
  *
- *  (c) 2009-2025 Highsoft AS
+ *  (c) 2009-2026 Highsoft AS
  *
- *  License: www.highcharts.com/license
+ *  A commercial license may be required depending on use.
+ *  See www.highcharts.com/license
  *
- *  !!!!!!! SOURCE GETS TRANSPILED BY TYPESCRIPT. EDIT TS FILE ONLY. !!!!!!!
  *
  *  Authors:
  *  - Dawid Dragula
@@ -28,7 +28,8 @@ export const defaultLangOptions = {
                 ascending: 'Sorted ascending.',
                 descending: 'Sorted descending.',
                 none: 'Not sorted.'
-            }
+            },
+            priority: 'Priority {priority}.'
         },
         pagination: {
             announcements: {
@@ -45,6 +46,10 @@ export const defaultLangOptions = {
                 filterCleared: 'Filter cleared for {columnId}. ' +
                     '{rowsCount} results found.'
             }
+        },
+        screenReaderSection: {
+            beforeRegionLabel: '',
+            afterRegionLabel: ''
         }
     },
     loading: 'Loading...',
@@ -95,6 +100,13 @@ export const defaultOptions = {
         announcements: {
             sorting: true,
             filtering: true
+        },
+        screenReaderSection: {
+            beforeGridFormat: '{gridTitle}' +
+                '<div>{gridDescription}</div>' +
+                '<div>Grid with {rowCount} rows and {columnCount}' +
+                ' columns.</div>',
+            afterGridFormat: 'End of Grid.'
         }
     },
     time: {
@@ -120,7 +132,7 @@ export const defaultOptions = {
     },
     columnDefaults: {
         sorting: {
-            sortable: true
+            enabled: true
         },
         filtering: {
             inline: false

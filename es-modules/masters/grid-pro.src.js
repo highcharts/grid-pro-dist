@@ -1,10 +1,12 @@
+// SPDX-License-Identifier: LicenseRef-Highcharts
 /**
- * @license Highcharts Grid Pro v2.1.1 (2025-12-10)
+ * @license Highcharts Grid Pro v2.2.0 (2026-01-13)
  * @module grid/grid-pro
  *
- * (c) 2009-2025 Highsoft AS
+ * (c) 2009-2026 Highsoft AS
  *
- * License: www.highcharts.com/license
+ * A commercial license may be required depending on use.
+ * See www.highcharts.com/license
  */
 import AST from '../Core/Renderer/HTML/AST.js';
 import Templating from '../Core/Templating.js';
@@ -119,9 +121,15 @@ PaginationComposition.compose(G.Pagination);
  * Named Exports
  *
  * */
-export { AST, CellContentPro, CellRenderer, CellRendererRegistry, Column, ColumnResizing, DataConnector, DataConverter, DataCursor, DataModifier, DataPool, DataTable, HeaderCell, Pagination, Popup, SvgIcons, Table, TableCell, Templating };
-export const { classNamePrefix, defaultOptions, Grid, grid, grids, isHighContrastModeActive, merge, product, setOptions, version, win } = G;
-if (G.win.Highcharts) {
-    G.CellRendererRegistry.types.sparkline.useHighcharts(G.win.Highcharts);
+export { AST, CellContentPro, CellRenderer, CellRendererRegistry, Column, ColumnResizing, DataConnector, DataConverter, DataCursor, DataModifier, DataPool, DataTable, _Grid as Grid, HeaderCell, Pagination, Popup, SvgIcons, Table, TableCell, Templating };
+export const { classNamePrefix, defaultOptions, grid, grids, isHighContrastModeActive, merge, product, setOptions, version, win } = G;
+/* *
+ *
+ *  Classic Extensions
+ *
+ * */
+const wnd = G.win;
+if (wnd.Highcharts) {
+    G.CellRendererRegistry.types.sparkline.useHighcharts(wnd.Highcharts);
 }
 export default G;

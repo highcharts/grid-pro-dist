@@ -2,11 +2,11 @@
  *
  *  Grid Header Cell State Helpers namespace
  *
- *  (c) 2020-2025 Highsoft AS
+ *  (c) 2020-2026 Highsoft AS
  *
- *  License: www.highcharts.com/license
+ *  A commercial license may be required depending on use.
+ *  See www.highcharts.com/license
  *
- *  !!!!!!! SOURCE GETS TRANSPILED BY TYPESCRIPT. EDIT TS FILE ONLY. !!!!!!!
  *
  *  Authors:
  *  - Dawid Dragula
@@ -44,13 +44,17 @@ export function isFiltered(column) {
  * only if the column is sorted in the provided order.
  */
 export function isSorted(column, order) {
-    const { currentSorting } = column.viewport.grid.querying.sorting || {};
-    if (currentSorting?.columnId !== column.id) {
+    const { currentSorting, currentSortings } = column.viewport.grid.querying.sorting || {};
+    const columnSorting = (currentSortings?.find((sorting) => sorting.columnId === column.id) ||
+        (currentSorting?.columnId === column.id ?
+            currentSorting :
+            void 0));
+    if (!columnSorting?.order) {
         return false;
     }
     return order ?
-        currentSorting?.order === order :
-        !!currentSorting?.order;
+        columnSorting.order === order :
+        !!columnSorting.order;
 }
 /* *
  *

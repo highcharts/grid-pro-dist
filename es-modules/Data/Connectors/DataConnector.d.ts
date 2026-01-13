@@ -4,6 +4,7 @@ import type DataEvent from '../DataEvent';
 import type DataConverterType from '../Converters/DataConverterType';
 import DataConverter from '../Converters/DataConverter.js';
 import DataTable from '../DataTable.js';
+import { DeepPartial } from '../../Shared/Types';
 /**
  * Abstract class providing an interface for managing a DataConnector.
  */
@@ -96,6 +97,16 @@ declare abstract class DataConnector implements DataEvent.Emitter<DataConnector.
      */
     setColumnOrder(columnIds: Array<string>): void;
     /**
+     * Updates the connector with new options.
+     *
+     * @param newOptions
+     * The new options to be applied to the connector.
+     *
+     * @param reload
+     * Whether to reload the connector after applying the new options.
+     */
+    update(newOptions: DeepPartial<typeof this.options>, reload?: boolean): Promise<void>;
+    /**
      * The default load method, which fires the `afterLoad` event
      *
      * @return {Promise<DataConnector>}
@@ -163,7 +174,7 @@ declare namespace DataConnector {
      * The event type that is provided on events within DataConnector.
      */
     interface Event extends DataEvent {
-        readonly type: 'loadError' | 'load' | 'afterLoad';
+        readonly type: ('loadError' | 'load' | 'afterLoad' | 'beforeUpdate' | 'afterUpdate');
         readonly error?: string | Error;
     }
     /**

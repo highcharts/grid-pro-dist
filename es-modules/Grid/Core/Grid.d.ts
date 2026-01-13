@@ -1,4 +1,4 @@
-import type { Options, GroupedHeaderOptions } from './Options';
+import type { ColumnSortingOrder, Options, GroupedHeaderOptions } from './Options';
 import type { NoIdColumnOptions } from './Table/Column';
 import type Popup from './UI/Popup.js';
 import Accessibility from './Accessibility/Accessibility.js';
@@ -217,6 +217,17 @@ export declare class Grid {
     redraw(): Promise<void>;
     updateColumn(columnId: string, options: NoIdColumnOptions, render?: boolean, overwrite?: boolean): Promise<void>;
     updateColumn(columnId: string, options: NoIdColumnOptions, render?: false, overwrite?: boolean): void;
+    /**
+     * Sets the sorting order for one or more columns. Provide the sortings
+     * in priority order. Use `null` to clear sorting.
+     *
+     * @param sortings
+     * The sorting definition in priority order.
+     */
+    setSorting(sortings: Array<{
+        columnId: string;
+        order: ColumnSortingOrder;
+    }> | null): Promise<void>;
     private render;
     /**
      * Hovers the row with the provided index. It removes the hover effect from

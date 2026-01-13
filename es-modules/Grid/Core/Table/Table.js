@@ -2,11 +2,11 @@
  *
  *  Grid Table Viewport class
  *
- *  (c) 2020-2025 Highsoft AS
+ *  (c) 2020-2026 Highsoft AS
  *
- *  License: www.highcharts.com/license
+ *  A commercial license may be required depending on use.
+ *  See www.highcharts.com/license
  *
- *  !!!!!!! SOURCE GETS TRANSPILED BY TYPESCRIPT. EDIT TS FILE ONLY. !!!!!!!
  *
  *  Authors:
  *  - Dawid Dragula
@@ -82,20 +82,77 @@ class Table {
             }
             this.header?.scrollHorizontally(this.tbodyElement.scrollLeft);
         };
+        /**
+         * Delegated click handler for cells.
+         * @param e Mouse event
+         */
+        this.onCellClick = (e) => {
+            const cell = this.getCellFromElement(e.target);
+            if (cell) {
+                cell
+                    .onClick(e);
+            }
+        };
+        /**
+         * Delegated double-click handler for cells.
+         * @param e Mouse event
+         */
+        this.onCellDblClick = (e) => {
+            const cell = this.getCellFromElement(e.target);
+            if (cell && 'onDblClick' in cell) {
+                cell.onDblClick(e);
+            }
+        };
+        /**
+         * Delegated mousedown handler for cells.
+         * @param e Mouse event
+         */
+        this.onCellMouseDown = (e) => {
+            const cell = this.getCellFromElement(e.target);
+            if (cell && 'onMouseDown' in cell) {
+                cell.onMouseDown(e);
+            }
+        };
+        /**
+         * Delegated mouseover handler for cells.
+         * @param e Mouse event
+         */
+        this.onCellMouseOver = (e) => {
+            const cell = this.getCellFromElement(e.target);
+            if (cell) {
+                cell.onMouseOver();
+            }
+        };
+        /**
+         * Delegated mouseout handler for cells.
+         * @param e Mouse event
+         */
+        this.onCellMouseOut = (e) => {
+            const cell = this.getCellFromElement(e.target);
+            if (cell) {
+                cell.onMouseOut();
+            }
+        };
+        /**
+         * Delegated keydown handler for cells.
+         * @param e Keyboard event
+         */
+        this.onCellKeyDown = (e) => {
+            const cell = this.getCellFromElement(e.target);
+            if (cell) {
+                cell.onKeyDown(e);
+            }
+        };
         this.grid = grid;
         this.tableElement = tableElement;
         this.dataTable = this.grid.presentationTable;
         const dgOptions = grid.options;
         const customClassName = dgOptions?.rendering?.table?.className;
         this.columnResizing = ColumnResizing.initMode(this);
-        this.virtualRows = this.shouldVirtualizeRows();
         if (dgOptions?.rendering?.header?.enabled) {
             this.theadElement = makeHTMLElement('thead', {}, tableElement);
         }
         this.tbodyElement = makeHTMLElement('tbody', {}, tableElement);
-        if (this.virtualRows) {
-            tableElement.classList.add(Globals.getClassName('virtualization'));
-        }
         if (dgOptions?.rendering?.columns?.resizing?.enabled) {
             this.columnsResizer = new ColumnsResizer(this);
         }
@@ -106,6 +163,10 @@ class Table {
         // Load columns
         this.loadColumns();
         // Virtualization
+        this.virtualRows = this.shouldVirtualizeRows();
+        if (this.virtualRows) {
+            tableElement.classList.add(Globals.getClassName('virtualization'));
+        }
         this.rowsVirtualizer = new RowsVirtualizer(this);
         // Init Table
         this.init();
@@ -114,6 +175,13 @@ class Table {
         this.resizeObserver.observe(tableElement);
         this.tbodyElement.addEventListener('scroll', this.onScroll);
         this.tbodyElement.addEventListener('focus', this.onTBodyFocus);
+        // Delegated cell events
+        this.tbodyElement.addEventListener('click', this.onCellClick);
+        this.tbodyElement.addEventListener('dblclick', this.onCellDblClick);
+        this.tbodyElement.addEventListener('mousedown', this.onCellMouseDown);
+        this.tbodyElement.addEventListener('mouseover', this.onCellMouseOver);
+        this.tbodyElement.addEventListener('mouseout', this.onCellMouseOut);
+        this.tbodyElement.addEventListener('keydown', this.onCellKeyDown);
     }
     /* *
     *
@@ -310,11 +378,54 @@ class Table {
         return this.tbodyElement.clientWidth * ratio;
     }
     /**
+     * Finds a cell from a DOM element within the table body.
+     *
+     * @param element
+     * The DOM element to find the cell for (typically event.target).
+     *
+     * @returns
+     * The Cell instance or undefined if not found.
+     *
+     * @internal
+     */
+    getCellFromElement(element) {
+        if (!(element instanceof Element)) {
+            return;
+        }
+        const td = element.closest('td');
+        if (!td) {
+            return;
+        }
+        const tr = td.parentElement;
+        if (!tr) {
+            return;
+        }
+        const rowIndexAttr = tr.getAttribute('data-row-index');
+        if (rowIndexAttr === null) {
+            return;
+        }
+        const rowIndex = parseInt(rowIndexAttr, 10);
+        const firstRowIndex = this.rows[0]?.index ?? 0;
+        const row = this.rows[rowIndex - firstRowIndex];
+        if (!row) {
+            return;
+        }
+        // Find cell index by position in row
+        const cellIndex = Array.prototype.indexOf.call(tr.children, td);
+        return row.cells[cellIndex];
+    }
+    /**
      * Destroys the grid table.
      */
     destroy() {
         this.tbodyElement.removeEventListener('focus', this.onTBodyFocus);
         this.tbodyElement.removeEventListener('scroll', this.onScroll);
+        this.tbodyElement.removeEventListener('click', this.onCellClick);
+        this.tbodyElement.removeEventListener('dblclick', this.onCellDblClick);
+        this.tbodyElement.removeEventListener('mousedown', this.onCellMouseDown);
+        this.tbodyElement.removeEventListener('mouseover', this.onCellMouseOver);
+        this.tbodyElement.removeEventListener('mouseout', this.onCellMouseOut);
+        this.tbodyElement.removeEventListener('keydown', this.onCellKeyDown);
         this.resizeObserver.disconnect();
         this.columnsResizer?.removeEventListeners();
         this.header?.destroy();

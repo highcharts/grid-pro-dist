@@ -154,11 +154,11 @@ declare class DataTableCore {
      */
     setRow(row: DataTable.RowObject, rowIndex?: number, insert?: boolean, eventDetail?: DataEvent.Detail): void;
     /**
-     * Returns the medified (clone) or the original data table if the modified
+     * Returns the modified (clone) or the original data table if the modified
      * one does not exist.
      *
      * @return {Highcharts.DataTableCore}
-     * The medified (clone) or the original data table.
+     * The modified (clone) or the original data table.
      */
     getModified(): this;
 }

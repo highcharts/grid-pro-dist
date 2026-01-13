@@ -1,21 +1,4 @@
-/* *
- *
- *  (c) 2010-2025 Torstein Honsi
- *
- *  License: www.highcharts.com/license
- *
- *  !!!!!!! SOURCE GETS TRANSPILED BY TYPESCRIPT. EDIT TS FILE ONLY. !!!!!!!
- *
- * */
-
-/* *
- *
- *  Declarations
- *
- * */
-
 export interface HTMLAttributes {
-    // [key: string]: (boolean|number|string|Function|undefined);
     'aria-expanded'?: boolean;
     'aria-label'?: string;
     'aria-live'?: string;
@@ -44,14 +27,7 @@ export interface HTMLAttributes {
     rowspan?: number;
     summary?: string;
     tabindex?: number;
-    valign?: 'bottom'|'middle'|'top';
+    valign?: 'bottom' | 'middle' | 'top';
     value?: string;
 }
-
-/* *
- *
- *  Default Export
- *
- * */
-
 export default HTMLAttributes;

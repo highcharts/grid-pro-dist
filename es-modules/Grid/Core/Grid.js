@@ -2,11 +2,11 @@
  *
  *  Highcharts Grid class
  *
- *  (c) 2020-2025 Highsoft AS
+ *  (c) 2020-2026 Highsoft AS
  *
- *  License: www.highcharts.com/license
+ *  A commercial license may be required depending on use.
+ *  See www.highcharts.com/license
  *
- *  !!!!!!! SOURCE GETS TRANSPILED BY TYPESCRIPT. EDIT TS FILE ONLY. !!!!!!!
  *
  *  Authors:
  *  - Dawid Dragula
@@ -25,8 +25,8 @@ import QueryingController from './Querying/QueryingController.js';
 import Globals from './Globals.js';
 import TimeBase from '../../Shared/TimeBase.js';
 import Pagination from './Pagination/Pagination.js';
-const { makeHTMLElement, setHTMLContent } = GridUtils;
-const { defined, diffObjects, extend, fireEvent, getStyle, merge, pick } = U;
+const { makeHTMLElement, setHTMLContent, createOptionsProxy } = GridUtils;
+const { defined, diffObjects, extend, fireEvent, merge, pick } = U;
 /* *
  *
  *  Class
@@ -153,8 +153,8 @@ export class Grid {
             throw new Error('Rendering div not found. It is unable to find the HTML ' +
                 'element to render the Grid in.');
         }
-        this.initialContainerHeight = getStyle(container, 'height', true) || 0;
         this.container = container;
+        this.container.style.minHeight = 0 + 'px';
         this.container.innerHTML = AST.emptyHTML;
         this.contentWrapper = makeHTMLElement('div', {
             className: Globals.getClassName('container')
@@ -195,6 +195,9 @@ export class Grid {
         merge(true, diff, diffObjects(newOptions, this.userOptions));
         this.userOptions = merge(this.userOptions, newOptions);
         this.options = merge(this.options ?? defaultOptions, this.userOptions);
+        this.viewport?.columns.forEach((column) => {
+            column.options = createOptionsProxy(this.columnOptionsMap?.[column.id]?.options ?? {}, this.options?.columnDefaults);
+        });
         return diff;
     }
     /**
@@ -496,7 +499,9 @@ export class Grid {
         fireEvent(this, 'beforeRedraw');
         const flags = this.dirtyFlags;
         if (flags.has('grid')) {
-            return await this.render();
+            await this.render();
+            fireEvent(this, 'afterRedraw');
+            return;
         }
         const { viewport: vp, pagination } = this;
         const colResizing = vp?.columnResizing;
@@ -582,6 +587,90 @@ export class Grid {
             overwrite,
             columnId
         });
+    }
+    /**
+     * Sets the sorting order for one or more columns. Provide the sortings
+     * in priority order. Use `null` to clear sorting.
+     *
+     * @param sortings
+     * The sorting definition in priority order.
+     */
+    async setSorting(sortings) {
+        const viewport = this.viewport;
+        if (!viewport) {
+            return;
+        }
+        if (viewport.validator?.errorCell) {
+            return;
+        }
+        const normalized = (sortings || []).filter((sorting) => !!(sorting.columnId && sorting.order));
+        const sortingController = this.querying.sorting;
+        const previousSortings = sortingController.currentSortings || [];
+        const eventColumnIds = new Set();
+        for (const sorting of previousSortings) {
+            if (sorting.columnId) {
+                eventColumnIds.add(sorting.columnId);
+            }
+        }
+        for (const sorting of normalized) {
+            eventColumnIds.add(sorting.columnId);
+        }
+        const eventColumns = Array.from(eventColumnIds)
+            .map((columnId) => {
+            const column = viewport.getColumn(columnId);
+            if (!column) {
+                return null;
+            }
+            const order = normalized.find((sorting) => sorting.columnId === columnId)?.order || null;
+            return { column, order };
+        })
+            .filter((item) => !!item);
+        for (const { column, order } of eventColumns) {
+            [column, this].forEach((source) => {
+                fireEvent(source, 'beforeSort', {
+                    target: column,
+                    order
+                });
+            });
+        }
+        sortingController.setSorting(normalized);
+        await viewport.updateRows();
+        const currentSortings = sortingController.currentSortings || [];
+        const hasMultiple = currentSortings.length > 1;
+        for (const column of viewport.columns) {
+            const sortingIndex = currentSortings.findIndex((sorting) => sorting.columnId === column.id);
+            if (sortingIndex !== -1 && currentSortings[sortingIndex].order) {
+                const sorting = currentSortings[sortingIndex];
+                const sortingOptions = {
+                    order: sorting.order
+                };
+                if (hasMultiple) {
+                    sortingOptions.priority = sortingIndex + 1;
+                }
+                column.setOptions({ sorting: sortingOptions });
+                if (!hasMultiple) {
+                    delete column.options.sorting?.priority;
+                }
+            }
+            else {
+                delete column.options.sorting?.order;
+                delete column.options.sorting?.priority;
+                if (column.options.sorting &&
+                    Object.keys(column.options.sorting).length < 1) {
+                    delete column.options.sorting;
+                }
+            }
+            column.sorting?.refreshHeaderAttributes();
+        }
+        this.accessibility?.userSortedColumn(currentSortings[0]?.order || null);
+        for (const { column, order } of eventColumns) {
+            [column, this].forEach((source) => {
+                fireEvent(source, 'afterSort', {
+                    target: column,
+                    order
+                });
+            });
+        }
     }
     async render() {
         if (this.isRendered) {
@@ -765,7 +854,7 @@ export class Grid {
         else {
             this.renderNoData();
         }
-        this.accessibility?.setA11yOptions();
+        this.renderAccessibility();
         // Render bottom pagination, footer pagination,
         // or custom container pagination (after table).
         if (paginationPosition !== 'top') {
@@ -774,6 +863,19 @@ export class Grid {
         this.renderDescription();
         fireEvent(this, 'afterRenderViewport');
         this.viewport?.reflow();
+    }
+    /**
+     * Renders the Grid accessibility.
+     * @internal
+     */
+    renderAccessibility() {
+        const accessibility = this.accessibility;
+        if (!accessibility) {
+            return;
+        }
+        accessibility.setA11yOptions();
+        accessibility.addScreenReaderSection('before');
+        accessibility.addScreenReaderSection('after');
     }
     /**
      * Renders the table (viewport) of the Grid.

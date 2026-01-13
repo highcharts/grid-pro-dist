@@ -2,11 +2,11 @@
  *
  *  Grid HeaderCell class
  *
- *  (c) 2020-2025 Highsoft AS
+ *  (c) 2020-2026 Highsoft AS
  *
- *  License: www.highcharts.com/license
+ *  A commercial license may be required depending on use.
+ *  See www.highcharts.com/license
  *
- *  !!!!!!! SOURCE GETS TRANSPILED BY TYPESCRIPT. EDIT TS FILE ONLY. !!!!!!!
  *
  *  Authors:
  *  - Dawid Dragula
@@ -106,8 +106,8 @@ class HeaderCell extends Cell {
         const { column } = this;
         const options = createOptionsProxy(this.superColumnOptions, column?.options);
         const headerCellOptions = options.header || {};
-        if (headerCellOptions.formatter) {
-            this.value = headerCellOptions.formatter.call(this).toString();
+        if (column && headerCellOptions.formatter) {
+            this.value = headerCellOptions.formatter.call(column).toString();
         }
         else if (isString(headerCellOptions.format)) {
             this.value = column ?
@@ -184,8 +184,9 @@ class HeaderCell extends Cell {
             e.target !== column.header?.headerContent) || column.viewport.columnsResizer?.isResizing) {
             return;
         }
-        if (column.options.sorting?.sortable) {
-            column.sorting?.toggle();
+        if ((column.options.sorting?.enabled ??
+            column.options.sorting?.sortable)) {
+            column.sorting?.toggle(e);
         }
         fireEvent(this, 'click', {
             originalEvent: e,

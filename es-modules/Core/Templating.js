@@ -1,10 +1,11 @@
 /* *
  *
- *  (c) 2010-2025 Torstein Honsi
+ *  (c) 2010-2026 Highsoft AS
+ *  Author: Torstein Honsi
  *
- *  License: www.highcharts.com/license
+ *  A commercial license may be required depending on use.
+ *  See www.highcharts.com/license
  *
- *  !!!!!!! SOURCE GETS TRANSPILED BY TYPESCRIPT. EDIT TS FILE ONLY. !!!!!!!
  *
  * */
 'use strict';
@@ -14,6 +15,7 @@ import G from './Globals.js';
 const { pageLang } = G;
 import U from './Utilities.js';
 const { extend, getNestedProperty, isArray, isNumber, isObject, isString, pick, ucfirst } = U;
+/** @internal */
 const helpers = {
     // Built-in helpers
     add: (a, b) => a + b,
@@ -48,7 +50,10 @@ const numberFormatCache = {};
  *  Functions
  *
  * */
-// Internal convenience function
+/**
+ * Internal convenience function.
+ * @internal
+ */
 const isQuotedString = (str) => /^["'].+["']$/.test(str);
 /**
  * Formats a JavaScript date timestamp (milliseconds since Jan 1st 1970) into a

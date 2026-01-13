@@ -2,11 +2,11 @@
  *
  *  Grid Sorting Controller class
  *
- *  (c) 2020-2025 Highsoft AS
+ *  (c) 2020-2026 Highsoft AS
  *
- *  License: www.highcharts.com/license
+ *  A commercial license may be required depending on use.
+ *  See www.highcharts.com/license
  *
- *  !!!!!!! SOURCE GETS TRANSPILED BY TYPESCRIPT. EDIT TS FILE ONLY. !!!!!!!
  *
  *  Authors:
  *  - Dawid Dragula
@@ -37,23 +37,24 @@ class SortingController {
     constructor(querying) {
         this.querying = querying;
     }
-    /* *
-    *
-    *  Functions
-    *
-    * */
-    /**
-     * Sets the sorting state. If the new sorting state is different than the
-     * current one, the `shouldBeUpdated` flag is set to `true`. If the
-     * same, the flag is set to `false`.
-     *
-     * @param order
-     * The sorting order.
-     *
-     * @param columnId
-     * The column ID to sort by.
-     */
-    setSorting(order, columnId) {
+    setSorting(orderOrSortings, columnId) {
+        if (Array.isArray(orderOrSortings)) {
+            const sortings = orderOrSortings
+                .filter((sorting) => !!(sorting.columnId && sorting.order))
+                .map((sorting) => ({
+                columnId: sorting.columnId,
+                order: sorting.order
+            }));
+            const currentSortings = this.currentSortings || [];
+            if (!SortingController.sortingsEqual(sortings, currentSortings)) {
+                this.querying.shouldBeUpdated = true;
+                this.currentSortings = sortings;
+                this.currentSorting = sortings[0] || { order: null };
+            }
+            this.modifier = this.createModifier();
+            return;
+        }
+        const order = orderOrSortings;
         if (this.currentSorting?.columnId !== columnId ||
             this.currentSorting?.order !== order) {
             this.querying.shouldBeUpdated = true;
@@ -61,8 +62,32 @@ class SortingController {
                 columnId,
                 order
             };
+            this.currentSortings = (order && columnId ?
+                [{ columnId, order }] :
+                []);
         }
         this.modifier = this.createModifier();
+    }
+    /**
+     * Checks whether two sorting state arrays are equal.
+     *
+     * @param a
+     * First sorting state array.
+     *
+     * @param b
+     * Second sorting state array.
+     */
+    static sortingsEqual(a, b) {
+        if (a.length !== b.length) {
+            return false;
+        }
+        for (let i = 0, iEnd = a.length; i < iEnd; ++i) {
+            if (a[i].columnId !== b[i].columnId ||
+                a[i].order !== b[i].order) {
+                return false;
+            }
+        }
+        return true;
     }
     /**
      * Returns the sorting options from the data grid options.
@@ -70,60 +95,73 @@ class SortingController {
     getSortingOptions() {
         const grid = this.querying.grid, { columnOptionsMap } = grid;
         if (!columnOptionsMap) {
-            return { order: null };
+            return [];
         }
         const columnIDs = Object.keys(columnOptionsMap);
-        let foundOrder = null;
-        let foundColumnId;
-        for (let i = columnIDs.length - 1; i > -1; --i) {
+        const sortings = [];
+        for (let i = 0, iEnd = columnIDs.length; i < iEnd; ++i) {
             const columnId = columnIDs[i];
             const columnOptions = columnOptionsMap[columnId]?.options || {};
             const order = columnOptions.sorting?.order;
             if (order) {
-                if (foundColumnId) {
-                    // eslint-disable-next-line no-console
-                    console.warn('Grid: Only one column can be sorted at a time. ' +
-                        'Data will be sorted only by the last found column ' +
-                        `with the sorting order defined in the options: "${foundColumnId}".`);
-                    break;
-                }
-                foundOrder = order;
-                foundColumnId = columnId;
+                sortings.push({
+                    columnId,
+                    order,
+                    priority: columnOptions.sorting?.priority,
+                    index: i
+                });
             }
         }
-        return {
-            columnId: foundColumnId,
-            order: foundOrder
-        };
+        if (sortings.some((sorting) => typeof sorting.priority === 'number')) {
+            sortings.sort((a, b) => {
+                const aPriority = (typeof a.priority === 'number' ?
+                    a.priority :
+                    Number.POSITIVE_INFINITY);
+                const bPriority = (typeof b.priority === 'number' ?
+                    b.priority :
+                    Number.POSITIVE_INFINITY);
+                if (aPriority !== bPriority) {
+                    return aPriority - bPriority;
+                }
+                return a.index - b.index;
+            });
+        }
+        else {
+            sortings.reverse();
+        }
+        return sortings.map((sorting) => ({
+            columnId: sorting.columnId,
+            order: sorting.order
+        }));
     }
     /**
      * Loads sorting options from the data grid options.
      */
     loadOptions() {
-        const stateFromOptions = this.getSortingOptions();
-        if (stateFromOptions.columnId !== this.currentSorting?.columnId ||
-            stateFromOptions.order !== this.currentSorting?.order) {
-            this.setSorting(stateFromOptions.order, stateFromOptions.columnId);
+        const sortingsFromOptions = this.getSortingOptions();
+        if (!SortingController.sortingsEqual(sortingsFromOptions, this.currentSortings || [])) {
+            this.setSorting(sortingsFromOptions);
         }
     }
     /**
      * Returns the sorting modifier based on the loaded sorting options.
      */
     createModifier() {
-        if (!this.currentSorting) {
-            return;
-        }
-        const { columnId, order } = this.currentSorting;
-        if (!order || !columnId) {
+        const sortings = (this.currentSortings ||
+            (this.currentSorting ? [this.currentSorting] : [])).filter((sorting) => !!(sorting.columnId && sorting.order));
+        if (!sortings.length) {
             return;
         }
         const grid = this.querying.grid;
+        const defaultCompare = grid.options?.columnDefaults?.sorting?.compare;
         return new SortModifier({
-            orderByColumn: columnId,
-            direction: order,
-            compare: grid.columnOptionsMap?.[columnId]?.options
-                ?.sorting?.compare ||
-                grid.options?.columnDefaults?.sorting?.compare
+            direction: sortings[0].order,
+            columns: sortings.map((sorting) => ({
+                column: sorting.columnId,
+                direction: sorting.order,
+                compare: grid.columnOptionsMap?.[sorting.columnId]
+                    ?.options?.sorting?.compare || defaultCompare
+            }))
         });
     }
 }

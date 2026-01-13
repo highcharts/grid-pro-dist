@@ -14,6 +14,10 @@ declare class SortingController {
      */
     currentSorting?: SortingState;
     /**
+     * The current multi-column sorting options in priority order.
+     */
+    currentSortings?: SortingState[];
+    /**
      * The modifier that is applied to the data table.
      */
     modifier?: SortModifier;
@@ -36,6 +40,17 @@ declare class SortingController {
      * The column ID to sort by.
      */
     setSorting(order: ColumnSortingOrder, columnId?: string): void;
+    setSorting(sortings: SortingState[]): void;
+    /**
+     * Checks whether two sorting state arrays are equal.
+     *
+     * @param a
+     * First sorting state array.
+     *
+     * @param b
+     * Second sorting state array.
+     */
+    private static sortingsEqual;
     /**
      * Returns the sorting options from the data grid options.
      */

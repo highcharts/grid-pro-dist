@@ -72,11 +72,11 @@ declare class DataTable extends DataTableCore implements DataEvent.Emitter<DataT
      *
      * @function Highcharts.DataTable#deleteRows
      *
-     * @param {number} [rowIndex]
-     * Index to start delete of rows. If not specified, all rows will be
-     * deleted.
+     * @param {number | number[]} [rowIndex]
+     * Index of the row where deletion should start, or an array of indices for
+     * deleting multiple rows. If not specified, all rows will be deleted.
      *
-     * @param {number} [rowCount=1]
+     * @param {number} [rowCount]
      * Number of rows to delete.
      *
      * @param {Highcharts.DataTableEventDetail} [eventDetail]
@@ -88,7 +88,7 @@ declare class DataTable extends DataTableCore implements DataEvent.Emitter<DataT
      * @emits #deleteRows
      * @emits #afterDeleteRows
      */
-    deleteRows(rowIndex?: number, rowCount?: number, eventDetail?: DataEvent.Detail): Array<DataTable.Row>;
+    deleteRows(rowIndex?: number | number[], rowCount?: number, eventDetail?: DataEvent.Detail): Array<DataTable.Row>;
     /**
      * Emits an event on this table to all registered callbacks of the given
      * event.
@@ -541,7 +541,7 @@ declare namespace DataTable {
     interface RowEvent extends DataEvent {
         readonly type: ('deleteRows' | 'afterDeleteRows' | 'setRows' | 'afterSetRows');
         readonly rowCount: number;
-        readonly rowIndex: number;
+        readonly rowIndex: number | number[];
         readonly rows?: Array<Row | RowObject>;
     }
     /**

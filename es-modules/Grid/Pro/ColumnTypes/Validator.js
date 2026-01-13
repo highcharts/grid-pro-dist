@@ -2,11 +2,11 @@
  *
  *  Grid cell content validator
  *
- *  (c) 2009-2024 Highsoft AS
+ *  (c) 2009-2026 Highsoft AS
  *
- *  License: www.highcharts.com/license
+ *  A commercial license may be required depending on use.
+ *  See www.highcharts.com/license
  *
- *  !!!!!!! SOURCE GETS TRANSPILED BY TYPESCRIPT. EDIT TS FILE ONLY. !!!!!!!
  *
  *  Authors:
  *  - Dawid Dragula
@@ -58,6 +58,7 @@ class Validator {
     validate(cell, errors = []) {
         const { options, dataType } = cell.column;
         const validationErrors = cell.row.viewport.grid.options?.lang?.validationErrors;
+        const rendererType = cell.column.options?.cells?.renderer?.type;
         let rules = Array.from(options?.cells?.editMode?.validationRules || []);
         // Remove duplicates in validationRules
         const isArrayString = rules.every((rule) => typeof rule === 'string');
@@ -65,7 +66,12 @@ class Validator {
             rules = [...new Set(rules)];
         }
         else {
-            const predefined = Validator.predefinedRules[dataType] || [];
+            const predefined = [
+                ...(Validator.predefinedRules.dataType[dataType] ?? [])
+            ];
+            if (rendererType) {
+                predefined.push(...Validator.predefinedRules.renderer[rendererType] ?? []);
+            }
             const hasPredefined = rules.some((rule) => typeof rule !== 'string' &&
                 typeof rule.validate === 'string' &&
                 predefined.includes(rule.validate));
@@ -236,16 +242,52 @@ Validator.rulesRegistry = {
             return !isDuplicate;
         },
         notification: 'Value must be unique within this column (case-sensitive).'
+    },
+    arrayNumber: {
+        validate: function ({ rawValue }) {
+            return rawValue
+                .split(',')
+                .every((item) => !Number.isNaN(Number(item.trim())));
+        },
+        notification: 'Value should be a list of numbers separated by commas.'
+    },
+    json: {
+        validate: function ({ rawValue }) {
+            try {
+                JSON.parse(rawValue);
+                return true;
+                // eslint-disable-next-line @typescript-eslint/no-unused-vars
+            }
+            catch (e) {
+                return false;
+            }
+        },
+        notification: 'Value should be a valid JSON.'
+    },
+    sparkline: {
+        validate: function ({ rawValue }) {
+            const arrayNumberValidate = Validator.rulesRegistry.arrayNumber.validate;
+            const jsonValidate = Validator.rulesRegistry.json.validate;
+            return arrayNumberValidate({ rawValue }) ||
+                jsonValidate({ rawValue });
+        },
+        // eslint-disable-next-line max-len
+        notification: 'Value should be a valid JSON or a list of numbers separated by commas.'
     }
 };
 /**
  * Default validation rules for each dataType.
  */
 Validator.predefinedRules = {
-    'boolean': ['boolean'],
-    datetime: ['datetime'],
-    number: ['number'],
-    string: []
+    dataType: {
+        'boolean': ['boolean'],
+        datetime: ['datetime'],
+        number: ['number'],
+        string: []
+    },
+    renderer: {
+        sparkline: ['sparkline']
+    }
 };
 /* *
  *
