@@ -14,8 +14,7 @@
  * */
 'use strict';
 import HeaderCell from '../../Header/HeaderCell.js';
-import U from '../../../../../Core/Utilities.js';
-const { fireEvent } = U;
+import { fireEvent } from '../../../../../Shared/Utilities.js';
 /* *
  *
  *  Class
@@ -40,10 +39,10 @@ class FilterCell extends HeaderCell {
      *  Methods
      *
      * */
-    render() {
+    async render() {
         const { column } = this;
         if (!column) {
-            return;
+            return Promise.resolve();
         }
         // Render content of th element
         this.row.htmlElement.appendChild(this.htmlElement);

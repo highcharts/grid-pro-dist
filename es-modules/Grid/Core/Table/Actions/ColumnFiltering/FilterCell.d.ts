@@ -7,7 +7,7 @@ import HeaderCell from '../../Header/HeaderCell.js';
 declare class FilterCell extends HeaderCell {
     column: Column;
     constructor(row: Row, column: Column);
-    render(): void;
+    render(): Promise<void>;
     onKeyDown(e: KeyboardEvent): void;
     onClick(e: MouseEvent): void;
 }

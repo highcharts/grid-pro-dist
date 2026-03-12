@@ -15,8 +15,7 @@
 'use strict';
 import Validator from './Validator.js';
 import Globals from '../../Core/Globals.js';
-import U from '../../../Core/Utilities.js';
-const { addEvent, pushUnique } = U;
+import { addEvent, pushUnique } from '../../../Shared/Utilities.js';
 /* *
  *
  *  Composition
@@ -33,7 +32,7 @@ export function compose(TableClass) {
     if (!pushUnique(Globals.composed, 'Validator')) {
         return;
     }
-    addEvent(TableClass, 'afterInit', initValidatorComposition);
+    addEvent(TableClass, 'beforeInit', initValidatorComposition);
     addEvent(TableClass, 'afterDestroy', destroy);
 }
 /**
@@ -46,7 +45,7 @@ function initValidatorComposition() {
  * Callback function called after table destroy.
  */
 function destroy() {
-    this.validator.destroy();
+    this.validator?.destroy();
 }
 /* *
  *

@@ -52,10 +52,10 @@ class PaginationController {
     *
     * */
     /**
-     * Total number of items (rows)
+     * Total number of items (rows before pagination).
      */
     get totalItems() {
-        return this._totalItems ?? this.querying.grid.dataTable?.rowCount ?? 0;
+        return this.totalItemsCount ?? 0;
     }
     /**
      * Gets the total number of pages.
@@ -126,7 +126,7 @@ class PaginationController {
         // Calculate the start index (0-based)
         const start = (currentPage - 1) * pageSize;
         const end = Math.min(start + pageSize, rowsCountBeforePagination);
-        this._totalItems = rowsCountBeforePagination;
+        this.totalItemsCount = rowsCountBeforePagination;
         return new RangeModifier({
             start,
             end

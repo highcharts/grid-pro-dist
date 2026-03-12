@@ -1,4 +1,4 @@
-import type DataTable from '../../../../Data/DataTable';
+import type { CellType as DataTableCellType } from '../../../../Data/DataTable';
 import type { EditModeContent } from '../../CellEditing/CellEditMode';
 import type TableCell from '../../../Core/Table/Body/TableCell';
 import type TextInputRenderer from '../Renderers/TextInputRenderer';
@@ -36,7 +36,7 @@ declare class TextInputContent extends CellContentPro implements EditModeContent
     /**
      * Gets the value of the input element.
      */
-    get value(): DataTable.CellType;
+    get value(): DataTableCellType;
     /**
      * Converts the cell value to a string for the input.
      */

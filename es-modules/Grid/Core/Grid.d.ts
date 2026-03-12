@@ -1,4 +1,5 @@
 import type { ColumnSortingOrder, Options, GroupedHeaderOptions } from './Options';
+import type { DataProviderType } from './Data/DataProviderType';
 import type { NoIdColumnOptions } from './Table/Column';
 import type Popup from './UI/Popup.js';
 import Accessibility from './Accessibility/Accessibility.js';
@@ -70,11 +71,6 @@ export declare class Grid {
      */
     contentWrapper?: HTMLElement;
     /**
-     * The data source of the Grid. It contains the original data table
-     * that was passed to the Grid.
-     */
-    dataTable?: DataTable;
-    /**
      * The description element of the Grid.
      */
     descriptionElement?: HTMLElement;
@@ -82,12 +78,6 @@ export declare class Grid {
      * The container element of the loading indicator overlaying the Grid.
      */
     loadingWrapper?: HTMLElement;
-    /**
-     * The presentation table of the Grid. It contains a modified version
-     * of the data table that is used for rendering the Grid content. If
-     * not modified, just a reference to the original data table.
-     */
-    presentationTable?: DataTable;
     /**
      * The HTML element of the table.
      */
@@ -117,16 +107,11 @@ export declare class Grid {
     /**
      * The unique ID of the Grid.
      */
-    id: string;
+    readonly id: string;
     /**
      * The list of currently shown popups.
      */
     popups: Set<Popup>;
-    /**
-     * Functions that unregister events attached to the grid's data table,
-     * that need to be removed when the grid is destroyed.
-     */
-    private dataTableEventDestructors;
     /**
      * The render target (container) of the Grid.
      */
@@ -135,6 +120,14 @@ export declare class Grid {
      * Whether the Grid is rendered.
      */
     private isRendered;
+    /**
+     * Internal redraw queue used to prevent concurrent `redraw()` calls from
+     * interleaving async DOM work and corrupting the state (for example
+     * rendering duplicate pagination controls when `update()` is called
+     * multiple times without awaiting).
+     */
+    private redrawQueue;
+    dataProvider?: DataProviderType;
     /**
      * Constructs a new Grid.
      *
@@ -148,6 +141,21 @@ export declare class Grid {
      * The callback that is called after the Grid is loaded.
      */
     constructor(renderTo: string | HTMLElement, options: Options, afterLoadCallback?: (grid: Grid) => void);
+    /**
+     * The data source of the Grid. It contains the original data table
+     * that was passed to the Grid.
+     *
+     * @deprecated Use `dataProvider` instead.
+     */
+    get dataTable(): DataTable | undefined;
+    /**
+     * The presentation table of the Grid. It contains a modified version
+     * of the data table that is used for rendering the Grid content. If
+     * not modified, just a reference to the original data table.
+     *
+     * @deprecated Use `dataProvider` instead.
+     */
+    get presentationTable(): DataTable | undefined;
     private initAccessibility;
     private initPagination;
     /**
@@ -277,11 +285,7 @@ export declare class Grid {
      * grid, in the correct order.
      */
     private getEnabledColumnIDs;
-    /**
-     * Loads the data table of the Grid. If the data table is passed as a
-     * reference, it should be used instead of creating a new one.
-     */
-    private loadDataTable;
+    private loadDataProvider;
     /**
      * Extracts all references to columnIds on all levels below defined level
      * in the settings.header structure.
@@ -316,6 +320,11 @@ export declare class Grid {
     hideLoading(): void;
     /**
      * Returns the grid data as a JSON string.
+     *
+     * **Note:** This method only works with `LocalDataProvider`.
+     * For other data providers, use your data source directly.
+     *
+     * @deprecated
      *
      * @param modified
      * Whether to return the modified data table (after filtering/sorting/etc.)

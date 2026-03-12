@@ -20,7 +20,7 @@ declare module '../../Core/Table/Column' {
         /**
          * The cell view renderer instance for the column.
          */
-        cellRenderer: CellRendererType;
+        cellRenderer?: CellRendererType;
     }
 }
 declare const _default: {

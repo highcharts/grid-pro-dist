@@ -2,8 +2,8 @@ import type { IndividualColumnOptions } from '../Options';
 import type Cell from './Cell';
 import type CellContent from './CellContent/CellContent';
 import type HeaderCell from './Header/HeaderCell';
+import type { Column as DataTableColumn } from '../../../Data/DataTable';
 import Table from './Table.js';
-import DataTable from '../../../Data/DataTable.js';
 import ColumnSorting from './Actions/ColumnSorting';
 import ColumnFiltering from './Actions/ColumnFiltering/ColumnFiltering.js';
 import TableCell from './Body/TableCell';
@@ -18,7 +18,7 @@ export declare class Column {
     /**
      * Type of the data in the column.
      */
-    readonly dataType: ColumnDataType;
+    dataType: ColumnDataType;
     /**
      * The cells of the column.
      */
@@ -28,9 +28,11 @@ export declare class Column {
      */
     id: string;
     /**
-     * The data of the column.
+     * The data of the column. Shouldn't be used directly in all cases, because
+     * it's not guaranteed to be defined (e.g. when using the lazy loading,
+     * `RemoteDataProvider`).
      */
-    data?: DataTable.Column;
+    data?: DataTableColumn;
     /**
      * The options of the column as a proxy that provides merged access to
      * original options and defaults if not defined in the individual options.
@@ -65,6 +67,10 @@ export declare class Column {
      * The index of the column.
      */
     constructor(viewport: Table, id: string, index: number);
+    /**
+     * Initializes the column data-related properties.
+     */
+    init(): Promise<void>;
     /**
      * Loads the data of the column from the viewport's data table.
      */

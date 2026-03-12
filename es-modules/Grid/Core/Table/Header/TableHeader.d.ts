@@ -33,7 +33,7 @@ declare class TableHeader {
     /**
      * Renders the table head content.
      */
-    render(): void;
+    render(): Promise<void>;
     /**
      * Reflows the table head's content dimensions.
      */

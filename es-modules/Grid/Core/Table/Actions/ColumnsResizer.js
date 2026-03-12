@@ -16,9 +16,8 @@
 'use strict';
 import GridUtils from '../../GridUtils.js';
 import Globals from '../../Globals.js';
-import Utils from '../../../../Core/Utilities.js';
+import { fireEvent } from '../../../../Shared/Utilities.js';
 const { makeHTMLElement } = GridUtils;
-const { fireEvent } = Utils;
 /* *
  *
  *  Class
@@ -58,7 +57,6 @@ class ColumnsResizer {
             const vp = this.viewport;
             vp.columnResizing.resize(this, diff);
             vp.reflow();
-            vp.rowsVirtualizer.adjustRowHeights();
             fireEvent(this.draggedColumn, 'afterResize', {
                 target: this.draggedColumn,
                 originalEvent: e

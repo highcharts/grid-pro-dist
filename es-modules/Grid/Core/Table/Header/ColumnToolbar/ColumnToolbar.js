@@ -18,15 +18,20 @@ import Globals from '../../../Globals.js';
 import SortToolbarButton from './ToolbarButtons/SortToolbarButton.js';
 import FilterToolbarButton from './ToolbarButtons/FilterToolbarButton.js';
 import MenuToolbarButton from './ToolbarButtons/MenuToolbarButton.js';
-import U from '../../../../../Core/Utilities.js';
+import { getStyle } from '../../../../../Shared/Utilities.js';
 const { makeHTMLElement } = GridUtils;
-const { getStyle } = U;
 /* *
  *
  *  Class
  *
  * */
 class HeaderCellToolbar {
+    /**
+     * Reference to the Grid instance for icon registry and options.
+     */
+    get grid() {
+        return this.column.viewport.grid;
+    }
     /* *
      *
      *  Constructor

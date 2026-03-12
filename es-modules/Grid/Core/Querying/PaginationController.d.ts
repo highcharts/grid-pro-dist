@@ -23,7 +23,7 @@ declare class PaginationController {
     /**
      * The number of rows before pagination.
      */
-    private _totalItems?;
+    totalItemsCount?: number;
     /**
      * Constructs the PaginationController instance.
      *
@@ -32,7 +32,7 @@ declare class PaginationController {
      */
     constructor(querying: QueryingController);
     /**
-     * Total number of items (rows)
+     * Total number of items (rows before pagination).
      */
     get totalItems(): number;
     /**

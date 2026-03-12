@@ -13,8 +13,7 @@
  *
  * */
 import AST from '../../Core/Renderer/HTML/AST.js';
-import U from '../../Core/Utilities.js';
-const { isObject } = U;
+import { isObject } from '../../Shared/Utilities.js';
 AST.allowedAttributes.push('srcset', 'media');
 AST.allowedTags.push('picture', 'source');
 /* *
@@ -163,6 +162,52 @@ export function createOptionsProxy(options, defaultOptions = {}) {
 export function formatText(template, values) {
     return template.replace(/\{(\w+)\}/g, (match, key) => (values[key] !== void 0 ? String(values[key]) : match));
 }
+/**
+ * Resolves a style value that can be static or callback based.
+ *
+ * @param style
+ * Style object or callback returning one.
+ *
+ * @param target
+ * Runtime target used as callback context and first argument.
+ *
+ * @returns
+ * A resolved style object or `undefined`.
+ */
+export function resolveStyleValue(style, target) {
+    if (!style) {
+        return;
+    }
+    if (typeof style === 'function') {
+        if (!target) {
+            return;
+        }
+        return style.call(target, target);
+    }
+    return style;
+}
+/**
+ * Resolves and merges style values in order.
+ *
+ * @param target
+ * Runtime target used as callback context and first argument.
+ *
+ * @param styleValues
+ * Style values to merge in order, where latter entries override former.
+ *
+ * @returns
+ * Merged style object.
+ */
+export function mergeStyleValues(target, ...styleValues) {
+    const mergedStyle = {};
+    for (const styleValue of styleValues) {
+        const resolvedStyle = resolveStyleValue(styleValue, target);
+        if (resolvedStyle) {
+            Object.assign(mergedStyle, resolvedStyle);
+        }
+    }
+    return mergedStyle;
+}
 /* *
  *
  *  Default Export
@@ -175,5 +220,7 @@ export default {
     sanitizeText,
     setHTMLContent,
     createOptionsProxy,
-    formatText
+    formatText,
+    resolveStyleValue,
+    mergeStyleValues
 };

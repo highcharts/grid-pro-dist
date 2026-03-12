@@ -1,3 +1,4 @@
+import type CSSObject from '../../Core/Renderer/CSSObject';
 /**
  * The event object for the grid.
  */
@@ -28,6 +29,10 @@ export interface MakeHTMLElementParameters {
     innerHTML?: string;
     style?: Partial<CSSStyleDeclaration>;
 }
+/**
+ * A style object or callback returning one.
+ */
+export type StyleValue<T> = CSSObject | ((this: T, target: T) => CSSObject);
 /**
  * Creates a HTML element with the provided options.
  *
@@ -105,6 +110,32 @@ export declare function createOptionsProxy<T extends object>(options: T, default
  * @returns Formatted text
  */
 export declare function formatText(template: string, values: Record<string, string | number>): string;
+/**
+ * Resolves a style value that can be static or callback based.
+ *
+ * @param style
+ * Style object or callback returning one.
+ *
+ * @param target
+ * Runtime target used as callback context and first argument.
+ *
+ * @returns
+ * A resolved style object or `undefined`.
+ */
+export declare function resolveStyleValue<T>(style?: StyleValue<T>, target?: T): (CSSObject | undefined);
+/**
+ * Resolves and merges style values in order.
+ *
+ * @param target
+ * Runtime target used as callback context and first argument.
+ *
+ * @param styleValues
+ * Style values to merge in order, where latter entries override former.
+ *
+ * @returns
+ * Merged style object.
+ */
+export declare function mergeStyleValues<T>(target: T, ...styleValues: Array<(StyleValue<T> | undefined)>): CSSObject;
 declare const _default: {
     readonly makeHTMLElement: typeof makeHTMLElement;
     readonly makeDiv: typeof makeDiv;
@@ -113,5 +144,7 @@ declare const _default: {
     readonly setHTMLContent: typeof setHTMLContent;
     readonly createOptionsProxy: typeof createOptionsProxy;
     readonly formatText: typeof formatText;
+    readonly resolveStyleValue: typeof resolveStyleValue;
+    readonly mergeStyleValues: typeof mergeStyleValues;
 };
 export default _default;

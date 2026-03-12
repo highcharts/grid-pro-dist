@@ -1,5 +1,6 @@
 import type TableRow from './Body/TableRow';
-import DataTable from '../../../Data/DataTable.js';
+import type DataTable from '../../../Data/DataTable';
+import type { RowId } from '../Data/DataProvider';
 import ColumnResizingMode from './ColumnResizing/ResizingMode.js';
 import Column from './Column.js';
 import TableHeader from './Header/TableHeader.js';
@@ -13,14 +14,6 @@ declare class Table {
      * The data grid instance which the table (viewport) belongs to.
      */
     readonly grid: Grid;
-    /**
-     * The presentation version of the data table. It has applied modifiers
-     * and is ready to be rendered.
-     *
-     * If you want to modify the data table, you should use the original
-     * instance that is stored in the `grid.dataTable` property.
-     */
-    dataTable: DataTable;
     /**
      * The HTML element of the table.
      */
@@ -64,6 +57,10 @@ declare class Table {
      */
     virtualRows: boolean;
     /**
+     * Cell context menu instance (lazy created).
+     */
+    private cellContextMenu?;
+    /**
      * Constructs a new data grid table.
      *
      * @param grid
@@ -74,9 +71,17 @@ declare class Table {
      */
     constructor(grid: Grid, tableElement: HTMLTableElement);
     /**
-     * Initializes the data grid table.
+     * The presentation version of the data table. It has applied modifiers
+     * and is ready to be rendered.
+     *
+     * @deprecated Use `grid.dataProvider` instead.
      */
-    private init;
+    get dataTable(): DataTable | undefined;
+    /**
+     * Initializes the table. Should be called after creation so that the table
+     * can be asynchronously initialized.
+     */
+    init(): Promise<void>;
     /**
      * Sets the minimum height of the table body.
      */
@@ -126,6 +131,11 @@ declare class Table {
      */
     private onCellDblClick;
     /**
+     * Delegated context menu handler for cells.
+     * @param e Mouse event
+     */
+    private onCellContextMenu;
+    /**
      * Delegated mousedown handler for cells.
      * @param e Mouse event
      */
@@ -145,6 +155,22 @@ declare class Table {
      * @param e Keyboard event
      */
     private onCellKeyDown;
+    /**
+     * Opens a cell context menu if configured and enabled.
+     *
+     * @param tableCell
+     * The target cell.
+     *
+     * @param clientX
+     * The viewport X coordinate for anchoring.
+     *
+     * @param clientY
+     * The viewport Y coordinate for anchoring.
+     *
+     * @returns
+     * True if the menu was opened.
+     */
+    private openCellContextMenu;
     /**
      * Scrolls the table to the specified row.
      *
@@ -194,7 +220,7 @@ declare class Table {
      * @param id
      * The ID of the row.
      */
-    getRow(id: number): TableRow | undefined;
+    getRow(id: RowId): TableRow | undefined;
 }
 /**
  * Represents the metadata of the viewport state. It is used to save the

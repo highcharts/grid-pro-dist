@@ -51,7 +51,7 @@ declare class QueryingController {
      */
     getGroupedModifiers(): DataModifier[];
     /**
-     * Apply all modifiers to the data table.
+     * Apply all modifiers to the data provider.
      */
     private modifyData;
 }

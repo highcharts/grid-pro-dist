@@ -80,7 +80,8 @@ export class ContextMenuButton {
         buttonEl.setAttribute('tabindex', '-1');
         this.refreshState();
         if (cfg.chevron) {
-            chevronEl.appendChild(createGridIcon('chevronRight'));
+            const grid = this.contextMenu?.grid;
+            chevronEl.appendChild(createGridIcon('chevronRight', grid?.options?.rendering?.icons));
         }
         if (cfg.icon) {
             this.setIcon(cfg.icon);
@@ -104,14 +105,15 @@ export class ContextMenuButton {
      * Sets the icon for the button.
      *
      * @param icon
-     * The icon to set.
+     * The icon to set (built-in name or custom name from rendering.icons).
      */
     setIcon(icon) {
         this.icon?.remove();
         if (!icon) {
             return;
         }
-        this.icon = createGridIcon(icon);
+        const grid = this.contextMenu?.grid;
+        this.icon = createGridIcon(icon, grid?.options?.rendering?.icons);
         this.iconWrapper?.appendChild(this.icon);
     }
     setActive(active) {

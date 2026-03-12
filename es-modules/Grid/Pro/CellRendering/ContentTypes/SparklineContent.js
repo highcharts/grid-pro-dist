@@ -16,8 +16,7 @@
 'use strict';
 import CellContentPro from '../CellContentPro.js';
 import Globals from '../../../Core/Globals.js';
-import U from '../../../../Core/Utilities.js';
-const { defined, merge } = U;
+import { defined, merge } from '../../../../Shared/Utilities.js';
 /* *
  *
  *  Class

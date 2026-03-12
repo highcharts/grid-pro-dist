@@ -1,4 +1,4 @@
-import type DataTable from '../../../../Data/DataTable';
+import type { CellType as DataTableCellType } from '../../../../Data/DataTable';
 import type { EditModeContent } from '../../CellEditing/CellEditMode';
 import type SelectRenderer from '../Renderers/SelectRenderer';
 import type TableCell from '../../../Core/Table/Body/TableCell';
@@ -44,7 +44,7 @@ declare class SelectContent extends CellContentPro implements EditModeContent {
     /**
      * Gets the value of the select element.
      */
-    get value(): DataTable.CellType;
+    get value(): DataTableCellType;
     /**
      * Gets the main element (select) of the content.
      * @returns The select element.

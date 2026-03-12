@@ -101,7 +101,7 @@ declare class Accessibility {
     /**
      * Set a11y options for the Grid.
      */
-    setA11yOptions(): void;
+    setA11yOptions(): Promise<void>;
     /**
      * Adds the screen reader section before or after the Grid.
      *

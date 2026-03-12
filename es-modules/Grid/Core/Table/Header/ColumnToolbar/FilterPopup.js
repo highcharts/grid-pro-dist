@@ -14,8 +14,7 @@
  * */
 'use strict';
 import Popup from '../../../UI/Popup.js';
-import U from '../../../../../Core/Utilities.js';
-const { merge } = U;
+import { merge } from '../../../../../Shared/Utilities.js';
 /* *
  *
  *  Class

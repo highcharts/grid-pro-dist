@@ -2,12 +2,17 @@ import type { A11yOptions, HeaderCellA11yOptions, LangAccessibilityOptions } fro
 import type { PaginationLangOptions, PaginationOptions } from './Pagination/PaginationOptions';
 import type { ColumnResizingMode } from './Table/ColumnResizing/ColumnResizing';
 import type { ColumnDataType } from './Table/Column';
+import type { DataProviderOptionsType } from './Data/DataProviderType';
 import type DataTable from '../../Data/DataTable';
+import type { CellType as DataTableCellType } from '../../Data/DataTable';
 import type DataTableOptions from '../../Data/DataTableOptions';
 import type Cell from './Table/Cell';
 import type Column from './Table/Column';
+import type TableCell from './Table/Body/TableCell';
+import type { IconRegistryValue } from './UI/SvgIcons';
 import type { LangOptionsCore } from '../../Shared/LangOptionsCore';
 import type { Condition as ColumnFilteringCondition } from './Table/Actions/ColumnFiltering/FilteringTypes';
+import type CSSObject from '../../Core/Renderer/CSSObject';
 /**
  * Callback function to be called when a header event is triggered. Returns a
  * formatted cell's string.
@@ -19,9 +24,79 @@ export type CellFormatterCallback = (this: Cell) => string;
  */
 export type HeaderFormatterCallback = (this: Column) => string;
 /**
+ * Callback function to resolve dynamic style for a grid entity.
+ */
+export type StyleCallback<T> = (this: T, target: T) => CSSObject;
+/**
+ * A static style object or a callback that returns one.
+ */
+export type StyleValue<T> = CSSObject | StyleCallback<T>;
+/**
  * Column sorting order type.
  */
 export type ColumnSortingOrder = 'asc' | 'desc' | null;
+/**
+ * Options for a single cell context menu item.
+ */
+export interface CellContextMenuActionItemOptions {
+    /**
+     * The label shown in the menu.
+     */
+    label: string;
+    /**
+     * Optional icon name for the menu item (built-in name from the default
+     * registry or custom name from rendering.icons).
+     */
+    icon?: string;
+    /**
+     * Whether the menu item should be disabled.
+     */
+    disabled?: boolean;
+    /**
+     * Whether to render a divider instead of a button.
+     */
+    separator?: false;
+    /**
+     * Callback executed when the menu item is clicked.
+     *
+     * The cell is available on `this` and is also passed as the first argument
+     * to support arrow functions.
+     */
+    onClick?: (this: TableCell, cell: TableCell) => void;
+}
+/**
+ * Options for a divider item in the cell context menu.
+ */
+export interface CellContextMenuDividerItemOptions {
+    /**
+     * Whether to render a divider instead of a button.
+     */
+    separator: true;
+    /**
+     * Optional label for accessibility or testing.
+     * Not rendered as a clickable item.
+     */
+    label?: string;
+}
+/**
+ * Options for a single cell context menu item.
+ */
+export type CellContextMenuItemOptions = CellContextMenuDividerItemOptions | CellContextMenuActionItemOptions;
+/**
+ * Cell context menu options.
+ */
+export interface CellContextMenuOptions {
+    /**
+     * Whether the cell context menu is enabled.
+     *
+     * @default true
+     */
+    enabled?: boolean;
+    /**
+     * List of items to show in the cell context menu.
+     */
+    items?: Array<CellContextMenuItemOptions>;
+}
 /**
  * Options to control the content and the user experience of a grid structure.
  */
@@ -48,7 +123,14 @@ export interface Options {
      */
     columns?: Array<IndividualColumnOptions>;
     /**
+     * Options for the data provider.
+     */
+    data?: DataProviderOptionsType;
+    /**
      * Data table with the data to display in the grid structure.
+     *
+     * @deprecated
+     * Use `data.dataTable` instead.
      */
     dataTable?: DataTable | DataTableOptions;
     /**
@@ -83,6 +165,25 @@ export interface Options {
  * Options to control the way grid is rendered.
  */
 export interface RenderingSettings {
+    /**
+     * Custom or override icons for the grid. Keys are icon names (either
+     * built-in names from the default registry or custom names). Values
+     * are either an SVG definition object or a raw SVG markup string.
+     * Built-in icons can be overridden; new names can be used for custom
+     * icons and referenced where an icon name is accepted (e.g. menu
+     * items, pagination buttons).
+     *
+     * @example
+     * ```js
+     * rendering: {
+     *   icons: {
+     *     chevronRight: '<svg>...</svg>',
+     *     myCustomIcon: { width: 16, height: 16, children: [{ d: '...' }] }
+     *   }
+     * }
+     * ```
+     */
+    icons?: Record<string, IconRegistryValue>;
     /**
      * Options to control the columns rendering.
      */
@@ -268,9 +369,9 @@ export interface ColumnOptions {
      */
     sorting?: ColumnSortingOptions;
     /**
-     * The width of the column. It can be set in pixels or as a percentage of
-     * the table width. If unset, the width is distributed evenly between all
-     * columns.
+     * The width of the column. It can be set in pixels, as a percentage of the
+     * table width, or `'auto'`. If unset or `'auto'`, the width is distributed
+     * evenly between columns without a fixed width.
      *
      * This option does not work with the `resizing` option set to `full`.
      *
@@ -282,6 +383,11 @@ export interface ColumnOptions {
      * Filtering options for the column.
      */
     filtering?: ColumnFilteringOptions;
+    /**
+     * CSS styles for the whole column, applied to the header and body cells.
+     * Can be a static style object or a callback that returns one.
+     */
+    style?: StyleValue<Column>;
 }
 /**
  * Options for all cells in the column.
@@ -319,6 +425,11 @@ export interface ColumnCellOptions {
      * A string to be set as a table cell's content.
      */
     formatter?: CellFormatterCallback;
+    /**
+     * CSS styles for table body cells in the column.
+     * Can be a static style object or a callback that returns one.
+     */
+    style?: StyleValue<Cell>;
 }
 /**
  * Options for the header cells in the columns.
@@ -344,6 +455,11 @@ export interface ColumnHeaderOptions {
      * A string to be set as a header cell's content.
      */
     formatter?: HeaderFormatterCallback;
+    /**
+     * CSS styles for the column header cells.
+     * Can be a static style object or a callback that returns one.
+     */
+    style?: StyleValue<Column>;
 }
 /**
  * Column sorting options available for applying to all columns at once.
@@ -368,6 +484,22 @@ export interface ColumnSortingOptions {
      */
     sortable?: boolean;
     /**
+     * Sequence of sorting orders used when toggling sorting from the user
+     * interface (for example by clicking the column header).
+     *
+     * The sequence can contain any number of values, in any order, with
+     * duplicates allowed. Allowed values are: `'asc'`, `'desc'`, and `null`.
+     *
+     * If the sequence is empty (`[]`), sorting toggles become a no-op while
+     * the sortable UI can still be shown.
+     *
+     * This option can be set in both `columnDefaults.sorting` and
+     * `columns[].sorting`.
+     *
+     * @default ['asc', 'desc', null]
+     */
+    orderSequence?: ColumnSortingOrder[];
+    /**
      * Custom compare function to sort the column values. It overrides the
      * default sorting behavior. If not set, the default sorting behavior is
      * used.
@@ -382,7 +514,7 @@ export interface ColumnSortingOptions {
      * A number indicating whether the first value (`a`) is less than (`-1`),
      * equal to (`0`), or greater than (`1`) the second value (`b`).
      */
-    compare?: (a: DataTable.CellType, b: DataTable.CellType) => number;
+    compare?: (a: DataTableCellType, b: DataTableCellType) => number;
 }
 /**
  * Column sorting options that can be set for each column individually.
@@ -439,6 +571,15 @@ export interface CaptionOptions {
      * The custom CSS class name for the table caption.
      */
     className?: string;
+    /**
+     * The HTML tag to use for the caption. When set, the caption is rendered
+     * as that element (e.g. `h1`, `p`, `span`). Must be one of
+     * [AST.allowedTags](https://api.highcharts.com/class-reference/Highcharts.AST#allowedTags)
+     * (e.g. `div`, `p`, `span`, `h1`–`h6`).
+     *
+     * @default 'div'
+     */
+    htmlTag?: string;
     /**
      * The caption of the grid.
      *

@@ -15,9 +15,8 @@
 'use strict';
 import GridUtils from '../GridUtils.js';
 import Globals from '../Globals.js';
-import U from '../../../Core/Utilities.js';
+import { fireEvent } from '../../../Shared/Utilities.js';
 const { makeHTMLElement } = GridUtils;
-const { fireEvent } = U;
 /* *
  *
  *  Class
@@ -146,6 +145,7 @@ export class Popup {
             return;
         }
         const next = this.options.nextToAnchor || false;
+        const edgePadding = 8;
         const popupRect = this.container.getBoundingClientRect();
         const parentRect = wrapper.getBoundingClientRect();
         const anchorRect = anchorElement?.getBoundingClientRect() ?? parentRect;
@@ -153,24 +153,22 @@ export class Popup {
         let left = next ? anchorRect.right + 3 : anchorRect.left;
         // If popup's right side is after the parent's right side, shift popup
         // to the left of the anchor element.
-        if (left + popupRect.width > parentRect.width) {
+        if (left + popupRect.width > parentRect.right - edgePadding) {
             left = -popupRect.width + (next ? anchorRect.left + 4 : anchorRect.right);
         }
         // If popup's left side is before the parent's left side,
         // shift popup so it's aligned to parent's left.
-        if (left < parentRect.left) {
-            left = parentRect.left;
+        if (left < parentRect.left + edgePadding) {
+            left = parentRect.left + edgePadding;
         }
         // Apply positioning
         this.container.style.top = `${top - parentRect.top}px`;
         this.container.style.left = `${left - parentRect.left}px`;
         // If the content is too tall, constrain the container to the bottom
         // of the parent to enable content Y-scrolling.
-        const contentRect = this.content.getBoundingClientRect();
-        if (contentRect.height + contentRect.top - parentRect.top >
-            parentRect.height) {
+        if (top + popupRect.height > parentRect.bottom - edgePadding) {
             this.container.style.top = 'auto';
-            this.container.style.bottom = '0';
+            this.container.style.bottom = `${edgePadding}px`;
         }
         else {
             this.container.style.top = `${top - parentRect.top}px`;

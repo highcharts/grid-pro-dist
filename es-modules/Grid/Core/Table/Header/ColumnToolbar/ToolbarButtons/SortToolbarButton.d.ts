@@ -10,6 +10,5 @@ declare class SortToolbarButton extends ToolbarButton {
     private renderSortPriorityIndicator;
     refreshState(): void;
     protected addEventListeners(): void;
-    protected renderActiveIndicator(render: boolean): void;
 }
 export default SortToolbarButton;

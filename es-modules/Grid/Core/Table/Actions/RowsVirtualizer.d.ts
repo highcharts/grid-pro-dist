@@ -7,7 +7,7 @@ declare class RowsVirtualizer {
     /**
      * The default height of a row.
      */
-    readonly defaultRowHeight: number;
+    defaultRowHeight: number;
     /**
      * The index of the first visible row.
      */
@@ -36,6 +36,34 @@ declare class RowsVirtualizer {
      */
     rowSettings?: RowsSettings;
     /**
+     * Cached max element height in CSS pixels.
+     */
+    private static maxElementHeight?;
+    /**
+     * The maximum height of a HTML element in most browsers.
+     * Firefox has a lower limit than other browsers.
+     */
+    private static getMaxElementHeight;
+    /**
+     * The maximum height of the scrollable element in CSS pixels.
+     */
+    private maxElementHeight;
+    /**
+     * The total height of the grid, used when the Grid height
+     * exceeds the max element height.
+     */
+    private totalGridHeight;
+    /**
+     * The overflow height of the grid, used when the Grid height
+     * exceeds the max element height.
+     */
+    private gridHeightOverflow;
+    /**
+     * The scroll offset in pixels used to adjust the row positions when
+     * the Grid height exceeds the max element height.
+     */
+    private scrollOffset;
+    /**
      * Reuse pool for rows that are currently out of viewport.
      */
     private readonly rowPool;
@@ -49,6 +77,16 @@ declare class RowsVirtualizer {
      */
     private scrollQueued;
     /**
+     * Flag indicating if rows are currently being rendered to prevent
+     * concurrent render operations.
+     */
+    private isRendering;
+    /**
+     * Pending row cursor to render after current render completes.
+     * Used to ensure the final scroll position is rendered.
+     */
+    private pendingRowCursor;
+    /**
      * Constructs an instance of the rows virtualizer.
      *
      * @param viewport
@@ -58,12 +96,17 @@ declare class RowsVirtualizer {
     /**
      * Renders the rows in the viewport for the first time.
      */
-    initialRender(): void;
+    initialRender(): Promise<void>;
     /**
      * Renders the rows in the viewport. It is called when the rows need to be
      * re-rendered, e.g., after a sort or filter operation.
      */
-    rerender(): void;
+    rerender(): Promise<void>;
+    /**
+     * Refreshes the rendered rows without a full teardown.
+     * It updates the row range and reuses existing rows when possible.
+     */
+    refreshRows(): Promise<void>;
     /**
      * Method called on the viewport scroll event, only when the virtualization
      * is enabled.
@@ -120,5 +163,16 @@ declare class RowsVirtualizer {
      * The default height of a row.
      */
     private getDefaultRowHeight;
+    /**
+     * Updates cached row count and derived grid height metrics used for
+     * overflow-aware scrolling.
+     */
+    private updateGridMetrics;
+    /**
+     * Updates row translate offsets based on scroll scaling. When the grid
+     * exceeds the max element height, it keeps the bottom rows aligned to the
+     * maximum scrollable height.
+     */
+    private adjustRowOffsets;
 }
 export default RowsVirtualizer;

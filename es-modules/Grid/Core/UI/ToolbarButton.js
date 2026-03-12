@@ -60,7 +60,9 @@ class ToolbarButton {
         this.wrapper = wrapper;
         const button = this.buttonEl = makeHTMLElement('button', {
             className: (Globals.getClassName('button') +
-                (this.isActive ? ' active' : ''))
+                (this.isActive ?
+                    ' ' + Globals.getClassName('buttonSelected') :
+                    ''))
         }, wrapper);
         button.setAttribute('type', 'button');
         button.setAttribute('tabindex', '-1');
@@ -97,20 +99,20 @@ class ToolbarButton {
      * Sets the icon for the button.
      *
      * @param icon
-     * The icon to set.
+     * The icon to set (built-in name or custom name from rendering.icons).
      */
     setIcon(icon) {
         this.icon?.remove();
-        this.icon = createGridIcon(icon);
+        const grid = this.toolbar?.grid;
+        this.icon = createGridIcon(icon, grid?.options?.rendering?.icons);
         this.buttonEl?.appendChild(this.icon);
     }
     setActive(active) {
         this.isActive = active;
-        this.buttonEl?.classList.toggle('active', active);
-        this.renderActiveIndicator(active);
+        this.buttonEl?.classList.toggle(Globals.getClassName('buttonSelected'), active);
     }
     setHighlighted(highlighted) {
-        this.buttonEl?.classList.toggle('highlighted', highlighted);
+        this.buttonEl?.classList.toggle(Globals.getClassName('buttonHighlighted'), highlighted);
         const ariaExpanded = this.options.accessibility?.ariaExpanded;
         if (typeof ariaExpanded === 'boolean') {
             this.buttonEl?.setAttribute('aria-expanded', highlighted);
@@ -141,26 +143,6 @@ class ToolbarButton {
      */
     clickHandler(event) {
         this.options.onClick?.(event, this);
-    }
-    /**
-     * Renders the active indicator for the button.
-     *
-     * @param render
-     * Whether the active indicator should be rendered.
-     */
-    renderActiveIndicator(render) {
-        const button = this.buttonEl;
-        if (!button) {
-            return;
-        }
-        this.activeIndicator?.remove();
-        if (!render) {
-            delete this.activeIndicator;
-            return;
-        }
-        this.activeIndicator = makeHTMLElement('div', {
-            className: Globals.getClassName('toolbarButtonActiveIndicator')
-        }, button);
     }
     /**
      * Adds event listeners to the button.

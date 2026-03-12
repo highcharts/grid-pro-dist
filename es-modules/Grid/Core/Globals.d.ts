@@ -3,7 +3,7 @@ export type DeepRequired<T> = {
 };
 export type ClassNameKey = keyof typeof rawClassNames;
 export declare const classNamePrefix: string;
-export declare const version = "2.2.0";
+export declare const version = "2.3.0";
 export declare const rawClassNames: {
     readonly container: "container";
     readonly tableElement: "table";
@@ -40,7 +40,6 @@ export declare const rawClassNames: {
     readonly columnSortableIcon: "column-sortable-icon";
     readonly columnSortedAsc: "column-sorted-asc";
     readonly columnSortedDesc: "column-sorted-desc";
-    readonly sortPriorityIndicator: "sort-priority-indicator";
     readonly resizableContent: "resizable-content";
     readonly resizerHandles: "column-resizer";
     readonly resizedColumn: "column-resized";
@@ -55,12 +54,12 @@ export declare const rawClassNames: {
     readonly popup: "popup";
     readonly button: "button";
     readonly buttonSelected: "button-selected";
+    readonly buttonHighlighted: "button-highlighted";
     readonly input: "input";
     readonly icon: "icon";
     readonly iconSearch: "icon-search";
     readonly popupContent: "popup-content";
     readonly columnFilterWrapper: "column-filter-wrapper";
-    readonly toolbarButtonActiveIndicator: "active-indicator";
     readonly menuContainer: "menu-container";
     readonly menuItem: "menu-item";
     readonly menuHeader: "menu-header";
@@ -70,13 +69,16 @@ export declare const rawClassNames: {
     readonly menuItemLabel: "menu-item-label";
     readonly menuDivider: "menu-divider";
     readonly clearFilterButton: "clear-filter-button";
-    readonly paginationWrapper: "pagination-wrapper";
-    readonly paginationContainer: "pagination-container";
+    readonly pagination: "pagination";
     readonly paginationPageInfo: "pagination-info";
-    readonly paginationControlsContainer: "pagination-controls-container";
-    readonly paginationNavButtonsContainer: "pagination-nav-buttons-container";
-    readonly paginationNavDropdown: "pagination-nav-dropdown";
+    readonly paginationControls: "pagination-controls";
     readonly paginationPageSize: "pagination-page-size";
+    readonly paginationPages: "pagination-pages";
+    readonly paginationNavDropdown: "pagination-nav-dropdown";
+    readonly paginationLeft: "pagination-left";
+    readonly paginationCenter: "pagination-center";
+    readonly paginationRight: "pagination-right";
+    readonly paginationDistributed: "pagination-distributed";
     readonly noWidth: "no-width";
     readonly rightAlign: "right";
     readonly centerAlign: "center";
@@ -90,7 +92,7 @@ export declare const isSafari: boolean;
 export declare const getClassName: (classNameKey: ClassNameKey) => string;
 declare const _default: {
     readonly classNamePrefix: string;
-    readonly version: "2.2.0";
+    readonly version: "2.3.0";
     readonly rawClassNames: {
         readonly container: "container";
         readonly tableElement: "table";
@@ -127,7 +129,6 @@ declare const _default: {
         readonly columnSortableIcon: "column-sortable-icon";
         readonly columnSortedAsc: "column-sorted-asc";
         readonly columnSortedDesc: "column-sorted-desc";
-        readonly sortPriorityIndicator: "sort-priority-indicator";
         readonly resizableContent: "resizable-content";
         readonly resizerHandles: "column-resizer";
         readonly resizedColumn: "column-resized";
@@ -142,12 +143,12 @@ declare const _default: {
         readonly popup: "popup";
         readonly button: "button";
         readonly buttonSelected: "button-selected";
+        readonly buttonHighlighted: "button-highlighted";
         readonly input: "input";
         readonly icon: "icon";
         readonly iconSearch: "icon-search";
         readonly popupContent: "popup-content";
         readonly columnFilterWrapper: "column-filter-wrapper";
-        readonly toolbarButtonActiveIndicator: "active-indicator";
         readonly menuContainer: "menu-container";
         readonly menuItem: "menu-item";
         readonly menuHeader: "menu-header";
@@ -157,13 +158,16 @@ declare const _default: {
         readonly menuItemLabel: "menu-item-label";
         readonly menuDivider: "menu-divider";
         readonly clearFilterButton: "clear-filter-button";
-        readonly paginationWrapper: "pagination-wrapper";
-        readonly paginationContainer: "pagination-container";
+        readonly pagination: "pagination";
         readonly paginationPageInfo: "pagination-info";
-        readonly paginationControlsContainer: "pagination-controls-container";
-        readonly paginationNavButtonsContainer: "pagination-nav-buttons-container";
-        readonly paginationNavDropdown: "pagination-nav-dropdown";
+        readonly paginationControls: "pagination-controls";
         readonly paginationPageSize: "pagination-page-size";
+        readonly paginationPages: "pagination-pages";
+        readonly paginationNavDropdown: "pagination-nav-dropdown";
+        readonly paginationLeft: "pagination-left";
+        readonly paginationCenter: "pagination-center";
+        readonly paginationRight: "pagination-right";
+        readonly paginationDistributed: "pagination-distributed";
         readonly noWidth: "no-width";
         readonly rightAlign: "right";
         readonly centerAlign: "center";

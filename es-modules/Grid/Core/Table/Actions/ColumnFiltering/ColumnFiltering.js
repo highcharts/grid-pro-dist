@@ -15,11 +15,10 @@
  *
  * */
 'use strict';
-import U from '../../../../../Core/Utilities.js';
 import GU from '../../../GridUtils.js';
 import Globals from '../../../Globals.js';
 import { conditionsMap } from './FilteringTypes.js';
-const { defined, fireEvent } = U;
+import { defined, fireEvent } from '../../../../../Shared/Utilities.js';
 const { makeHTMLElement } = GU;
 /* *
  *
@@ -328,7 +327,7 @@ class ColumnFiltering {
     renderClearButton(inputWrapper) {
         this.clearButton = makeHTMLElement('button', {
             className: Globals.getClassName('clearFilterButton'),
-            innerText: 'Clear filter' // TODO: Lang
+            innerText: 'Clear filter' // TODO(lang): Lang
         }, inputWrapper);
         this.clearButton.setAttribute('tabindex', '-1');
         this.clearButton.disabled = !this.isFilteringApplied();

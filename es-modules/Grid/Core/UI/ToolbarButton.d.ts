@@ -1,7 +1,6 @@
 import type Toolbar from './Toolbar';
 import type Button from './Button';
 import type Popup from './Popup';
-import { GridIconName } from './SvgIcons.js';
 import { ClassNameKey } from '../Globals.js';
 declare class ToolbarButton implements Button {
     /**
@@ -51,9 +50,9 @@ declare class ToolbarButton implements Button {
      * Sets the icon for the button.
      *
      * @param icon
-     * The icon to set.
+     * The icon to set (built-in name or custom name from rendering.icons).
      */
-    setIcon(icon: GridIconName): void;
+    setIcon(icon: string): void;
     setActive(active: boolean): void;
     setHighlighted(highlighted: boolean): void;
     /**
@@ -68,13 +67,6 @@ declare class ToolbarButton implements Button {
      */
     protected clickHandler(event: MouseEvent): void;
     /**
-     * Renders the active indicator for the button.
-     *
-     * @param render
-     * Whether the active indicator should be rendered.
-     */
-    protected renderActiveIndicator(render: boolean): void;
-    /**
      * Adds event listeners to the button.
      */
     protected addEventListeners(): void;
@@ -88,9 +80,9 @@ declare class ToolbarButton implements Button {
  */
 export interface ToolbarButtonOptions {
     /**
-     * The icon for the button.
+     * The icon for the button (built-in name or custom from rendering.icons).
      */
-    icon: GridIconName;
+    icon: string;
     /**
      * The class name key for the button.
      */

@@ -139,6 +139,10 @@ export interface PaginationOptions {
      */
     position?: string;
     /**
+     * Alignment of the pagination elements within the wrapper.
+     */
+    align?: 'left' | 'center' | 'right' | 'distributed';
+    /**
      * Controls options for pagination UI elements.
      */
     controls?: PaginationControlsOptions;

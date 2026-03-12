@@ -1,6 +1,7 @@
 import type Cell from '../Cell';
 import type Column from '../Column';
-import type DataTable from '../../../../Data/DataTable';
+import type { RowObject as DataTableRowObject } from '../../../../Data/DataTable';
+import type { RowId } from '../../Data/DataProvider';
 import Row from '../Row.js';
 import Table from '../Table.js';
 /**
@@ -10,15 +11,15 @@ declare class TableRow extends Row {
     /**
      * The row values from the data table in the original column order.
      */
-    data: DataTable.RowObject;
+    data: DataTableRowObject;
     /**
      * The local index of the row in the presentation data table.
      */
     index: number;
     /**
-     * The index of the row in the original data table (ID).
+     * The unique ID of the row.
      */
-    id?: number;
+    id?: RowId;
     /**
      * The vertical translation of the row.
      */
@@ -33,6 +34,7 @@ declare class TableRow extends Row {
      * The index of the row in the data table.
      */
     constructor(viewport: Table, index: number);
+    init(): Promise<void>;
     createCell(column: Column): Cell;
     /**
      * Loads the row data from the data table.
@@ -42,17 +44,7 @@ declare class TableRow extends Row {
      * Updates the row data and its cells with the latest values from the data
      * table.
      */
-    update(): void;
-    /**
-     * Reuses the row instance for a new index.
-     *
-     * @param index
-     * The index of the row in the data table.
-     *
-     * @param doReflow
-     * Whether to reflow the row after updating the cells.
-     */
-    reuse(index: number, doReflow?: boolean): void;
+    update(): Promise<void>;
     /**
      * Adds or removes the hovered CSS class to the row element.
      *

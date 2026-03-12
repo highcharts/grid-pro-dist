@@ -16,8 +16,7 @@
 import { CellRenderer } from '../CellRenderer.js';
 import { registerRenderer } from '../CellRendererRegistry.js';
 import DateTimeInputContent from '../ContentTypes/DateTimeInputContent.js';
-import U from '../../../../Core/Utilities.js';
-const { merge } = U;
+import { merge } from '../../../../Shared/Utilities.js';
 /* *
  *
  *  Class

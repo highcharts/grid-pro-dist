@@ -39,7 +39,7 @@ declare abstract class Row {
      * Renders the row's content. It does not attach the row element to the
      * viewport nor pushes the rows to the viewport.rows array.
      */
-    render(): void;
+    render(): Promise<void>;
     /**
      * Reflows the row's content dimensions.
      */

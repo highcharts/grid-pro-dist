@@ -11,9 +11,8 @@
  *
  * */
 'use strict';
-import U from '../../Core/Utilities.js';
 import Globals from '../../Core/Globals.js';
-const { addEvent, fireEvent, pushUnique } = U;
+import { addEvent, fireEvent, pushUnique } from '../../Shared/Utilities.js';
 const propagate = {
     'cell_mouseOver': function () {
         fireEvent(this.row.viewport.grid, 'cellMouseOver', {

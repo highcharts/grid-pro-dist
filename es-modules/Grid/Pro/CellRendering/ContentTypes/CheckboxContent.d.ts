@@ -1,5 +1,5 @@
 import type CheckboxRenderer from '../Renderers/CheckboxRenderer';
-import type DataTable from '../../../../Data/DataTable';
+import type { CellType as DataTableCellType } from '../../../../Data/DataTable';
 import type { EditModeContent } from '../../CellEditing/CellEditMode';
 import type TableCell from '../../../Core/Table/Body/TableCell';
 import CellContentPro from '../CellContentPro.js';
@@ -19,7 +19,7 @@ declare class CheckboxContent extends CellContentPro implements EditModeContent 
     protected add(parentElement?: HTMLElement): HTMLInputElement;
     update(): void;
     get rawValue(): string;
-    get value(): DataTable.CellType;
+    get value(): DataTableCellType;
     getMainElement(): HTMLInputElement;
     destroy(): void;
     private readonly onChange;

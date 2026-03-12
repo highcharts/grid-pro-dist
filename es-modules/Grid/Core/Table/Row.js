@@ -54,11 +54,11 @@ class Row {
      * Renders the row's content. It does not attach the row element to the
      * viewport nor pushes the rows to the viewport.rows array.
      */
-    render() {
+    async render() {
         const columns = this.viewport.columns;
         for (let i = 0, iEnd = columns.length; i < iEnd; i++) {
             const cell = this.createCell(columns[i]);
-            cell.render();
+            await cell.render();
         }
         this.rendered = true;
         if (this.viewport.virtualRows) {

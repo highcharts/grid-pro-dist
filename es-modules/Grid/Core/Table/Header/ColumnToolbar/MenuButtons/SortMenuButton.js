@@ -15,8 +15,7 @@
 'use strict';
 import ContextMenuButton from '../../../../UI/ContextMenuButton.js';
 import StateHelpers from '../StateHelpers.js';
-import U from '../../../../../../Core/Utilities.js';
-const { addEvent } = U;
+import { addEvent } from '../../../../../../Shared/Utilities.js';
 /* *
  *
  *  Class
@@ -29,7 +28,7 @@ class SortMenuButton extends ContextMenuButton {
      *
      * */
     constructor(langOptions, direction) {
-        super({ icon: direction === 'asc' ? 'sortAsc' : 'sortDesc' });
+        super({ icon: direction === 'asc' ? 'arrowUp' : 'arrowDown' });
         this.direction = direction;
         this.baseLabel = langOptions[direction === 'asc' ? 'sortAscending' : 'sortDescending'] || '';
         this.options.label = this.baseLabel;

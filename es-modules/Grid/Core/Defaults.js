@@ -15,8 +15,7 @@
  * */
 'use strict';
 import Pagination from './Pagination/Pagination.js';
-import Utils from '../../Core/Utilities.js';
-const { merge } = Utils;
+import { merge } from '../../Shared/Utilities.js';
 /**
  * Default language options for the Grid.
  */
@@ -108,6 +107,9 @@ export const defaultOptions = {
                 ' columns.</div>',
             afterGridFormat: 'End of Grid.'
         }
+    },
+    data: {
+        providerType: 'local'
     },
     time: {
         timezone: 'UTC'

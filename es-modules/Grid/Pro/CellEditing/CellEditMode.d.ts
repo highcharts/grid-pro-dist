@@ -1,4 +1,4 @@
-import type DataTable from '../../../Data/DataTable';
+import type { CellType as DataTableCellType } from '../../../Data/DataTable';
 import type TableCell from '../../Core/Table/Body/TableCell';
 /**
  * Interface for the edit mode content in a cell. It can be implemented by
@@ -13,7 +13,7 @@ export interface EditModeContent<E extends HTMLElement = HTMLElement> {
     /**
      * Value of the edit mode cell content, parsed according to the column type.
      */
-    readonly value: DataTable.CellType;
+    readonly value: DataTableCellType;
     /**
      * Raw value of the edit mode cell content, in a string format.
      */

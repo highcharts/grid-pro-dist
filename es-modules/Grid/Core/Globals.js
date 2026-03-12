@@ -18,7 +18,7 @@
  *
  * */
 export const classNamePrefix = 'hcg-';
-export const version = '2.2.0';
+export const version = '2.3.0';
 export const rawClassNames = {
     container: 'container',
     tableElement: 'table',
@@ -55,7 +55,6 @@ export const rawClassNames = {
     columnSortableIcon: 'column-sortable-icon',
     columnSortedAsc: 'column-sorted-asc',
     columnSortedDesc: 'column-sorted-desc',
-    sortPriorityIndicator: 'sort-priority-indicator',
     resizableContent: 'resizable-content',
     resizerHandles: 'column-resizer',
     resizedColumn: 'column-resized',
@@ -70,12 +69,12 @@ export const rawClassNames = {
     popup: 'popup',
     button: 'button',
     buttonSelected: 'button-selected',
+    buttonHighlighted: 'button-highlighted',
     input: 'input',
     icon: 'icon',
     iconSearch: 'icon-search',
     popupContent: 'popup-content',
     columnFilterWrapper: 'column-filter-wrapper',
-    toolbarButtonActiveIndicator: 'active-indicator',
     menuContainer: 'menu-container',
     menuItem: 'menu-item',
     menuHeader: 'menu-header',
@@ -85,13 +84,16 @@ export const rawClassNames = {
     menuItemLabel: 'menu-item-label',
     menuDivider: 'menu-divider',
     clearFilterButton: 'clear-filter-button',
-    paginationWrapper: 'pagination-wrapper',
-    paginationContainer: 'pagination-container',
+    pagination: 'pagination',
     paginationPageInfo: 'pagination-info',
-    paginationControlsContainer: 'pagination-controls-container',
-    paginationNavButtonsContainer: 'pagination-nav-buttons-container',
-    paginationNavDropdown: 'pagination-nav-dropdown',
+    paginationControls: 'pagination-controls',
     paginationPageSize: 'pagination-page-size',
+    paginationPages: 'pagination-pages',
+    paginationNavDropdown: 'pagination-nav-dropdown',
+    paginationLeft: 'pagination-left',
+    paginationCenter: 'pagination-center',
+    paginationRight: 'pagination-right',
+    paginationDistributed: 'pagination-distributed',
     noWidth: 'no-width',
     rightAlign: 'right',
     centerAlign: 'center',

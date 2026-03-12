@@ -1,5 +1,5 @@
 /**
- * @license Highcharts Grid Pro v2.2.0 (2026-01-13)
+ * @license Highcharts Grid Pro v2.3.0 (2026-03-12)
  * @module grid/grid-pro
  *
  * (c) 2009-2026 Highsoft AS
@@ -18,6 +18,7 @@ import _Grid from '../Grid/Core/Grid.js';
 import DataModifier from '../Data/Modifiers/DataModifier.js';
 import DataPool from '../Data/DataPool.js';
 import DataTable from '../Data/DataTable.js';
+import { merge } from '../Shared/Utilities.js';
 import Table from '../Grid/Core/Table/Table.js';
 import Column from '../Grid/Core/Table/Column.js';
 import HeaderCell from '../Grid/Core/Table/Header/HeaderCell.js';
@@ -28,6 +29,7 @@ import Pagination from '../Grid/Core/Pagination/Pagination.js';
 import CellContentPro from '../Grid/Pro/CellRendering/CellContentPro.js';
 import CellRenderer from '../Grid/Pro/CellRendering/CellRenderer.js';
 import Popup from '../Grid/Core/UI/Popup.js';
+import DataProviderRegistry from '../Grid/Core/Data/DataProviderRegistry.js';
 import '../Data/Connectors/CSVConnector.js';
 import '../Data/Connectors/GoogleSheetsConnector.js';
 import '../Data/Connectors/HTMLTableConnector.js';
@@ -53,6 +55,9 @@ import '../Grid/Pro/CellRendering/Renderers/DateTimeInputRenderer.js';
 import '../Grid/Pro/CellRendering/Renderers/TimeInputRenderer.js';
 import '../Grid/Pro/CellRendering/Renderers/SparklineRenderer.js';
 import '../Grid/Pro/CellRendering/Renderers/NumberInputRenderer.js';
+import '../Grid/Core/Data/LocalDataProvider.js';
+import '../Grid/Pro/Data/RemoteDataProvider.js';
+import '../Grid/Core/Responsive/ResponsiveComposition.js';
 declare const G: {
     readonly AST: typeof AST;
     readonly CellContentPro: typeof CellContentPro;
@@ -77,6 +82,10 @@ declare const G: {
     readonly DataCursor: typeof DataCursor;
     readonly DataModifier: typeof DataModifier;
     readonly DataPool: typeof DataPool;
+    readonly DataProviderRegistry: {
+        readonly registerDataProvider: typeof import("../Grid/Core/Data/DataProviderRegistry.js").registerDataProvider;
+        readonly types: import("../Grid/Core/Data/DataProviderType").DataProviderTypeRegistry;
+    };
     readonly DataTable: typeof DataTable;
     readonly defaultOptions: import("../Shared/Types").DeepPartial<_Options>;
     readonly Grid: typeof _Grid;
@@ -84,16 +93,14 @@ declare const G: {
     readonly grids: (_Grid | undefined)[];
     readonly HeaderCell: typeof HeaderCell;
     readonly isHighContrastModeActive: () => boolean;
-    readonly merge: {
-        <T = object>(extend: true, a?: T, ...n: Array<import("../Shared/Types").DeepPartial<T> | undefined>): (T);
-        <T1 extends object = object, T2 = unknown, T3 = unknown, T4 = unknown, T5 = unknown, T6 = unknown, T7 = unknown, T8 = unknown, T9 = unknown>(a?: T1, b?: T2, c?: T3, d?: T4, e?: T5, f?: T6, g?: T7, h?: T8, i?: T9): (T1 & T2 & T3 & T4 & T5 & T6 & T7 & T8 & T9);
-    };
+    readonly merge: typeof merge;
     readonly Pagination: typeof Pagination;
     readonly Popup: typeof Popup;
     readonly product: "Grid Pro";
     readonly setOptions: typeof import("../Grid/Core/Defaults.js").setOptions;
     readonly SvgIcons: {
         readonly createGridIcon: typeof import("../Grid/Core/UI/SvgIcons.js").createGridIcon;
+        readonly getIconFromRegistry: typeof import("../Grid/Core/UI/SvgIcons.js").getIconFromRegistry;
         readonly icons: Record<import("../Grid/Core/UI/SvgIcons.js").GridIconName, import("../Grid/Core/UI/SvgIcons.js").SVGDefinition>;
         readonly pathDefaults: Partial<import("../Grid/Core/UI/SvgIcons.js").PathDefinition>;
     };
@@ -105,14 +112,11 @@ declare const G: {
         helpers: Record<string, Function>;
         numberFormat: (this: Templating.Owner | void, number: number, decimals: number, decimalPoint?: string, thousandsSep?: string) => string;
     };
-    readonly version: "2.2.0";
+    readonly version: "2.3.0";
     readonly win: Window & typeof globalThis;
 };
-export { AST, CellContentPro, CellRenderer, CellRendererRegistry, Column, ColumnResizing, DataConnector, DataConverter, DataCursor, DataModifier, DataPool, DataTable, _Grid as Grid, HeaderCell, _Options as Options, Pagination, Popup, SvgIcons, Table, TableCell, Templating };
-export declare const classNamePrefix: string, defaultOptions: import("../Shared/Types").DeepPartial<_Options>, grid: typeof _Grid.grid, grids: (_Grid | undefined)[], isHighContrastModeActive: () => boolean, merge: {
-    <T = object>(extend: true, a?: T, ...n: Array<import("../Shared/Types").DeepPartial<T> | undefined>): (T);
-    <T1 extends object = object, T2 = unknown, T3 = unknown, T4 = unknown, T5 = unknown, T6 = unknown, T7 = unknown, T8 = unknown, T9 = unknown>(a?: T1, b?: T2, c?: T3, d?: T4, e?: T5, f?: T6, g?: T7, h?: T8, i?: T9): (T1 & T2 & T3 & T4 & T5 & T6 & T7 & T8 & T9);
-}, product: "Grid Pro", setOptions: typeof import("../Grid/Core/Defaults.js").setOptions, version: "2.2.0", win: Window & typeof globalThis;
+export { AST, CellContentPro, CellRenderer, CellRendererRegistry, Column, ColumnResizing, DataConnector, DataConverter, DataCursor, DataModifier, DataProviderRegistry, DataPool, DataTable, _Grid as Grid, HeaderCell, _Options as Options, Pagination, Popup, SvgIcons, Table, TableCell, Templating };
+export declare const classNamePrefix: string, defaultOptions: import("../Shared/Types").DeepPartial<_Options>, grid: typeof _Grid.grid, grids: (_Grid | undefined)[], isHighContrastModeActive: () => boolean, product: "Grid Pro", setOptions: typeof import("../Grid/Core/Defaults.js").setOptions, version: "2.3.0", win: Window & typeof globalThis;
 declare namespace G {
     type Options = _Options;
 }

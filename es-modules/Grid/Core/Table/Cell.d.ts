@@ -1,4 +1,5 @@
-import type DataTable from '../../../Data/DataTable';
+import type { CellType as DataTableCellType } from '../../../Data/DataTable';
+import type CSSObject from '../../../Core/Renderer/CSSObject';
 import Column from './Column';
 import Row from './Row';
 declare abstract class Cell {
@@ -17,11 +18,15 @@ declare abstract class Cell {
     /**
      * The raw value of the cell.
      */
-    value: DataTable.CellType;
+    value: DataTableCellType;
     /**
      * An additional, custom class name that can be changed dynamically.
      */
     private customClassName?;
+    /**
+     * Custom inline styles currently applied from user options.
+     */
+    private customStyleProperties?;
     /**
      * Array of cell events to be removed when the cell is destroyed.
      */
@@ -55,7 +60,7 @@ declare abstract class Cell {
     /**
      * Renders the cell by appending the HTML element to the row.
      */
-    render(): void;
+    render(): Promise<void>;
     /**
      * Reflows the cell dimensions.
      */
@@ -77,6 +82,14 @@ declare abstract class Cell {
      * The template string.
      */
     protected setCustomClassName(template?: string): void;
+    /**
+     * Sets custom inline styles from options and removes the previously applied
+     * custom styles to keep updates deterministic.
+     *
+     * @param styles
+     * A style object to apply.
+     */
+    protected setCustomStyles(styles?: CSSObject): void;
     /**
      * Destroys the cell.
      */

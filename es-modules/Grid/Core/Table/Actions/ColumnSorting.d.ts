@@ -13,6 +13,10 @@ declare class ColumnSorting {
      */
     headerCellElement: HTMLElement;
     /**
+     * Last index used from the configured order sequence.
+     */
+    private lastOrderSequenceIndex?;
+    /**
      * Constructs sorting for a dedicated column.
      *
      * @param column
@@ -38,6 +42,17 @@ declare class ColumnSorting {
      */
     private updateColumnOptions;
     /**
+     * Returns sorting order sequence for this column.
+     */
+    private getOrderSequence;
+    /**
+     * Normalizes arbitrary sorting values to valid order states.
+     *
+     * @param order
+     * Value to normalize.
+     */
+    private normalizeOrder;
+    /**
      * Set sorting order for the column. It will modify the presentation data
      * and rerender the rows.
      *
@@ -50,7 +65,8 @@ declare class ColumnSorting {
      */
     setOrder(order: ColumnSortingOrder, additive?: boolean): Promise<void>;
     /**
-     * Toggle sorting order for the column in the order: asc -> desc -> none
+     * Toggle sorting order for the column according to the configured
+     * sorting order sequence.
      *
      * @param e
      * Optional mouse or keyboard event.

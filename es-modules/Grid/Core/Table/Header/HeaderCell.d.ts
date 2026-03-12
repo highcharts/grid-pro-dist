@@ -53,7 +53,12 @@ declare class HeaderCell extends Cell {
     /**
      * Render the cell container.
      */
-    render(): void;
+    render(): Promise<void>;
+    /**
+     * Returns merged header styles from defaults and current column options.
+     *
+     */
+    private getColumnStyles;
     reflow(): void;
     onKeyDown(e: KeyboardEvent): void;
     onClick(e: MouseEvent): void;

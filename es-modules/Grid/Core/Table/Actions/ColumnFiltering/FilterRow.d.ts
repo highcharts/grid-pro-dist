@@ -14,6 +14,6 @@ declare class FilterRow extends HeaderRow {
      */
     constructor(viewport: Table);
     createCell(column: Column): FilterCell;
-    renderContent(): void;
+    renderContent(): Promise<void>;
 }
 export default FilterRow;

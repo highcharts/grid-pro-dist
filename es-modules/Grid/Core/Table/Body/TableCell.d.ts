@@ -1,4 +1,4 @@
-import type DataTable from '../../../../Data/DataTable';
+import type { CellType as DataTableCellType } from '../../../../Data/DataTable';
 import type Column from '../Column';
 import type TableRow from './TableRow';
 import Cell from '../Cell.js';
@@ -20,6 +20,16 @@ declare class TableCell extends Cell {
      */
     content?: CellContent;
     /**
+     * A token used to prevent stale async responses from overwriting cell
+     * data. In virtualized grids, cells are reused as rows scroll in/out of
+     * view. If a cell starts an async value fetch for row A, then gets reused
+     * for row B before the fetch completes, the stale response for row A
+     * could incorrectly overwrite row B's data. This token is incremented
+     * before each async fetch, and checked when the fetch completes - if the
+     * token has changed, the response is discarded as stale.
+     */
+    private asyncFetchToken;
+    /**
      * Constructs a cell in the data grid.
      *
      * @param row
@@ -32,15 +42,15 @@ declare class TableCell extends Cell {
     /**
      * Renders the cell by appending it to the row and setting its value.
      */
-    render(): void;
+    render(): Promise<void>;
     /**
-     * Edits the cell value and updates the data table. Call this instead of
+     * Edits the cell value and updates the dataset. Call this instead of
      * `setValue` when you want it to trigger the cell value user change event.
      *
      * @param value
      * The new value to set.
      */
-    editValue(value: DataTable.CellType): Promise<void>;
+    editValue(value: DataTableCellType): Promise<void>;
     /**
      * Sets the cell value and updates its content with it.
      *
@@ -48,21 +58,25 @@ declare class TableCell extends Cell {
      * The raw value to set. If not provided, it will use the value from the
      * data table for the current row and column.
      *
-     * @param updateTable
-     * Whether to update the table after setting the content. Defaults to
-     * `false`, meaning the table will not be updated.
+     * @param updateDataset
+     * Whether to update the dataset after setting the content. Defaults to
+     * `false`, meaning the dataset will not be updated.
      */
-    setValue(value?: DataTable.CellType, updateTable?: boolean): Promise<void>;
+    setValue(value?: DataTableCellType, updateDataset?: boolean): Promise<void>;
     /**
-     * Updates the the data table so that it reflects the current state of
-     * the grid.
+     * Returns merged styles from defaults and current column options.
+     */
+    private getCellStyles;
+    /**
+     * Updates the the dataset so that it reflects the current state of the
+     * grid.
      *
      * @returns
      * A promise that resolves to `true` if the cell triggered all the whole
-     * viewport rows to be updated, or `false` if the only change should be
-     * the cell's content.
+     * viewport rows to be updated, or `false` if the only change was the cell's
+     * content.
      */
-    private updateDataTable;
+    private updateDataset;
     /**
      * Initialize event listeners for table body cells.
      *

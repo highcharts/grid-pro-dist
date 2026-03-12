@@ -14,7 +14,7 @@ declare module '../../Core/Table/Table' {
         /**
          * The validator object.
          */
-        validator: Validator;
+        validator?: Validator;
     }
 }
 declare module '../../Pro/CellEditing/CellEditingComposition' {

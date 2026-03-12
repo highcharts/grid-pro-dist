@@ -15,8 +15,7 @@
  * */
 'use strict';
 import Globals from '../../Globals.js';
-import U from '../../../../Core/Utilities.js';
-const { fireEvent } = U;
+import { fireEvent } from '../../../../Shared/Utilities.js';
 /* *
  *
  *  Class
@@ -42,7 +41,8 @@ class ColumnSorting {
      */
     constructor(column, headerCellElement) {
         /**
-         * Toggle sorting order for the column in the order: asc -> desc -> none
+         * Toggle sorting order for the column according to the configured
+         * sorting order sequence.
          *
          * @param e
          * Optional mouse or keyboard event.
@@ -52,18 +52,40 @@ class ColumnSorting {
             const querying = viewport.grid.querying;
             const sortingController = querying.sorting;
             const additive = !!e?.shiftKey;
-            const currentOrder = (additive ?
-                sortingController.currentSortings?.find((sorting) => sorting.columnId === this.column.id)?.order :
-                (sortingController.currentSorting?.columnId ===
-                    this.column.id ?
-                    sortingController.currentSorting.order :
-                    null)) || 'none';
-            const consequents = {
-                none: 'asc',
-                asc: 'desc',
-                desc: null
-            };
-            void this.setOrder(consequents[currentOrder], additive);
+            let hasCurrentColumnSorting = false;
+            const currentOrder = (() => {
+                if (additive) {
+                    const currentSorting = sortingController.currentSortings?.find((sorting) => sorting.columnId === this.column.id);
+                    hasCurrentColumnSorting = !!currentSorting;
+                    return this.normalizeOrder(currentSorting?.order);
+                }
+                const currentSorting = sortingController.currentSorting;
+                hasCurrentColumnSorting =
+                    currentSorting?.columnId === this.column.id;
+                return hasCurrentColumnSorting ?
+                    this.normalizeOrder(currentSorting?.order) :
+                    null;
+            })();
+            const orderSequence = this.getOrderSequence();
+            if (orderSequence.length < 1) {
+                return;
+            }
+            let nextOrderIndex = 0;
+            const lastIndex = this.lastOrderSequenceIndex;
+            if (hasCurrentColumnSorting &&
+                typeof lastIndex === 'number' &&
+                orderSequence[lastIndex] === currentOrder) {
+                nextOrderIndex = (lastIndex + 1) % orderSequence.length;
+            }
+            else {
+                const currentOrderIndex = orderSequence.indexOf(currentOrder);
+                nextOrderIndex = (currentOrderIndex === -1 ?
+                    0 :
+                    (currentOrderIndex + 1) % orderSequence.length);
+            }
+            this.lastOrderSequenceIndex = nextOrderIndex;
+            const nextOrder = orderSequence[nextOrderIndex];
+            void this.setOrder(nextOrder, additive);
         };
         this.column = column;
         this.headerCellElement = headerCellElement;
@@ -154,6 +176,27 @@ class ColumnSorting {
                 delete col.options.sorting;
             }
         }
+    }
+    /**
+     * Returns sorting order sequence for this column.
+     */
+    getOrderSequence() {
+        return this.column.options.sorting?.orderSequence || [
+            'asc',
+            'desc',
+            null
+        ];
+    }
+    /**
+     * Normalizes arbitrary sorting values to valid order states.
+     *
+     * @param order
+     * Value to normalize.
+     */
+    normalizeOrder(order) {
+        return order === 'asc' || order === 'desc' ?
+            order :
+            null;
     }
     /**
      * Set sorting order for the column. It will modify the presentation data

@@ -1,7 +1,6 @@
 import type ContextMenu from './ContextMenu';
 import type Button from './Button';
 import type Popup from './Popup';
-import { GridIconName } from './SvgIcons.js';
 import { ClassNameKey } from '../Globals.js';
 export declare class ContextMenuButton implements Button {
     /**
@@ -55,9 +54,9 @@ export declare class ContextMenuButton implements Button {
      * Sets the icon for the button.
      *
      * @param icon
-     * The icon to set.
+     * The icon to set (built-in name or custom name from rendering.icons).
      */
-    setIcon(icon?: GridIconName): void;
+    setIcon(icon?: string): void;
     setActive(active: boolean): void;
     setHighlighted(highlighted: boolean): void;
     /**
@@ -90,9 +89,9 @@ export interface ContextMenuButtonOptions {
      */
     label?: string;
     /**
-     * The icon for the button.
+     * The icon for the button (built-in name or custom from rendering.icons).
      */
-    icon?: GridIconName;
+    icon?: string;
     /**
      * A class name key applied to the `<li>` wrapper of the button.
      */
@@ -100,11 +99,11 @@ export interface ContextMenuButtonOptions {
     /**
      * The icon for the active state of the button.
      */
-    activeIcon?: GridIconName;
+    activeIcon?: string;
     /**
      * The icon for the highlighted state of the button.
      */
-    highlightedIcon?: GridIconName;
+    highlightedIcon?: string;
     /**
      * The tooltip string for the button.
      */

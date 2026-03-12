@@ -15,8 +15,7 @@
  * */
 'use strict';
 import Globals from '../../Core/Globals.js';
-import U from '../../../Core/Utilities.js';
-const { fireEvent } = U;
+import { fireEvent } from '../../../Shared/Utilities.js';
 /* *
  *
  *  Class
@@ -115,8 +114,8 @@ class CellEditing {
         const newValue = emContent.value;
         if (submit) {
             const validationErrors = [];
-            if (!vp.validator.validate(cell, validationErrors)) {
-                vp.validator.initErrorBox(cell, validationErrors);
+            if (!vp.validator?.validate(cell, validationErrors)) {
+                vp.validator?.initErrorBox(cell, validationErrors);
                 this.setA11yAttributes(false);
                 return false;
             }
@@ -125,17 +124,18 @@ class CellEditing {
             vp.validator.errorCell = void 0;
         }
         // Hide notification
-        this.viewport.validator.hide();
+        this.viewport.validator?.hide();
         // Hide input
         this.destroy();
         cell.htmlElement.classList.remove(Globals.getClassName('editedCell'));
         cell.htmlElement.focus();
         const isValueChanged = cell.value !== newValue;
-        void cell.setValue(submit ? newValue : cell.value, submit && isValueChanged);
-        if (isValueChanged) {
-            fireEvent(cell, 'stoppedEditing', { submit });
-        }
-        delete this.editedCell;
+        void cell.setValue(submit ? newValue : cell.value, submit && isValueChanged).then(() => {
+            if (isValueChanged) {
+                fireEvent(cell, 'stoppedEditing', { submit });
+            }
+            delete this.editedCell;
+        });
         return true;
     }
     setA11yAttributes(valid) {

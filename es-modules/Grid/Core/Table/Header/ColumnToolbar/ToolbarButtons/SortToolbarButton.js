@@ -15,11 +15,9 @@
 'use strict';
 import ToolbarButton from '../../../../UI/ToolbarButton.js';
 import GridUtils from '../../../../GridUtils.js';
-import Globals from '../../../../Globals.js';
 import StateHelpers from '../StateHelpers.js';
-import U from '../../../../../../Core/Utilities.js';
+import { addEvent } from '../../../../../../Shared/Utilities.js';
 const { formatText } = GridUtils;
-const { addEvent } = U;
 /* *
  *
  *  Class
@@ -75,8 +73,7 @@ class SortToolbarButton extends ToolbarButton {
      * */
     constructor() {
         super({
-            icon: 'upDownArrows',
-            classNameKey: 'headerCellSortIcon',
+            icon: 'arrowUpDown',
             accessibility: {
                 ariaLabel: 'sort'
             }
@@ -107,7 +104,6 @@ class SortToolbarButton extends ToolbarButton {
         }
         if (!this.sortPriorityIndicator) {
             this.sortPriorityIndicator = document.createElement('span');
-            this.sortPriorityIndicator.className = Globals.getClassName('sortPriorityIndicator');
         }
         // Ensure the indicator is rendered to the right of the icon.
         button.appendChild(this.sortPriorityIndicator);
@@ -126,13 +122,13 @@ class SortToolbarButton extends ToolbarButton {
                 void 0));
         if (!StateHelpers.isSorted(column) || !columnSorting?.order) {
             this.setActive(false);
-            this.setIcon('upDownArrows');
+            this.setIcon('arrowUpDown');
             this.renderSortPriorityIndicator();
             this.updateA11yLabel(null);
             return;
         }
         this.setActive(true);
-        this.setIcon(columnSorting.order === 'asc' ? 'sortAsc' : 'sortDesc');
+        this.setIcon(columnSorting.order === 'asc' ? 'arrowUp' : 'arrowDown');
         const sortIndex = sortings.findIndex((sorting) => sorting.columnId === column.id);
         const priority = (sortings.length > 1 && sortIndex !== -1 ?
             sortIndex + 1 :
@@ -148,12 +144,6 @@ class SortToolbarButton extends ToolbarButton {
         }
         // If this grid is currently sorted, update the state
         this.eventListenerDestroyers.push(addEvent(column.viewport.grid, 'afterSort', () => this.refreshState()));
-    }
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    renderActiveIndicator(render) {
-        // Sorting uses directional icons + priority indicators
-        // (for multi-sort), not the generic active dot indicator
-        // (reserved for filtering).
     }
 }
 /* *

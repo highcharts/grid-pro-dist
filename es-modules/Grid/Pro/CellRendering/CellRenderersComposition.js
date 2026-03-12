@@ -15,8 +15,7 @@
 'use strict';
 import CellRendererRegistry from './CellRendererRegistry.js';
 import Globals from '../../Core/Globals.js';
-import U from '../../../Core/Utilities.js';
-const { addEvent, pushUnique } = U;
+import { addEvent, pushUnique } from '../../../Shared/Utilities.js';
 /* *
  *
  *  Composition
@@ -62,6 +61,9 @@ function afterColumnInit() {
  * Formatted cell content.
  */
 function createCellContent(cell) {
+    if (!this.cellRenderer) {
+        throw new Error('Called cell renderer on uninitialized column.');
+    }
     return this.cellRenderer.render(cell);
 }
 /* *

@@ -1,3 +1,4 @@
+import type Grid from '../../../Grid';
 import type Toolbar from '../../../UI/Toolbar';
 import type Column from '../../Column';
 import ToolbarButton from '../../../UI/ToolbarButton.js';
@@ -10,6 +11,10 @@ declare class HeaderCellToolbar implements Toolbar {
      * The column that this toolbar belongs to.
      */
     column: Column;
+    /**
+     * Reference to the Grid instance for icon registry and options.
+     */
+    get grid(): Grid;
     buttons: ToolbarButton[];
     container?: HTMLDivElement;
     focusCursor: number;

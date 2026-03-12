@@ -16,8 +16,7 @@
 import FilterPopup from '../FilterPopup.js';
 import ToolbarButton from '../../../../UI/ToolbarButton.js';
 import StateHelpers from '../StateHelpers.js';
-import U from '../../../../../../Core/Utilities.js';
-const { addEvent } = U;
+import { addEvent } from '../../../../../../Shared/Utilities.js';
 /* *
  *
  *  Class

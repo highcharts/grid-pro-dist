@@ -48,7 +48,7 @@ class FilterRow extends HeaderRow {
     createCell(column) {
         return new FilterCell(this, column);
     }
-    renderContent() {
+    async renderContent() {
         const vp = this.viewport;
         const enabledColumns = vp.grid.enabledColumns || [];
         vp.theadElement?.appendChild(this.htmlElement);
@@ -59,7 +59,7 @@ class FilterRow extends HeaderRow {
                 continue;
             }
             const cell = this.createCell(column);
-            cell.render();
+            await cell.render();
             if (column.options.filtering?.inline) {
                 column.filtering?.renderFilteringContent(cell.htmlElement);
             }

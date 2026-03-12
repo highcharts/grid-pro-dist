@@ -16,9 +16,8 @@
 import AST from '../../../Core/Renderer/HTML/AST.js';
 import Globals from '../../Core/Globals.js';
 import GridUtils from '../../Core/GridUtils.js';
-import U from '../../../Core/Utilities.js';
+import { defined } from '../../../Shared/Utilities.js';
 const { makeDiv, setHTMLContent } = GridUtils;
-const { defined } = U;
 /* *
  *
  *  Class
@@ -217,32 +216,6 @@ Validator.rulesRegistry = {
             Number(rawValue) === 1 || Number(rawValue) === 0),
         notification: 'Value has to be a boolean.'
     },
-    ignoreCaseUnique: {
-        validate: function ({ rawValue }) {
-            const oldValue = String(this.value).toLowerCase();
-            const rowValueString = rawValue.toLowerCase();
-            if (oldValue === rowValueString) {
-                return true;
-            }
-            const columnData = this.column.data;
-            const isDuplicate = columnData?.some((value) => String(value).toLowerCase() ===
-                rowValueString);
-            return !isDuplicate;
-        },
-        notification: 'Value must be unique within this column (case-insensitive).'
-    },
-    unique: {
-        validate: function ({ rawValue }) {
-            const oldValue = this.value;
-            if (oldValue === rawValue) {
-                return true;
-            }
-            const columnData = this.column.data;
-            const isDuplicate = columnData?.some((value) => value === rawValue);
-            return !isDuplicate;
-        },
-        notification: 'Value must be unique within this column (case-sensitive).'
-    },
     arrayNumber: {
         validate: function ({ rawValue }) {
             return rawValue
@@ -256,9 +229,8 @@ Validator.rulesRegistry = {
             try {
                 JSON.parse(rawValue);
                 return true;
-                // eslint-disable-next-line @typescript-eslint/no-unused-vars
             }
-            catch (e) {
+            catch {
                 return false;
             }
         },
@@ -271,8 +243,38 @@ Validator.rulesRegistry = {
             return arrayNumberValidate({ rawValue }) ||
                 jsonValidate({ rawValue });
         },
-        // eslint-disable-next-line max-len
-        notification: 'Value should be a valid JSON or a list of numbers separated by commas.'
+        notification: 'Value should be a valid JSON or a list of numbers ' +
+            'separated by commas.'
+    },
+    ignoreCaseUnique: {
+        validate: function ({ rawValue }) {
+            const oldValue = String(this.value).toLowerCase();
+            const rowValueString = rawValue.toLowerCase();
+            if (oldValue === rowValueString) {
+                return true;
+            }
+            // Local dataset only
+            // TODO(enhancement): Implement this for remote dataset.
+            const columnData = this.column.data;
+            const isDuplicate = columnData?.some((value) => (String(value).toLowerCase() ===
+                rowValueString));
+            return !isDuplicate;
+        },
+        notification: 'Value must be unique within this column (case-insensitive).'
+    },
+    unique: {
+        validate: function ({ rawValue }) {
+            const oldValue = this.value;
+            if (oldValue === rawValue) {
+                return true;
+            }
+            // Local dataset only
+            // TODO(enhancement): Implement this for remote dataset.
+            const columnData = this.column.data;
+            const isDuplicate = columnData?.some((value) => value === rawValue);
+            return !isDuplicate;
+        },
+        notification: 'Value must be unique within this column (case-sensitive).'
     }
 };
 /**

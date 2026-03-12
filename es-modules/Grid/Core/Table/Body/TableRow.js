@@ -17,6 +17,7 @@
 import Row from '../Row.js';
 import TableCell from './TableCell.js';
 import Globals from '../../Globals.js';
+import { fireEvent } from '../../../../Shared/Utilities.js';
 /* *
  *
  *  Class
@@ -56,24 +57,28 @@ class TableRow extends Row {
          */
         this.translateY = 0;
         this.index = index;
-        this.id = viewport.dataTable.getOriginalRowIndex(index);
-        this.loadData();
-        this.setRowAttributes();
     }
     /* *
     *
     *  Methods
     *
     * */
+    async init() {
+        const dp = this.viewport.grid.dataProvider;
+        this.id = await dp?.getRowId(this.index);
+        await this.loadData();
+        this.setRowAttributes();
+    }
     createCell(column) {
         return new TableCell(this, column);
     }
     /**
      * Loads the row data from the data table.
      */
-    loadData() {
-        const data = this.viewport.dataTable.getRowObject(this.index);
+    async loadData() {
+        const data = await this.viewport.grid.dataProvider?.getRowObject(this.index);
         if (!data) {
+            this.data = {};
             return;
         }
         this.data = data;
@@ -82,13 +87,13 @@ class TableRow extends Row {
      * Updates the row data and its cells with the latest values from the data
      * table.
      */
-    update() {
-        this.id = this.viewport.dataTable.getOriginalRowIndex(this.index);
+    async update() {
+        this.id = await this.viewport.grid.dataProvider?.getRowId(this.index);
         this.updateRowAttributes();
-        this.loadData();
+        await this.loadData();
         for (let i = 0, iEnd = this.cells.length; i < iEnd; ++i) {
             const cell = this.cells[i];
-            void cell.setValue();
+            await cell.setValue();
         }
         this.reflow();
     }
@@ -98,28 +103,28 @@ class TableRow extends Row {
      * @param index
      * The index of the row in the data table.
      *
-     * @param doReflow
-     * Whether to reflow the row after updating the cells.
+     * @internal
      */
-    reuse(index, doReflow = true) {
+    async reuse(index) {
+        for (let i = 0, iEnd = this.cells.length; i < iEnd; ++i) {
+            fireEvent(this.cells[i], 'outdate');
+        }
         if (this.index === index) {
-            this.update();
+            await this.update();
             return;
         }
         this.index = index;
-        this.id = this.viewport.dataTable.getOriginalRowIndex(index);
+        this.id = await this.viewport.grid.dataProvider?.getRowId(this.index);
         this.htmlElement.setAttribute('data-row-index', index);
         this.updateRowAttributes();
         this.updateParityClass();
         this.updateStateClasses();
-        this.loadData();
+        await this.loadData();
         for (let i = 0, iEnd = this.cells.length; i < iEnd; ++i) {
             const cell = this.cells[i];
-            void cell.setValue();
+            await cell.setValue();
         }
-        if (doReflow) {
-            this.reflow();
-        }
+        this.reflow();
     }
     /**
      * Adds or removes the hovered CSS class to the row element.

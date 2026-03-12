@@ -13,8 +13,7 @@
  *
  * */
 'use strict';
-import U from '../../../../Core/Utilities.js';
-const { getStyle, defined } = U;
+import { defined, getStyle } from '../../../../Shared/Utilities.js';
 /* *
  *
  *  Class
@@ -86,7 +85,9 @@ class ResizingMode {
      */
     loadColumn(column) {
         const rawWidth = column.options.width;
-        if (!rawWidth) {
+        if (!defined(rawWidth) || rawWidth === 'auto') {
+            delete this.columnWidths[column.id];
+            delete this.columnWidthUnits[column.id];
             return;
         }
         let value;

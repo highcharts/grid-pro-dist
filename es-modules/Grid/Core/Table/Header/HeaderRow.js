@@ -17,8 +17,7 @@
 import Row from '../Row.js';
 import HeaderCell from './HeaderCell.js';
 import Globals from '../../Globals.js';
-import Utils from '../../../../Core/Utilities.js';
-const { isString } = Utils;
+import { isString } from '../../../../Shared/Utilities.js';
 /* *
  *
  *  Class
@@ -63,7 +62,7 @@ class HeaderRow extends Row {
      *
      * @internal
      */
-    renderContent(level) {
+    async renderContent(level) {
         const headerOpt = this.viewport.grid.options?.header;
         const vp = this.viewport;
         const enabledColumns = vp.grid.enabledColumns || [];
@@ -71,7 +70,7 @@ class HeaderRow extends Row {
         vp.theadElement?.appendChild(this.htmlElement);
         this.htmlElement.classList.add(Globals.getClassName('headerRow'));
         if (!headerOpt) {
-            super.render();
+            await super.render();
         }
         else {
             const columnsOnLevel = this.getColumnsAtLevel(headerOpt, level);
@@ -110,7 +109,7 @@ class HeaderRow extends Row {
                 if (dataColumn?.index === 0 && i === 0) {
                     headerCell.htmlElement.classList.add(Globals.getClassName('columnFirst'));
                 }
-                headerCell.render();
+                await headerCell.render();
                 if (columnId) {
                     headerCell.htmlElement.setAttribute('rowSpan', (this.viewport.header?.levels || 1) - level);
                 }

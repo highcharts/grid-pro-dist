@@ -14,8 +14,7 @@
  * */
 'use strict';
 import FilterModifier from '../../../Data/Modifiers/FilterModifier.js';
-import U from '../../../Core/Utilities.js';
-const { isString } = U;
+import { isString } from '../../../Shared/Utilities.js';
 /* *
  *
  *  Class
