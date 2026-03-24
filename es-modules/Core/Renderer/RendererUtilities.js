@@ -33,7 +33,6 @@ var RendererUtilities;
      *  Functions
      *
      * */
-    /* eslint-disable valid-jsdoc */
     /**
      * General distribution algorithm for distributing labels of differing size
      * along a confined length in two dimensions. The algorithm takes an array

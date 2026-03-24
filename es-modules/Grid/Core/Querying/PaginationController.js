@@ -64,13 +64,14 @@ class PaginationController {
         return this.currentPageSize > 0 ? Math.ceil(this.totalItems / this.currentPageSize) : 1;
     }
     /**
-     * Clamps the current page to the total number of pages.
+     * Clamps the current page to the valid range [1, totalPages].
      */
     clampPage() {
-        if (this.currentPage <= this.totalPages) {
+        const target = Math.max(1, Math.min(this.currentPage, this.totalPages || 1));
+        if (this.currentPage === target) {
             return;
         }
-        this.currentPage = this.totalPages;
+        this.currentPage = target;
         this.querying.shouldBeUpdated = true;
     }
     /**

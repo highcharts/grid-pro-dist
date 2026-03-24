@@ -25,7 +25,6 @@ const simulatedEventTarget = win.EventTarget && new win.EventTarget() || 'none';
  *  Functions
  *
  * */
-/* eslint-disable valid-jsdoc */
 /**
  * @private
  * @param {Highcharts.HTMLDOMElement} el

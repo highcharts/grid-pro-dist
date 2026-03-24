@@ -40,7 +40,7 @@ declare class PaginationController {
      */
     get totalPages(): number;
     /**
-     * Clamps the current page to the total number of pages.
+     * Clamps the current page to the valid range [1, totalPages].
      */
     clampPage(): void;
     /**

@@ -9,7 +9,6 @@
  * */
 import H from '../Core/Globals.js';
 const { doc, win } = H;
-/* eslint-disable valid-jsdoc */
 /**
  * Add an event listener.
  *
@@ -35,7 +34,6 @@ const { doc, win } = H;
  *         A callback function to remove the added event.
  */
 export function addEvent(el, type, fn, options = {}) {
-    /* eslint-enable valid-jsdoc */
     // Add hcEvents to either the prototype (in case we're running addEvent on a
     // class) or the instance. If hasOwnProperty('hcEvents') is false, it is
     // inherited down the prototype chain, in which case we need to set the
@@ -434,7 +432,6 @@ export function erase(arr, item) {
  *         Object a, the original object.
  */
 export function extend(a, b) {
-    /* eslint-enable valid-jsdoc */
     let n;
     if (!a) {
         a = {};
@@ -467,7 +464,6 @@ export function extendClass(parent, members) {
     extend(obj.prototype, members);
     return obj;
 }
-/* eslint-disable valid-jsdoc */
 /**
  * Fire an event that was registered with {@link Highcharts#addEvent}.
  *
@@ -491,7 +487,6 @@ export function extendClass(parent, members) {
  * @return {void}
  */
 export function fireEvent(el, type, eventArguments, defaultFunction) {
-    /* eslint-enable valid-jsdoc */
     eventArguments = eventArguments || {};
     if (doc?.createEvent &&
         (el.dispatchEvent ||
@@ -628,7 +623,7 @@ export function getMagnitude(num) {
  * @param {string} path
  * Path to the property, for example `custom.myValue`.
  *
- * @param {unknown} obj
+ * @param {unknown} parent
  * Instance containing the property on the specific path.
  *
  * @return {unknown}
@@ -1002,7 +997,6 @@ export function normalizeTickInterval(interval, multiples, magnitude, allowDecim
     retInterval = correctFloat(retInterval * magnitude, -Math.round(Math.log(0.001) / Math.LN10));
     return retInterval;
 }
-/* eslint-disable valid-jsdoc */
 /**
  * Iterate over object key pairs in an object.
  *
@@ -1021,7 +1015,6 @@ export function normalizeTickInterval(interval, multiples, magnitude, allowDecim
  *        The context.
  */
 export function objectEach(obj, fn, ctx) {
-    /* eslint-enable valid-jsdoc */
     for (const key in obj) {
         if (Object.hasOwnProperty.call(obj, key)) {
             fn.call(ctx || obj[key], obj[key], key, obj);
@@ -1077,7 +1070,7 @@ export function pad(number, length, padder) {
             .replace('-', '')
             .length).join(padder || '0') + number;
 }
-/* eslint-disable valid-jsdoc */
+/* eslint-disable jsdoc/check-param-names */
 /**
  * Return the first value that is not null or undefined.
  *
@@ -1099,6 +1092,7 @@ export function pick() {
         }
     }
 }
+/* eslint-enable jsdoc/check-param-names */
 /**
  * Shortcut for parseInt
  *
@@ -1187,7 +1181,6 @@ export function replaceNested(text, ...replacements) {
     } while (text !== previous);
     return text;
 }
-/* eslint-disable valid-jsdoc */
 /**
  * Remove an event that was added with {@link Highcharts#addEvent}.
  *
@@ -1207,7 +1200,6 @@ export function replaceNested(text, ...replacements) {
  * @return {void}
  */
 export function removeEvent(el, type, fn) {
-    /* eslint-enable valid-jsdoc */
     /** @internal */
     function removeOneEvent(type, fn) {
         const removeEventListener = el.removeEventListener;

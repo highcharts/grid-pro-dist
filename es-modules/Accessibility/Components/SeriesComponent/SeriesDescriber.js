@@ -25,7 +25,6 @@ import { defined, find, isString, isNumber, pick } from '../../../Shared/Utiliti
  *  Functions
  *
  * */
-/* eslint-disable valid-jsdoc */
 /**
  * @private
  */

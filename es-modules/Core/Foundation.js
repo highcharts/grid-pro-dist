@@ -23,7 +23,6 @@ var Foundation;
      *  Functions
      *
      * */
-    /* eslint-disable valid-jsdoc */
     /**
      * Register event options. If an event handler is set on the options, it
      * should be subject to Chart.update, Axis.update and Series.update. This is

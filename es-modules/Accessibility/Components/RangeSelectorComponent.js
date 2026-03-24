@@ -52,7 +52,6 @@ class RangeSelectorComponent extends AccessibilityComponent {
      *  Functions
      *
      * */
-    /* eslint-disable valid-jsdoc */
     /**
      * Init the component
      * @private

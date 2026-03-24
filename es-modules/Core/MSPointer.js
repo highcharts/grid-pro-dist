@@ -26,7 +26,6 @@ const hasPointerEvent = !!win.PointerEvent;
  *  Functions
  *
  * */
-/* eslint-disable valid-jsdoc */
 /** @internal */
 function getWebkitTouches() {
     const fake = [];

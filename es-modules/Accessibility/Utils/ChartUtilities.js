@@ -21,7 +21,6 @@ import { defined, find, fireEvent } from '../../Shared/Utilities.js';
  *  Functions
  *
  * */
-/* eslint-disable valid-jsdoc */
 /**
  * Fire an event on an element that is either wrapped by Highcharts,
  * or a DOM element.

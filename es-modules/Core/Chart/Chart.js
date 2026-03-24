@@ -65,6 +65,7 @@ import { error, uniqueKey } from '../Utilities.js';
  *        handler is equivalent.
  */
 class Chart {
+    /* eslint-disable jsdoc/check-param-names */
     /**
      * Factory function for basic charts.
      *
@@ -1283,6 +1284,12 @@ class Chart {
                     // (#1257)
                     if (chart.container) {
                         chart.setSize(void 0, void 0, false);
+                        // #23712: sync containerBox with reflowed height to
+                        // break infinite loop
+                        const box = chart.containerBox;
+                        if (box) {
+                            box.height = chart.chartHeight;
+                        }
                     }
                 }, e ? 100 : 0);
             }
@@ -2168,7 +2175,7 @@ class Chart {
      * @param {string} coll
      * An axis type.
      *
-     * @param {...Array<*>} arguments
+     * @param {...Array<*>} options
      * All arguments for the constructor.
      *
      * @return {Highcharts.Axis}

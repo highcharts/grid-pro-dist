@@ -24,7 +24,6 @@ const isStringColor = (color) => isString(color) && !!color && color !== 'none';
  *  Class
  *
  * */
-/* eslint-disable valid-jsdoc */
 /**
  * Handle color operations. Some object methods are chainable.
  *

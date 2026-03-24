@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: LicenseRef-Highcharts
 /**
- * @license Highcharts Grid Pro v2.3.0 (2026-03-12)
+ * @license Highcharts Grid Pro v2.3.1 (2026-03-24)
  * @module grid/grid-pro
  *
  * (c) 2009-2026 Highsoft AS
@@ -79,7 +79,7 @@ var Globals;
      *  Constants
      *
      * */
-    Globals.SVG_NS = 'http://www.w3.org/2000/svg', Globals.product = 'Highcharts', Globals.version = '2.3.0', Globals.win = (typeof window !== 'undefined' ?
+    Globals.SVG_NS = 'http://www.w3.org/2000/svg', Globals.product = 'Highcharts', Globals.version = '2.3.1', Globals.win = (typeof window !== 'undefined' ?
         window :
         {}), // eslint-disable-line node/no-unsupported-features/es-builtins
     Globals.doc = Globals.win.document, Globals.svg = !!Globals.doc?.createElementNS?.(Globals.SVG_NS, 'svg')?.createSVGRect, Globals.pageLang = Globals.doc?.documentElement?.closest('[lang]')?.lang, Globals.userAgent = Globals.win.navigator?.userAgent || '', Globals.isChrome = Globals.win.chrome, Globals.isFirefox = Globals.userAgent.indexOf('Firefox') !== -1, Globals.isMS = /(edge|msie|trident)/i.test(Globals.userAgent) && !Globals.win.opera, Globals.isSafari = !Globals.isChrome && Globals.userAgent.indexOf('Safari') !== -1, Globals.isTouchDevice = /(Mobile|Android|Windows Phone)/.test(Globals.userAgent), Globals.isWebKit = Globals.userAgent.indexOf('AppleWebKit') !== -1, Globals.deg2rad = Math.PI * 2 / 360, Globals.marginNames = [
@@ -191,7 +191,6 @@ var Globals;
  * */
 
 const { doc, win } = Core_Globals;
-/* eslint-disable valid-jsdoc */
 /**
  * Add an event listener.
  *
@@ -217,7 +216,6 @@ const { doc, win } = Core_Globals;
  *         A callback function to remove the added event.
  */
 function addEvent(el, type, fn, options = {}) {
-    /* eslint-enable valid-jsdoc */
     // Add hcEvents to either the prototype (in case we're running addEvent on a
     // class) or the instance. If hasOwnProperty('hcEvents') is false, it is
     // inherited down the prototype chain, in which case we need to set the
@@ -616,7 +614,6 @@ function erase(arr, item) {
  *         Object a, the original object.
  */
 function extend(a, b) {
-    /* eslint-enable valid-jsdoc */
     let n;
     if (!a) {
         a = {};
@@ -649,7 +646,6 @@ function extendClass(parent, members) {
     extend(obj.prototype, members);
     return obj;
 }
-/* eslint-disable valid-jsdoc */
 /**
  * Fire an event that was registered with {@link Highcharts#addEvent}.
  *
@@ -673,7 +669,6 @@ function extendClass(parent, members) {
  * @return {void}
  */
 function fireEvent(el, type, eventArguments, defaultFunction) {
-    /* eslint-enable valid-jsdoc */
     eventArguments = eventArguments || {};
     if (doc?.createEvent &&
         (el.dispatchEvent ||
@@ -810,7 +805,7 @@ function getMagnitude(num) {
  * @param {string} path
  * Path to the property, for example `custom.myValue`.
  *
- * @param {unknown} obj
+ * @param {unknown} parent
  * Instance containing the property on the specific path.
  *
  * @return {unknown}
@@ -1184,7 +1179,6 @@ function normalizeTickInterval(interval, multiples, magnitude, allowDecimals, ha
     retInterval = correctFloat(retInterval * magnitude, -Math.round(Math.log(0.001) / Math.LN10));
     return retInterval;
 }
-/* eslint-disable valid-jsdoc */
 /**
  * Iterate over object key pairs in an object.
  *
@@ -1203,7 +1197,6 @@ function normalizeTickInterval(interval, multiples, magnitude, allowDecimals, ha
  *        The context.
  */
 function objectEach(obj, fn, ctx) {
-    /* eslint-enable valid-jsdoc */
     for (const key in obj) {
         if (Object.hasOwnProperty.call(obj, key)) {
             fn.call(ctx || obj[key], obj[key], key, obj);
@@ -1259,7 +1252,7 @@ function pad(number, length, padder) {
             .replace('-', '')
             .length).join(padder || '0') + number;
 }
-/* eslint-disable valid-jsdoc */
+/* eslint-disable jsdoc/check-param-names */
 /**
  * Return the first value that is not null or undefined.
  *
@@ -1281,6 +1274,7 @@ function Utilities_pick() {
         }
     }
 }
+/* eslint-enable jsdoc/check-param-names */
 /**
  * Shortcut for parseInt
  *
@@ -1369,7 +1363,6 @@ function replaceNested(text, ...replacements) {
     } while (text !== previous);
     return text;
 }
-/* eslint-disable valid-jsdoc */
 /**
  * Remove an event that was added with {@link Highcharts#addEvent}.
  *
@@ -1389,7 +1382,6 @@ function replaceNested(text, ...replacements) {
  * @return {void}
  */
 function removeEvent(el, type, fn) {
-    /* eslint-enable valid-jsdoc */
     /** @internal */
     function removeOneEvent(type, fn) {
         const removeEventListener = el.removeEventListener;
@@ -1764,6 +1756,7 @@ if (Utilities_win.jQuery) {
      *
      * @external JQuery
      */
+    /* eslint-disable jsdoc/check-param-names */
     /**
      * Helper function to return the chart of the current JQuery selector
      * element.
@@ -1808,6 +1801,7 @@ if (Utilities_win.jQuery) {
             return charts[attr(this[0], 'data-highcharts-chart')];
         }
     };
+    /* eslint-enable jsdoc/check-param-names */
 }
 /* *
  *
@@ -1867,7 +1861,7 @@ if (Utilities_win.jQuery) {
 */ /**
 * Radius of the element border.
 * @name Highcharts.CSSObject#borderRadius
-* @type {number|undefined}
+* @type {string|undefined}
 */ /**
 * Color used in the element. The 'contrast' option is a Highcharts custom
 * property that results in black or white, depending on the background of the
@@ -1886,7 +1880,7 @@ if (Utilities_win.jQuery) {
 */ /**
 * Font size of the element text.
 * @name Highcharts.CSSObject#fontSize
-* @type {string|undefined}
+* @type {number|string|undefined}
 */ /**
 * Font weight of the element text.
 * @name Highcharts.CSSObject#fontWeight
@@ -6177,7 +6171,6 @@ const defaultOptions = {
          * @since     1.3
          * @apioption legend.labelFormat
          */
-        /* eslint-disable valid-jsdoc */
         /**
          * Callback function to format each of the series' labels. The `this`
          * keyword refers to the series object, or the point object in case of
@@ -10700,10 +10693,10 @@ class DataConnector {
     /**
      * Updates the connector with new options.
      *
-     * @param newOptions
+     * @param {object} newOptions
      * The new options to be applied to the connector.
      *
-     * @param reload
+     * @param {boolean} [reload=true]
      * Whether to reload the connector after applying the new options.
      */
     async update(newOptions, reload = true) {
@@ -10808,10 +10801,10 @@ class DataConnector {
     /**
      * Registers a callback for a specific connector event.
      *
-     * @param type
+     * @param {string} type
      * Event type.
      *
-     * @param callback
+     * @param {Function} callback
      * Function to register for the connector callback.
      *
      * @return {Function}
@@ -11919,7 +11912,7 @@ const whcm = {
  *
  * */
 const classNamePrefix = 'hcg-';
-const version = '2.3.0';
+const version = '2.3.1';
 const rawClassNames = {
     container: 'container',
     tableElement: 'table',
@@ -12742,7 +12735,6 @@ const simulatedEventTarget = HTMLUtilities_win.EventTarget && new HTMLUtilities_
  *  Functions
  *
  * */
-/* eslint-disable valid-jsdoc */
 /**
  * @private
  * @param {Highcharts.HTMLDOMElement} el
@@ -14045,7 +14037,7 @@ class Pagination {
             return;
         }
         const { currentPage, currentPageSize, totalItems, totalPages } = this.controller;
-        const startItem = (currentPage - 1) * currentPageSize + 1;
+        const startItem = Math.min(Math.max(0, (currentPage - 1) * currentPageSize + 1), totalItems);
         const endItem = Math.min(currentPage * currentPageSize, totalItems);
         const pageInfoText = Pagination_formatText(this.lang?.pageInfo ?? '', {
             start: startItem,
@@ -14590,10 +14582,10 @@ class Pagination {
      * Destroy the pagination instance.
      */
     destroy() {
-        const position = this.options?.position;
-        if (position === 'footer') {
-            // For footer position, remove the entire tfoot element.
-            this.paginationContainer?.parentElement?.parentElement?.remove();
+        // Fixed container removal when switching from custom to footer.
+        const tfoot = this.paginationContainer?.closest('tfoot');
+        if (tfoot) {
+            tfoot.remove();
         }
         else {
             this.contentWrapper?.remove();
@@ -19141,8 +19133,22 @@ class RowsVirtualizer {
         // Render missing rows, drop out-of-range ones, and ensure last row.
         await this.renderRows(this.rowCursor);
         const rows = this.viewport.rows;
+        // For non-virtualized rows, re-order rows to match data order.
+        if (!this.viewport.virtualRows) {
+            let node = tbody.firstElementChild;
+            for (let i = 0, iEnd = rows.length; i < iEnd; ++i) {
+                if (node === rows[i].htmlElement) {
+                    node = node.nextElementSibling;
+                    continue;
+                }
+                // Mismatch found, so append the rest in the correct order.
+                for (let j = i; j < iEnd; ++j) {
+                    tbody.appendChild(rows[j].htmlElement);
+                }
+                break;
+            }
+        }
         for (let i = 0, iEnd = rows.length; i < iEnd; ++i) {
-            // Update row data so indices map to fresh provider values.
             await rows[i].update();
         }
         if (this.viewport.virtualRows && defined(oldScrollTop)) {
@@ -21483,13 +21489,14 @@ class PaginationController {
         return this.currentPageSize > 0 ? Math.ceil(this.totalItems / this.currentPageSize) : 1;
     }
     /**
-     * Clamps the current page to the total number of pages.
+     * Clamps the current page to the valid range [1, totalPages].
      */
     clampPage() {
-        if (this.currentPage <= this.totalPages) {
+        const target = Math.max(1, Math.min(this.currentPage, this.totalPages || 1));
+        if (this.currentPage === target) {
             return;
         }
-        this.currentPage = this.totalPages;
+        this.currentPage = target;
         this.querying.shouldBeUpdated = true;
     }
     /**
@@ -22550,14 +22557,14 @@ class Grid {
      */
     async renderViewport() {
         const viewportMeta = this.viewport?.getStateMeta();
-        const pagination = this.pagination;
-        const paginationPosition = pagination?.options?.position;
-        this.enabledColumns = await this.getEnabledColumnIDs();
         this.credits?.destroy();
         this.viewport?.destroy();
         delete this.viewport;
-        this.resetContentWrapper();
         fireEvent(this, 'beforeRenderViewport');
+        this.resetContentWrapper();
+        this.enabledColumns = await this.getEnabledColumnIDs();
+        const pagination = this.pagination;
+        const paginationPosition = pagination?.options?.position;
         this.renderCaption();
         // Render top pagination if enabled (before table)
         if (paginationPosition === 'top') {
@@ -23081,10 +23088,10 @@ class DataPool {
     /**
      * Sets connector options under the specified `options.id`.
      *
-     * @param options
+     * @param {object} options
      * Connector options to set.
      *
-     * @param update
+     * @param {boolean} [update]
      * Whether to update the existing connector with the new options and reload
      * it (`true`) or replace it with a new connector instance (`false`).
      */
@@ -23182,14 +23189,36 @@ function compose(GridClass) {
  */
 function initResizeObserver() {
     destroyResizeObserver.call(this);
-    if (!this.container) {
+    if (!this.container || !this.contentWrapper) {
         return;
     }
     this.activeRules = new Set();
+    // Synchronously evaluate responsive rules so the first render already
+    // uses the correct options (avoids a redundant second render).
+    if (!this.updatingResponsive) {
+        const rules = this.options?.responsive?.rules || [];
+        if (rules.length > 0) {
+            const { clientWidth: width, clientHeight: height } = this.container;
+            const fakeEntry = {
+                contentRect: { width, height }
+            };
+            const matchingRules = [];
+            for (const rule of rules) {
+                if (typeof rule._id === 'undefined') {
+                    rule._id = uniqueKey();
+                }
+                if (matchResponsiveRule.call(this, rule, fakeEntry)) {
+                    matchingRules.push(rule);
+                }
+            }
+            this.activeRules = new Set(matchingRules);
+            setResponsive.call(this, matchingRules, false);
+        }
+    }
     this.resizeObserver = new ResizeObserver((entries) => {
         onResize.call(this, entries[0]);
     });
-    this.resizeObserver.observe(this.container);
+    this.resizeObserver.observe(this.contentWrapper);
 }
 /**
  * Destroys the resize observer.
@@ -23229,20 +23258,28 @@ function matchResponsiveRule(rule, entry) {
  *
  * @param matchingRules
  * Active responsive rules.
+ *
+ * @param redraw
+ * Whether to redraw the grid. Default is `true`.
  */
-function setResponsive(matchingRules) {
+function setResponsive(matchingRules, redraw = true) {
     const ruleIds = matchingRules.map((rule) => rule._id);
     const ruleIdsString = (ruleIds.toString() || void 0);
     const currentRuleIds = this.currentResponsive?.ruleIds;
-    if (ruleIdsString === currentRuleIds) {
+    if (ruleIdsString === currentRuleIds || this.updatingResponsive) {
         return;
     }
+    this.updatingResponsive = true;
+    let lastUpdate;
     if (this.currentResponsive) {
         const undoOptions = this.currentResponsive.undoOptions;
         this.currentResponsive = void 0;
-        this.updatingResponsive = true;
-        void this.update(undoOptions, true);
-        this.updatingResponsive = false;
+        if (redraw) {
+            lastUpdate = this.update(undoOptions, true);
+        }
+        else {
+            this.update(undoOptions, false);
+        }
     }
     if (ruleIdsString) {
         const mergedOptions = merge(...matchingRules.map((rule) => rule.gridOptions));
@@ -23259,9 +23296,22 @@ function setResponsive(matchingRules) {
             mergedOptions,
             undoOptions
         };
-        if (!this.updatingResponsive) {
-            void this.update(mergedOptions, true);
+        if (redraw) {
+            lastUpdate = this.update(mergedOptions, true);
         }
+        else {
+            this.update(mergedOptions, false);
+        }
+    }
+    // Keep the flag alive until the last queued update finishes so that
+    // ResizeObserver callbacks arriving in the meantime are ignored.
+    if (lastUpdate !== void 0) {
+        void lastUpdate.then(() => {
+            this.updatingResponsive = false;
+        });
+    }
+    else {
+        this.updatingResponsive = false;
     }
 }
 /**
@@ -23342,7 +23392,7 @@ function syncColumnIds(undoOptions, mergedOptions) {
  * The resize observer entry.
  */
 function onResize(entry) {
-    if (!this.activeRules) {
+    if (!this.activeRules || this.updatingResponsive) {
         return;
     }
     const rules = this.options?.responsive?.rules || [];
@@ -29742,9 +29792,11 @@ const filterOperatorMap = {
     '<': 'lessThan',
     '<=': 'lessThanOrEqualTo',
     contains: 'contains',
+    notContains: 'doesNotContain',
     startsWith: 'beginsWith',
     endsWith: 'endsWith',
-    empty: 'empty'
+    empty: 'empty',
+    notEmpty: 'notEmpty'
 };
 /**
  * Recursively extracts filter conditions from the Grid's FilterCondition
@@ -29764,21 +29816,29 @@ function extractFilterConditions(condition, filterColumns = []) {
         return filterColumns;
     }
     if (condition.operator === 'and' || condition.operator === 'or') {
-        // Logical condition - extract from nested conditions
         if (condition.conditions) {
             for (const subCondition of condition.conditions) {
                 extractFilterConditions(subCondition, filterColumns);
             }
         }
     }
-    else if (condition.columnId) {
-        // Single condition
-        const mappedOperator = filterOperatorMap[condition.operator] || condition.operator;
-        filterColumns.push({
-            id: condition.columnId,
-            condition: mappedOperator,
-            value: condition.value
-        });
+    else if (condition.columnId || condition.condition?.columnId) {
+        const conditionToUse = condition.columnId ?
+            condition : condition.condition;
+        let key = conditionToUse.operator;
+        if (condition.operator === 'not') {
+            key = condition.operator +
+                conditionToUse.operator.charAt(0).toUpperCase() +
+                conditionToUse.operator.slice(1);
+        }
+        const mapped = filterOperatorMap[key] || conditionToUse.operator;
+        if (conditionToUse.columnId) {
+            filterColumns.push({
+                id: conditionToUse.columnId,
+                condition: mapped,
+                value: conditionToUse.value
+            });
+        }
     }
     return filterColumns;
 }

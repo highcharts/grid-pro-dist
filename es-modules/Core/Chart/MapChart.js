@@ -164,6 +164,7 @@ class MapChart extends Chart {
      *  Functions
      *
      * */
+    /* eslint-disable jsdoc/check-param-names */
     /**
      * The factory function for creating new map charts. Creates a new {@link
      * Highcharts.MapChart|MapChart} object with different default options than
@@ -194,6 +195,7 @@ class MapChart extends Chart {
         return new MapChart(a, b, c);
     }
     MapChart.mapChart = mapChart;
+    /* eslint-enable jsdoc/check-param-names */
     /**
      * Utility for reading SVG paths directly.
      *

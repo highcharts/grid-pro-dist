@@ -21,9 +21,9 @@ declare function arc(cx: number, cy: number, w: number, h: number, options?: Sym
 /**
  * Callout shape used for default tooltips.
  *
- * @param {number} cx
+ * @param {number} x
  * Center X
- * @param {number} cy
+ * @param {number} y
  * Center Y
  * @param {number} w
  * Width

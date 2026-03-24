@@ -27,7 +27,6 @@ const { getPointFromXY, getSeriesFromName, scrollAxisToPoint } = ChartUtilities;
  *  Functions
  *
  * */
-/* eslint-disable valid-jsdoc */
 /**
  * Get the index of a point in a series. This is needed when using e.g. data
  * grouping.
@@ -176,7 +175,6 @@ class SeriesKeyboardNavigation {
      *  Functions
      *
      * */
-    /* eslint-disable valid-jsdoc */
     /**
      * Init the keyboard navigation
      */

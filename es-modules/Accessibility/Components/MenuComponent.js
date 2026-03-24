@@ -60,7 +60,6 @@ class MenuComponent extends AccessibilityComponent {
      *  Functions
      *
      * */
-    /* eslint-disable valid-jsdoc */
     /**
      * Init the component
      */

@@ -43,14 +43,36 @@ export function compose(GridClass) {
  */
 function initResizeObserver() {
     destroyResizeObserver.call(this);
-    if (!this.container) {
+    if (!this.container || !this.contentWrapper) {
         return;
     }
     this.activeRules = new Set();
+    // Synchronously evaluate responsive rules so the first render already
+    // uses the correct options (avoids a redundant second render).
+    if (!this.updatingResponsive) {
+        const rules = this.options?.responsive?.rules || [];
+        if (rules.length > 0) {
+            const { clientWidth: width, clientHeight: height } = this.container;
+            const fakeEntry = {
+                contentRect: { width, height }
+            };
+            const matchingRules = [];
+            for (const rule of rules) {
+                if (typeof rule._id === 'undefined') {
+                    rule._id = uniqueKey();
+                }
+                if (matchResponsiveRule.call(this, rule, fakeEntry)) {
+                    matchingRules.push(rule);
+                }
+            }
+            this.activeRules = new Set(matchingRules);
+            setResponsive.call(this, matchingRules, false);
+        }
+    }
     this.resizeObserver = new ResizeObserver((entries) => {
         onResize.call(this, entries[0]);
     });
-    this.resizeObserver.observe(this.container);
+    this.resizeObserver.observe(this.contentWrapper);
 }
 /**
  * Destroys the resize observer.
@@ -90,20 +112,28 @@ function matchResponsiveRule(rule, entry) {
  *
  * @param matchingRules
  * Active responsive rules.
+ *
+ * @param redraw
+ * Whether to redraw the grid. Default is `true`.
  */
-function setResponsive(matchingRules) {
+function setResponsive(matchingRules, redraw = true) {
     const ruleIds = matchingRules.map((rule) => rule._id);
     const ruleIdsString = (ruleIds.toString() || void 0);
     const currentRuleIds = this.currentResponsive?.ruleIds;
-    if (ruleIdsString === currentRuleIds) {
+    if (ruleIdsString === currentRuleIds || this.updatingResponsive) {
         return;
     }
+    this.updatingResponsive = true;
+    let lastUpdate;
     if (this.currentResponsive) {
         const undoOptions = this.currentResponsive.undoOptions;
         this.currentResponsive = void 0;
-        this.updatingResponsive = true;
-        void this.update(undoOptions, true);
-        this.updatingResponsive = false;
+        if (redraw) {
+            lastUpdate = this.update(undoOptions, true);
+        }
+        else {
+            this.update(undoOptions, false);
+        }
     }
     if (ruleIdsString) {
         const mergedOptions = merge(...matchingRules.map((rule) => rule.gridOptions));
@@ -120,9 +150,22 @@ function setResponsive(matchingRules) {
             mergedOptions,
             undoOptions
         };
-        if (!this.updatingResponsive) {
-            void this.update(mergedOptions, true);
+        if (redraw) {
+            lastUpdate = this.update(mergedOptions, true);
         }
+        else {
+            this.update(mergedOptions, false);
+        }
+    }
+    // Keep the flag alive until the last queued update finishes so that
+    // ResizeObserver callbacks arriving in the meantime are ignored.
+    if (lastUpdate !== void 0) {
+        void lastUpdate.then(() => {
+            this.updatingResponsive = false;
+        });
+    }
+    else {
+        this.updatingResponsive = false;
     }
 }
 /**
@@ -203,7 +246,7 @@ function syncColumnIds(undoOptions, mergedOptions) {
  * The resize observer entry.
  */
 function onResize(entry) {
-    if (!this.activeRules) {
+    if (!this.activeRules || this.updatingResponsive) {
         return;
     }
     const rules = this.options?.responsive?.rules || [];

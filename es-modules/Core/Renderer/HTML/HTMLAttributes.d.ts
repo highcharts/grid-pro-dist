@@ -13,6 +13,8 @@ export interface HTMLAttributes {
     href?: string;
     htmlFor?: string;
     id?: string;
+    min?: string;
+    max?: string;
     name?: string;
     onclick?: any;
     onload?: any;
@@ -24,6 +26,7 @@ export interface HTMLAttributes {
     rel?: string;
     role?: string;
     src?: string;
+    step?: string;
     rowspan?: number;
     summary?: string;
     tabindex?: number;

@@ -883,14 +883,14 @@ export class Grid {
      */
     async renderViewport() {
         const viewportMeta = this.viewport?.getStateMeta();
-        const pagination = this.pagination;
-        const paginationPosition = pagination?.options?.position;
-        this.enabledColumns = await this.getEnabledColumnIDs();
         this.credits?.destroy();
         this.viewport?.destroy();
         delete this.viewport;
-        this.resetContentWrapper();
         fireEvent(this, 'beforeRenderViewport');
+        this.resetContentWrapper();
+        this.enabledColumns = await this.getEnabledColumnIDs();
+        const pagination = this.pagination;
+        const paginationPosition = pagination?.options?.position;
         this.renderCaption();
         // Render top pagination if enabled (before table)
         if (paginationPosition === 'top') {

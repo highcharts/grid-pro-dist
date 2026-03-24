@@ -34,9 +34,11 @@ const filterOperatorMap = {
     '<': 'lessThan',
     '<=': 'lessThanOrEqualTo',
     contains: 'contains',
+    notContains: 'doesNotContain',
     startsWith: 'beginsWith',
     endsWith: 'endsWith',
-    empty: 'empty'
+    empty: 'empty',
+    notEmpty: 'notEmpty'
 };
 /**
  * Recursively extracts filter conditions from the Grid's FilterCondition
@@ -56,21 +58,29 @@ function extractFilterConditions(condition, filterColumns = []) {
         return filterColumns;
     }
     if (condition.operator === 'and' || condition.operator === 'or') {
-        // Logical condition - extract from nested conditions
         if (condition.conditions) {
             for (const subCondition of condition.conditions) {
                 extractFilterConditions(subCondition, filterColumns);
             }
         }
     }
-    else if (condition.columnId) {
-        // Single condition
-        const mappedOperator = filterOperatorMap[condition.operator] || condition.operator;
-        filterColumns.push({
-            id: condition.columnId,
-            condition: mappedOperator,
-            value: condition.value
-        });
+    else if (condition.columnId || condition.condition?.columnId) {
+        const conditionToUse = condition.columnId ?
+            condition : condition.condition;
+        let key = conditionToUse.operator;
+        if (condition.operator === 'not') {
+            key = condition.operator +
+                conditionToUse.operator.charAt(0).toUpperCase() +
+                conditionToUse.operator.slice(1);
+        }
+        const mapped = filterOperatorMap[key] || conditionToUse.operator;
+        if (conditionToUse.columnId) {
+            filterColumns.push({
+                id: conditionToUse.columnId,
+                condition: mapped,
+                value: conditionToUse.value
+            });
+        }
     }
     return filterColumns;
 }

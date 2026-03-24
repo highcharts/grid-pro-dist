@@ -224,7 +224,7 @@ class Pagination {
             return;
         }
         const { currentPage, currentPageSize, totalItems, totalPages } = this.controller;
-        const startItem = (currentPage - 1) * currentPageSize + 1;
+        const startItem = Math.min(Math.max(0, (currentPage - 1) * currentPageSize + 1), totalItems);
         const endItem = Math.min(currentPage * currentPageSize, totalItems);
         const pageInfoText = formatText(this.lang?.pageInfo ?? '', {
             start: startItem,
@@ -767,10 +767,10 @@ class Pagination {
      * Destroy the pagination instance.
      */
     destroy() {
-        const position = this.options?.position;
-        if (position === 'footer') {
-            // For footer position, remove the entire tfoot element.
-            this.paginationContainer?.parentElement?.parentElement?.remove();
+        // Fixed container removal when switching from custom to footer.
+        const tfoot = this.paginationContainer?.closest('tfoot');
+        if (tfoot) {
+            tfoot.remove();
         }
         else {
             this.contentWrapper?.remove();
