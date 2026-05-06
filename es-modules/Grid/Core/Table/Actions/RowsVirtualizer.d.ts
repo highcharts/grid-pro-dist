@@ -139,6 +139,48 @@ declare class RowsVirtualizer {
      */
     reflowRows(): void;
     /**
+     * Estimates the current top offset of a row in the virtualized scroll
+     * space, accounting for the active scroll compression offset.
+     *
+     * @param index
+     * The row index in the projected data order.
+     *
+     * @returns
+     * The estimated top offset in pixels.
+     */
+    getEstimatedRowTop(index: number): number;
+    /**
+     * Estimates the current bottom offset of a row in the virtualized scroll
+     * space.
+     *
+     * @param index
+     * The row index in the projected data order.
+     *
+     * @param rowHeight
+     * The height of the row.
+     *
+     * @returns
+     * The estimated bottom offset in pixels.
+     */
+    getEstimatedRowBottom(index: number, rowHeight?: number): number;
+    /**
+     * Measures the height of the first rendered row's first cell.
+     *
+     * @returns
+     * The measured row height or undefined if it cannot be measured.
+     */
+    measureRenderedRowHeight(): number | undefined;
+    /**
+     * Applies a newly measured row height and refreshes related metrics.
+     *
+     * @param measuredHeight
+     * The measured row height in pixels.
+     *
+     * @returns
+     * Whether the default row height changed.
+     */
+    applyMeasuredRowHeight(measuredHeight: number): boolean;
+    /**
      * Gets a row from the pool or creates a new one for the given index.
      *
      * @param index

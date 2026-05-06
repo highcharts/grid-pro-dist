@@ -155,9 +155,11 @@ class Accessibility {
         // Update keyboard navigation
         this.keyboardNavigation.update(kbdNavOrder);
         // Handle high contrast mode
-        // Should only be applied once, and not if explicitly disabled
-        if (!chart.highContrastModeActive &&
-            a11yOptions.highContrastMode !== false && (whcm.isHighContrastModeActive() ||
+        // Reapply after updates while HC mode is active, but avoid recursion
+        // while the theme itself is being applied through chart.update.
+        if (!chart.highContrastState?.applying &&
+            a11yOptions.highContrastMode !== false && (chart.highContrastState?.active ||
+            whcm.isHighContrastModeActive() ||
             a11yOptions.highContrastMode === true)) {
             whcm.setHighContrastTheme(chart);
         }

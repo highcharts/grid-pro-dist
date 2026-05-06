@@ -1,9 +1,10 @@
 import type { ColumnSortingOrder, Options, GroupedHeaderOptions } from './Options';
+import type { RowId } from './Data/DataProvider';
 import type { DataProviderType } from './Data/DataProviderType';
 import type { NoIdColumnOptions } from './Table/Column';
 import type Popup from './UI/Popup.js';
 import Accessibility from './Accessibility/Accessibility.js';
-import DataTable from '../../Data/DataTable.js';
+import ColumnPolicyResolver from './ColumnPolicyResolver.js';
 import Table from './Table/Table.js';
 import TimeBase from '../../Shared/TimeBase.js';
 import Pagination from './Pagination/Pagination.js';
@@ -63,6 +64,10 @@ export declare class Grid {
      */
     captionElement?: HTMLElement;
     /**
+     * Resolver for data binding and column capabilities.
+     */
+    readonly columnPolicy: ColumnPolicyResolver;
+    /**
      * The container of the grid.
      */
     container?: HTMLElement;
@@ -121,12 +126,20 @@ export declare class Grid {
      */
     private isRendered;
     /**
+     * Per-row metadata shared across Grid modules.
+     */
+    readonly rowMeta: Map<RowId, RowMetaRecord>;
+    /**
      * Internal redraw queue used to prevent concurrent `redraw()` calls from
      * interleaving async DOM work and corrupting the state (for example
      * rendering duplicate pagination controls when `update()` is called
      * multiple times without awaiting).
      */
     private redrawQueue;
+    /**
+     * The data provider of the Grid. The interface between the Grid renderer
+     * and the data source.
+     */
     dataProvider?: DataProviderType;
     /**
      * Constructs a new Grid.
@@ -141,21 +154,6 @@ export declare class Grid {
      * The callback that is called after the Grid is loaded.
      */
     constructor(renderTo: string | HTMLElement, options: Options, afterLoadCallback?: (grid: Grid) => void);
-    /**
-     * The data source of the Grid. It contains the original data table
-     * that was passed to the Grid.
-     *
-     * @deprecated Use `dataProvider` instead.
-     */
-    get dataTable(): DataTable | undefined;
-    /**
-     * The presentation table of the Grid. It contains a modified version
-     * of the data table that is used for rendering the Grid content. If
-     * not modified, just a reference to the original data table.
-     *
-     * @deprecated Use `dataProvider` instead.
-     */
-    get presentationTable(): DataTable | undefined;
     private initAccessibility;
     private initPagination;
     /**
@@ -168,7 +166,7 @@ export declare class Grid {
     private initContainer;
     /**
      * Loads the new user options to all the important fields (`userOptions`,
-     * `options` and `columnOptionsMap`).
+     * `options` and column policy state).
      *
      * @param newOptions
      * The options that were declared by the user.
@@ -188,12 +186,19 @@ export declare class Grid {
      */
     private reloadColumnOptions;
     /**
+     * Refreshes the cached source column ids available in the data provider.
+     */
+    private refreshAvailableSourceColumnIds;
+    /**
      * Loads the new column options to the userOptions field in a one-to-one
      * manner. It means that all the columns that are not defined in the new
      * options will be removed.
      *
      * @param newColumnOptions
      * The new column options that should be loaded.
+     *
+     * @param preserveIdOnlyColumnOptions
+     * Whether to preserve the id only column options. Default is `false`.
      *
      * @returns
      * The difference between the previous and the new column options in form
@@ -319,22 +324,6 @@ export declare class Grid {
      */
     hideLoading(): void;
     /**
-     * Returns the grid data as a JSON string.
-     *
-     * **Note:** This method only works with `LocalDataProvider`.
-     * For other data providers, use your data source directly.
-     *
-     * @deprecated
-     *
-     * @param modified
-     * Whether to return the modified data table (after filtering/sorting/etc.)
-     * or the unmodified, original one. Default value is set to `true`.
-     *
-     * @return
-     * JSON representation of the data
-     */
-    getData(modified?: boolean): string;
-    /**
      * Returns the current Grid options.
      *
      * @param onlyUserOptions
@@ -345,5 +334,19 @@ export declare class Grid {
      * Grid options.
      */
     getOptions(onlyUserOptions?: boolean): Partial<Options>;
+}
+/**
+ * Resolved data binding for a Grid column.
+ */
+export interface ColumnOptionsMapItem {
+    index: number;
+    options: NoIdColumnOptions;
+}
+/**
+ * Per-row metadata object shared across Grid modules.
+ *
+ * Empty before module extensions.
+ */
+export interface RowMetaRecord {
 }
 export default Grid;

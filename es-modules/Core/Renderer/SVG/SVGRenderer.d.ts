@@ -211,7 +211,7 @@ declare class SVGRenderer implements SVGRendererBase {
      */
     button(text: string, x: number, y: number, callback: EventCallback<SVGElement>, theme?: ButtonThemeObject, hoverState?: SVGAttributes, selectState?: SVGAttributes, disabledState?: SVGAttributes, shape?: SymbolKey, useHTML?: boolean): SVGElement;
     /**
-     * Make a straight line crisper by not spilling out to neighbour pixels.
+     * Make a straight line crisper by not spilling out to neighbor pixels.
      *
      * @function Highcharts.SVGRenderer#crispLine
      *
@@ -631,7 +631,14 @@ interface SVGRenderer extends SVGRendererBase {
      */
     escapes: Record<string, string>;
     /**
-     * An extendable collection of functions for defining symbol paths.
+     * An extendable collection of functions for defining symbol paths. Each
+     * symbol function takes five parameters: `x`, `y`, `width`, `height` and
+     * `options`, and returns an `SVGPath` array.
+     *
+     * @sample highcharts/members/renderer-symbols
+     *         Renderer symbols overview
+     * @sample highcharts/plotoptions/series-marker-symbol
+     *         Custom marker symbol
      *
      * @name Highcharts.SVGRenderer#symbols
      * @type {Highcharts.SymbolDictionary}

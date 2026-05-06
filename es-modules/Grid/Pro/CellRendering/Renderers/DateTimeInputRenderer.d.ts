@@ -25,6 +25,11 @@ declare class DateTimeInputRenderer extends CellRenderer implements EditModeRend
  * Options to control the date time input renderer content.
  */
 export interface DateTimeInputRendererOptions extends DateInputRendererBaseOptions {
+    /**
+     * Use the built-in date-time input renderer.
+     *
+     * @default 'dateTimeInput'
+     */
     type: 'dateTimeInput';
 }
 declare module '../CellRendererType' {

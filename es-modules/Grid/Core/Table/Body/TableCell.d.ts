@@ -76,7 +76,7 @@ declare class TableCell extends Cell {
      * viewport rows to be updated, or `false` if the only change was the cell's
      * content.
      */
-    private updateDataset;
+    protected updateDataset(): Promise<boolean>;
     /**
      * Initialize event listeners for table body cells.
      *
@@ -89,6 +89,13 @@ declare class TableCell extends Cell {
      * Handles the focus event on the cell.
      */
     protected onFocus(): void;
+    /**
+     * Handles the blur event on the cell.
+     *
+     * @param e
+     * The focus event object.
+     */
+    protected onBlur(e?: FocusEvent): void;
     onMouseOver(): void;
     onMouseOut(): void;
     /**

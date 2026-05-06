@@ -1,7 +1,7 @@
 /* *
  *
  *  (c) 2010-2026 Highsoft AS
- *  Author: Torstein Honsi
+ *  Author: Torstein Hønsi
  *
  *  A commercial license may be required depending on use.
  *  See www.highcharts.com/license
@@ -388,7 +388,7 @@ class Chart {
         }
     }
     /**
-     * Get the clipping for a series. Could be called for a series to initialate
+     * Get the clipping for a series. Could be called for a series to initialize
      * animating the clip or to set the final clip (only width and x).
      *
      * @internal
@@ -401,10 +401,10 @@ class Chart {
         if (series) {
             // Otherwise, use clipBox.width which is corrected for
             // plotBorderWidth and clipOffset
-            if (xAxis && xAxis.len !== this.plotSizeX) {
+            if (xAxis && xAxis.len !== this.plotSizeX && !xAxis.isRadial) {
                 width = xAxis.len;
             }
-            if (yAxis && yAxis.len !== this.plotSizeY) {
+            if (yAxis && yAxis.len !== this.plotSizeY && !yAxis.isRadial) {
                 height = yAxis.len;
             }
             // If the chart is inverted and the series is not invertible, the
@@ -858,18 +858,18 @@ class Chart {
                     y: verticalAlign === 'bottom' ?
                         baseline :
                         offset + baseline
-                }, {
-                    align: key === 'title' ?
-                        // Title defaults to center for short titles,
-                        // left for word-wrapped titles
-                        (uncappedScale < minScale ? 'left' : 'center') :
-                        // Subtitle defaults to the title.align
-                        this.title?.alignValue
                 }, descOptions), width = (descOptions.width || ((uncappedScale > minScale ?
                     // One line
                     this.chartWidth :
                     // Allow word wrap
                     alignTo.width) / scale)) + 'px';
+                // Handle auto alignment
+                alignAttr.align ?? (alignAttr.align = key === 'title' ?
+                    // Title defaults to center for short titles,
+                    // left for word-wrapped titles
+                    (uncappedScale < minScale ? 'left' : 'center') :
+                    // Subtitle defaults to the title.align
+                    this.title?.alignValue);
                 // No animation when switching alignment
                 if (desc.alignValue !== alignAttr.align) {
                     desc.placed = false;
@@ -1010,7 +1010,7 @@ class Chart {
                     doc.body.appendChild(node);
                 }
                 if (getStyle(node, 'display', false) === 'none' ||
-                    node.hcOricDetached) {
+                    node.hcOrigDetached) {
                     node.hcOrigStyle = {
                         display: node.style.display,
                         height: node.style.height,
@@ -1101,9 +1101,12 @@ class Chart {
         chart.getChartSize();
         const chartHeight = chart.chartHeight;
         let chartWidth = chart.chartWidth;
-        // Allow table cells and flex-boxes to shrink without the chart blocking
-        // them out (#6427)
-        css(renderTo, { overflow: 'hidden' });
+        // Allow table cells and flex-boxes to shrink without the chart
+        // blocking them out (#6427) but skip in styled mode so inline styles
+        // don't override user CSS on renderTo
+        if (!chart.styledMode) {
+            css(renderTo, { overflow: 'hidden' });
+        }
         // Create the inner container
         if (!chart.styledMode) {
             containerStyle = extend({
@@ -1145,7 +1148,6 @@ class Chart {
                 });
             }
         }
-        chart.containerBox = chart.getContainerBox();
         // Cache the cursor (#1650)
         chart._cursor = container.style.cursor;
         // Initialize the renderer
@@ -1160,6 +1162,10 @@ class Chart {
          * @type {Highcharts.SVGRenderer}
          */
         chart.renderer = new Renderer(container, chartWidth, chartHeight, void 0, optionsChart.forExport, options.exporting?.allowHTML, chart.styledMode);
+        // Measure after the SVG is appended. In styled mode the inner
+        // container's CSS `height: 100%` otherwise yields 0 and causes a false
+        // first ResizeObserver reflow
+        chart.containerBox = chart.getContainerBox();
         // Set the initial animation from the options
         setAnimation(void 0, chart);
         chart.setClassName(optionsChart.className);
@@ -1745,7 +1751,8 @@ class Chart {
                 labels.enabled &&
                 axis.series.length &&
                 axis.coll !== 'colorAxis' &&
-                !chart.polar) {
+                !axis.isRadial // Gauges and polar chart (#24526)
+            ) {
                 expectedSpace = options.tickLength;
                 axis.createGroups();
                 // Calculate expected space based on dummy tick
@@ -2579,7 +2586,7 @@ class Chart {
      * @emits Highcharts.Chart#event:beforeShowResetZoom
      */
     showResetZoom() {
-        const chart = this, lang = defaultOptions.lang, btnOptions = chart.zooming.resetButton, theme = btnOptions.theme, alignTo = (btnOptions.relativeTo === 'chart' ||
+        const chart = this, lang = chart.options.lang, btnOptions = chart.zooming.resetButton, theme = btnOptions.theme, alignTo = (btnOptions.relativeTo === 'chart' ||
             btnOptions.relativeTo === 'spacingBox' ?
             null :
             'plotBox');
@@ -2941,7 +2948,7 @@ export default Chart;
  *        options, or a space character.
  *
  * @param {Highcharts.Chart} [ctx]
- *        Since v12.5.0, the chart context passed as an extra argument for
+ *        Since v12.6.0, the chart context passed as an extra argument for
  *        arrow functions.
  *
  * @return {string} The formatted number.

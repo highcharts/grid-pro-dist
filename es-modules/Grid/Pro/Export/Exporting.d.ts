@@ -64,5 +64,6 @@ declare class Exporting {
      * A file name without extension.
      */
     private getFilename;
+    private getDataTable;
 }
 export default Exporting;

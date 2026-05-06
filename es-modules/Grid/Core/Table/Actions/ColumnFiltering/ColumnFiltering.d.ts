@@ -82,6 +82,17 @@ declare class ColumnFiltering {
      */
     private applyFilter;
     /**
+     * Returns whether the next filtering options would produce the same
+     * semantic filter condition as the current one.
+     *
+     * @param columnId
+     * The column ID to compare filtering state for.
+     *
+     * @param options
+     * The next filtering options to compare.
+     */
+    private hasSameFilterCondition;
+    /**
      * Render the filtering input element, based on the column type.
      *
      * @param inputWrapper

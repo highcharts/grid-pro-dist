@@ -86,12 +86,10 @@ export declare class LocalDataProvider extends DataProvider {
      */
     getOriginalRowIndexFromLocal(localRowIndex: number): Promise<number | undefined>;
     /**
-     * Returns the local (presentation table) row index for a given original
-     * data table row index.
+     * Returns the local row index for a given original row index.
      *
      * @param originalRowIndex
-     * The original data table row index to get the presentation table row index
-     * for.
+     * The original row index to get the local row index for.
      */
     getLocalRowIndexFromOriginal(originalRowIndex: number): Promise<number | undefined>;
     getRowObject(rowIndex: number): Promise<RowObjectType | undefined>;
@@ -103,6 +101,8 @@ export declare class LocalDataProvider extends DataProvider {
      * Applies querying modifiers and updates the presentation table.
      */
     applyQuery(): Promise<void>;
+    private createOriginalRowIndexesMap;
+    private resolveOriginalRowIndex;
     destroy(): void;
     getColumnDataType(columnId: string): Promise<ColumnDataType>;
     /**
@@ -129,17 +129,31 @@ export declare class LocalDataProvider extends DataProvider {
 }
 export type GridDataConnectorTypeOptions = MakeOptional<DataConnectorTypeOptions, 'id'>;
 export interface LocalDataProviderOptions extends DataProviderOptions {
+    /**
+     * The local data provider type.
+     *
+     * @default 'local'
+     */
     providerType?: 'local';
     /**
      * Data table as a source of data for the grid.
+     *
+     * @sample grid-lite/options/data-table-instance
+     *         Data from a DataTable instance
      */
     dataTable?: DataTable;
     /**
      * Connector instance or options used to populate the data table.
+     *
+     * @sample grid-lite/basic/data-connector
+     *         Data from connector
      */
     connector?: GridDataConnectorTypeOptions | DataConnectorType;
     /**
      * Columns data to initialize the Grid with.
+     *
+     * @sample grid-lite/options/data-columns
+     *         Data from column arrays
      */
     columns?: Record<string, Array<DataTableValue> | TypedArray>;
     /**

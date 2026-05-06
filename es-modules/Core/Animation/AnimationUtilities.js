@@ -1,7 +1,7 @@
 /* *
  *
  *  (c) 2010-2026 Highsoft AS
- *  Author: Torstein Honsi
+ *  Author: Torstein Hønsi
  *
  *  A commercial license may be required depending on use.
  *  See www.highcharts.com/license
@@ -48,7 +48,7 @@ function setAnimation(animation, chart) {
  * @return {Highcharts.AnimationOptionsObject}
  *         An object with at least a duration property.
  */
-function animObject(animation) {
+export function animObject(animation) {
     return isObject(animation) ?
         merge({ duration: 500, defer: 0 }, animation) :
         { duration: animation ? 500 : 0, defer: 0 };

@@ -18,7 +18,7 @@ declare class ColumnsResizer {
      */
     private dragStartX?;
     /**
-     * The handles and their mouse down event listeners.
+     * The handles and their drag event listeners.
      */
     private handles;
     constructor(viewport: Table);
@@ -33,9 +33,23 @@ declare class ColumnsResizer {
      */
     renderColumnDragHandles(column: Column, cell: Cell): void;
     /**
-     * Handles the mouse up event on the document.
+     * Returns the page X coordinate for a mouse or touch event.
+     *
+     * @param e
+     * The drag event.
      */
-    private onDocumentMouseUp;
+    private static getPageX;
+    /**
+     * Prevents touch scrolling from interrupting column dragging.
+     *
+     * @param e
+     * The drag event.
+     */
+    private static preventTouchDefault;
+    /**
+     * Handles the drag end event on the document.
+     */
+    private onDocumentDragEnd;
     /**
      * Adds event listeners to the handle.
      *

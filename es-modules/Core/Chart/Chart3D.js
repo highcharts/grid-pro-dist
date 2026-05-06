@@ -1,7 +1,7 @@
 /* *
  *
  *  (c) 2010-2026 Highsoft AS
- *  Author: Torstein Honsi
+ *  Author: Torstein Hønsi
  *
  *  Extension for 3D charts
  *
@@ -133,7 +133,7 @@ var Chart3D;
                     /**
                      * The color of the panel.
                      *
-                     * @type      {Highcharts.ColorString|Highcharts.GradientColorObject|Highcharts.PatternObject}
+                     * @type      {Highcharts.ColorType}
                      * @default   transparent
                      * @since     4.0
                      * @product   highcharts
@@ -1133,7 +1133,7 @@ var Chart3D;
         const chart = this, options3d = chart.options.chart.options3d;
         if (chart.chart3d &&
             chart.is3d()) {
-            // Add a 0-360 normalisation for alfa and beta angles in 3d graph
+            // Add a 0-360 normalization for alfa and beta angles in 3d graph
             if (options3d) {
                 options3d.alpha = options3d.alpha % 360 +
                     (options3d.alpha >= 0 ? 0 : 360);
@@ -1653,7 +1653,7 @@ export default Chart3D;
  * The color of the panel.
  *
  * @deprecated
- * @type      {Highcharts.ColorString|Highcharts.GradientColorObject|Highcharts.PatternObject}
+ * @type      {Highcharts.ColorType}
  * @default   transparent
  * @since     4.0
  * @product   highcharts

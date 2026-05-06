@@ -111,6 +111,22 @@ export declare function createOptionsProxy<T extends object>(options: T, default
  */
 export declare function formatText(template: string, values: Record<string, string | number>): string;
 /**
+ * Checks whether two objects have the same own keys and values.
+ *
+ * Supports nested plain objects and arrays. Functions are compared by
+ * reference.
+ *
+ * @param left
+ * The first object to compare.
+ *
+ * @param right
+ * The second object to compare.
+ *
+ * @returns
+ * `true` when both objects are equal, otherwise `false`.
+ */
+export declare function isDeepEqual(left: unknown, right: unknown): boolean;
+/**
  * Resolves a style value that can be static or callback based.
  *
  * @param style
@@ -136,6 +152,10 @@ export declare function resolveStyleValue<T>(style?: StyleValue<T>, target?: T):
  * Merged style object.
  */
 export declare function mergeStyleValues<T>(target: T, ...styleValues: Array<(StyleValue<T> | undefined)>): CSSObject;
+/**
+ * Waits for the next animation frame.
+ */
+export declare function waitForAnimationFrame(): Promise<void>;
 declare const _default: {
     readonly makeHTMLElement: typeof makeHTMLElement;
     readonly makeDiv: typeof makeDiv;
@@ -144,7 +164,9 @@ declare const _default: {
     readonly setHTMLContent: typeof setHTMLContent;
     readonly createOptionsProxy: typeof createOptionsProxy;
     readonly formatText: typeof formatText;
+    readonly isDeepEqual: typeof isDeepEqual;
     readonly resolveStyleValue: typeof resolveStyleValue;
     readonly mergeStyleValues: typeof mergeStyleValues;
+    readonly waitForAnimationFrame: typeof waitForAnimationFrame;
 };
 export default _default;

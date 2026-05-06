@@ -20,6 +20,9 @@ export interface A11yOptions {
     announcements?: A11yAnnouncementsOptions;
     /**
      * Options for screen reader sections before and after the Grid.
+     *
+     * @sample grid-lite/options/screen-reader-section
+     *         Screen reader sections
      */
     screenReaderSection?: ScreenReaderSectionOptions;
 }
@@ -56,6 +59,13 @@ export interface LangAccessibilityOptions {
      * Language options for the accessibility descriptions in filtering.
      */
     filtering?: FilteringLangA11yOptions;
+    /**
+     * Accessible label for the minimized column header menu button. Use
+     * `{column}` to insert the current column label.
+     *
+     * @default 'Open menu for {column}.'
+     */
+    columnMenu?: string;
     /**
      * Language options for screen reader sections before and after the Grid.
      */

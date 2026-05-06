@@ -1,5 +1,5 @@
 /**
- * @license Highcharts Grid Pro v2.3.1 (2026-03-24)
+ * @license Highcharts Grid Pro v3.0.0 (2026-05-06)
  * @module grid/grid-pro
  *
  * (c) 2009-2026 Highsoft AS
@@ -22,6 +22,7 @@ import { merge } from '../Shared/Utilities.js';
 import Table from '../Grid/Core/Table/Table.js';
 import Column from '../Grid/Core/Table/Column.js';
 import HeaderCell from '../Grid/Core/Table/Header/HeaderCell.js';
+import TableRow from '../Grid/Core/Table/Body/TableRow.js';
 import TableCell from '../Grid/Core/Table/Body/TableCell.js';
 import SvgIcons from '../Grid/Core/UI/SvgIcons.js';
 import CellRendererRegistry from '../Grid/Pro/CellRendering/CellRendererRegistry.js';
@@ -39,6 +40,8 @@ import '../Data/Modifiers/InvertModifier.js';
 import '../Data/Modifiers/RangeModifier.js';
 import '../Data/Modifiers/SortModifier.js';
 import '../Data/Modifiers/FilterModifier.js';
+import '../Grid/Core/Responsive/ResponsiveComposition.js';
+import '../Grid/Pro/RowPinning/RowPinningComposition.js';
 import '../Grid/Pro/GridEvents.js';
 import '../Grid/Pro/CellEditing/CellEditingComposition.js';
 import '../Grid/Pro/Credits/CreditsProComposition.js';
@@ -57,7 +60,6 @@ import '../Grid/Pro/CellRendering/Renderers/SparklineRenderer.js';
 import '../Grid/Pro/CellRendering/Renderers/NumberInputRenderer.js';
 import '../Grid/Core/Data/LocalDataProvider.js';
 import '../Grid/Pro/Data/RemoteDataProvider.js';
-import '../Grid/Core/Responsive/ResponsiveComposition.js';
 declare const G: {
     readonly AST: typeof AST;
     readonly CellContentPro: typeof CellContentPro;
@@ -106,17 +108,18 @@ declare const G: {
     };
     readonly Table: typeof Table;
     readonly TableCell: typeof TableCell;
+    readonly TableRow: typeof TableRow;
     readonly Templating: {
         dateFormat: (format: string, timestamp: number, upperCaseFirst?: boolean) => string;
         format: (str: string | undefined, ctx: any, owner?: Templating.Owner) => string;
         helpers: Record<string, Function>;
         numberFormat: (this: Templating.Owner | void, number: number, decimals: number, decimalPoint?: string, thousandsSep?: string) => string;
     };
-    readonly version: "2.3.1";
+    readonly version: "3.0.0";
     readonly win: Window & typeof globalThis;
 };
 export { AST, CellContentPro, CellRenderer, CellRendererRegistry, Column, ColumnResizing, DataConnector, DataConverter, DataCursor, DataModifier, DataProviderRegistry, DataPool, DataTable, _Grid as Grid, HeaderCell, _Options as Options, Pagination, Popup, SvgIcons, Table, TableCell, Templating };
-export declare const classNamePrefix: string, defaultOptions: import("../Shared/Types").DeepPartial<_Options>, grid: typeof _Grid.grid, grids: (_Grid | undefined)[], isHighContrastModeActive: () => boolean, product: "Grid Pro", setOptions: typeof import("../Grid/Core/Defaults.js").setOptions, version: "2.3.1", win: Window & typeof globalThis;
+export declare const classNamePrefix: string, defaultOptions: import("../Shared/Types").DeepPartial<_Options>, grid: typeof _Grid.grid, grids: (_Grid | undefined)[], isHighContrastModeActive: () => boolean, product: "Grid Pro", setOptions: typeof import("../Grid/Core/Defaults.js").setOptions, version: "3.0.0", win: Window & typeof globalThis;
 declare namespace G {
     type Options = _Options;
 }

@@ -10,7 +10,7 @@
  * - `copy`, `clipboard`, `plus`, `trash`
  * - `addRowAbove`, `addRowBelow`, `addColumnLeft`, `addColumnRight`
  */
-export type GridIconName = ('filter' | 'menu' | 'checkmark' | 'arrowUpDown' | 'arrowUp' | 'arrowDown' | 'chevronLeft' | 'chevronRight' | 'doubleChevronLeft' | 'doubleChevronRight' | 'copy' | 'clipboard' | 'plus' | 'trash' | 'addRowAbove' | 'addRowBelow' | 'addColumnLeft' | 'addColumnRight');
+export type GridIconName = ('filter' | 'menu' | 'checkmark' | 'arrowUpDown' | 'arrowUp' | 'arrowDown' | 'chevronLeft' | 'chevronRight' | 'doubleChevronLeft' | 'doubleChevronRight' | 'copy' | 'clipboard' | 'plus' | 'trash' | 'addRowAbove' | 'addRowBelow' | 'addColumnLeft' | 'addColumnRight' | 'pin' | 'unpin');
 /**
  * The registry of all Grid Svg icons with their SVG path data.
  */
@@ -64,8 +64,7 @@ export declare function getIconFromRegistry(name: string, customIcons?: Record<s
  * Creates an SVG icon element from the SvgIcons registry or a custom
  * registry. When `customIcons` is provided, `name` can be any registered
  * name (built-in or custom). When omitted, only built-in `GridIconName`
- * values are allowed. The SVG element always receives the default icon
- * class name from `Globals`.
+ * values are allowed.
  *
  * @param name
  * The name of the icon (built-in or from registry)

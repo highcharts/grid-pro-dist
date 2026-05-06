@@ -7,7 +7,7 @@
  *
  *
  *  Authors:
- *  - Dawid Dragula
+ *  - Dawid Draguła
  *  - Sebastian Bochan
  *
  * */
@@ -18,7 +18,8 @@
  *
  * */
 export const classNamePrefix = 'hcg-';
-export const version = '2.3.1';
+export const version = '3.0.0';
+export const buildDate = '2026-05-06';
 export const rawClassNames = {
     container: 'container',
     tableElement: 'table',
@@ -26,6 +27,7 @@ export const rawClassNames = {
     descriptionElement: 'description',
     theadElement: 'thead',
     tbodyElement: 'tbody',
+    cell: 'cell',
     rowElement: 'row',
     rowEven: 'row-even',
     rowOdd: 'row-odd',
@@ -69,9 +71,10 @@ export const rawClassNames = {
     popup: 'popup',
     button: 'button',
     buttonSelected: 'button-selected',
-    buttonHighlighted: 'button-highlighted',
     input: 'input',
     icon: 'icon',
+    iconSelected: 'icon-selected',
+    iconHighlighted: 'icon-highlighted',
     iconSearch: 'icon-search',
     popupContent: 'popup-content',
     columnFilterWrapper: 'column-filter-wrapper',
@@ -99,7 +102,9 @@ export const rawClassNames = {
     centerAlign: 'center',
     leftAlign: 'left'
 };
-export const win = window;
+export const win = (typeof window !== 'undefined' ?
+    window :
+    {});
 export const composed = [];
 export const userAgent = (win.navigator && win.navigator.userAgent) || '';
 export const isChrome = userAgent.indexOf('Chrome') !== -1;
@@ -113,6 +118,7 @@ export const getClassName = (classNameKey) => classNamePrefix + rawClassNames[cl
 export default {
     classNamePrefix,
     version,
+    buildDate,
     rawClassNames,
     win,
     composed,

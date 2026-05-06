@@ -9,13 +9,14 @@
  *
  *
  *  Authors:
- *  - Dawid Dragula
+ *  - Dawid Draguła
  *  - Sebastian Bochan
  *
  * */
 'use strict';
 import Accessibility from './Accessibility/Accessibility.js';
 import AST from '../../Core/Renderer/HTML/AST.js';
+import ColumnPolicyResolver from './ColumnPolicyResolver.js';
 import DataProviderRegistry from './Data/DataProviderRegistry.js';
 import DataTable from '../../Data/DataTable.js';
 import { defaultOptions } from './Defaults.js';
@@ -25,7 +26,7 @@ import QueryingController from './Querying/QueryingController.js';
 import Globals from './Globals.js';
 import TimeBase from '../../Shared/TimeBase.js';
 import Pagination from './Pagination/Pagination.js';
-import { defined, diffObjects, extend, fireEvent, merge, pick } from '../../Shared/Utilities.js';
+import { diffObjects, extend, fireEvent, merge, pick } from '../../Shared/Utilities.js';
 import { uniqueKey } from '../../Core/Utilities.js';
 /* *
  *
@@ -66,11 +67,9 @@ export class Grid {
      */
     constructor(renderTo, options, afterLoadCallback) {
         /**
-         * The user options declared for the columns as an object of column ID to
-         * column options.
-         * @internal
+         * Resolver for data binding and column capabilities.
          */
-        this.columnOptionsMap = {};
+        this.columnPolicy = new ColumnPolicyResolver();
         /**
          * The options that were declared by the user when creating the Grid
          * or when updating it.
@@ -96,6 +95,10 @@ export class Grid {
          */
         this.dirtyFlags = new Set();
         /**
+         * Per-row metadata shared across Grid modules.
+         */
+        this.rowMeta = new Map();
+        /**
          * Internal redraw queue used to prevent concurrent `redraw()` calls from
          * interleaving async DOM work and corrupting the state (for example
          * rendering duplicate pagination controls when `update()` is called
@@ -120,31 +123,6 @@ export class Grid {
      *  Methods
      *
      * */
-    /**
-     * The data source of the Grid. It contains the original data table
-     * that was passed to the Grid.
-     *
-     * @deprecated Use `dataProvider` instead.
-     */
-    get dataTable() {
-        const dp = this.dataProvider;
-        if (dp && 'getDataTable' in dp) {
-            return dp.getDataTable();
-        }
-    }
-    /**
-     * The presentation table of the Grid. It contains a modified version
-     * of the data table that is used for rendering the Grid content. If
-     * not modified, just a reference to the original data table.
-     *
-     * @deprecated Use `dataProvider` instead.
-     */
-    get presentationTable() {
-        const dp = this.dataProvider;
-        if (dp && 'getDataTable' in dp) {
-            return dp.getDataTable(true);
-        }
-    }
     /*
      * Initializes the accessibility controller.
      */
@@ -189,7 +167,7 @@ export class Grid {
     }
     /**
      * Loads the new user options to all the important fields (`userOptions`,
-     * `options` and `columnOptionsMap`).
+     * `options` and column policy state).
      *
      * @param newOptions
      * The options that were declared by the user.
@@ -206,12 +184,15 @@ export class Grid {
         // Operate on a copy of the options argument
         newOptions = merge(newOptions);
         const diff = {};
+        const preserveIdOnlyColumnOptions = (newOptions.data?.autogenerateColumns ??
+            this.userOptions.data?.autogenerateColumns ??
+            this.options?.data?.autogenerateColumns) === false;
         if (newOptions.columns) {
             if (oneToOne) {
-                diff.columns = this.setColumnOptionsOneToOne(newOptions.columns);
+                diff.columns = this.setColumnOptionsOneToOne(newOptions.columns, preserveIdOnlyColumnOptions);
             }
             else {
-                diff.columns = this.setColumnOptions(newOptions.columns);
+                diff.columns = this.setColumnOptions(newOptions.columns, false, preserveIdOnlyColumnOptions);
             }
             delete newOptions.columns;
         }
@@ -222,8 +203,9 @@ export class Grid {
         merge(true, diff, diffObjects(newOptions, this.userOptions));
         this.userOptions = merge(this.userOptions, newOptions);
         this.options = merge(this.options ?? defaultOptions, this.userOptions);
+        this.columnPolicy.setColumnDefaults(this.options?.columnDefaults);
         this.viewport?.columns.forEach((column) => {
-            column.options = createOptionsProxy(this.columnOptionsMap?.[column.id]?.options ?? {}, this.options?.columnDefaults);
+            column.options = createOptionsProxy(this.columnPolicy.getIndividualColumnOptions(column.id) ?? {}, this.options?.columnDefaults);
         });
         return diff;
     }
@@ -234,12 +216,12 @@ export class Grid {
     reloadColumnOptions() {
         const colOptions = this.userOptions.columns;
         if (!colOptions) {
-            this.columnOptionsMap = {};
+            this.columnPolicy.clearColumnOptions();
             return;
         }
         if (colOptions.length < 1) {
             delete this.userOptions.columns;
-            this.columnOptionsMap = {};
+            this.columnPolicy.clearColumnOptions();
             return;
         }
         const columnOptionsMap = {};
@@ -249,7 +231,13 @@ export class Grid {
                 options: colOptions[i]
             };
         }
-        this.columnOptionsMap = columnOptionsMap;
+        this.columnPolicy.setColumnOptionsMap(columnOptionsMap);
+    }
+    /**
+     * Refreshes the cached source column ids available in the data provider.
+     */
+    async refreshAvailableSourceColumnIds() {
+        this.columnPolicy.setAvailableSourceColumnIds((await this.dataProvider?.getColumnIds()) || []);
     }
     /**
      * Sets the new column options to the userOptions field.
@@ -261,13 +249,16 @@ export class Grid {
      * Whether to overwrite the existing column options with the new ones.
      * Default is `false`.
      *
+     * @param preserveIdOnlyColumnOptions
+     * Whether to preserve the id only column options. Default is `false`.
+     *
      * @returns
      * An object of the changed column options in form of a record of
      * `[column.id]: column.options`.
      *
      * @internal
      */
-    setColumnOptions(newColumnOptions, overwrite = false) {
+    setColumnOptions(newColumnOptions, overwrite = false, preserveIdOnlyColumnOptions = false) {
         const columnDiffOptions = {};
         if (!this.userOptions.columns) {
             this.userOptions.columns = this.options?.columns ?? [];
@@ -275,9 +266,13 @@ export class Grid {
         const columnOptions = this.userOptions.columns;
         for (let i = 0, iEnd = newColumnOptions.length; i < iEnd; ++i) {
             const newOptions = newColumnOptions[i];
-            const colOptionsIndex = this.columnOptionsMap?.[newOptions.id]?.index ?? -1;
+            const colOptionsIndex = this.columnPolicy.getColumnOptionIndex(newOptions.id) ?? -1;
             // If the new column options contain only the id.
             if (Object.keys(newOptions).length < 2) {
+                if (preserveIdOnlyColumnOptions && colOptionsIndex === -1) {
+                    columnOptions.push(newOptions);
+                    continue;
+                }
                 if (overwrite && colOptionsIndex !== -1) {
                     columnDiffOptions[newOptions.id] = diffObjects(columnOptions[colOptionsIndex], { id: newOptions.id }, true);
                     columnOptions.splice(colOptionsIndex, 1);
@@ -315,11 +310,14 @@ export class Grid {
      * @param newColumnOptions
      * The new column options that should be loaded.
      *
+     * @param preserveIdOnlyColumnOptions
+     * Whether to preserve the id only column options. Default is `false`.
+     *
      * @returns
      * The difference between the previous and the new column options in form
      * of a record of `[column.id]: column.options`.
      */
-    setColumnOptionsOneToOne(newColumnOptions) {
+    setColumnOptionsOneToOne(newColumnOptions, preserveIdOnlyColumnOptions = false) {
         const prevColumnOptions = this.userOptions.columns;
         const columnOptions = [];
         const columnDiffOptions = {};
@@ -336,7 +334,8 @@ export class Grid {
                 columnDiffOptions[newOptions.id] = diffOptions;
             }
             const resultOptions = merge(prevOptions ?? {}, newOptions);
-            if (Object.keys(resultOptions).length > 1) {
+            if (preserveIdOnlyColumnOptions ||
+                Object.keys(resultOptions).length > 1) {
                 columnOptions.push(resultOptions);
             }
         }
@@ -374,7 +373,7 @@ export class Grid {
             if (!this.dataProvider ||
                 ('data' in diff) ||
                 ('dataTable' in diff)) {
-                if ( // Handle backward compatibility
+                if ( // Preserve legacy root-level `dataTable` option
                 diff.dataTable &&
                     this.options?.dataTable &&
                     this.options?.data?.providerType === 'local') {
@@ -551,6 +550,7 @@ export class Grid {
                 return;
             }
             await this.dataProvider?.init();
+            await this.refreshAvailableSourceColumnIds();
             if (flagsToProcess.has('sorting') ||
                 flagsToProcess.has('filtering') ||
                 paginationWasDirty) {
@@ -653,7 +653,9 @@ export class Grid {
         if (viewport.validator?.errorCell) {
             return;
         }
-        const normalized = (sortings || []).filter((sorting) => !!(sorting.columnId && sorting.order));
+        const normalized = (sortings || []).filter((sorting) => !!(sorting.columnId &&
+            sorting.order &&
+            !this.columnPolicy.isColumnUnbound(sorting.columnId)));
         const sortingController = this.querying.sorting;
         const previousSortings = sortingController.currentSortings || [];
         const eventColumnIds = new Set();
@@ -730,6 +732,7 @@ export class Grid {
         this.initContainer(this.renderTo);
         this.initAccessibility();
         this.initPagination();
+        await this.refreshAvailableSourceColumnIds();
         this.querying.loadOptions();
         await this.querying.proceed();
         await this.renderViewport();
@@ -746,16 +749,16 @@ export class Grid {
      * The index of the row.
      */
     hoverRow(rowIndex) {
-        const rows = this.viewport?.rows;
-        if (!rows) {
+        const viewport = this.viewport;
+        if (!viewport) {
             return;
         }
-        const firstRowIndex = this.viewport?.rows[0]?.index ?? 0;
         if (this.hoveredRowIndex !== void 0) {
-            rows[this.hoveredRowIndex - firstRowIndex]?.setHoveredState(false);
+            viewport.getRenderedRowByIndex(this.hoveredRowIndex)
+                ?.setHoveredState(false);
         }
         if (rowIndex !== void 0) {
-            rows[rowIndex - firstRowIndex]?.setHoveredState(true);
+            viewport.getRenderedRowByIndex(rowIndex)?.setHoveredState(true);
         }
         this.hoveredRowIndex = rowIndex;
     }
@@ -787,16 +790,16 @@ export class Grid {
      * The index of the row.
      */
     syncRow(rowIndex) {
-        const rows = this.viewport?.rows;
-        if (!rows) {
+        const viewport = this.viewport;
+        if (!viewport) {
             return;
         }
-        const firstRowIndex = this.viewport?.rows[0]?.index ?? 0;
         if (this.syncedRowIndex !== void 0) {
-            rows[this.syncedRowIndex - firstRowIndex]?.setSyncedState(false);
+            viewport.getRenderedRowByIndex(this.syncedRowIndex)
+                ?.setSyncedState(false);
         }
         if (rowIndex !== void 0) {
-            rows[rowIndex - firstRowIndex]?.setSyncedState(true);
+            viewport.getRenderedRowByIndex(rowIndex)?.setSyncedState(true);
         }
         this.syncedRowIndex = rowIndex;
     }
@@ -958,42 +961,33 @@ export class Grid {
      * grid, in the correct order.
      */
     async getEnabledColumnIDs() {
-        const { columnOptionsMap } = this;
         const header = this.options?.header;
         const headerColumns = this.getColumnIds(header || [], false);
-        const columnsIncluded = this.options?.rendering?.columns?.included || (headerColumns && headerColumns.length > 0 ?
-            headerColumns : await this.dataProvider?.getColumnIds());
-        if (!columnsIncluded?.length) {
-            return [];
+        const dataOptions = this.options?.data;
+        const autogenerateColumns = !dataOptions ||
+            dataOptions.autogenerateColumns !== false;
+        let autoColumns = this.columnPolicy.getAvailableSourceColumnIds();
+        if (!autoColumns) {
+            await this.refreshAvailableSourceColumnIds();
+            autoColumns = this.columnPolicy.getAvailableSourceColumnIds() || [];
         }
-        if (!columnOptionsMap) {
-            return columnsIncluded;
-        }
-        let columnId;
-        const result = [];
-        for (let i = 0, iEnd = columnsIncluded.length; i < iEnd; ++i) {
-            columnId = columnsIncluded[i];
-            if (columnOptionsMap?.[columnId]?.options?.enabled !== false) {
-                result.push(columnId);
-            }
-        }
-        return result;
+        return this.columnPolicy.getColumnsForRender(headerColumns, autogenerateColumns, autoColumns, this.options?.columns?.map((column) => column.id));
     }
     loadDataProvider() {
         this.dataProvider?.destroy();
         this.querying.shouldBeUpdated = true;
+        this.columnPolicy.setAvailableSourceColumnIds();
         const userDT = this.options?.dataTable;
         const dataOptions = this.options?.data ?? {
             providerType: 'local',
             dataTable: userDT ?? {}
         };
-        // Just for the backward compatibility, remove in the future
+        // Preserve legacy root-level `dataTable` option for now.
         if (dataOptions.providerType === 'local' &&
             !dataOptions.dataTable && userDT) {
             dataOptions.dataTable = 'clone' in userDT ?
                 userDT : new DataTable(userDT);
         }
-        // End of backward compatibility snippet
         const DataProviderConstructor = DataProviderRegistry.types[dataOptions.providerType ?? 'local'] ??
             DataProviderRegistry.types.local;
         this.dataProvider = new DataProviderConstructor(this.querying, dataOptions);
@@ -1034,7 +1028,7 @@ export class Grid {
      * after destruction by calling the `render` method.
      */
     destroy(onlyDOM = false) {
-        fireEvent(this, 'beforeDestroy');
+        fireEvent(this, 'beforeDestroy', { onlyDOM });
         this.isRendered = false;
         const dgIndex = Grid.grids.findIndex((dg) => dg === this);
         this.dataProvider?.destroy();
@@ -1086,60 +1080,6 @@ export class Grid {
         delete this.loadingWrapper;
     }
     /**
-     * Returns the grid data as a JSON string.
-     *
-     * **Note:** This method only works with `LocalDataProvider`.
-     * For other data providers, use your data source directly.
-     *
-     * @deprecated
-     *
-     * @param modified
-     * Whether to return the modified data table (after filtering/sorting/etc.)
-     * or the unmodified, original one. Default value is set to `true`.
-     *
-     * @return
-     * JSON representation of the data
-     */
-    getData(modified = true) {
-        if (!this.dataProvider || !('getDataTable' in this.dataProvider)) {
-            // eslint-disable-next-line no-console
-            console.warn('getData() works only with LocalDataProvider.');
-            return JSON.stringify({
-                error: 'getData() works only with LocalDataProvider.'
-            }, null, 2);
-        }
-        const dataTable = this.dataProvider.getDataTable(modified);
-        const tableColumns = dataTable?.columns;
-        const outputColumns = {};
-        if (!this.enabledColumns || !tableColumns) {
-            return '{}';
-        }
-        const typeParser = (type) => {
-            const TypeMap = {
-                number: Number,
-                datetime: Number,
-                string: String,
-                'boolean': Boolean
-            };
-            return (value) => (defined(value) ? TypeMap[type](value) : null);
-        };
-        for (const columnId of Object.keys(tableColumns)) {
-            const column = this.viewport?.getColumn(columnId);
-            if (column) {
-                const columnData = tableColumns[columnId];
-                const parser = typeParser(column.dataType);
-                outputColumns[columnId] = (() => {
-                    const result = [];
-                    for (let i = 0, iEnd = columnData.length; i < iEnd; ++i) {
-                        result.push(parser(columnData[i]));
-                    }
-                    return result;
-                })();
-            }
-        }
-        return JSON.stringify(outputColumns, null, 2);
-    }
-    /**
      * Returns the current Grid options.
      *
      * @param onlyUserOptions
@@ -1171,10 +1111,11 @@ export class Grid {
         // Clean up the column options by removing the ones that have no other
         // options than `id`:
         const oldColumnOptions = options.columns;
+        const keepIdOnlyColumns = options.data?.autogenerateColumns === false;
         if (oldColumnOptions) {
             options.columns = [];
             for (const columnOption of oldColumnOptions) {
-                if (Object.keys(columnOption).length > 1) {
+                if (keepIdOnlyColumns || Object.keys(columnOption).length > 1) {
                     options.columns.push(columnOption);
                 }
             }

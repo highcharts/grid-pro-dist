@@ -4,7 +4,7 @@ export interface ButtonThemeObject extends SVGAttributes {
     /**
      * The default fill exists only to capture hover events.
      *
-     * @type {Highcharts.ColorString|Highcharts.GradientColorObject|Highcharts.PatternObject}
+     * @type {Highcharts.ColorType}
      * @default #ffffff
      */
     fill?: SVGAttributes['fill'];

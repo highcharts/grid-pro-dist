@@ -19,7 +19,7 @@ declare module '../CSSObject' {
  * rendering layer of Highcharts. Combined with the
  * {@link Highcharts.SVGRenderer}
  * object, these prototypes allow freeform annotation in the charts or even in
- * HTML pages without instanciating a chart. The SVGElement can also wrap HTML
+ * HTML pages without instantiating a chart. The SVGElement can also wrap HTML
  * labels, when `text` or `label` elements are created with the `useHTML`
  * parameter.
  *

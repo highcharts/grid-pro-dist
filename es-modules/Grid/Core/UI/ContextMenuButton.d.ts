@@ -49,6 +49,10 @@ export declare class ContextMenuButton implements Button {
      */
     add(contextMenu: ContextMenu): this | undefined;
     focus(): void;
+    /**
+     * Triggers button click programmatically.
+     */
+    click(): void;
     setLabel(label: string): void;
     /**
      * Sets the icon for the button.

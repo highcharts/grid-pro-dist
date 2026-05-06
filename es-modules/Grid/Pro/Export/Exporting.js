@@ -9,10 +9,11 @@
  *
  *
  *  Authors:
- *  - Karol Kolodziej
+ *  - Karol Kołodziej
  *
  * */
 'use strict';
+import { hasDataTableProvider } from '../../Core/Data/DataProvider.js';
 import { downloadURL, getBlobFromContent } from '../../../Shared/DownloadURL.js';
 import { defined } from '../../../Shared/Utilities.js';
 /* *
@@ -79,7 +80,7 @@ class Exporting {
      */
     getCSV(modified = true) {
         const { grid } = this;
-        const dataTable = modified ? grid.presentationTable : grid.dataTable;
+        const dataTable = this.getDataTable(modified);
         if (!dataTable) {
             return '';
         }
@@ -95,7 +96,7 @@ class Exporting {
         if (!itemDelimiter) {
             itemDelimiter = (decimalPoint === ',' ? ';' : ',');
         }
-        const columnIds = grid.enabledColumns ?? [];
+        const columnIds = (grid.enabledColumns ?? []).filter((columnId) => grid.columnPolicy.isColumnExportable(columnId));
         const columnsCount = columnIds?.length;
         const csvRows = [];
         const rowArray = [];
@@ -121,7 +122,9 @@ class Exporting {
             }
         };
         for (let columnIndex = 0; columnIndex < columnsCount; columnIndex++) {
-            const columnId = columnIds[columnIndex], column = grid.viewport?.getColumn(columnId), colType = column?.dataType, columnArray = dataTable.getColumn(columnId) ?? [], columnLength = columnArray?.length, parser = typeParser(colType ?? 'string');
+            const columnId = columnIds[columnIndex], column = grid.viewport?.getColumn(columnId), colType = column?.dataType, sourceColumnId = grid.columnPolicy.getColumnSourceId(columnId), columnArray = sourceColumnId ?
+                (dataTable.getColumn(sourceColumnId) ?? []) :
+                [], columnLength = columnArray?.length, parser = typeParser(colType ?? 'string');
             for (let rowIndex = 0; rowIndex < columnLength; rowIndex++) {
                 let row = rowArray[rowIndex];
                 if (!row) {
@@ -159,7 +162,50 @@ class Exporting {
      * JSON representation of the data
      */
     getJSON(modified = true) {
-        return this.grid.getData(modified);
+        const dataTable = this.getDataTable(modified);
+        const tableColumns = dataTable?.columns;
+        const outputColumns = {};
+        if (!dataTable) {
+            // eslint-disable-next-line no-console
+            console.warn('getJSON() works only with LocalDataProvider.');
+            return JSON.stringify({
+                error: 'getJSON() works only with LocalDataProvider.'
+            }, null, 2);
+        }
+        if (!this.grid.enabledColumns || !tableColumns) {
+            return '{}';
+        }
+        const typeParser = (type) => {
+            const TypeMap = {
+                number: Number,
+                datetime: Number,
+                string: String,
+                'boolean': Boolean
+            };
+            return (value) => (defined(value) ? TypeMap[type](value) : null);
+        };
+        for (const columnId of this.grid.enabledColumns) {
+            const column = this.grid.viewport?.getColumn(columnId);
+            const sourceColumnId = this.grid.columnPolicy.getColumnSourceId(columnId);
+            if (!column ||
+                !sourceColumnId ||
+                !this.grid.columnPolicy.isColumnExportable(columnId)) {
+                continue;
+            }
+            const columnData = tableColumns[sourceColumnId];
+            if (!columnData) {
+                continue;
+            }
+            const parser = typeParser(column.dataType);
+            outputColumns[columnId] = (() => {
+                const result = [];
+                for (let i = 0, iEnd = columnData.length; i < iEnd; ++i) {
+                    result.push(parser(columnData[i]));
+                }
+                return result;
+            })();
+        }
+        return JSON.stringify(outputColumns, null, 2);
     }
     /**
      * Get the default file name used for exported the grid.
@@ -184,6 +230,12 @@ class Exporting {
                 .replace(/[\-]+$/g, ''); // Dashes in the end;
         }
         return filename;
+    }
+    getDataTable(modified) {
+        const { dataProvider } = this.grid;
+        return hasDataTableProvider(dataProvider) ?
+            dataProvider.getDataTable(modified) :
+            void 0;
     }
 }
 /**

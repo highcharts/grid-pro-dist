@@ -7,5 +7,6 @@ declare class CellContextMenu extends ContextMenu {
     showAt(cell: TableCell, clientX: number, clientY: number): void;
     hide(): void;
     protected renderContent(): void;
+    protected onKeyDown(event: KeyboardEvent): void;
 }
 export default CellContextMenu;

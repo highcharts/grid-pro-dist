@@ -10,7 +10,7 @@
  *  - Sophie Bremer
  *  - Gøran Slettemark
  *  - Jomar Hønsi
- *  - Dawid Dragula
+ *  - Dawid Draguła
  *
  * */
 'use strict';
@@ -799,6 +799,11 @@ class DataTable extends DataTableCore {
      */
     setModifier(modifier, eventDetail) {
         const table = this;
+        // Avoid emitting modifier events when unchanged. This prevents extra
+        // rerenders when polling calls `applyTableModifiers()`.
+        if (modifier === table.modifier) {
+            return Promise.resolve(table);
+        }
         let promise;
         table.emit({
             type: 'setModifier',

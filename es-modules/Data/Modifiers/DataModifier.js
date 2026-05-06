@@ -9,7 +9,7 @@
  *  Authors:
  *  - Sophie Bremer
  *  - Gøran Slettemark
- *  - Dawid Dragula
+ *  - Dawid Draguła
  *
  * */
 'use strict';
@@ -108,7 +108,7 @@ class DataModifier {
      * Emits an event on the modifier to all registered callbacks of this event.
      *
      * @param {DataModifierEvent} [e]
-     * Event object containing additonal event information.
+     * Event object containing additional event information.
      */
     emit(e) {
         fireEvent(this, e.type, e);

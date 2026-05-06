@@ -9,7 +9,7 @@
  *
  *
  *  Authors:
- *  - Dawid Dragula
+ *  - Dawid Draguła
  *  - Sebastian Bochan
  *
  * */
@@ -101,7 +101,7 @@ class TableCell extends Cell {
         // TODO(design): Design a better way to show the cell val being updated.
         this.htmlElement.style.opacity = '0.5';
         if (!defined(value)) {
-            value = await grid.dataProvider?.getValue(this.column.id, this.row.index);
+            value = await this.column.getCellValue(this);
             // Discard stale response if cell was reused for a different row
             if (fetchToken !== this.asyncFetchToken) {
                 this.htmlElement.style.opacity = '';
@@ -147,7 +147,7 @@ class TableCell extends Cell {
      */
     getCellStyles() {
         const { grid } = this.column.viewport;
-        const rawColumnOptions = grid.columnOptionsMap?.[this.column.id]?.options;
+        const rawColumnOptions = grid.columnPolicy.getIndividualColumnOptions(this.column.id);
         return {
             ...mergeStyleValues(this.column, grid.options?.columnDefaults?.style, rawColumnOptions?.style),
             ...mergeStyleValues(this, grid.options?.columnDefaults?.cells?.style, rawColumnOptions?.cells?.style)
@@ -163,7 +163,12 @@ class TableCell extends Cell {
      * content.
      */
     async updateDataset() {
-        const oldValue = await this.column.viewport.grid.dataProvider?.getValue(this.column.id, this.row.index);
+        const sourceColumnId = this.column.viewport.grid.columnPolicy
+            .getColumnSourceId(this.column.id);
+        if (!sourceColumnId) {
+            return false;
+        }
+        const oldValue = await this.column.viewport.grid.dataProvider?.getValue(sourceColumnId, this.row.index);
         if (oldValue === this.value) {
             // Abort if the value is the same as in the data table.
             return false;
@@ -175,7 +180,10 @@ class TableCell extends Cell {
             return false;
         }
         this.row.data[this.column.id] = this.value;
-        await dp.setValue(this.value, this.column.id, rowId);
+        if (sourceColumnId !== this.column.id) {
+            this.row.data[sourceColumnId] = this.value;
+        }
+        await dp.setValue(this.value, sourceColumnId, rowId);
         if (vp.grid.querying.willNotModify()) {
             return false;
         }
@@ -190,7 +198,9 @@ class TableCell extends Cell {
      * Only focus/blur remain on individual cells for focus management.
      */
     initEvents() {
-        this.cellEvents.push(['blur', () => this.onBlur()]);
+        this.cellEvents.push(['blur', (e) => {
+                this.onBlur(e);
+            }]);
         this.cellEvents.push(['focus', () => this.onFocus()]);
         this.cellEvents.forEach((pair) => {
             this.htmlElement.addEventListener(pair[0], pair[1]);
@@ -202,10 +212,29 @@ class TableCell extends Cell {
     onFocus() {
         super.onFocus();
         const vp = this.row.viewport;
-        vp.focusCursor = [
-            this.row.index,
-            this.column.index
-        ];
+        const rowId = this.row.id;
+        if (rowId === void 0) {
+            return;
+        }
+        delete vp.pendingFocusCursor;
+        vp.clearDetachedFocus();
+        vp.focusCursor = {
+            rowId,
+            columnIndex: this.column.index
+        };
+    }
+    /**
+     * Handles the blur event on the cell.
+     *
+     * @param e
+     * The focus event object.
+     */
+    onBlur(e) {
+        if (e &&
+            this.row.viewport.hasDetachedFocusAt(this.row.id, this.column.index)) {
+            return;
+        }
+        super.onBlur();
     }
     /**
      * Handles the mouse down event on the cell.

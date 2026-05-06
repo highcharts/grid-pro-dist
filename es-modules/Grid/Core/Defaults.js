@@ -9,7 +9,7 @@
  *
  *
  *  Authors:
- *  - Dawid Dragula
+ *  - Dawid Draguła
  *  - Sebastian Bochan
  *
  * */
@@ -21,6 +21,7 @@ import { merge } from '../../Shared/Utilities.js';
  */
 export const defaultLangOptions = {
     accessibility: {
+        columnMenu: 'Open menu for {column}.',
         sorting: {
             sortable: 'Sortable.',
             announcements: {
@@ -109,7 +110,8 @@ export const defaultOptions = {
         }
     },
     data: {
-        providerType: 'local'
+        providerType: 'local',
+        autogenerateColumns: true
     },
     time: {
         timezone: 'UTC'

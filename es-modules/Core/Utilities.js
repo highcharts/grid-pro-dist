@@ -1,7 +1,7 @@
 /* *
  *
  *  (c) 2010-2026 Highsoft AS
- *  Author: Torstein Honsi
+ *  Author: Torstein Hønsi
  *
  *  A commercial license may be required depending on use.
  *  See www.highcharts.com/license
@@ -62,7 +62,7 @@ export function error(code, stop, chart, params) {
         }
         // Else ...
         if (win.console &&
-            error.messages.indexOf(message) === -1 // Prevent console flooting
+            error.messages.indexOf(message) === -1 // Prevent console floating
         ) {
             console.warn(message); // eslint-disable-line no-console
         }
@@ -363,7 +363,7 @@ if (win.jQuery) {
 * @name Highcharts.CSSObject#padding
 * @type {string|undefined}
 */ /**
-* Behaviour of the element when the mouse cursor rests over it.
+* Behavior of the element when the mouse cursor rests over it.
 * @name Highcharts.CSSObject#pointerEvents
 * @type {string|undefined}
 */ /**
@@ -439,7 +439,7 @@ if (win.jQuery) {
  *        Event arguments.
  *
  * @param {T} [ctx]
- *        Since v12.5.0, the callback context is passed as the last argument,
+ *        Since v12.6.0, the callback context is passed as the last argument,
  *        so arrow functions can access the same context as regular functions
  *        using `this`.
  *
@@ -472,7 +472,7 @@ if (win.jQuery) {
  *        Context to format
  *
  * @param {T} [ctx]
- *        Since v12.5.0, the callback context is passed as an extra argument,
+ *        Since v12.6.0, the callback context is passed as an extra argument,
  *        so arrow functions can access the same context as regular functions
  *        using `this`.
  *

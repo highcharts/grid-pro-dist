@@ -188,7 +188,7 @@ var FocusBorderComposition;
                 borderPosX = attrX - (bb.width * correction.x) - pad;
             }
             if (!isNaN(attrY)) {
-                // Correct by line height if "text-achor" == "start", #19335.
+                // Correct by line height if "text-anchor" == "start", #19335.
                 const dim = this.attr('text-anchor') === 'start' ?
                     lineHeight :
                     bb.height;

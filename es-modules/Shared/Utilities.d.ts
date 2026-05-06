@@ -157,7 +157,7 @@ export declare function destroyObjectProperties(obj: any, except?: any, destruct
  */
 export declare function discardElement(element?: HTMLDOMElement): void;
 /**
- * Remove the last occurence of an item from an array.
+ * Remove the last occurrence of an item from an array.
  *
  * @function Highcharts.erase
  *
@@ -470,7 +470,7 @@ export declare function removeEvent<T>(el: (Class<T> | T), type?: string, fn?: (
 export declare function splat<T>(obj: T | Array<T>): Array<T>;
 /**
  * Sort an object array and keep the order of equal items. The ECMAScript
- * standard does not specify the behaviour when items are equal.
+ * standard does not specify the behavior when items are equal.
  *
  * @function Highcharts.stableSort
  *

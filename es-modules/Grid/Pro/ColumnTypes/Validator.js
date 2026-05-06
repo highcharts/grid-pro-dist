@@ -9,7 +9,7 @@
  *
  *
  *  Authors:
- *  - Dawid Dragula
+ *  - Dawid Draguła
  *
  * */
 'use strict';
@@ -56,7 +56,7 @@ class Validator {
      */
     validate(cell, errors = []) {
         const { options, dataType } = cell.column;
-        const validationErrors = cell.row.viewport.grid.options?.lang?.validationErrors;
+        const validationNotifications = cell.row.viewport.grid.options?.lang?.validationNotifications;
         const rendererType = cell.column.options?.cells?.renderer?.type;
         let rules = Array.from(options?.cells?.editMode?.validationRules || []);
         // Remove duplicates in validationRules
@@ -83,7 +83,7 @@ class Validator {
             let err;
             if (typeof rule === 'string') {
                 ruleDef = Validator.rulesRegistry[rule];
-                err = validationErrors?.[rule]?.notification;
+                err = validationNotifications?.[rule];
             }
             else {
                 ruleDef = rule;
@@ -101,7 +101,10 @@ class Validator {
             if (typeof validateFn === 'function' &&
                 editModeContent &&
                 !validateFn.call(cell, editModeContent)) {
-                if (typeof ruleDef.notification === 'function') {
+                if (typeof err === 'function') {
+                    err = err.call(cell, editModeContent);
+                }
+                else if (typeof ruleDef.notification === 'function') {
                     err = ruleDef.notification.call(cell, editModeContent);
                 }
                 errors.push((err || ruleDef.notification));

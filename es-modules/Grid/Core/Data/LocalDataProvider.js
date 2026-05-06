@@ -9,7 +9,7 @@
  *  !!!!!!! SOURCE GETS TRANSPILED BY TYPESCRIPT. EDIT TS FILE ONLY. !!!!!!!
  *
  *  Authors:
- *  - Dawid Dragula
+ *  - Dawid Draguła
  *
  * */
 'use strict';
@@ -80,25 +80,7 @@ export class LocalDataProvider extends DataProvider {
             });
             this.dataTableEventDestructors.push(fn);
         }
-        const idColId = this.options.idColumn;
-        if (idColId) {
-            const idColumn = table.getColumn(idColId, true);
-            if (!idColumn) {
-                throw new Error(`Column "${idColId}" not found in table.`);
-            }
-            const map = new Map();
-            for (let i = 0, len = idColumn.length; i < len; ++i) {
-                const value = idColumn[i];
-                if (!isString(value) && !isNumber(value)) {
-                    throw new Error('idColumn must contain only string or number values.');
-                }
-                map.set(value, i);
-            }
-            if (map.size !== idColumn.length) {
-                throw new Error('idColumn must contain unique values.');
-            }
-            this.originalRowIndexesMap = map;
-        }
+        this.originalRowIndexesMap = this.createOriginalRowIndexesMap();
     }
     async handleTableChange(e) {
         this.querying.shouldBeUpdated = true;
@@ -179,11 +161,17 @@ export class LocalDataProvider extends DataProvider {
      * The local (presentation table) row index to get the row ID for.
      */
     async getRowId(rowIndex) {
+        const idColId = this.options.idColumn;
+        if (idColId) {
+            const rawId = this.presentationTable?.getCell(idColId, rowIndex);
+            if (isString(rawId) || isNumber(rawId)) {
+                return Promise.resolve(rawId);
+            }
+        }
         const originalRowIndex = await this.getOriginalRowIndexFromLocal(rowIndex);
         if (!defined(originalRowIndex) || !this.dataTable) {
             return Promise.resolve(void 0);
         }
-        const idColId = this.options.idColumn;
         if (!idColId) {
             return Promise.resolve(originalRowIndex);
         }
@@ -221,12 +209,10 @@ export class LocalDataProvider extends DataProvider {
         return Promise.resolve(this.presentationTable?.getOriginalRowIndex(localRowIndex));
     }
     /**
-     * Returns the local (presentation table) row index for a given original
-     * data table row index.
+     * Returns the local row index for a given original row index.
      *
      * @param originalRowIndex
-     * The original data table row index to get the presentation table row index
-     * for.
+     * The original row index to get the local row index for.
      */
     getLocalRowIndexFromOriginal(originalRowIndex) {
         return Promise.resolve(this.presentationTable?.getLocalRowIndex(originalRowIndex));
@@ -243,21 +229,17 @@ export class LocalDataProvider extends DataProvider {
     getValue(columnId, rowIndex) {
         return Promise.resolve(this.presentationTable?.getCell(columnId, rowIndex));
     }
-    async setValue(value, columnId, rowId) {
-        const localRowIndex = await this.getRowIndex(rowId);
-        if (!defined(localRowIndex)) {
+    setValue(value, columnId, rowId) {
+        const originalIndex = this.resolveOriginalRowIndex(rowId);
+        if (originalIndex === void 0) {
             // eslint-disable-next-line no-console
             console.error('[setValue] Wrong row ID:', rowId);
-            return;
+            return Promise.resolve();
         }
-        const rowIndex = await this.getOriginalRowIndexFromLocal(localRowIndex);
-        if (!defined(rowIndex)) {
-            // eslint-disable-next-line no-console
-            console.error('[setValue] Wrong local row index:', localRowIndex);
-            return;
-        }
-        this.dataTable?.setCell(columnId, rowIndex, value, { fromGrid: true });
-        return;
+        this.dataTable?.setCell(columnId, originalIndex, value, {
+            fromGrid: true
+        });
+        return Promise.resolve();
     }
     /**
      * Applies querying modifiers and updates the presentation table.
@@ -280,6 +262,17 @@ export class LocalDataProvider extends DataProvider {
         else {
             interTable = originalDataTable.getModified();
         }
+        const grid = this.querying.grid;
+        if ('treeView' in grid && grid.treeView) {
+            try {
+                grid.treeView.sync();
+                interTable = grid.treeView.projectTable(interTable);
+            }
+            catch (error) {
+                // eslint-disable-next-line no-console
+                console.error(error.message);
+            }
+        }
         this.prePaginationRowCount = interTable.rowCount;
         // Pagination modifier
         const paginationModifier = controller.pagination.createModifier(interTable.rowCount);
@@ -289,6 +282,37 @@ export class LocalDataProvider extends DataProvider {
             interTable = interTable.getModified();
         }
         this.presentationTable = interTable;
+    }
+    createOriginalRowIndexesMap() {
+        const idColId = this.options.idColumn;
+        const table = this.dataTable;
+        if (!idColId || !table) {
+            return;
+        }
+        const idColumn = table.getColumn(idColId, true);
+        if (!idColumn) {
+            throw new Error(`Column "${idColId}" not found in table.`);
+        }
+        const map = new Map();
+        for (let i = 0, len = idColumn.length; i < len; ++i) {
+            const value = idColumn[i];
+            if (!isString(value) && !isNumber(value)) {
+                throw new Error('idColumn must contain only string or number values.');
+            }
+            map.set(value, i);
+        }
+        if (map.size !== idColumn.length) {
+            throw new Error('idColumn must contain unique values.');
+        }
+        return map;
+    }
+    resolveOriginalRowIndex(rowId) {
+        if (this.originalRowIndexesMap) {
+            return this.originalRowIndexesMap.get(rowId);
+        }
+        if (isNumber(rowId)) {
+            return rowId;
+        }
     }
     destroy() {
         this.clearDataTableEvents();

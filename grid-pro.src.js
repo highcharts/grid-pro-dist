@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: LicenseRef-Highcharts
 /**
- * @license Highcharts Grid Pro v2.3.1 (2026-03-24)
+ * @license Highcharts Grid Pro v3.0.0 (2026-05-06)
  * @module grid/grid-pro
  *
  * (c) 2009-2026 Highsoft AS
@@ -55,7 +55,7 @@ __webpack_require__.d(__webpack_exports__, {
 /* *
  *
  *  (c) 2010-2026 Highsoft AS
- *  Author: Torstein Honsi
+ *  Author: Torstein Hønsi
  *
  *  A commercial license may be required depending on use.
  *  See www.highcharts.com/license
@@ -79,7 +79,7 @@ var Globals;
      *  Constants
      *
      * */
-    Globals.SVG_NS = 'http://www.w3.org/2000/svg', Globals.product = 'Highcharts', Globals.version = '2.3.1', Globals.win = (typeof window !== 'undefined' ?
+    Globals.SVG_NS = 'http://www.w3.org/2000/svg', Globals.product = 'Highcharts', Globals.version = '3.0.0', Globals.win = (typeof window !== 'undefined' ?
         window :
         {}), // eslint-disable-line node/no-unsupported-features/es-builtins
     Globals.doc = Globals.win.document, Globals.svg = !!Globals.doc?.createElementNS?.(Globals.SVG_NS, 'svg')?.createSVGRect, Globals.pageLang = Globals.doc?.documentElement?.closest('[lang]')?.lang, Globals.userAgent = Globals.win.navigator?.userAgent || '', Globals.isChrome = Globals.win.chrome, Globals.isFirefox = Globals.userAgent.indexOf('Firefox') !== -1, Globals.isMS = /(edge|msie|trident)/i.test(Globals.userAgent) && !Globals.win.opera, Globals.isSafari = !Globals.isChrome && Globals.userAgent.indexOf('Safari') !== -1, Globals.isTouchDevice = /(Mobile|Android|Windows Phone)/.test(Globals.userAgent), Globals.isWebKit = Globals.userAgent.indexOf('AppleWebKit') !== -1, Globals.deg2rad = Math.PI * 2 / 360, Globals.marginNames = [
@@ -427,8 +427,8 @@ function createElement(tag, attribs, styles, parent, nopad) {
     return el;
 }
 /**
- * Utility for crisping a line position to the nearest full pixel depening on
- * the line width
+ * Utility for crisping a line position to the nearest full pixel depending on
+ * the line width.
  *
  * @internal
  * @param {number} value       The raw pixel position
@@ -578,7 +578,7 @@ function diffObjects(newer, older, keepOlder, collectionsWithUpdate) {
     return ret;
 }
 /**
- * Remove the last occurence of an item from an array.
+ * Remove the last occurrence of an item from an array.
  *
  * @function Highcharts.erase
  *
@@ -1449,7 +1449,7 @@ function splat(obj) {
 }
 /**
  * Sort an object array and keep the order of equal items. The ECMAScript
- * standard does not specify the behaviour when items are equal.
+ * standard does not specify the behavior when items are equal.
  *
  * @function Highcharts.stableSort
  *
@@ -1545,7 +1545,7 @@ function wrap(obj, method, func) {
 /* *
  *
  *  (c) 2010-2026 Highsoft AS
- *  Author: Torstein Honsi
+ *  Author: Torstein Hønsi
  *
  *  A commercial license may be required depending on use.
  *  See www.highcharts.com/license
@@ -1606,7 +1606,7 @@ function error(code, stop, chart, params) {
         }
         // Else ...
         if (Utilities_win.console &&
-            error.messages.indexOf(message) === -1 // Prevent console flooting
+            error.messages.indexOf(message) === -1 // Prevent console floating
         ) {
             console.warn(message); // eslint-disable-line no-console
         }
@@ -1907,7 +1907,7 @@ if (Utilities_win.jQuery) {
 * @name Highcharts.CSSObject#padding
 * @type {string|undefined}
 */ /**
-* Behaviour of the element when the mouse cursor rests over it.
+* Behavior of the element when the mouse cursor rests over it.
 * @name Highcharts.CSSObject#pointerEvents
 * @type {string|undefined}
 */ /**
@@ -1983,7 +1983,7 @@ if (Utilities_win.jQuery) {
  *        Event arguments.
  *
  * @param {T} [ctx]
- *        Since v12.5.0, the callback context is passed as the last argument,
+ *        Since v12.6.0, the callback context is passed as the last argument,
  *        so arrow functions can access the same context as regular functions
  *        using `this`.
  *
@@ -2016,7 +2016,7 @@ if (Utilities_win.jQuery) {
  *        Context to format
  *
  * @param {T} [ctx]
- *        Since v12.5.0, the callback context is passed as an extra argument,
+ *        Since v12.6.0, the callback context is passed as an extra argument,
  *        so arrow functions can access the same context as regular functions
  *        using `this`.
  *
@@ -2123,7 +2123,7 @@ if (Utilities_win.jQuery) {
 /* *
  *
  *  (c) 2010-2026 Highsoft AS
- *  Author: Torstein Honsi
+ *  Author: Torstein Hønsi
  *
  *  A commercial license may be required depending on use.
  *  See www.highcharts.com/license
@@ -2458,6 +2458,7 @@ AST.allowedAttributes = [
     'aria-readonly',
     'aria-roledescription',
     'aria-selected',
+    'aria-sort',
     'class',
     'clip-path',
     'color',
@@ -2696,7 +2697,7 @@ AST.bypassHTMLFiltering = false;
 /* *
  *
  *  (c) 2010-2026 Highsoft AS
- *  Author: Torstein Honsi
+ *  Author: Torstein Hønsi
  *
  *  A commercial license may be required depending on use.
  *  See www.highcharts.com/license
@@ -3081,7 +3082,7 @@ const ChartDefaults = {
     /**
      * Callback function to override the default function that formats all
      * the numbers in the chart. Returns a string with the formatted number.
-     * Since v12.5.0, the callback also receives `ctx` as the last argument,
+     * Since v12.6.0, the callback also receives `ctx` as the last argument,
      * so that arrow functions can access the same context as regular
      * functions using `this`.
      *
@@ -3480,7 +3481,7 @@ const ChartDefaults = {
      * @see In styled mode, the selection marker fill is set with the
      *      `.highcharts-selection-marker` class.
      *
-     * @type      {Highcharts.ColorString|Highcharts.GradientColorObject|Highcharts.PatternObject}
+     * @type      {Highcharts.ColorType}
      * @default   rgba(51,92,173,0.25)
      * @since     2.1.7
      * @apioption chart.selectionMarkerFill
@@ -3805,6 +3806,7 @@ const ChartDefaults = {
              * @sample {highstock} highcharts/chart/resetzoombutton-theme/
              *         Theming the button
              *
+             * @default { zIndex: 6 }
              * @type  {Highcharts.SVGAttributes}
              * @since 10.2.1
              */
@@ -3830,18 +3832,15 @@ const ChartDefaults = {
              * @since 10.2.1
              */
             position: {
-                /** @internal */
                 align: 'right',
-                /** @internal */
-                x: -10,
                 /**
                  * The vertical alignment of the button.
                  *
-                 * @type       {Highcharts.VerticalAlignValue}
-                 * @default    top
-                 * @apioption  chart.zooming.resetButton.position.verticalAlign
+                 * @type      {Highcharts.VerticalAlignValue}
+                 * @default   top
+                 * @apioption chart.zooming.resetButton.position.verticalAlign
                  */
-                /** @internal */
+                x: -10,
                 y: 10
             }
         }
@@ -3898,7 +3897,7 @@ const ChartDefaults = {
      * @sample {highmaps} maps/chart/border/
      *         Border options
      *
-     * @type {Highcharts.ColorString|Highcharts.GradientColorObject|Highcharts.PatternObject}
+     * @type {Highcharts.ColorType}
      */
     borderColor: "#334eff" /* Palette.highlightColor80 */,
     /**
@@ -3937,7 +3936,7 @@ const ChartDefaults = {
      * @sample {highmaps} maps/chart/backgroundcolor-gradient/
      *         Gradient
      *
-     * @type {Highcharts.ColorString|Highcharts.GradientColorObject|Highcharts.PatternObject}
+     * @type {Highcharts.ColorType}
      */
     backgroundColor: "#ffffff" /* Palette.backgroundColor */,
     /**
@@ -3959,7 +3958,7 @@ const ChartDefaults = {
      * @sample {highmaps} maps/chart/plotbackgroundcolor-gradient/
      *         Gradient
      *
-     * @type      {Highcharts.ColorString|Highcharts.GradientColorObject|Highcharts.PatternObject}
+     * @type      {Highcharts.ColorType}
      * @apioption chart.plotBackgroundColor
      */
     /**
@@ -3993,7 +3992,7 @@ const ChartDefaults = {
      * @sample {highmaps} maps/chart/plotborder/
      *         Plot border options
      *
-     * @type {Highcharts.ColorString|Highcharts.GradientColorObject|Highcharts.PatternObject}
+     * @type {Highcharts.ColorType}
      */
     plotBorderColor: "#cccccc" /* Palette.neutralColor20 */
 };
@@ -4034,7 +4033,7 @@ const SeriesPalettes = {
 /* *
  *
  *  (c) 2010-2026 Highsoft AS
- *  Author: Torstein Honsi
+ *  Author: Torstein Hønsi
  *
  *  A commercial license may be required depending on use.
  *  See www.highcharts.com/license
@@ -4461,8 +4460,8 @@ class TimeBase {
      * | `%o` | Month number, 1 through 12                   |       |
      * | `%y` | Two digits year, like 24 for 2024            |       |
      * | `%Y` | Four digits year, like 2024                  |       |
-     * | `%H` | Two digits hours in 24h format, 00 through 23 | Depending on the locale, 12h format may be instered. |
-     * | `%k` | Hours in 24h format, 0 through 23            | Depending on the locale, 12h format may be instered. |
+     * | `%H` | Two digits hours in 24h format, 00 through 23 | Depending on the locale, 12h format may be inserted. |
+     * | `%k` | Hours in 24h format, 0 through 23            | Depending on the locale, 12h format may be inserted. |
      * | `%I` | Two digits hours in 12h format, 00 through 11 | N/A. The locale determines the hour format. |
      * | `%l` | Hours in 12h format, 1 through 12            | N/A. The locale determines the hour format. |
      * | `%M` | Two digits minutes, 00 through 59            |       |
@@ -4867,7 +4866,7 @@ class TimeBase {
 /* *
  *
  *  (c) 2010-2026 Highsoft AS
- *  Author: Torstein Honsi
+ *  Author: Torstein Hønsi
  *
  *  A commercial license may be required depending on use.
  *  See www.highcharts.com/license
@@ -5042,7 +5041,7 @@ class Time extends Shared_TimeBase {
 /* *
  *
  *  (c) 2010-2026 Highsoft AS
- *  Author: Torstein Honsi
+ *  Author: Torstein Hønsi
  *
  *  A commercial license may be required depending on use.
  *  See www.highcharts.com/license
@@ -5088,7 +5087,7 @@ const defaultOptions = {
      * @sample highcharts/members/theme-v10/
      *         Latest release styled like version 10
      *
-     * @type    {Array<(Highcharts.ColorString|Highcharts.GradientColorObject|Highcharts.PatternObject)>}
+     * @type    {Array<Highcharts.ColorType>}
      * @default [
      *     "#2caffe",
      *     "#544fc5",
@@ -5366,6 +5365,9 @@ const defaultOptions = {
              * CSS styling for the buttons' text
              */
             style: {
+                /**
+                 * @type {Highcharts.ColorType}
+                 */
                 color: "#333333" /* Palette.neutralColor80 */,
                 cursor: 'pointer',
                 fontSize: '0.8em',
@@ -5387,8 +5389,14 @@ const defaultOptions = {
                  * addition to the normal state options
                  */
                 select: {
+                    /**
+                     * @type {Highcharts.ColorType}
+                     */
                     fill: "#e6e9ff" /* Palette.highlightColor10 */,
                     style: {
+                        /**
+                         * @type {Highcharts.ColorType}
+                         */
                         color: "#000000" /* Palette.neutralColor100 */,
                         fontWeight: 'bold'
                     }
@@ -5638,6 +5646,9 @@ const defaultOptions = {
          * @default   {highstock} { "color": "#333333", "fontSize": "16px" }
          */
         style: {
+            /**
+             * @type {Highcharts.ColorType}
+             */
             color: "#333333" /* Palette.neutralColor80 */,
             fontWeight: 'bold'
         },
@@ -5825,6 +5836,9 @@ const defaultOptions = {
          * @default   {"color": "#666666"}
          */
         style: {
+            /**
+             * @type {Highcharts.ColorType}
+             */
             color: "#666666" /* Palette.neutralColor60 */,
             /**
              * @type {number|string}
@@ -5900,6 +5914,9 @@ const defaultOptions = {
          * @default   {"color": "#666666"}
          */
         style: {
+            /**
+             * @type {Highcharts.ColorType}
+             */
             color: "#666666" /* Palette.neutralColor60 */,
             /**
              * @type {number|string}
@@ -5969,7 +5986,7 @@ const defaultOptions = {
          * @sample {highmaps} maps/legend/border-background/
          *         Border and background options
          *
-         * @type      {Highcharts.ColorString|Highcharts.GradientColorObject|Highcharts.PatternObject}
+         * @type      {Highcharts.ColorType}
          * @apioption legend.backgroundColor
          */
         /**
@@ -6046,15 +6063,13 @@ const defaultOptions = {
          * `Highcharts.addEvent` function.
          *
          * @declare Highcharts.LegendEventsOptionsObject
-         *
-         * @internal
          */
-        events: {},
+        events: {
         /**
-         * Fires when the legend item belonging to the series is clicked. One
-         * parameter, `event`, is passed to the function. The default action
-         * is to toggle the visibility of the series, point or data class. This
-         * can be prevented by returning `false` or calling
+         * Fires when the legend item belonging to the series is clicked.
+         * One parameter, `event`, is passed to the function. The default
+         * action is to toggle the visibility of the series, point or data
+         * class. This can be prevented by returning `false` or calling
          * `event.preventDefault()`.
          *
          * @sample {highcharts} highcharts/legend/itemclick/
@@ -6066,6 +6081,7 @@ const defaultOptions = {
          * @context   Highcharts.Legend
          * @apioption legend.events.itemClick
          */
+        },
         /**
          * When the legend is floating, the plot area ignores it and is allowed
          * to be placed below it.
@@ -6188,7 +6204,7 @@ const defaultOptions = {
          * @sample {highmaps} maps/legend/labelformatter/
          *         Data classes with label formatter
          *
-         * @type {Highcharts.FormatterCallbackFunction<Point|Series>}
+         * @type {Highcharts.FormatterCallbackFunction<Highcharts.Point|Highcharts.Series>}
          */
         labelFormatter: function () {
             // eslint-enable valid-jsdoc
@@ -6257,7 +6273,7 @@ const defaultOptions = {
          * @sample {highmaps} maps/legend/border-background/
          *         Border and background options
          *
-         * @type {Highcharts.ColorString|Highcharts.GradientColorObject|Highcharts.PatternObject}
+         * @type {Highcharts.ColorType}
          */
         borderColor: "#999999" /* Palette.neutralColor40 */,
         /**
@@ -6362,7 +6378,7 @@ const defaultOptions = {
              * @sample  {highstock} highcharts/legend/navigation/
              *          Legend page navigation demonstrated
              *
-             * @type  {Highcharts.ColorString|Highcharts.GradientColorObject|Highcharts.PatternObject}
+             * @type  {Highcharts.ColorType}
              * @since 2.2.4
              */
             activeColor: "#0022ff" /* Palette.highlightColor100 */,
@@ -6378,7 +6394,7 @@ const defaultOptions = {
              * @sample {highstock} highcharts/legend/navigation/
              *         Legend page navigation demonstrated
              *
-             * @type  {Highcharts.ColorString|Highcharts.GradientColorObject|Highcharts.PatternObject}
+             * @type  {Highcharts.ColorType}
              * @since 2.2.4
              */
             inactiveColor: "#cccccc" /* Palette.neutralColor20 */
@@ -6900,7 +6916,7 @@ const defaultOptions = {
          * @sample {highmaps} maps/tooltip/background-border/ Background and
          *         border demo
          *
-         * @type {Highcharts.ColorString|Highcharts.GradientColorObject|Highcharts.PatternObject}
+         * @type {Highcharts.ColorType}
          * @apioption tooltip.borderColor
          */
         /**
@@ -7073,7 +7089,7 @@ const defaultOptions = {
          * @sample {highmaps} maps/tooltip/formatter/
          *         String formatting
          *
-         * Since v12.5.0, the callback also receives `ctx` as the second
+         * Since v12.6.0, the callback also receives `ctx` as the second
          * argument, so that arrow functions can access the same context as
          * regular functions using `this`.
          *
@@ -7118,7 +7134,7 @@ const defaultOptions = {
         /**
          * A callback function for formatting the HTML output for a single point
          * in the tooltip. Like the `pointFormat` string, but with more
-         * flexibility. Since v12.5.0, the callback also receives `ctx` as the
+         * flexibility. Since v12.6.0, the callback also receives `ctx` as the
          * first argument, so that arrow functions can access the same context
          * as regular functions using `this`.
          *
@@ -7135,7 +7151,7 @@ const defaultOptions = {
          * `ctx` is the tooltip context (so that arrow-functions can access the
          * same context as a normal function using `this`). Add
          * `chart.plotLeft` and `chart.plotTop` to get the full coordinates.
-         * Since v12.5.0, the callback receives `ctx`.
+         * Since v12.6.0, the callback receives `ctx`.
          *
          * To find the actual hovered `Point` instance, use
          * `this.chart.hoverPoint`. For shared or split tooltips, all the hover
@@ -7305,21 +7321,13 @@ const defaultOptions = {
          * @product highcharts highstock gantt
          */
         dateTimeLabelFormats: {
-            /** @internal */
             millisecond: '%[AebHMSL]',
-            /** @internal */
             second: '%[AebHMS]',
-            /** @internal */
             minute: '%[AebHM]',
-            /** @internal */
             hour: '%[AebHM]',
-            /** @internal */
             day: '%[AebY]',
-            /** @internal */
             week: '%v %[AebY]',
-            /** @internal */
             month: '%[BY]',
-            /** @internal */
             year: '%Y'
         },
         /**
@@ -7364,8 +7372,9 @@ const defaultOptions = {
          * mouse over a point. Works on initial hover.
          *
          * @sample {highcharts|highstock} highcharts/tooltip/showdelay/
+         *         Show tooltip after 2 seconds
          *
-         * @since next
+         * @since 12.6.0
          */
         showDelay: 0,
         /**
@@ -7601,7 +7610,7 @@ const defaultOptions = {
          * @sample {highmaps} highcharts/css/tooltip-border-background/
          *         Tooltip in styled mode
          *
-         * @type {Highcharts.ColorString|Highcharts.GradientColorObject|Highcharts.PatternObject}
+         * @type {Highcharts.ColorType}
          */
         backgroundColor: "#ffffff" /* Palette.backgroundColor */,
         /**
@@ -7650,6 +7659,8 @@ const defaultOptions = {
          *
          * @sample highcharts/tooltip/stickoncontact/
          *         Tooltip sticks on pointer contact
+         * @sample highcharts/tooltip/stickoncontact-anchor-link/
+         *         Tooltip with clickable links
          *
          * @type      {boolean}
          * @since     8.0.1
@@ -7669,13 +7680,10 @@ const defaultOptions = {
          * @type {Highcharts.CSSObject}
          */
         style: {
-            /** @internal */
+            /** @type {Highcharts.ColorType} */
             color: "#333333" /* Palette.neutralColor80 */,
-            /** @internal */
             cursor: 'default',
-            /**
-             * @type {number|string}
-             */
+            /** @type {number|string} */
             fontSize: '0.8em'
         },
         /**
@@ -7696,7 +7704,7 @@ const defaultOptions = {
         useHTML: false
     },
     /**
-     * Highchart by default puts a credits label in the lower right corner
+     * Highcharts by default puts a credits label in the lower right corner
      * of the chart. This can be changed using these options.
      */
     credits: {
@@ -7729,6 +7737,30 @@ const defaultOptions = {
          * @apioption credits.mapTextFull
          */
         /**
+         * Events for the credits label.
+         *
+         * @type     {object}
+         * @since    12.6.0
+         * @apioption credits.events
+         */
+        /**
+         * Callback function to handle click events on the credits label.
+         * The callback can call `event.preventDefault()` to prevent the
+         * default navigation behavior. Alternatively, you can add a general
+         * event handler using `Highcharts.addEvent(Chart, 'creditsClick',
+         * callback)` instead of providing it in the options tree.
+         *
+         * @sample {highcharts} highcharts/credits/events-click/
+         *         Custom click handler
+         *
+         * @param {Event} event
+         *        The click event object.
+         *
+         * @type  {Function}
+         * @since 12.6.0
+         * @apioption credits.events.click
+         */
+        /**
          * Whether to show the credits text.
          *
          * @sample {highcharts} highcharts/credits/enabled-false/
@@ -7753,24 +7785,16 @@ const defaultOptions = {
          *
          * @sample {highcharts} highcharts/credits/position-left/
          *         Left aligned
-         * @sample {highcharts} highcharts/credits/position-left/
-         *         Left aligned
-         * @sample {highmaps} maps/credits/customized/
-         *         Left aligned
          * @sample {highmaps} maps/credits/customized/
          *         Left aligned
          *
-         * @type    {Highcharts.AlignObject}
-         * @since   2.1
+         * @type  {Highcharts.AlignObject}
+         * @since 2.1
          */
         position: {
-            /** @internal */
             align: 'right',
-            /** @internal */
-            x: -10,
-            /** @internal */
             verticalAlign: 'bottom',
-            /** @internal */
+            x: -10,
             y: -5
         },
         /**
@@ -7782,9 +7806,10 @@ const defaultOptions = {
          * @type {Highcharts.CSSObject}
          */
         style: {
-            /** @internal */
             cursor: 'pointer',
-            /** @internal */
+            /**
+             * @type {Highcharts.ColorType}
+             */
             color: "#999999" /* Palette.neutralColor40 */,
             /**
              * @type {number|string}
@@ -7898,7 +7923,7 @@ const DefaultOptions = {
 * @name Highcharts.ChartAddSeriesEventObject#options
 * @type {Highcharts.SeriesOptionsType}
 */ /**
-* Prevents the default behaviour of the event.
+* Prevents the default behavior of the event.
 * @name Highcharts.ChartAddSeriesEventObject#preventDefault
 * @type {Function}
 */ /**
@@ -8000,7 +8025,7 @@ const DefaultOptions = {
  *        The chart on which the event occurred.
  *
  * @param {Highcharts.SelectEventObject} event
- *        Event informations
+ *        Event information
  *
  * @return {boolean|undefined}
  *         Return false to prevent the default action, usually zoom.
@@ -8011,7 +8036,7 @@ const DefaultOptions = {
 /* *
  *
  *  (c) 2010-2026 Highsoft AS
- *  Author: Torstein Honsi
+ *  Author: Torstein Hønsi
  *
  *  A commercial license may be required depending on use.
  *  See www.highcharts.com/license
@@ -8452,7 +8477,7 @@ const Templating = {
  *
  *
  *  Authors:
- *  - Dawid Dragula
+ *  - Dawid Draguła
  *
  * */
 
@@ -8557,7 +8582,7 @@ class ResizingMode {
         }
     }
     /**
-     * Recaulculates the changing dimentions of the table.
+     * Recalculates the changing dimensions of the table.
      */
     reflow() {
         const vp = this.viewport;
@@ -8649,7 +8674,7 @@ ResizingMode.MIN_COLUMN_WIDTH = 20;
  *
  *
  *  Authors:
- *  - Dawid Dragula
+ *  - Dawid Draguła
  *
  * */
 
@@ -8713,7 +8738,7 @@ class AdjacentResizingMode extends ColumnResizing_ResizingMode {
  *
  *
  *  Authors:
- *  - Dawid Dragula
+ *  - Dawid Draguła
  *
  * */
 
@@ -8779,7 +8804,7 @@ class IndependentResizingMode extends ColumnResizing_ResizingMode {
  *
  *
  *  Authors:
- *  - Dawid Dragula
+ *  - Dawid Draguła
  *
  * */
 
@@ -8834,7 +8859,7 @@ class DistributedResizingMode extends ColumnResizing_ResizingMode {
  *
  *
  *  Authors:
- *  - Dawid Dragula
+ *  - Dawid Draguła
  *
  * */
 
@@ -8904,7 +8929,7 @@ function initMode(viewport) {
  *  Authors:
  *  - Sophie Bremer
  *  - Gøran Slettemark
- *  - Dawid Dragula
+ *  - Dawid Draguła
  *
  * */
 
@@ -9003,7 +9028,7 @@ class DataModifier {
      * Emits an event on the modifier to all registered callbacks of this event.
      *
      * @param {DataModifierEvent} [e]
-     * Event object containing additonal event information.
+     * Event object containing additional event information.
      */
     emit(e) {
         fireEvent(this, e.type, e);
@@ -9084,7 +9109,7 @@ DataModifier.types = {};
  *
  *
  *  Authors:
- *  - Dawid Dragula
+ *  - Dawid Draguła
  *
  * */
 /* *
@@ -9546,7 +9571,7 @@ class DataTableCore {
  *  - Sophie Bremer
  *  - Gøran Slettemark
  *  - Jomar Hønsi
- *  - Dawid Dragula
+ *  - Dawid Draguła
  *
  * */
 
@@ -10335,6 +10360,11 @@ class DataTable extends Data_DataTableCore {
      */
     setModifier(modifier, eventDetail) {
         const table = this;
+        // Avoid emitting modifier events when unchanged. This prevents extra
+        // rerenders when polling calls `applyTableModifiers()`.
+        if (modifier === table.modifier) {
+            return Promise.resolve(table);
+        }
         let promise;
         table.emit({
             type: 'setModifier',
@@ -10513,7 +10543,7 @@ class DataTable extends Data_DataTableCore {
  *  - Sophie Bremer
  *  - Wojciech Chmiel
  *  - Gøran Slettemark
- *  - Dawid Dragula
+ *  - Dawid Draguła
  *  - Kamil Kubik
  *
  * */
@@ -10737,7 +10767,7 @@ class DataConnector {
     async applyTableModifiers() {
         const tableOptionsArray = this.options?.dataTables;
         for (const [key, table] of Object.entries(this.dataTables)) {
-            // Take data modifier options from the corresponsing data table
+            // Take data modifier options from the corresponding data table
             // options, otherwise take the data modifier options from the
             // connector options.
             const dataModifierOptions = tableOptionsArray?.find((dataTable) => dataTable.key === key)?.dataModifier ?? this.options?.dataModifier;
@@ -11016,12 +11046,12 @@ function guessType(value, converter) {
  * Remove all spaces between numbers.
  *
  * @return {string}
- * Trimed string
+ * Trimmed string
  */
 function trim(str, inside) {
     if (typeof str === 'string') {
         str = str.replace(/^\s+|\s+$/g, '');
-        // Clear white space insdie the string, like thousands separators
+        // Clear white space inside the string, like thousands separators
         if (inside && /^[\d\s]+$/.test(str)) {
             str = str.replace(/\s/g, '');
         }
@@ -11312,7 +11342,7 @@ class DataConverter {
                 guessedFormat[2] = 'YY';
             }
             format = guessedFormat.join('/');
-            // If the caculated format is not valid, we need to present an
+            // If the calculated format is not valid, we need to present an
             // error.
         }
         // Save the deduced format in the converter options.
@@ -11845,40 +11875,47 @@ function setHighContrastTheme(chart) {
     // We might want to add additional functionality here in the future for
     // storing the old state so that we can reset the theme if HC mode is
     // disabled. For now, the user will have to reload the page.
-    chart.highContrastModeActive = true;
-    // Apply theme to chart
-    const theme = (chart.options.accessibility.highContrastTheme);
-    chart.update(theme, false);
-    const hasCustomColors = theme.colors?.length > 1;
-    // Force series colors (plotOptions is not enough)
-    chart.series.forEach(function (s) {
-        const plotOpts = theme.plotOptions[s.type] || {};
-        const fillColor = hasCustomColors && s.colorIndex !== void 0 ?
-            theme.colors[s.colorIndex] :
-            plotOpts.color || 'window';
-        const seriesOptions = {
-            color: plotOpts.color || 'windowText',
-            colors: hasCustomColors ?
-                theme.colors : [plotOpts.color || 'windowText'],
-            borderColor: plotOpts.borderColor || 'window',
-            fillColor
-        };
-        s.update(seriesOptions, false);
-        if (s.points) {
-            // Force point colors if existing
-            s.points.forEach(function (p) {
-                if (p.options && p.options.color) {
-                    p.update({
-                        color: plotOpts.color || 'windowText',
-                        borderColor: plotOpts.borderColor || 'window'
-                    }, false);
-                }
-            });
-        }
-    });
-    // The redraw for each series and after is required for 3D pie
-    // (workaround)
-    chart.redraw();
+    const highContrastState = chart.highContrastState || (chart.highContrastState = {});
+    highContrastState.active = true;
+    highContrastState.applying = true;
+    try {
+        // Apply theme to chart
+        const theme = (chart.options.accessibility.highContrastTheme);
+        chart.update(theme, false);
+        const hasCustomColors = theme.colors?.length > 1;
+        // Force series colors (plotOptions is not enough)
+        chart.series.forEach(function (s) {
+            const plotOpts = theme.plotOptions[s.type] || {};
+            const fillColor = hasCustomColors && s.colorIndex !== void 0 ?
+                theme.colors[s.colorIndex] :
+                plotOpts.color || 'window';
+            const seriesOptions = {
+                color: plotOpts.color || 'windowText',
+                colors: hasCustomColors ?
+                    theme.colors : [plotOpts.color || 'windowText'],
+                borderColor: plotOpts.borderColor || 'window',
+                fillColor
+            };
+            s.update(seriesOptions, false);
+            if (s.points) {
+                // Force point colors if existing
+                s.points.forEach(function (p) {
+                    if (p.options && p.options.color) {
+                        p.update({
+                            color: plotOpts.color || 'windowText',
+                            borderColor: plotOpts.borderColor || 'window'
+                        }, false);
+                    }
+                });
+            }
+        });
+        // The redraw for each series and after is required for 3D pie
+        // (workaround)
+        chart.redraw();
+    }
+    finally {
+        delete highContrastState.applying;
+    }
 }
 /* *
  *
@@ -11891,6 +11928,110 @@ const whcm = {
 };
 /* harmony default export */ const HighContrastMode = (whcm);
 
+;// ./code/grid/es-modules/Grid/Core/Data/DataProvider.js
+/* *
+ *
+ *  Data Provider abstract class
+ *
+ *  (c) 2020-2025 Highsoft AS
+ *
+ *  License: www.highcharts.com/license
+ *
+ *  !!!!!!! SOURCE GETS TRANSPILED BY TYPESCRIPT. EDIT TS FILE ONLY. !!!!!!!
+ *
+ *  Authors:
+ *  - Dawid Draguła
+ *
+ * */
+
+
+/**
+ * Base class for Grid data providers.
+ *
+ * Data providers are responsible for serving data to the grid, applying query
+ * modifiers and persisting edits.
+ */
+class DataProvider {
+    /* *
+     *
+     *  Constructor
+     *
+     * */
+    constructor(queryingController, options) {
+        this.querying = queryingController;
+        this.options = options;
+    }
+    /* *
+     *
+     *  Methods
+     *
+     * */
+    /**
+     * Initializes the data provider.
+     */
+    init() {
+        return Promise.resolve();
+    }
+    /**
+     * Returns the number of items before pagination has been applied.
+     */
+    async getPrePaginationRowCount() {
+        return await this.getRowCount();
+    }
+    /**
+     * Helper method to assume the data type of a column based on the sample
+     * of the column data.
+     *
+     * @param columnSample
+     * The sample of the column data to determine the data type from.
+     *
+     * @param columnId
+     * The id of the column to determine the data type for.
+     */
+    static assumeColumnDataType(columnSample, columnId) {
+        for (let i = 0, iEnd = columnSample.length; i < iEnd; ++i) {
+            if (!defined(columnSample[i])) {
+                // If the data is null or undefined, we should look
+                // at the next value to determine the type.
+                continue;
+            }
+            switch (typeof columnSample[i]) {
+                case 'number':
+                    return 'number';
+                case 'boolean':
+                    return 'boolean';
+                default:
+                    return 'string';
+            }
+        }
+        // eslint-disable-next-line no-console
+        console.warn(`Column "${columnId}" sample does not contain any defined ` +
+            'values; defaulting dataType to "string". Set `dataType` option ' +
+            'for the column to determine the data type and avoid unnecessary ' +
+            'column scanning.');
+        return 'string';
+    }
+}
+/**
+ * Returns whether the provider exposes `getDataTable`.
+ *
+ * @param provider
+ * Data provider instance to test.
+ *
+ * @returns
+ * `true` when provider exposes `getDataTable`.
+ */
+function hasDataTableProvider(provider) {
+    return !!(provider &&
+        typeof provider.getDataTable === 'function');
+}
+/* *
+ *
+ * Default Export
+ *
+ * */
+/* harmony default export */ const Data_DataProvider = ((/* unused pure expression or super */ null && (DataProvider)));
+
 ;// ./code/grid/es-modules/Grid/Core/Globals.js
 /* *
  *
@@ -11901,7 +12042,7 @@ const whcm = {
  *
  *
  *  Authors:
- *  - Dawid Dragula
+ *  - Dawid Draguła
  *  - Sebastian Bochan
  *
  * */
@@ -11912,7 +12053,8 @@ const whcm = {
  *
  * */
 const classNamePrefix = 'hcg-';
-const version = '2.3.1';
+const version = '3.0.0';
+const buildDate = '2026-05-06';
 const rawClassNames = {
     container: 'container',
     tableElement: 'table',
@@ -11920,6 +12062,7 @@ const rawClassNames = {
     descriptionElement: 'description',
     theadElement: 'thead',
     tbodyElement: 'tbody',
+    cell: 'cell',
     rowElement: 'row',
     rowEven: 'row-even',
     rowOdd: 'row-odd',
@@ -11963,9 +12106,10 @@ const rawClassNames = {
     popup: 'popup',
     button: 'button',
     buttonSelected: 'button-selected',
-    buttonHighlighted: 'button-highlighted',
     input: 'input',
     icon: 'icon',
+    iconSelected: 'icon-selected',
+    iconHighlighted: 'icon-highlighted',
     iconSearch: 'icon-search',
     popupContent: 'popup-content',
     columnFilterWrapper: 'column-filter-wrapper',
@@ -11993,7 +12137,9 @@ const rawClassNames = {
     centerAlign: 'center',
     leftAlign: 'left'
 };
-const Globals_win = window;
+const Globals_win = (typeof window !== 'undefined' ?
+    window :
+    {});
 const composed = [];
 const userAgent = (Globals_win.navigator && Globals_win.navigator.userAgent) || '';
 const isChrome = userAgent.indexOf('Chrome') !== -1;
@@ -12007,6 +12153,7 @@ const getClassName = (classNameKey) => classNamePrefix + rawClassNames[className
 /* harmony default export */ const Grid_Core_Globals = ({
     classNamePrefix,
     version,
+    buildDate,
     rawClassNames,
     win: Globals_win,
     composed,
@@ -12028,7 +12175,7 @@ const getClassName = (classNameKey) => classNamePrefix + rawClassNames[className
  *
  *
  *  Authors:
- *  - Dawid Dragula
+ *  - Dawid Draguła
  *
  * */
 
@@ -12182,6 +12329,67 @@ function formatText(template, values) {
     return template.replace(/\{(\w+)\}/g, (match, key) => (values[key] !== void 0 ? String(values[key]) : match));
 }
 /**
+ * Checks whether two objects have the same own keys and values.
+ *
+ * Supports nested plain objects and arrays. Functions are compared by
+ * reference.
+ *
+ * @param left
+ * The first object to compare.
+ *
+ * @param right
+ * The second object to compare.
+ *
+ * @returns
+ * `true` when both objects are equal, otherwise `false`.
+ */
+function isDeepEqual(left, right) {
+    if (left === right) {
+        return true;
+    }
+    if (left instanceof RegExp || right instanceof RegExp) {
+        return (left instanceof RegExp &&
+            right instanceof RegExp &&
+            left.source === right.source &&
+            left.flags === right.flags);
+    }
+    if (!isObject(left) || !isObject(right)) {
+        return false;
+    }
+    const leftRecord = left;
+    const rightRecord = right;
+    if ('nodeType' in leftRecord || 'nodeType' in rightRecord) {
+        return false;
+    }
+    if (Array.isArray(left) || Array.isArray(right)) {
+        if (!Array.isArray(left) || !Array.isArray(right)) {
+            return false;
+        }
+        if (left.length !== right.length) {
+            return false;
+        }
+    }
+    const leftKeys = Object.keys(left).filter(function (key) {
+        return key !== '__proto__' && key !== 'constructor';
+    });
+    const rightKeys = Object.keys(right).filter(function (key) {
+        return key !== '__proto__' && key !== 'constructor';
+    });
+    if (leftKeys.length !== rightKeys.length) {
+        return false;
+    }
+    for (let i = 0, iEnd = leftKeys.length; i < iEnd; ++i) {
+        const key = leftKeys[i];
+        if (!(key in rightRecord)) {
+            return false;
+        }
+        if (!isDeepEqual(leftRecord[key], rightRecord[key])) {
+            return false;
+        }
+    }
+    return true;
+}
+/**
  * Resolves a style value that can be static or callback based.
  *
  * @param style
@@ -12227,6 +12435,14 @@ function mergeStyleValues(target, ...styleValues) {
     }
     return mergedStyle;
 }
+/**
+ * Waits for the next animation frame.
+ */
+function waitForAnimationFrame() {
+    return new Promise((resolve) => {
+        requestAnimationFrame(() => resolve());
+    });
+}
 /* *
  *
  *  Default Export
@@ -12240,9 +12456,492 @@ function mergeStyleValues(target, ...styleValues) {
     setHTMLContent,
     createOptionsProxy,
     formatText,
+    isDeepEqual,
     resolveStyleValue,
-    mergeStyleValues
+    mergeStyleValues,
+    waitForAnimationFrame
 });
+
+;// ./code/grid/es-modules/Data/Modifiers/FilterModifier.js
+/* *
+ *
+ *  (c) 2009-2026 Highsoft AS
+ *
+ *  A commercial license may be required depending on use.
+ *  See www.highcharts.com/license
+ *
+ *
+ *  Authors:
+ *  - Dawid Draguła
+ *
+ * */
+
+
+
+/* *
+ *
+ *  Class
+ *
+ * */
+/**
+ * Filters out table rows matching a given condition.
+ */
+class FilterModifier extends Modifiers_DataModifier {
+    /* *
+     *
+     *  Static Functions
+     *
+     * */
+    /**
+     * Compiles a filter condition into a callback function.
+     *
+     * @param {FilterCondition} condition
+     * Condition to compile.
+     */
+    static compile(condition) {
+        if (isFunction(condition)) {
+            return condition;
+        }
+        const op = condition.operator;
+        switch (op) {
+            case 'and': {
+                const subs = condition.conditions.map((c) => this.compile(c));
+                return (row, table, i) => subs.every((cond) => cond(row, table, i));
+            }
+            case 'or': {
+                const subs = condition.conditions.map((c) => this.compile(c));
+                return (row, table, i) => subs.some((cond) => cond(row, table, i));
+            }
+            case 'not': {
+                const sub = this.compile(condition.condition);
+                return (row, table, i) => !sub(row, table, i);
+            }
+        }
+        const { columnId: col, value } = condition;
+        switch (op) {
+            case '==':
+                // eslint-disable-next-line eqeqeq
+                return (row) => row[col] == value;
+            case '===':
+                return (row) => row[col] === value;
+            case '!=':
+                // eslint-disable-next-line eqeqeq
+                return (row) => row[col] != value;
+            case '!==':
+                return (row) => row[col] !== value;
+            case '>':
+                return (row) => (row[col] || 0) > (value || 0);
+            case '>=':
+                return (row) => (row[col] || 0) >= (value || 0);
+            case '<':
+                return (row) => (row[col] || 0) < (value || 0);
+            case '<=':
+                return (row) => (row[col] || 0) <= (value || 0);
+            case 'empty':
+                return (row) => row[col] === null || row[col] === '';
+        }
+        const { ignoreCase } = condition;
+        const str = (val) => {
+            const s = '' + val;
+            return (ignoreCase ?? true) ? s.toLowerCase() : s;
+        };
+        switch (op) {
+            case 'contains':
+                return (row) => str(row[col]).includes(str(value));
+            default:
+                return (row) => str(row[col])[op](str(value));
+        }
+    }
+    /* *
+     *
+     *  Constructor
+     *
+     * */
+    /**
+     * Constructs an instance of the filter modifier.
+     *
+     * @param {Partial<FilterModifierOptions>} [options]
+     * Options to configure the filter modifier.
+     */
+    constructor(options) {
+        super();
+        this.options = merge(FilterModifier.defaultOptions, options);
+    }
+    /* *
+     *
+     *  Functions
+     *
+     * */
+    /**
+     * Filters out table rows matching a given condition. If the given table
+     * does not have defined a `modified` property, the filtering is applied
+     * in-place on the original table rather than on a `modified` copy.
+     *
+     * @param {DataTable} table
+     * Table to modify.
+     *
+     * @param {DataEventDetail} [eventDetail]
+     * Custom information for pending events.
+     *
+     * @return {DataTable}
+     * Table with `modified` property as a reference or modified table, if
+     * `modified` property of the original table is undefined.
+     */
+    modifyTable(table, eventDetail) {
+        const modifier = this;
+        modifier.emit({ type: 'modify', detail: eventDetail, table });
+        const { condition } = modifier.options;
+        if (!condition) {
+            // If no condition is set, return the unmodified table.
+            return table;
+        }
+        const matchRow = FilterModifier.compile(condition);
+        const modified = table.getModified();
+        const rows = [];
+        const indexes = [];
+        for (let i = 0, iEnd = table.getRowCount(); i < iEnd; ++i) {
+            const row = table.getRowObject(i);
+            if (!row) {
+                continue;
+            }
+            if (matchRow(row, table, i)) {
+                rows.push(row);
+                indexes.push(table.getOriginalRowIndex(i));
+            }
+        }
+        modified.deleteRows();
+        modified.setRows(rows);
+        modified.setOriginalRowIndexes(indexes);
+        modifier.emit({ type: 'afterModify', detail: eventDetail, table });
+        return table;
+    }
+}
+/* *
+ *
+ *  Static Properties
+ *
+ * */
+/**
+ * Default options for the filter modifier.
+ */
+FilterModifier.defaultOptions = {
+    type: 'Filter'
+};
+Modifiers_DataModifier.registerType('Filter', FilterModifier);
+/* *
+ *
+ *  Default Export
+ *
+ * */
+/* harmony default export */ const Modifiers_FilterModifier = (FilterModifier);
+
+;// ./code/grid/es-modules/Grid/Core/Querying/FilteringController.js
+/* *
+ *
+ *  Grid Filtering Controller class
+ *
+ *  (c) 2020-2026 Highsoft AS
+ *
+ *  A commercial license may be required depending on use.
+ *  See www.highcharts.com/license
+ *
+ *
+ *  Authors:
+ *  - Dawid Draguła
+ *
+ * */
+
+
+
+/* *
+ *
+ *  Class
+ *
+ * */
+/**
+ * Class that manages one of the data grid querying types - filtering.
+ */
+class FilteringController {
+    /* *
+    *
+    *  Constructor
+    *
+    * */
+    /**
+     * Constructs the FilteringController instance.
+     *
+     * @param querying
+     * The querying controller instance.
+     */
+    constructor(querying) {
+        /**
+         * A map of the filtering conditions for each column.
+         */
+        this.columnConditions = {};
+        this.querying = querying;
+    }
+    /* *
+    *
+    *  Functions
+    *
+    * */
+    /**
+     * Maps filtering options to the filtering condition.
+     *
+     * @param columnId
+     * Id of the column to filter.
+     *
+     * @param options
+     * Filtering options.
+     */
+    static mapOptionsToFilter(columnId, options) {
+        const { condition, value } = options;
+        const isStringValue = isString(value);
+        const stringifiedValue = isStringValue ? value : '';
+        const nonValueConditions = ['empty', 'notEmpty', 'true', 'false'];
+        if ((typeof value === 'undefined' ||
+            (isStringValue && !stringifiedValue)) && !nonValueConditions.includes(condition ?? '')) {
+            return;
+        }
+        switch (condition) {
+            case 'contains':
+                return {
+                    columnId,
+                    operator: 'contains',
+                    value: stringifiedValue
+                };
+            case 'doesNotContain':
+                return {
+                    operator: 'not',
+                    condition: {
+                        columnId,
+                        operator: 'contains',
+                        value: stringifiedValue
+                    }
+                };
+            case 'equals':
+                return {
+                    columnId,
+                    operator: '===',
+                    value
+                };
+            case 'doesNotEqual':
+                return {
+                    columnId,
+                    operator: '!==',
+                    value
+                };
+            case 'beginsWith':
+                return {
+                    columnId,
+                    operator: 'startsWith',
+                    value: stringifiedValue
+                };
+            case 'endsWith':
+                return {
+                    columnId,
+                    operator: 'endsWith',
+                    value: stringifiedValue
+                };
+            case 'greaterThan':
+                return {
+                    columnId,
+                    operator: '>',
+                    value
+                };
+            case 'greaterThanOrEqualTo':
+                return {
+                    columnId,
+                    operator: '>=',
+                    value
+                };
+            case 'lessThan':
+                return {
+                    columnId,
+                    operator: '<',
+                    value
+                };
+            case 'lessThanOrEqualTo':
+                return {
+                    columnId,
+                    operator: '<=',
+                    value
+                };
+            case 'before':
+                return {
+                    columnId,
+                    operator: '<',
+                    value
+                };
+            case 'after':
+                return {
+                    columnId,
+                    operator: '>',
+                    value
+                };
+            case 'empty':
+                return {
+                    columnId,
+                    operator: 'empty',
+                    value
+                };
+            case 'notEmpty':
+                return {
+                    operator: 'not',
+                    condition: {
+                        columnId,
+                        operator: 'empty',
+                        value
+                    }
+                };
+            case 'true':
+                return {
+                    columnId,
+                    operator: '===',
+                    value: true
+                };
+            case 'false':
+                return {
+                    columnId,
+                    operator: '===',
+                    value: false
+                };
+        }
+    }
+    /**
+     * Compares two serializable filter conditions produced from Grid options.
+     *
+     * @param left
+     * The current filter condition.
+     *
+     * @param right
+     * The next filter condition.
+     */
+    static filterConditionsEqual(left, right) {
+        if (left === right) {
+            return true;
+        }
+        if (!left || !right) {
+            return false;
+        }
+        if (typeof left === 'function' ||
+            typeof right === 'function' ||
+            left.operator !== right.operator) {
+            return false;
+        }
+        if ('condition' in left || 'condition' in right) {
+            return ('condition' in left &&
+                'condition' in right &&
+                FilteringController.filterConditionsEqual(left.condition, right.condition));
+        }
+        if ('conditions' in left || 'conditions' in right) {
+            return ('conditions' in left &&
+                'conditions' in right &&
+                left.conditions.length === right.conditions.length &&
+                left.conditions.every((condition, index) => FilteringController.filterConditionsEqual(condition, right.conditions[index])));
+        }
+        return ('columnId' in left &&
+            'columnId' in right &&
+            left.columnId === right.columnId &&
+            left.value === right.value &&
+            (('ignoreCase' in left ? left.ignoreCase : void 0) ===
+                ('ignoreCase' in right ? right.ignoreCase : void 0)));
+    }
+    /**
+     * Loads filtering options from the data grid options.
+     */
+    loadOptions() {
+        const columnPolicy = this.querying.grid.columnPolicy;
+        const newConditions = {};
+        const columnIds = columnPolicy.getColumnIds();
+        for (let i = 0, iEnd = columnIds.length; i < iEnd; ++i) {
+            const columnId = columnIds[i];
+            if (columnPolicy.isColumnUnbound(columnId)) {
+                continue;
+            }
+            const sourceColumnId = columnPolicy.getColumnSourceId(columnId);
+            const filteringOptions = columnPolicy
+                .getIndividualColumnOptions(columnId)
+                ?.filtering;
+            if (!filteringOptions || !sourceColumnId) {
+                continue;
+            }
+            const condition = FilteringController.mapOptionsToFilter(sourceColumnId, filteringOptions);
+            if (condition) {
+                newConditions[columnId] = condition;
+            }
+        }
+        this.columnConditions = newConditions;
+        this.updateModifier();
+    }
+    /**
+     * Adds a new filtering condition to the specified column.
+     *
+     * @param columnId
+     * The column ID to filter in.
+     *
+     * @param options
+     * The filtering options.
+     */
+    addColumnFilterCondition(columnId, options) {
+        if (this.querying.grid.columnPolicy.isColumnUnbound(columnId)) {
+            return;
+        }
+        const sourceColumnId = this.querying.grid
+            .columnPolicy.getColumnSourceId(columnId);
+        if (!sourceColumnId) {
+            return;
+        }
+        const condition = FilteringController.mapOptionsToFilter(sourceColumnId, options);
+        if (condition) {
+            this.columnConditions[columnId] = condition;
+        }
+        else {
+            delete this.columnConditions[columnId];
+        }
+        this.updateModifier();
+    }
+    /**
+     * Clears the filtering condition for the specified column. If no column ID
+     * is provided, clears all the column filtering conditions.
+     *
+     * @param columnId
+     * The column ID to clear or `undefined` to clear all the column filtering
+     * conditions.
+     */
+    clearColumnFiltering(columnId) {
+        if (!columnId) {
+            this.columnConditions = {};
+        }
+        else {
+            delete this.columnConditions[columnId];
+        }
+        this.updateModifier();
+    }
+    /**
+     * Updates the modifier based on the current column conditions.
+     */
+    updateModifier() {
+        const columnConditions = Object.values(this.columnConditions);
+        this.querying.shouldBeUpdated = true;
+        if (columnConditions.length < 1) {
+            delete this.modifier;
+            return;
+        }
+        this.modifier = new Modifiers_FilterModifier({
+            condition: {
+                operator: 'and',
+                conditions: columnConditions
+            }
+        });
+    }
+}
+/* *
+ *
+ *  Default Export
+ *
+ * */
+/* harmony default export */ const Querying_FilteringController = (FilteringController);
 
 ;// ./code/grid/es-modules/Grid/Core/Table/Actions/ColumnFiltering/FilteringTypes.js
 /* *
@@ -12256,7 +12955,7 @@ function mergeStyleValues(target, ...styleValues) {
  *
  *
  *  Authors:
- *  - Dawid Dragula
+ *  - Dawid Draguła
  *  - Sebastian Bochan
  *  - Kamil Kubik
  *
@@ -12339,11 +13038,12 @@ const conditionsMap = {
  *
  *
  *  Authors:
- *  - Dawid Dragula
+ *  - Dawid Draguła
  *  - Sebastian Bochan
  *  - Kamil Kubik
  *
  * */
+
 
 
 
@@ -12416,7 +13116,7 @@ class ColumnFiltering {
                 'ArrowDown': 1,
                 'ArrowUp': -1
             }[e.key];
-            if (direction) {
+            if (direction && contentOrder.length) {
                 e.preventDefault();
                 const currentIndex = contentOrder.indexOf(e.target);
                 const n = contentOrder.length;
@@ -12487,7 +13187,7 @@ class ColumnFiltering {
     renderFilteringContent(container) {
         const column = this.column;
         const columnType = column.dataType;
-        if (!column.options.filtering?.enabled) {
+        if (!column.viewport.grid.columnPolicy.isColumnFilteringEnabled(column.id)) {
             return;
         }
         // Render the input wrapper.
@@ -12547,6 +13247,9 @@ class ColumnFiltering {
                     break;
             }
         }
+        if (this.hasSameFilterCondition(columnId, condition)) {
+            return;
+        }
         this.column.setOptions({
             filtering: {
                 condition: condition.condition,
@@ -12565,6 +13268,21 @@ class ColumnFiltering {
         fireEvent(this.column, 'afterFilter', {
             target: this.column
         });
+    }
+    /**
+     * Returns whether the next filtering options would produce the same
+     * semantic filter condition as the current one.
+     *
+     * @param columnId
+     * The column ID to compare filtering state for.
+     *
+     * @param options
+     * The next filtering options to compare.
+     */
+    hasSameFilterCondition(columnId, options) {
+        const currentCondition = Querying_FilteringController.mapOptionsToFilter(columnId, this.column.options.filtering ?? {});
+        const nextCondition = Querying_FilteringController.mapOptionsToFilter(columnId, options);
+        return Querying_FilteringController.filterConditionsEqual(currentCondition, nextCondition);
     }
     /**
      * Render the filtering input element, based on the column type.
@@ -12592,7 +13310,7 @@ class ColumnFiltering {
         }
         else {
             this.filterInput.type = 'text';
-            this.filterInput.classList.add(Grid_Core_Globals.getClassName('icon'), Grid_Core_Globals.getClassName('iconSearch'));
+            this.filterInput.classList.add(Grid_Core_Globals.getClassName('iconSearch'));
         }
         // Assign the default input value.
         const { value } = this.column.options.filtering ?? {};
@@ -13039,11 +13757,12 @@ const HTMLUtilities = {
  *
  *
  *  Authors:
- *  - Dawid Dragula
+ *  - Dawid Draguła
  *  - Sebastian Bochan
  *  - Kamil Kubik
  *
  * */
+
 
 
 
@@ -13329,7 +14048,7 @@ class Accessibility {
      */
     defaultBeforeFormatter() {
         const grid = this.grid;
-        const { container, dataTable, options } = grid;
+        const { container, options } = grid;
         const format = options?.accessibility?.screenReaderSection?.beforeGridFormat;
         if (!format || !container) {
             return '';
@@ -13346,6 +14065,9 @@ class Accessibility {
                     `<${headingTag}>${gridTitle}</${headingTag}>`;
             }
         }
+        const dataTable = hasDataTableProvider(grid.dataProvider) ?
+            grid.dataProvider.getDataTable() :
+            void 0;
         const context = {
             gridTitle: formattedGridTitle,
             gridDescription: options?.description?.text || '',
@@ -13432,6 +14154,342 @@ class Accessibility {
  * */
 /* harmony default export */ const Accessibility_Accessibility = (Accessibility);
 
+;// ./code/grid/es-modules/Grid/Core/ColumnPolicyResolver.js
+/* *
+ *
+ *  Grid Column Policy Resolver class
+ *
+ *  (c) 2020-2026 Highsoft AS
+ *
+ *  A commercial license may be required depending on use.
+ *  See www.highcharts.com/license
+ *
+ *
+ *  Authors:
+ *  - Dawid Dragula
+ *
+ * */
+
+/* *
+ *
+ *  Class
+ *
+ * */
+/**
+ * Represents a column policy resolver.
+ */
+class ColumnPolicyResolver {
+    constructor() {
+        /* *
+         *
+         *  Properties
+         *
+         * */
+        /**
+         * Individual column options map keyed by Grid column id.
+         */
+        this.columnOptionsMap = {};
+        /**
+         * Source column id map keyed by Grid column id.
+         */
+        this.sourceColumnIdMap = {};
+        /**
+         * Column defaults merged into all capability checks.
+         */
+        this.columnDefaults = {};
+    }
+    /* *
+    *
+    *  Methods
+    *
+    * */
+    /**
+     * Sets the current column options map and rebuilds source id mappings.
+     *
+     * @param columnOptionsMap
+     * Column options keyed by Grid column id.
+     */
+    setColumnOptionsMap(columnOptionsMap) {
+        this.columnOptionsMap = columnOptionsMap;
+        this.rebuildSourceColumnIdMap();
+    }
+    /**
+     * Removes all column options from the resolver.
+     */
+    clearColumnOptions() {
+        this.columnOptionsMap = {};
+        this.sourceColumnIdMap = {};
+    }
+    /**
+     * Returns whether options for the given column id exist.
+     *
+     * @param columnId
+     * Grid column id.
+     */
+    hasColumnOptions(columnId) {
+        return !!this.columnOptionsMap[columnId];
+    }
+    /**
+     * Returns column ids for all configured column options.
+     */
+    getColumnIds() {
+        return Object.keys(this.columnOptionsMap);
+    }
+    /**
+     * Returns raw options for a Grid column.
+     *
+     * @param columnId
+     * Grid column id.
+     */
+    getIndividualColumnOptions(columnId) {
+        return this.columnOptionsMap[columnId]?.options;
+    }
+    /**
+     * Returns the index of a Grid column in `options.columns`.
+     *
+     * @param columnId
+     * Grid column id.
+     */
+    getColumnOptionIndex(columnId) {
+        return this.columnOptionsMap[columnId]?.index;
+    }
+    /**
+     * Adds or replaces a single column option entry.
+     *
+     * @param columnId
+     * Grid column id.
+     *
+     * @param columnOption
+     * Column map item to store.
+     */
+    setColumnOption(columnId, columnOption) {
+        this.columnOptionsMap[columnId] = columnOption;
+        this.sourceColumnIdMap[columnId] = this.resolveSourceColumnId(columnId);
+    }
+    /**
+     * Removes a single column option entry.
+     *
+     * @param columnId
+     * Grid column id.
+     */
+    removeColumnOption(columnId) {
+        delete this.columnOptionsMap[columnId];
+        delete this.sourceColumnIdMap[columnId];
+    }
+    /**
+     * Sets column defaults used for capability checks.
+     *
+     * @param columnDefaults
+     * Grid column defaults.
+     */
+    setColumnDefaults(columnDefaults) {
+        this.columnDefaults = columnDefaults || {};
+    }
+    /**
+     * Sets available source column ids from the current data provider.
+     *
+     * @param columnIds
+     * List of source column ids. If omitted, the cache is cleared.
+     */
+    setAvailableSourceColumnIds(columnIds) {
+        this.availableSourceColumnIds = columnIds ?
+            new Set(columnIds) :
+            void 0;
+    }
+    /**
+     * Returns cached source column ids from the data provider.
+     */
+    getAvailableSourceColumnIds() {
+        return this.availableSourceColumnIds ?
+            Array.from(this.availableSourceColumnIds) :
+            void 0;
+    }
+    /**
+     * Resolves source column id for a Grid column id.
+     *
+     * @param columnId
+     * Grid column id.
+     */
+    getColumnSourceId(columnId) {
+        if (columnId in this.sourceColumnIdMap) {
+            return this.sourceColumnIdMap[columnId];
+        }
+        return columnId;
+    }
+    /**
+     * Returns whether the column is unbound to provider data.
+     *
+     * @param columnId
+     * Grid column id.
+     */
+    isColumnUnbound(columnId) {
+        const sourceColumnId = this.getColumnSourceId(columnId);
+        if (!sourceColumnId) {
+            return true;
+        }
+        if (!this.availableSourceColumnIds) {
+            return false;
+        }
+        return !this.availableSourceColumnIds.has(sourceColumnId);
+    }
+    /**
+     * Returns whether the column should be included in exports.
+     *
+     * @param columnId
+     * Grid column id.
+     */
+    isColumnExportable(columnId) {
+        const exportable = this.getIndividualColumnOptions(columnId)?.exportable ??
+            this.columnDefaults.exportable;
+        return !this.isColumnUnbound(columnId) &&
+            exportable !== false;
+    }
+    /**
+     * Returns whether sorting should be enabled for the column.
+     *
+     * @param columnId
+     * Grid column id.
+     */
+    isColumnSortingEnabled(columnId) {
+        const sortingOptions = this.getIndividualColumnOptions(columnId)?.sorting;
+        const defaultSortingOptions = this.columnDefaults.sorting;
+        const sortingEnabled = (sortingOptions?.enabled ??
+            defaultSortingOptions?.enabled);
+        return !this.isColumnUnbound(columnId) &&
+            !!sortingEnabled;
+    }
+    /**
+     * Returns whether filtering should be enabled for the column.
+     *
+     * @param columnId
+     * Grid column id.
+     */
+    isColumnFilteringEnabled(columnId) {
+        const filteringEnabled = (this.getIndividualColumnOptions(columnId)?.filtering?.enabled ??
+            this.columnDefaults.filtering?.enabled);
+        return !this.isColumnUnbound(columnId) &&
+            !!filteringEnabled;
+    }
+    /**
+     * Returns whether inline filtering should be enabled for the column.
+     *
+     * @param columnId
+     * Grid column id.
+     */
+    isColumnInlineFilteringEnabled(columnId) {
+        const inlineFilteringEnabled = (this.getIndividualColumnOptions(columnId)?.filtering?.inline ??
+            this.columnDefaults.filtering?.inline);
+        return this.isColumnFilteringEnabled(columnId) &&
+            !!inlineFilteringEnabled;
+    }
+    /**
+     * Returns whether editing should be enabled for the column.
+     *
+     * @param columnId
+     * Grid column id.
+     */
+    isColumnEditable(columnId) {
+        const editable = (this.getIndividualColumnOptions(columnId)
+            ?.cells?.editMode?.enabled ??
+            this.columnDefaults.cells?.editMode?.enabled);
+        return !this.isColumnUnbound(columnId) &&
+            !!editable;
+    }
+    /**
+     * Resolves ordered column ids that should be rendered.
+     *
+     * @param headerColumns
+     * Column ids resolved from header.
+     *
+     * @param autogenerateColumns
+     * Whether columns should be autogenerated from the provider.
+     *
+     * @param autoColumns
+     * Available column ids from the data provider.
+     *
+     * @param configuredColumns
+     * Column ids from `options.columns`.
+     */
+    getColumnsForRender(headerColumns, autogenerateColumns, autoColumns, configuredColumns) {
+        const columnsIncluded = (headerColumns.length > 0 ?
+            headerColumns :
+            autogenerateColumns ?
+                ColumnPolicyResolver.getColumnsForAutogeneration(autoColumns, configuredColumns) : configuredColumns);
+        if (!columnsIncluded?.length) {
+            return [];
+        }
+        return this.filterEnabledColumns(columnsIncluded);
+    }
+    /**
+     * Returns column ids for autogeneration mode:
+     * `autoColumns` followed by configured-only columns.
+     *
+     * Relative order from `configuredColumns` is preserved.
+     *
+     * @param autoColumns
+     * Column ids from the data provider.
+     *
+     * @param configuredColumns
+     * Column ids from `options.columns`.
+     */
+    static getColumnsForAutogeneration(autoColumns, configuredColumns) {
+        const autoColumnIds = new Set(autoColumns);
+        const customConfiguredColumns = (configuredColumns || []).filter((columnId) => !autoColumnIds.has(columnId));
+        return autoColumns.concat(customConfiguredColumns);
+    }
+    /**
+     * Filters out duplicate and disabled columns while preserving order.
+     *
+     * @param columnIds
+     * Candidate column ids.
+     */
+    filterEnabledColumns(columnIds) {
+        const seen = new Set();
+        const result = [];
+        for (const columnId of columnIds) {
+            const columnEnabled = this.columnOptionsMap?.[columnId]?.options?.enabled;
+            if (seen.has(columnId) ||
+                columnEnabled === false) {
+                continue;
+            }
+            seen.add(columnId);
+            result.push(columnId);
+        }
+        return result;
+    }
+    /**
+     * Rebuilds source column id cache from current column options.
+     */
+    rebuildSourceColumnIdMap() {
+        const sourceColumnIdMap = {};
+        const columnIds = Object.keys(this.columnOptionsMap);
+        for (let i = 0, iEnd = columnIds.length; i < iEnd; ++i) {
+            const columnId = columnIds[i];
+            sourceColumnIdMap[columnId] = this.resolveSourceColumnId(columnId);
+        }
+        this.sourceColumnIdMap = sourceColumnIdMap;
+    }
+    /**
+     * Resolves source column id based on map item options.
+     *
+     * @param columnId
+     * Grid column id.
+     *
+     */
+    resolveSourceColumnId(columnId) {
+        const dataId = this.columnOptionsMap[columnId]?.options?.dataId;
+        return dataId === null ?
+            void 0 :
+            (typeof dataId === 'string' ? dataId : columnId);
+    }
+}
+/* *
+ *
+ *  Default Export
+ *
+ * */
+/* harmony default export */ const Core_ColumnPolicyResolver = (ColumnPolicyResolver);
+
 ;// ./code/grid/es-modules/Grid/Core/Data/DataProviderRegistry.js
 /* *
  *
@@ -13444,7 +14502,7 @@ class Accessibility {
  *  !!!!!!! SOURCE GETS TRANSPILED BY TYPESCRIPT. EDIT TS FILE ONLY. !!!!!!!
  *
  *  Authors:
- *  - Dawid Dragula
+ *  - Dawid Draguła
  *
  * */
 
@@ -13499,7 +14557,7 @@ function registerDataProvider(key, DataProviderClass) {
  *
  *  Authors:
  *  - Mikkel Espolin Birkeland
- *  - Dawid Dragula
+ *  - Dawid Draguła
  *
  * */
 
@@ -13509,7 +14567,6 @@ function registerDataProvider(key, DataProviderClass) {
  *  Imports
  *
  * */
-
 
 
 /**
@@ -13674,6 +14731,24 @@ const icons = {
                 d: 'M7.049 22.654V1m6.048 21.654V1m6.143 0H6.807c-2.033 0-3.05 0-3.825.393a3.62 3.62 0 0 0-1.586 1.578C1 3.743 1 4.753 1 6.774V16.88c0 2.021 0 3.032.396 3.804.348.68.903 1.231 1.586 1.577.776.394 1.792.394 3.825.394H19.24m.24-14.068v6.462m3.226-3.226h-6.462',
                 'stroke-width': 1.34
             }]
+    },
+    pin: {
+        width: 16,
+        height: 16,
+        viewBox: '0 0 24 24',
+        children: [{
+                d: 'M12.0004 15L12.0004 22M8.00043 7.30813V9.43875C8.00043 9.64677 8.00043 9.75078 7.98001 9.85026C7.9619 9.93852 7.93194 10.0239 7.89095 10.1042C7.84474 10.1946 7.77977 10.2758 7.64982 10.4383L6.08004 12.4005C5.4143 13.2327 5.08143 13.6487 5.08106 13.9989C5.08073 14.3035 5.21919 14.5916 5.4572 14.7815C5.73088 15 6.26373 15 7.32943 15H16.6714C17.7371 15 18.27 15 18.5437 14.7815C18.7817 14.5916 18.9201 14.3035 18.9198 13.9989C18.9194 13.6487 18.5866 13.2327 17.9208 12.4005L16.351 10.4383C16.2211 10.2758 16.1561 10.1946 16.1099 10.1042C16.0689 10.0239 16.039 9.93852 16.0208 9.85026C16.0004 9.75078 16.0004 9.64677 16.0004 9.43875V7.30813C16.0004 7.19301 16.0004 7.13544 16.0069 7.07868C16.0127 7.02825 16.0223 6.97833 16.0357 6.92937C16.0507 6.87424 16.0721 6.8208 16.1149 6.71391L17.1227 4.19423C17.4168 3.45914 17.5638 3.09159 17.5025 2.79655C17.4489 2.53853 17.2956 2.31211 17.0759 2.1665C16.8247 2 16.4289 2 15.6372 2H8.36368C7.57197 2 7.17611 2 6.92494 2.1665C6.70529 2.31211 6.55199 2.53853 6.49838 2.79655C6.43707 3.09159 6.58408 3.45914 6.87812 4.19423L7.88599 6.71391C7.92875 6.8208 7.95013 6.87424 7.96517 6.92937C7.97853 6.97833 7.98814 7.02825 7.99392 7.07868C8.00043 7.13544 8.00043 7.19301 8.00043 7.30813Z',
+                'stroke-width': 2
+            }]
+    },
+    unpin: {
+        width: 16,
+        height: 16,
+        viewBox: '0 0 24 24',
+        children: [{
+                d: 'M8.3767 15.6163L2.71985 21.2732M11.6944 6.64181L10.1335 8.2027C10.0062 8.33003 9.94252 8.39369 9.86999 8.44427C9.80561 8.48917 9.73616 8.52634 9.66309 8.555C9.58077 8.58729 9.49249 8.60495 9.31592 8.64026L5.65145 9.37315C4.69915 9.56361 4.223 9.65884 4.00024 9.9099C3.80617 10.1286 3.71755 10.4213 3.75771 10.7109C3.8038 11.0434 4.14715 11.3867 4.83387 12.0735L11.9196 19.1592C12.6063 19.8459 12.9497 20.1893 13.2821 20.2354C13.5718 20.2755 13.8645 20.1869 14.0832 19.9928C14.3342 19.7701 14.4294 19.2939 14.6199 18.3416L15.3528 14.6771C15.3881 14.5006 15.4058 14.4123 15.4381 14.33C15.4667 14.2569 15.5039 14.1875 15.5488 14.1231C15.5994 14.0505 15.663 13.9869 15.7904 13.8596L17.3512 12.2987C17.4326 12.2173 17.4734 12.1766 17.5181 12.141C17.5578 12.1095 17.5999 12.081 17.644 12.0558C17.6936 12.0274 17.7465 12.0048 17.8523 11.9594L20.3467 10.8904C21.0744 10.5785 21.4383 10.4226 21.6035 10.1706C21.7481 9.95025 21.7998 9.68175 21.7474 9.42348C21.6875 9.12813 21.4076 8.84822 20.8478 8.28839L15.7047 3.14526C15.1448 2.58543 14.8649 2.30552 14.5696 2.24565C14.3113 2.19329 14.0428 2.245 13.8225 2.38953C13.5705 2.55481 13.4145 2.91866 13.1027 3.64636L12.0337 6.14071C11.9883 6.24653 11.9656 6.29944 11.9373 6.34905C11.9121 6.39313 11.8836 6.43522 11.852 6.47496C11.8165 6.51971 11.7758 6.56041 11.6944 6.64181Z',
+                'stroke-width': 2
+            }]
     }
 };
 /**
@@ -13691,16 +14766,14 @@ const pathDefaults = {
 *
 * */
 /**
- * Parses a raw SVG markup string into an SVG element and applies a class.
+ * Parses a raw SVG markup string into an SVG element.
  *
  * @param svgString
  * Raw SVG markup
- * @param className
- * CSS class name for the SVG element
  * @returns
  * SVG element, or a fallback empty SVG if parsing fails
  */
-function parseSvgString(svgString, className) {
+function parseSvgString(svgString) {
     const div = document.createElement('div');
     setHTMLContent(div, svgString);
     const svg = div.firstElementChild;
@@ -13708,24 +14781,19 @@ function parseSvgString(svgString, className) {
         const fallback = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
         fallback.setAttribute('width', '16');
         fallback.setAttribute('height', '16');
-        fallback.classList.add(className);
         return fallback;
     }
-    const clone = svg.cloneNode(true);
-    clone.classList.add(className);
-    return clone;
+    return svg.cloneNode(true);
 }
 /**
  * Builds an SVG element from an SVG definition object.
  *
  * @param def
  * SVG definition from the registry
- * @param className
- * CSS class name for the SVG element
  * @returns
  * SVG element
  */
-function createSvgFromDefinition(def, className) {
+function createSvgFromDefinition(def) {
     const createElement = (type) => document.createElementNS('http://www.w3.org/2000/svg', type);
     const { width = 16, height = 16, viewBox, fill, children } = def;
     const svg = createElement('svg');
@@ -13747,7 +14815,6 @@ function createSvgFromDefinition(def, className) {
         }
         svg.appendChild(path);
     }
-    svg.classList.add(className);
     return svg;
 }
 /**
@@ -13774,8 +14841,7 @@ function getIconFromRegistry(name, customIcons) {
  * Creates an SVG icon element from the SvgIcons registry or a custom
  * registry. When `customIcons` is provided, `name` can be any registered
  * name (built-in or custom). When omitted, only built-in `GridIconName`
- * values are allowed. The SVG element always receives the default icon
- * class name from `Globals`.
+ * values are allowed.
  *
  * @param name
  * The name of the icon (built-in or from registry)
@@ -13788,15 +14854,14 @@ function getIconFromRegistry(name, customIcons) {
  * SVG element with the specified icon
  */
 function createGridIcon(name, customIcons) {
-    const className = Grid_Core_Globals.getClassName('icon');
     const value = getIconFromRegistry(name, customIcons);
     if (!defined(value)) {
-        return createSvgFromDefinition(icons.filter, className);
+        return createSvgFromDefinition(icons.filter);
     }
-    if (typeof value === 'string') {
-        return parseSvgString(value, className);
+    if (isString(value)) {
+        return parseSvgString(value);
     }
-    return createSvgFromDefinition(value, className);
+    return createSvgFromDefinition(value);
 }
 /* *
  *
@@ -14700,7 +15765,7 @@ Pagination.defaultOptions = {
  *
  *
  *  Authors:
- *  - Dawid Dragula
+ *  - Dawid Draguła
  *  - Sebastian Bochan
  *
  * */
@@ -14712,6 +15777,7 @@ Pagination.defaultOptions = {
  */
 const defaultLangOptions = {
     accessibility: {
+        columnMenu: 'Open menu for {column}.',
         sorting: {
             sortable: 'Sortable.',
             announcements: {
@@ -14800,7 +15866,8 @@ const Defaults_defaultOptions = {
         }
     },
     data: {
-        providerType: 'local'
+        providerType: 'local',
+        autogenerateColumns: true
     },
     time: {
         timezone: 'UTC'
@@ -14866,7 +15933,7 @@ function Defaults_setOptions(options) {
  *
  *
  *  Authors:
- *  - Dawid Dragula
+ *  - Dawid Draguła
  *
  * */
 
@@ -14908,7 +15975,7 @@ class CellContent {
  *
  *
  *  Authors:
- *  - Dawid Dragula
+ *  - Dawid Draguła
  *
  * */
 
@@ -15014,10 +16081,11 @@ TextContent.defaultFormatsForDataTypes = {
  *
  *
  *  Authors:
- *  - Dawid Dragula
+ *  - Dawid Draguła
  *  - Sebastian Bochan
  *
  * */
+
 
 
 
@@ -15068,18 +16136,15 @@ class Column {
         this.viewport = viewport;
         // Populate column options map if not exists, to prepare option
         // references for each column.
-        if (grid.options && !grid.columnOptionsMap?.[id]) {
+        if (grid.options && !grid.columnPolicy.hasColumnOptions(id)) {
             const columnOptions = { id };
             ((_a = grid.options).columns ?? (_a.columns = [])).push(columnOptions);
-            grid.columnOptionsMap[id] = {
+            grid.columnPolicy.setColumnOption(id, {
                 index: grid.options.columns.length - 1,
                 options: columnOptions
-            };
+            });
         }
-        this.options = Column_createOptionsProxy(grid.columnOptionsMap?.[id]?.options ?? {}, grid.options?.columnDefaults);
-        if (this.options.filtering?.enabled) {
-            this.filtering = new ColumnFiltering_ColumnFiltering(this);
-        }
+        this.options = Column_createOptionsProxy(grid.columnPolicy.getIndividualColumnOptions(id) ?? {}, grid.options?.columnDefaults);
     }
     /* *
     *
@@ -15092,19 +16157,50 @@ class Column {
     async init() {
         this.loadData();
         this.dataType = await this.assumeDataType();
+        if (this.viewport.grid.columnPolicy.isColumnFilteringEnabled(this.id)) {
+            this.filtering = new ColumnFiltering_ColumnFiltering(this);
+        }
         fireEvent(this, 'afterInit');
     }
     /**
      * Loads the data of the column from the viewport's data table.
      */
     loadData() {
-        const dp = this.viewport.grid.dataProvider;
-        if (dp && 'getDataTable' in dp) {
-            this.data = dp.getDataTable(true)?.getColumn(this.id, true);
+        const grid = this.viewport.grid;
+        const dp = grid.dataProvider;
+        const sourceColumnId = grid.columnPolicy.getColumnSourceId(this.id);
+        const isUnbound = grid.columnPolicy.isColumnUnbound(this.id);
+        if (hasDataTableProvider(dp) &&
+            sourceColumnId && !isUnbound) {
+            this.data = dp.getDataTable(true)?.getColumn(sourceColumnId, true);
         }
         else {
             delete this.data;
         }
+        if (grid.columnPolicy.isColumnFilteringEnabled(this.id)) {
+            this.filtering ?? (this.filtering = new ColumnFiltering_ColumnFiltering(this));
+        }
+        else {
+            delete this.filtering;
+        }
+    }
+    /**
+     * Resolves the raw value for a table cell.
+     *
+     * @param cell
+     * The cell to resolve the value for.
+     */
+    async getCellValue(cell) {
+        const valueGetter = this.options.cells?.valueGetter;
+        if (valueGetter) {
+            return await valueGetter.call(cell, cell);
+        }
+        const sourceColumnId = this.viewport.grid.columnPolicy
+            .getColumnSourceId(this.id);
+        if (!sourceColumnId) {
+            return void 0;
+        }
+        return this.viewport.grid.dataProvider?.getValue(sourceColumnId, cell.row.index);
     }
     /**
      * Creates a cell content instance.
@@ -15123,12 +16219,17 @@ class Column {
     async assumeDataType() {
         const { grid } = this.viewport;
         const dp = grid.dataProvider;
-        const type = grid.columnOptionsMap?.[this.id]?.options.dataType ??
+        const type = grid.columnPolicy
+            .getIndividualColumnOptions(this.id)?.dataType ??
             grid.options?.columnDefaults?.dataType;
         if (type) {
             return type;
         }
-        return (await dp?.getColumnDataType(this.id)) ?? 'string';
+        const sourceColumnId = grid.columnPolicy.getColumnSourceId(this.id);
+        if (grid.columnPolicy.isColumnUnbound(this.id) || !sourceColumnId) {
+            return 'string';
+        }
+        return (await dp?.getColumnDataType(sourceColumnId)) ?? 'string';
     }
     /**
      * Registers a cell in the column.
@@ -15257,7 +16358,7 @@ class Column {
  *
  *
  *  Authors:
- *  - Dawid Dragula
+ *  - Dawid Draguła
  *  - Sebastian Bochan
  *
  * */
@@ -15390,10 +16491,11 @@ class Row {
  *
  *
  *  Authors:
- *  - Dawid Dragula
+ *  - Dawid Draguła
  *  - Sebastian Bochan
  *
  * */
+
 
 
 
@@ -15427,7 +16529,8 @@ class Cell {
         this.row.registerCell(this);
         this.htmlElement = this.init();
         this.htmlElement.setAttribute('tabindex', '-1');
-        if (!this.column?.options.cells?.editMode?.enabled) {
+        if (!this.column ||
+            !this.column.viewport.grid.columnPolicy.isColumnEditable(this.column.id)) {
             this.htmlElement.setAttribute('aria-readonly', 'true');
         }
         this.initEvents();
@@ -15442,8 +16545,16 @@ class Cell {
      * @internal
      */
     init() {
-        const cell = document.createElement('td', {});
-        cell.setAttribute('role', 'gridcell');
+        const isRowHeader = !!this.column?.options.cells?.rowHeader;
+        const cell = document.createElement(isRowHeader ? 'th' : 'td', {});
+        cell.classList.add(Grid_Core_Globals.getClassName('cell'));
+        if (isRowHeader) {
+            cell.setAttribute('scope', 'row');
+            cell.setAttribute('role', 'rowheader');
+        }
+        else {
+            cell.setAttribute('role', 'gridcell');
+        }
         return cell;
     }
     /**
@@ -15498,7 +16609,12 @@ class Cell {
         const { header } = vp;
         const getVerticalPos = () => {
             if (row.index !== void 0) {
-                return row.index - vp.rows[0].index;
+                const renderedRowIndex = vp.getRenderedRows()
+                    .indexOf(row);
+                if (renderedRowIndex !== -1) {
+                    return renderedRowIndex;
+                }
+                return row.index - (vp.rows[0]?.index ?? 0);
             }
             const level = row.level;
             if (!header || level === void 0) {
@@ -15534,7 +16650,7 @@ class Cell {
                 }
                 return;
             }
-            const nextRow = vp.rows[nextVerticalDir];
+            const nextRow = vp.getRenderedRows()[nextVerticalDir];
             if (nextRow) {
                 nextRow.cells[column.index + dir[1]]?.htmlElement.focus();
             }
@@ -15680,7 +16796,7 @@ class Cell {
  *
  *
  *  Authors:
- *  - Dawid Dragula
+ *  - Dawid Draguła
  *  - Sebastian Bochan
  *
  * */
@@ -15761,9 +16877,8 @@ class ColumnSorting {
         this.column = column;
         this.headerCellElement = headerCellElement;
         this.addHeaderElementAttributes();
-        const sortingOptions = column.options.sorting;
-        const sortingEnabled = sortingOptions?.enabled ??
-            sortingOptions?.sortable;
+        const sortingEnabled = column.viewport.grid.columnPolicy
+            .isColumnSortingEnabled(column.id);
         if (sortingEnabled) {
             headerCellElement.classList.add(Grid_Core_Globals.getClassName('columnSortable'));
         }
@@ -15779,13 +16894,12 @@ class ColumnSorting {
     addHeaderElementAttributes() {
         const col = this.column;
         const a11y = col.viewport.grid.accessibility;
-        const sortingOptions = col.options.sorting;
         const { currentSorting, currentSortings } = col.viewport.grid.querying.sorting;
         const sortedAscClassName = Grid_Core_Globals.getClassName('columnSortedAsc');
         const sortedDescClassName = Grid_Core_Globals.getClassName('columnSortedDesc');
         const el = this.headerCellElement;
-        const sortingEnabled = sortingOptions?.enabled ??
-            sortingOptions?.sortable;
+        const sortingEnabled = col.viewport.grid.columnPolicy
+            .isColumnSortingEnabled(col.id);
         const columnSorting = (currentSortings?.find((sorting) => sorting.columnId === col.id) ||
             (currentSorting?.columnId === col.id ?
                 currentSorting :
@@ -15958,7 +17072,7 @@ class ColumnSorting {
  *
  *
  *  Authors:
- *  - Dawid Dragula
+ *  - Dawid Draguła
  *
  * */
 
@@ -16008,9 +17122,9 @@ class ToolbarButton {
         }, toolbar.container);
         this.wrapper = wrapper;
         const button = this.buttonEl = ToolbarButton_makeHTMLElement('button', {
-            className: (Grid_Core_Globals.getClassName('button') +
+            className: (Grid_Core_Globals.getClassName('icon') +
                 (this.isActive ?
-                    ' ' + Grid_Core_Globals.getClassName('buttonSelected') :
+                    ' ' + Grid_Core_Globals.getClassName('iconSelected') :
                     ''))
         }, wrapper);
         button.setAttribute('type', 'button');
@@ -16058,10 +17172,10 @@ class ToolbarButton {
     }
     setActive(active) {
         this.isActive = active;
-        this.buttonEl?.classList.toggle(Grid_Core_Globals.getClassName('buttonSelected'), active);
+        this.buttonEl?.classList.toggle(Grid_Core_Globals.getClassName('iconSelected'), active);
     }
     setHighlighted(highlighted) {
-        this.buttonEl?.classList.toggle(Grid_Core_Globals.getClassName('buttonHighlighted'), highlighted);
+        this.buttonEl?.classList.toggle(Grid_Core_Globals.getClassName('iconHighlighted'), highlighted);
         const ariaExpanded = this.options.accessibility?.ariaExpanded;
         if (typeof ariaExpanded === 'boolean') {
             this.buttonEl?.setAttribute('aria-expanded', highlighted);
@@ -16134,7 +17248,7 @@ class ToolbarButton {
  *
  *
  *  Authors:
- *  - Dawid Dragula
+ *  - Dawid Draguła
  *
  * */
 
@@ -16203,7 +17317,7 @@ function isSorted(column, order) {
  *
  *
  *  Authors:
- *  - Dawid Dragula
+ *  - Dawid Draguła
  *
  * */
 
@@ -16359,7 +17473,7 @@ class SortToolbarButton extends UI_ToolbarButton {
  *
  *
  *  Authors:
- *  - Dawid Dragula
+ *  - Dawid Draguła
  *
  * */
 
@@ -16631,7 +17745,7 @@ class Popup {
  *
  *
  *  Authors:
- *  - Dawid Dragula
+ *  - Dawid Draguła
  *
  * */
 
@@ -16709,7 +17823,7 @@ class FilterPopup extends UI_Popup {
  *
  *
  *  Authors:
- *  - Dawid Dragula
+ *  - Dawid Draguła
  *
  * */
 
@@ -16791,7 +17905,7 @@ class FilterToolbarButton extends UI_ToolbarButton {
  *
  *
  *  Authors:
- *  - Dawid Dragula
+ *  - Dawid Draguła
  *
  * */
 
@@ -16880,13 +17994,61 @@ class ContextMenu extends UI_Popup {
         }, this.itemsContainer);
     }
     onClickOutside(event) {
-        const buttons = this.buttons;
-        for (let i = 0, iEnd = buttons.length; i < iEnd; ++i) {
-            if (buttons[i].popup?.container?.contains(event.target)) {
-                return;
-            }
+        const target = event.target;
+        if (this.isInDescendantPopup(target)) {
+            return;
         }
         super.onClickOutside(event);
+    }
+    /**
+     * Checks whether an element is contained in any descendant popup.
+     *
+     * @param target
+     * Target node from click event.
+     *
+     * @returns
+     * True when the target is inside any descendant popup container.
+     */
+    isInDescendantPopup(target) {
+        const queue = [];
+        for (const button of this.buttons) {
+            if (button.popup?.container) {
+                queue.push(button.popup);
+            }
+        }
+        while (queue.length) {
+            const popup = queue.shift();
+            if (!popup?.container) {
+                continue;
+            }
+            if (popup.container.contains(target)) {
+                return true;
+            }
+            const popupButtons = popup.buttons;
+            if (!popupButtons) {
+                continue;
+            }
+            for (const button of popupButtons) {
+                if (button.popup?.container) {
+                    queue.push(button.popup);
+                }
+            }
+        }
+        return false;
+    }
+    addEventListeners() {
+        super.addEventListeners();
+        const container = this.container;
+        if (!container) {
+            return;
+        }
+        const insideMouseDownListener = (event) => {
+            event.stopPropagation();
+        };
+        container.addEventListener('mousedown', insideMouseDownListener);
+        this.eventListenerDestroyers.push(() => {
+            container.removeEventListener('mousedown', insideMouseDownListener);
+        });
     }
     onKeyDown(e) {
         super.onKeyDown(e);
@@ -16925,7 +18087,7 @@ class ContextMenu extends UI_Popup {
  *
  *
  *  Authors:
- *  - Dawid Dragula
+ *  - Dawid Draguła
  *
  * */
 
@@ -17012,6 +18174,12 @@ class ContextMenuButton {
             cm.focusCursor = cm.buttons.indexOf(this);
         }
     }
+    /**
+     * Triggers button click programmatically.
+     */
+    click() {
+        this.buttonEl?.click();
+    }
     setLabel(label) {
         if (this.spanEl) {
             this.spanEl.innerText = label;
@@ -17047,12 +18215,16 @@ class ContextMenuButton {
      * Destroys the button.
      */
     destroy() {
+        this.popup?.hide();
         this.removeEventListeners();
         this.wrapper?.remove();
         // Unregister from the context menu
         const cm = this.contextMenu;
         if (cm) {
-            cm.buttons.splice(cm.buttons.indexOf(this), 1);
+            const buttonIndex = cm.buttons.indexOf(this);
+            if (buttonIndex !== -1) {
+                cm.buttons.splice(buttonIndex, 1);
+            }
             delete this.contextMenu;
         }
     }
@@ -17112,7 +18284,7 @@ class ContextMenuButton {
  *
  *
  *  Authors:
- *  - Dawid Dragula
+ *  - Dawid Draguła
  *
  * */
 
@@ -17192,7 +18364,7 @@ class FilterMenuButton_FilterToolbarButton extends UI_ContextMenuButton {
  *
  *
  *  Authors:
- *  - Dawid Dragula
+ *  - Dawid Draguła
  *
  * */
 
@@ -17293,7 +18465,7 @@ class SortMenuButton extends UI_ContextMenuButton {
  *
  *
  *  Authors:
- *  - Dawid Dragula
+ *  - Dawid Draguła
  *
  * */
 
@@ -17325,11 +18497,13 @@ class MenuPopup extends UI_ContextMenu {
      * */
     renderContent() {
         const lang = this.grid.options?.lang || {};
-        const columnOptions = this.button.toolbar?.column.options || {};
-        const filteringEnabled = (columnOptions.filtering?.enabled &&
-            !columnOptions.filtering.inline);
-        const sortingEnabled = columnOptions.sorting?.enabled ??
-            columnOptions.sorting?.sortable;
+        const column = this.button.toolbar?.column;
+        const columnOptions = column?.options || {};
+        const filteringEnabled = !!column &&
+            this.grid.columnPolicy.isColumnFilteringEnabled(column.id) &&
+            !columnOptions.filtering?.inline;
+        const sortingEnabled = !!column &&
+            this.grid.columnPolicy.isColumnSortingEnabled(column.id);
         this.addHeader(this.button.toolbar?.column.header?.value || '', lang.column);
         if (sortingEnabled) {
             new MenuButtons_SortMenuButton(lang, 'desc').add(this);
@@ -17362,7 +18536,7 @@ class MenuPopup extends UI_ContextMenu {
  *
  *
  *  Authors:
- *  - Dawid Dragula
+ *  - Dawid Draguła
  *
  * */
 
@@ -17370,12 +18544,31 @@ class MenuPopup extends UI_ContextMenu {
 
 
 
+
+const { formatText: MenuToolbarButton_formatText } = GridUtils;
 /* *
  *
  *  Class
  *
  * */
 class MenuToolbarButton extends UI_ToolbarButton {
+    getColumnLabel() {
+        const column = this.toolbar?.column;
+        const label = (column?.header?.headerContent?.textContent ||
+            column?.id ||
+            '').trim();
+        return label || column?.id || '';
+    }
+    updateA11yLabel() {
+        const button = this.wrapper?.querySelector('button');
+        const column = this.toolbar?.column;
+        const lang = column?.viewport.grid.options?.lang;
+        const columnLabel = this.getColumnLabel();
+        const menuLabel = MenuToolbarButton_formatText(lang?.accessibility?.columnMenu || 'Open menu for {column}.', { column: columnLabel });
+        if (button && menuLabel) {
+            button.setAttribute('aria-label', menuLabel);
+        }
+    }
     /* *
      *
      *  Constructor
@@ -17384,7 +18577,10 @@ class MenuToolbarButton extends UI_ToolbarButton {
     constructor() {
         super({
             icon: 'menu',
-            classNameKey: 'headerCellMenuIcon'
+            classNameKey: 'headerCellMenuIcon',
+            accessibility: {
+                ariaExpanded: false
+            }
         });
     }
     /* *
@@ -17408,6 +18604,7 @@ class MenuToolbarButton extends UI_ToolbarButton {
         if (!column) {
             return;
         }
+        this.updateA11yLabel();
         this.setActive(StateHelpers.isSorted(column) ||
             StateHelpers.isFiltered(column));
     }
@@ -17443,7 +18640,7 @@ class MenuToolbarButton extends UI_ToolbarButton {
  *
  *
  *  Authors:
- *  - Dawid Dragula
+ *  - Dawid Draguła
  *
  * */
 
@@ -17490,22 +18687,22 @@ class HeaderCellToolbar {
      */
     renderFull() {
         const columnOptions = this.column.options;
-        const sortingEnabled = columnOptions.sorting?.enabled ??
-            columnOptions.sorting?.sortable;
+        const sortingEnabled = this.column.viewport.grid.columnPolicy
+            .isColumnSortingEnabled(this.column.id);
         if (sortingEnabled) {
             new ToolbarButtons_SortToolbarButton().add(this);
         }
-        if (columnOptions.filtering?.enabled &&
-            !columnOptions.filtering.inline) {
+        if (this.column.viewport.grid.columnPolicy.isColumnFilteringEnabled(this.column.id) &&
+            !columnOptions.filtering?.inline) {
             new ToolbarButtons_FilterToolbarButton().add(this);
         }
     }
     renderMinimized() {
         const columnOptions = this.column.options;
-        const sortingEnabled = columnOptions.sorting?.enabled ??
-            columnOptions.sorting?.sortable;
-        if (sortingEnabled || (columnOptions.filtering?.enabled &&
-            !columnOptions.filtering.inline)) {
+        const sortingEnabled = this.column.viewport.grid.columnPolicy
+            .isColumnSortingEnabled(this.column.id);
+        if (sortingEnabled || (this.column.viewport.grid.columnPolicy.isColumnFilteringEnabled(this.column.id) &&
+            !columnOptions.filtering?.inline)) {
             new ToolbarButtons_MenuToolbarButton().add(this);
         }
     }
@@ -17656,7 +18853,7 @@ HeaderCellToolbar.MINIMIZED_COLUMN_WIDTH = 120;
  *
  *
  *  Authors:
- *  - Dawid Dragula
+ *  - Dawid Draguła
  *  - Sebastian Bochan
  *
  * */
@@ -17812,7 +19009,8 @@ class HeaderCell extends Table_Cell {
             return resolveStyleValue(this.superColumnOptions.header?.style);
         }
         const { grid } = this.row.viewport;
-        const rawColumnOptions = grid.columnOptionsMap?.[column.id]?.options;
+        const rawColumnOptions = grid.columnPolicy
+            .getIndividualColumnOptions(column.id);
         return {
             ...mergeStyleValues(column, grid.options?.columnDefaults?.style, rawColumnOptions?.style),
             ...mergeStyleValues(column, grid.options?.columnDefaults?.header?.style, rawColumnOptions?.header?.style)
@@ -17844,20 +19042,21 @@ class HeaderCell extends Table_Cell {
         super.onKeyDown(e);
     }
     onClick(e) {
-        if (!this.column ||
+        const { column } = this;
+        if (!column ||
             !this.htmlElement.contains(e.target) ||
-            this.column.viewport.columnsResizer?.isResizing) {
+            this.toolbar?.container?.contains(e.target) ||
+            column.viewport.columnsResizer?.isResizing) {
             return;
         }
+        const grid = column.viewport.grid;
         // Toggle sort only when clicking header text/area, not toolbar icons
-        if (!this.toolbar?.container?.contains(e.target) &&
-            (this.column.options.sorting?.enabled ??
-                this.column.options.sorting?.sortable)) {
-            this.column.sorting?.toggle(e);
+        if (grid.columnPolicy.isColumnSortingEnabled(column.id)) {
+            column.sorting?.toggle(e);
         }
         fireEvent(this, 'click', {
             originalEvent: e,
-            column: this.column
+            column
         });
     }
     /**
@@ -17903,7 +19102,7 @@ class HeaderCell extends Table_Cell {
  *
  *
  *  Authors:
- *  - Dawid Dragula
+ *  - Dawid Draguła
  *  - Sebastian Bochan
  *
  * */
@@ -18086,7 +19285,7 @@ class HeaderRow extends Table_Row {
  *
  *
  *  Authors:
- *  - Dawid Dragula
+ *  - Dawid Draguła
  *
  * */
 
@@ -18133,9 +19332,10 @@ class FilterCell extends Header_HeaderCell {
         fireEvent(this, 'afterRender', { column, filtering: true });
     }
     onKeyDown(e) {
-        this.column.filtering?.onKeyDown(e);
         if (e.target === this.htmlElement) {
-            if (e.key === 'Enter') {
+            if (e.key === 'Enter' &&
+                this.column.viewport.grid.columnPolicy
+                    .isColumnInlineFilteringEnabled(this.column.id)) {
                 this.column.filtering?.filterSelect?.focus();
             }
             else {
@@ -18143,6 +19343,7 @@ class FilterCell extends Header_HeaderCell {
             }
         }
         else {
+            this.column.filtering?.onKeyDown(e);
             if (e.key === 'Escape') {
                 this.htmlElement.focus();
             }
@@ -18173,7 +19374,7 @@ class FilterCell extends Header_HeaderCell {
  *
  *
  *  Authors:
- *  - Dawid Dragula
+ *  - Dawid Draguła
  *
  * */
 
@@ -18224,7 +19425,7 @@ class FilterRow extends Header_HeaderRow {
             }
             const cell = this.createCell(column);
             await cell.render();
-            if (column.options.filtering?.inline) {
+            if (vp.grid.columnPolicy.isColumnInlineFilteringEnabled(column.id)) {
                 column.filtering?.renderFilteringContent(cell.htmlElement);
             }
         }
@@ -18255,7 +19456,7 @@ class FilterRow extends Header_HeaderRow {
  *
  *
  *  Authors:
- *  - Dawid Dragula
+ *  - Dawid Draguła
  *  - Sebastian Bochan
  *
  * */
@@ -18324,12 +19525,11 @@ class TableHeader {
         // Render regular, multiple level rows.
         for (let i = 0, iEnd = this.levels; i < iEnd; i++) {
             const row = new Header_HeaderRow(vp, i + 1); // Avoid indexing from 0
-            await row.renderContent(i);
+            await Promise.resolve(row.renderContent(i));
             this.rows.push(row);
         }
         // Render an extra row for inline filtering.
-        if (vp.columns.some((column) => (column.options.filtering?.enabled &&
-            column.options.filtering.inline) || false)) {
+        if (vp.columns.some((column) => vp.grid.columnPolicy.isColumnInlineFilteringEnabled(column.id))) {
             const row = new ColumnFiltering_FilterRow(vp);
             await row.renderContent();
             this.rows.push(row);
@@ -18416,7 +19616,7 @@ class TableHeader {
  *
  *
  *  Authors:
- *  - Dawid Dragula
+ *  - Dawid Draguła
  *  - Sebastian Bochan
  *
  * */
@@ -18508,7 +19708,7 @@ class TableCell extends Table_Cell {
         // TODO(design): Design a better way to show the cell val being updated.
         this.htmlElement.style.opacity = '0.5';
         if (!defined(value)) {
-            value = await grid.dataProvider?.getValue(this.column.id, this.row.index);
+            value = await this.column.getCellValue(this);
             // Discard stale response if cell was reused for a different row
             if (fetchToken !== this.asyncFetchToken) {
                 this.htmlElement.style.opacity = '';
@@ -18554,7 +19754,7 @@ class TableCell extends Table_Cell {
      */
     getCellStyles() {
         const { grid } = this.column.viewport;
-        const rawColumnOptions = grid.columnOptionsMap?.[this.column.id]?.options;
+        const rawColumnOptions = grid.columnPolicy.getIndividualColumnOptions(this.column.id);
         return {
             ...mergeStyleValues(this.column, grid.options?.columnDefaults?.style, rawColumnOptions?.style),
             ...mergeStyleValues(this, grid.options?.columnDefaults?.cells?.style, rawColumnOptions?.cells?.style)
@@ -18570,7 +19770,12 @@ class TableCell extends Table_Cell {
      * content.
      */
     async updateDataset() {
-        const oldValue = await this.column.viewport.grid.dataProvider?.getValue(this.column.id, this.row.index);
+        const sourceColumnId = this.column.viewport.grid.columnPolicy
+            .getColumnSourceId(this.column.id);
+        if (!sourceColumnId) {
+            return false;
+        }
+        const oldValue = await this.column.viewport.grid.dataProvider?.getValue(sourceColumnId, this.row.index);
         if (oldValue === this.value) {
             // Abort if the value is the same as in the data table.
             return false;
@@ -18582,7 +19787,10 @@ class TableCell extends Table_Cell {
             return false;
         }
         this.row.data[this.column.id] = this.value;
-        await dp.setValue(this.value, this.column.id, rowId);
+        if (sourceColumnId !== this.column.id) {
+            this.row.data[sourceColumnId] = this.value;
+        }
+        await dp.setValue(this.value, sourceColumnId, rowId);
         if (vp.grid.querying.willNotModify()) {
             return false;
         }
@@ -18597,7 +19805,9 @@ class TableCell extends Table_Cell {
      * Only focus/blur remain on individual cells for focus management.
      */
     initEvents() {
-        this.cellEvents.push(['blur', () => this.onBlur()]);
+        this.cellEvents.push(['blur', (e) => {
+                this.onBlur(e);
+            }]);
         this.cellEvents.push(['focus', () => this.onFocus()]);
         this.cellEvents.forEach((pair) => {
             this.htmlElement.addEventListener(pair[0], pair[1]);
@@ -18609,10 +19819,29 @@ class TableCell extends Table_Cell {
     onFocus() {
         super.onFocus();
         const vp = this.row.viewport;
-        vp.focusCursor = [
-            this.row.index,
-            this.column.index
-        ];
+        const rowId = this.row.id;
+        if (rowId === void 0) {
+            return;
+        }
+        delete vp.pendingFocusCursor;
+        vp.clearDetachedFocus();
+        vp.focusCursor = {
+            rowId,
+            columnIndex: this.column.index
+        };
+    }
+    /**
+     * Handles the blur event on the cell.
+     *
+     * @param e
+     * The focus event object.
+     */
+    onBlur(e) {
+        if (e &&
+            this.row.viewport.hasDetachedFocusAt(this.row.id, this.column.index)) {
+            return;
+        }
+        super.onBlur();
     }
     /**
      * Handles the mouse down event on the cell.
@@ -18702,7 +19931,7 @@ class TableCell extends Table_Cell {
  *
  *
  *  Authors:
- *  - Dawid Dragula
+ *  - Dawid Draguła
  *  - Sebastian Bochan
  *
  * */
@@ -18757,8 +19986,7 @@ class TableRow extends Table_Row {
     *
     * */
     async init() {
-        const dp = this.viewport.grid.dataProvider;
-        this.id = await dp?.getRowId(this.index);
+        this.id = await this.viewport.grid.dataProvider?.getRowId(this.index);
         await this.loadData();
         this.setRowAttributes();
     }
@@ -18775,6 +20003,9 @@ class TableRow extends Table_Row {
             return;
         }
         this.data = data;
+        fireEvent(this, 'afterLoadData', {
+            data
+        });
     }
     /**
      * Updates the row data and its cells with the latest values from the data
@@ -18795,8 +20026,6 @@ class TableRow extends Table_Row {
      *
      * @param index
      * The index of the row in the data table.
-     *
-     * @internal
      */
     async reuse(index) {
         for (let i = 0, iEnd = this.cells.length; i < iEnd; ++i) {
@@ -18807,8 +20036,8 @@ class TableRow extends Table_Row {
             return;
         }
         this.index = index;
-        this.id = await this.viewport.grid.dataProvider?.getRowId(this.index);
-        this.htmlElement.setAttribute('data-row-index', index);
+        this.id = await this.viewport.grid.dataProvider?.getRowId(index);
+        this.htmlElement.setAttribute('data-row-index', index + '');
         this.updateRowAttributes();
         this.updateParityClass();
         this.updateStateClasses();
@@ -18850,8 +20079,7 @@ class TableRow extends Table_Row {
         const idx = this.index;
         const el = this.htmlElement;
         el.classList.add(Grid_Core_Globals.getClassName('rowElement'));
-        // Index of the row in the presentation data table
-        el.setAttribute('data-row-index', idx);
+        el.setAttribute('data-row-index', idx + '');
         this.updateRowAttributes();
         // Indexing from 0, so rows with even index are odd.
         this.updateParityClass();
@@ -18872,6 +20100,7 @@ class TableRow extends Table_Row {
         }
         // Calculate levels of header, 1 to avoid indexing from 0
         a11y?.setRowIndex(el, idx + (vp.header?.rows.length ?? 0) + 1);
+        fireEvent(this, 'afterUpdateAttributes');
     }
     /**
      * Updates the row parity class based on index.
@@ -18932,7 +20161,7 @@ class TableRow extends Table_Row {
  *
  *
  *  Authors:
- *  - Dawid Dragula
+ *  - Dawid Draguła
  *
  * */
 
@@ -19046,13 +20275,14 @@ class RowsVirtualizer {
          * Used to ensure the final scroll position is rendered.
          */
         this.pendingRowCursor = null;
-        this.rowSettings =
-            viewport.grid.options?.rendering?.rows;
+        const rowSettings = (viewport.grid.options?.rendering?.rows || {});
+        this.rowSettings = rowSettings;
         this.viewport = viewport;
         this.rowCount = 0;
-        this.strictRowHeights = this.rowSettings.strictHeights;
-        this.buffer = Math.max(this.rowSettings.bufferSize, 0);
+        this.strictRowHeights = !!rowSettings.strictHeights;
+        this.buffer = Math.max((rowSettings.bufferSize || 0), 0);
         this.maxElementHeight = RowsVirtualizer.getMaxElementHeight();
+        this.rowCursor = 0;
         if (this.strictRowHeights) {
             viewport.tbodyElement.classList.add(Grid_Core_Globals.getClassName('rowsContentNowrap'));
         }
@@ -19071,7 +20301,7 @@ class RowsVirtualizer {
         if (this.viewport.virtualRows) {
             this.viewport.reflow();
         }
-        await this.updateGridMetrics();
+        await this.beforeInitialRenderRows?.();
         // Load & render rows
         await this.renderRows(this.rowCursor);
         this.adjustRowHeights();
@@ -19084,7 +20314,6 @@ class RowsVirtualizer {
      * re-rendered, e.g., after a sort or filter operation.
      */
     async rerender() {
-        await this.updateGridMetrics();
         const tbody = this.viewport.tbodyElement;
         let rows = this.viewport.rows;
         const oldScrollLeft = tbody.scrollLeft;
@@ -19264,7 +20493,8 @@ class RowsVirtualizer {
      * The index of the first visible row.
      */
     async renderRows(rowCursor) {
-        // Prevent concurrent render operations - queue the latest cursor
+        // Prevent concurrent render operations. Queue the latest cursor and
+        // render it once the current pass completes.
         if (this.isRendering) {
             this.pendingRowCursor = rowCursor;
             return;
@@ -19274,9 +20504,6 @@ class RowsVirtualizer {
             const { viewport: vp, buffer } = this;
             await this.updateGridMetrics();
             const rowCount = this.rowCount;
-            if (!defined(rowCount)) {
-                return;
-            }
             if (rowCount === 0) {
                 if (vp.rows.length) {
                     for (let i = 0, iEnd = vp.rows.length; i < iEnd; ++i) {
@@ -19288,13 +20515,18 @@ class RowsVirtualizer {
                 this.rowCursor = 0;
                 return;
             }
-            // Stop rendering if there are no rows to render.
-            if (rowCount < 1) {
-                return;
-            }
+            const rowEnd = rowCount - 1;
             const isVirtualization = this.viewport.virtualRows;
+            if (isVirtualization && vp.grid.popups.size) {
+                for (const popup of Array.from(vp.grid.popups)) {
+                    if (popup.anchorElement &&
+                        !popup.anchorElement.isConnected) {
+                        popup.hide();
+                    }
+                }
+            }
             const rowsPerPage = isVirtualization ? Math.ceil((vp.grid.tableElement?.clientHeight || 0) /
-                this.defaultRowHeight) : Infinity; // Need to be refactored when add pagination
+                this.defaultRowHeight) : Infinity;
             let rows = vp.rows;
             if (!isVirtualization && rows.length > 50) {
                 // eslint-disable-next-line no-console
@@ -19302,28 +20534,26 @@ class RowsVirtualizer {
                     'virtualization is disabled. Consider enabling ' +
                     'virtualization in the rows settings.');
             }
-            if (!rows.length && rowCount > 0) {
-                const last = new Body_TableRow(vp, rowCount - 1);
+            if (!rows.length) {
+                const last = new Body_TableRow(vp, rowEnd);
                 await last.init();
                 vp.tbodyElement.appendChild(last.htmlElement);
                 await last.render();
                 rows.push(last);
                 if (isVirtualization) {
-                    const topOffset = Math.min(last.getDefaultTopOffset(), this.maxElementHeight -
-                        last.htmlElement.offsetHeight);
+                    const topOffset = Math.min(last.getDefaultTopOffset(), this.maxElementHeight - last.htmlElement.offsetHeight);
                     last.setTranslateY(topOffset);
                 }
             }
-            // The last row is always kept rendered for bottom alignment
+            // The last row is always kept rendered for bottom alignment.
             let alwaysLastRow = rows.length > 0 ? rows.pop() : void 0;
-            if (alwaysLastRow && alwaysLastRow.index !== rowCount - 1) {
+            if (alwaysLastRow && alwaysLastRow.index !== rowEnd) {
                 this.poolRow(alwaysLastRow);
                 alwaysLastRow = void 0;
             }
-            const from = Math.max(0, Math.min(rowCursor - buffer, rowCount - rowsPerPage));
-            // `to` should not include the alwaysLastRow index (rowCount - 1)
-            const to = Math.min(rowCursor + rowsPerPage + buffer, rowCount - 2 // -2 because alwaysLastRow is at rowCount - 1
-            );
+            const from = Math.max(0, Math.min(rowCursor - buffer, rowEnd - rowsPerPage + 1));
+            // `to` should not include the alwaysLastRow index (`rowEnd`).
+            const to = Math.min(rowCursor + rowsPerPage + buffer, rowEnd - 1);
             const tempRows = [];
             const currentFrom = rows[0]?.index;
             const currentTo = rows[rows.length - 1]?.index;
@@ -19348,10 +20578,10 @@ class RowsVirtualizer {
                 for (let i = from; i <= to; ++i) {
                     const firstRowIndex = rows.length > 0 ? rows[0].index : from;
                     const row = rows[i - firstRowIndex];
-                    // Recreate row when it is destroyed and it is in the range.
+                    // Recreate the row when it is missing from the target
+                    // range.
                     if (!row) {
-                        const newRow = await this.getOrCreateRow(i);
-                        rows.push(newRow);
+                        rows.push(await this.getOrCreateRow(i));
                     }
                 }
                 rows.sort((a, b) => a.index - b.index);
@@ -19386,15 +20616,14 @@ class RowsVirtualizer {
             for (let i = 0, iEnd = rows.length; i < iEnd; ++i) {
                 const row = rows[i];
                 if (!row.rendered) {
-                    // Ensure row is initialized before rendering
+                    // Ensure the row is initialized before rendering.
                     if (!row.htmlElement.hasAttribute('data-row-index')) {
                         await row.init();
                     }
                     vp.tbodyElement.insertBefore(row.htmlElement, vp.tbodyElement.lastChild);
                     await row.render();
                     if (isVirtualization) {
-                        const topOffset = Math.min(row.getDefaultTopOffset(), this.maxElementHeight -
-                            row.htmlElement.offsetHeight);
+                        const topOffset = Math.min(row.getDefaultTopOffset(), this.maxElementHeight - row.htmlElement.offsetHeight);
                         row.setTranslateY(topOffset);
                     }
                     continue;
@@ -19404,7 +20633,7 @@ class RowsVirtualizer {
                 }
             }
             if (!alwaysLastRow && rowCount > 0) {
-                alwaysLastRow = await this.getOrCreateRow(rowCount - 1);
+                alwaysLastRow = await this.getOrCreateRow(rowEnd);
             }
             if (alwaysLastRow) {
                 if (!alwaysLastRow.rendered) {
@@ -19426,30 +20655,42 @@ class RowsVirtualizer {
                 rows.push(alwaysLastRow);
             }
             // Focus the cell if the focus cursor is set
-            if (vp.focusCursor) {
-                const [rowIndex, columnIndex] = vp.focusCursor;
+            const hadPendingFocusCursor = !!vp.pendingFocusCursor;
+            if (vp.pendingFocusCursor) {
+                const [rowIndex, columnIndex] = vp.pendingFocusCursor;
                 const row = rows.find((row) => row.index === rowIndex);
                 if (row) {
-                    row.cells[columnIndex]?.htmlElement.focus({
-                        preventScroll: true
-                    });
+                    delete vp.pendingFocusCursor;
+                    vp.restoreRenderedCellFocus(row.cells[columnIndex], rowIndex, columnIndex);
+                    if (hadPendingFocusCursor) {
+                        vp.ensureRowFullyVisible(row);
+                    }
                 }
             }
-            // Set the focus anchor cell
+            else if (vp.focusCursor) {
+                const focusCursor = vp.focusCursor;
+                if (!focusCursor.bodySectionId) {
+                    const focusedRow = rows.find((row) => row.id === focusCursor.rowId);
+                    if (focusedRow) {
+                        vp.restoreRenderedCellFocus(focusedRow.cells[focusCursor.columnIndex], focusedRow.index, focusCursor.columnIndex);
+                    }
+                }
+            }
+            // Set the focus anchor cell.
             if ((!vp.focusCursor || !vp.focusAnchorCell?.row.rendered) &&
                 rows.length > 0) {
-                const rowIndex = rowCursor - rows[0].index;
-                const targetRow = rows[rowIndex];
-                if (targetRow &&
-                    targetRow.cells.length > 0 &&
-                    targetRow.cells[0]) {
-                    vp.setFocusAnchorCell(targetRow.cells[0]);
+                const anchorRowIndex = Math.max(0, rowCursor - rows[0].index);
+                const anchorRow = rows[anchorRowIndex];
+                if (anchorRow?.cells[0]) {
+                    vp.setFocusAnchorCell(anchorRow.cells[0]);
                 }
             }
+            await vp.syncAriaRowIndexes();
+            await this.afterRenderRows?.();
         }
         finally {
             this.isRendering = false;
-            // If there's a pending render request, process it
+            // If there is a pending render request, process it now.
             if (this.pendingRowCursor !== null) {
                 const pendingCursor = this.pendingRowCursor;
                 this.pendingRowCursor = null;
@@ -19545,6 +20786,88 @@ class RowsVirtualizer {
         }
     }
     /**
+     * Estimates the current top offset of a row in the virtualized scroll
+     * space, accounting for the active scroll compression offset.
+     *
+     * @param index
+     * The row index in the projected data order.
+     *
+     * @returns
+     * The estimated top offset in pixels.
+     */
+    getEstimatedRowTop(index) {
+        const topOffset = index * this.defaultRowHeight;
+        if (!this.viewport.virtualRows ||
+            this.gridHeightOverflow <= 0) {
+            return topOffset;
+        }
+        return Math.floor(topOffset - this.scrollOffset);
+    }
+    /**
+     * Estimates the current bottom offset of a row in the virtualized scroll
+     * space.
+     *
+     * @param index
+     * The row index in the projected data order.
+     *
+     * @param rowHeight
+     * The height of the row.
+     *
+     * @returns
+     * The estimated bottom offset in pixels.
+     */
+    getEstimatedRowBottom(index, rowHeight = this.defaultRowHeight) {
+        return this.getEstimatedRowTop(index) + rowHeight;
+    }
+    /**
+     * Measures the height of the first rendered row's first cell.
+     *
+     * @returns
+     * The measured row height or undefined if it cannot be measured.
+     */
+    measureRenderedRowHeight() {
+        const rows = this.viewport.rows;
+        if (!rows.length) {
+            return;
+        }
+        for (let i = 0, iEnd = rows.length; i < iEnd; ++i) {
+            const cell = rows[i].cells[0]?.htmlElement;
+            if (cell) {
+                const height = cell.offsetHeight;
+                return height > 0 ? height : void 0;
+            }
+        }
+    }
+    /**
+     * Applies a newly measured row height and refreshes related metrics.
+     *
+     * @param measuredHeight
+     * The measured row height in pixels.
+     *
+     * @returns
+     * Whether the default row height changed.
+     */
+    applyMeasuredRowHeight(measuredHeight) {
+        const nextHeight = Math.max(1, Math.round(measuredHeight));
+        if (!nextHeight || nextHeight === this.defaultRowHeight) {
+            return false;
+        }
+        this.defaultRowHeight = nextHeight;
+        this.totalGridHeight = this.rowCount * this.defaultRowHeight;
+        this.gridHeightOverflow = Math.max(this.totalGridHeight - this.maxElementHeight, 0);
+        const target = this.viewport.tbodyElement;
+        const scrollDenominator = this.maxElementHeight - target.clientHeight;
+        const scrollPercentage = scrollDenominator > 0 ?
+            target.scrollTop / scrollDenominator :
+            0;
+        this.scrollOffset = Math.floor(scrollPercentage * this.gridHeightOverflow);
+        if (this.viewport.virtualRows) {
+            this.adjustRowHeights();
+            this.adjustRowOffsets();
+        }
+        return true;
+    }
+    /**
      * Gets a row from the pool or creates a new one for the given index.
      *
      * @param index
@@ -19579,6 +20902,14 @@ class RowsVirtualizer {
      * The row to pool.
      */
     poolRow(row) {
+        const focusCursor = this.viewport.focusCursor;
+        const activeElement = document.activeElement;
+        if (focusCursor &&
+            focusCursor.rowId === row.id &&
+            activeElement instanceof Element &&
+            row.htmlElement.contains(activeElement)) {
+            this.viewport.preserveFocusDuringDetach();
+        }
         row.htmlElement.remove();
         if (this.rowPool.length < RowsVirtualizer.MAX_POOL_SIZE) {
             this.rowPool.push(row);
@@ -19611,13 +20942,15 @@ class RowsVirtualizer {
      * overflow-aware scrolling.
      */
     async updateGridMetrics() {
-        const rowCount = await this.viewport.grid.dataProvider?.getRowCount();
-        if (!defined(rowCount)) {
-            return;
-        }
-        this.rowCount = rowCount;
+        const providerRowCount = await this.viewport.grid.dataProvider
+            ?.getRowCount();
+        this.rowCount = defined(providerRowCount) ? providerRowCount : 0;
+        this.rowCount = this.getEffectiveRowCount ?
+            await this.getEffectiveRowCount(this.rowCount) :
+            this.rowCount;
         this.totalGridHeight = this.rowCount * this.defaultRowHeight;
         this.gridHeightOverflow = Math.max(this.totalGridHeight - this.maxElementHeight, 0);
+        this.rowCursor = Math.min(Math.max(this.rowCursor, 0), Math.max(0, this.rowCount - 1));
     }
     /**
      * Updates row translate offsets based on scroll scaling. When the grid
@@ -19684,7 +21017,7 @@ RowsVirtualizer.MAX_POOL_SIZE = 100;
  *
  *
  *  Authors:
- *  - Dawid Dragula
+ *  - Dawid Draguła
  *  - Sebastian Bochan
  *
  * */
@@ -19713,22 +21046,35 @@ class ColumnsResizer {
          */
         this.isResizing = false;
         /**
-         * The handles and their mouse down event listeners.
+         * The handles and their drag event listeners.
          */
         this.handles = [];
         /**
-         * Handles the mouse move event on the document.
+         * Handles the drag move event on the document.
          *
          * @param e
-         * The mouse event.
+         * The drag event.
          *
          * @internal
          */
-        this.onDocumentMouseMove = (e) => {
+        this.onDocumentDragMove = (e) => {
             if (!this.draggedResizeHandle || !this.draggedColumn) {
                 return;
             }
-            const diff = e.pageX - (this.dragStartX || 0);
+            /*
+             * In iOS, a touchmove event with e.touches[0].pageX === 0 can fire
+             * while holding the finger in place. Ignore it to avoid collapsing the
+             * column to its minimum width.
+             */
+            if ('touches' in e && e.touches[0]?.pageX === 0) {
+                return;
+            }
+            const pageX = ColumnsResizer.getPageX(e);
+            if (pageX === void 0) {
+                return;
+            }
+            ColumnsResizer.preventTouchDefault(e);
+            const diff = pageX - (this.dragStartX || 0);
             const vp = this.viewport;
             vp.columnResizing.resize(this, diff);
             vp.reflow();
@@ -19738,9 +21084,9 @@ class ColumnsResizer {
             });
         };
         /**
-         * Handles the mouse up event on the document.
+         * Handles the drag end event on the document.
          */
-        this.onDocumentMouseUp = () => {
+        this.onDocumentDragEnd = () => {
             this.draggedColumn?.header?.htmlElement?.classList.remove(Grid_Core_Globals.getClassName('resizedColumn'));
             if (!this.draggedResizeHandle?.matches(':hover')) {
                 this.draggedResizeHandle?.classList.remove('hovered');
@@ -19755,8 +21101,11 @@ class ColumnsResizer {
             });
         };
         this.viewport = viewport;
-        document.addEventListener('mousemove', this.onDocumentMouseMove);
-        document.addEventListener('mouseup', this.onDocumentMouseUp);
+        document.addEventListener('mousemove', this.onDocumentDragMove);
+        document.addEventListener('mouseup', this.onDocumentDragEnd);
+        document.addEventListener('touchmove', this.onDocumentDragMove, { passive: false });
+        document.addEventListener('touchend', this.onDocumentDragEnd);
+        document.addEventListener('touchcancel', this.onDocumentDragEnd);
     }
     /* *
      *
@@ -19783,6 +21132,29 @@ class ColumnsResizer {
         }
     }
     /**
+     * Returns the page X coordinate for a mouse or touch event.
+     *
+     * @param e
+     * The drag event.
+     */
+    static getPageX(e) {
+        if ('touches' in e) {
+            return e.touches[0]?.pageX ?? e.changedTouches[0]?.pageX;
+        }
+        return e.pageX;
+    }
+    /**
+     * Prevents touch scrolling from interrupting column dragging.
+     *
+     * @param e
+     * The drag event.
+     */
+    static preventTouchDefault(e) {
+        if ('touches' in e && e.cancelable) {
+            e.preventDefault();
+        }
+    }
+    /**
      * Adds event listeners to the handle.
      *
      * @param handle
@@ -19792,12 +21164,18 @@ class ColumnsResizer {
      * The column the handle belongs to.
      */
     addHandleListeners(handle, column) {
-        const onHandleMouseDown = (e) => {
+        const onHandleMouseDown = (event) => {
+            const e = event;
             const vp = column.viewport;
+            const pageX = ColumnsResizer.getPageX(e);
+            if (pageX === void 0) {
+                return;
+            }
+            ColumnsResizer.preventTouchDefault(e);
             this.isResizing = true;
             handle.classList.add('hovered');
             vp.reflow();
-            this.dragStartX = e.pageX;
+            this.dragStartX = pageX;
             this.draggedColumn = column;
             this.draggedResizeHandle = handle;
             this.columnStartWidth = column.getWidth();
@@ -19821,6 +21199,9 @@ class ColumnsResizer {
                 eventName: 'mousedown',
                 listener: onHandleMouseDown
             }, {
+                eventName: 'touchstart',
+                listener: onHandleMouseDown
+            }, {
                 eventName: 'mouseover',
                 listener: onHandleMouseOver
             }, {
@@ -19837,8 +21218,11 @@ class ColumnsResizer {
      * should be called on the destroy of the data grid.
      */
     removeEventListeners() {
-        document.removeEventListener('mousemove', this.onDocumentMouseMove);
-        document.removeEventListener('mouseup', this.onDocumentMouseUp);
+        document.removeEventListener('mousemove', this.onDocumentDragMove);
+        document.removeEventListener('mouseup', this.onDocumentDragEnd);
+        document.removeEventListener('touchmove', this.onDocumentDragMove);
+        document.removeEventListener('touchend', this.onDocumentDragEnd);
+        document.removeEventListener('touchcancel', this.onDocumentDragEnd);
         for (let i = 0, iEnd = this.handles.length; i < iEnd; i++) {
             const [handle, listeners] = this.handles[i];
             for (const { eventName, listener } of listeners) {
@@ -19854,6 +21238,471 @@ class ColumnsResizer {
  * */
 /* harmony default export */ const Actions_ColumnsResizer = (ColumnsResizer);
 
+;// ./code/grid/es-modules/Grid/Core/Table/Body/CellContextMenuBuiltInActions.js
+/* *
+ *
+ *  Grid Cell Context Menu built-in actions
+ *
+ *  (c) 2020-2026 Highsoft AS
+ *
+ *  A commercial license may be required depending on use.
+ *  See www.highcharts.com/license
+ *
+ *  Authors:
+ *  - Mikkel Espolin Birkeland
+ *
+ * */
+
+
+/* *
+ *
+ *  Constants
+ *
+ * */
+const warnedUnknownActionIds = new Set();
+const defaultBuiltInCellContextMenuActions = [];
+const builtInActionDefinitions = {};
+/**
+ * Registers one built-in context menu action.
+ *
+ * @param actionId
+ * Built-in action identifier.
+ *
+ * @param definition
+ * Action behavior definition.
+ *
+ * @param useByDefault
+ * Whether the action should be added to the default menu set.
+ */
+function registerBuiltInAction(actionId, definition, useByDefault = false) {
+    builtInActionDefinitions[actionId] = definition;
+    if (useByDefault &&
+        !defaultBuiltInCellContextMenuActions.includes(actionId)) {
+        defaultBuiltInCellContextMenuActions.push(actionId);
+    }
+}
+/* *
+ *
+ *  Functions
+ *
+ * */
+/**
+ * Checks whether a context menu item is a divider item.
+ *
+ * @param item
+ * Context menu item declaration.
+ *
+ * @return
+ * True when the item is a divider.
+ */
+function isDivider(item) {
+    return (typeof item === 'object' &&
+        !!item &&
+        'separator' in item &&
+        item.separator === true);
+}
+/**
+ * Checks whether an item is a built-in override declaration.
+ *
+ * @param item
+ * Context menu item declaration.
+ *
+ * @return
+ * True when the item is a built-in override.
+ */
+function isBuiltInOverride(item) {
+    return (typeof item === 'object' &&
+        !!item &&
+        'actionId' in item);
+}
+/**
+ * Checks whether an item contains nested submenu items.
+ *
+ * @param item
+ * Context menu item declaration.
+ *
+ * @return
+ * True when submenu items are provided.
+ */
+function hasNestedItems(item) {
+    return (isObject(item, true) &&
+        'items' in item &&
+        isArray(item.items));
+}
+/**
+ * Logs unknown built-in action ids once per id.
+ *
+ * @param actionId
+ * Unknown action id.
+ */
+function warnUnknownBuiltInAction(actionId) {
+    if (warnedUnknownActionIds.has(actionId)) {
+        return;
+    }
+    warnedUnknownActionIds.add(actionId);
+    // eslint-disable-next-line no-console
+    console.warn(`Grid cell context menu: Unknown built-in actionId "${actionId}".`);
+}
+/**
+ * Returns the current row id if available.
+ *
+ * @param cell
+ * Table cell for the context menu.
+ *
+ * @return
+ * Row id when available.
+ */
+function getCurrentRowId(cell) {
+    const rowId = cell.row.id;
+    if (isString(rowId) || Utilities_isNumber(rowId)) {
+        return rowId;
+    }
+}
+/**
+ * Returns the built-in action definition for a given action ID.
+ *
+ * @param actionId
+ * Built-in action id.
+ *
+ * @return
+ * Built-in action definition when known.
+ */
+function getBuiltInActionDefinition(actionId) {
+    const definition = builtInActionDefinitions[actionId];
+    if (definition) {
+        return definition;
+    }
+    warnUnknownBuiltInAction(actionId);
+}
+/**
+ * Resolves one built-in action declaration into a regular action item.
+ *
+ * @param actionId
+ * Built-in action id.
+ *
+ * @param cell
+ * Table cell for the context menu.
+ *
+ * @param override
+ * Optional label/icon/disabled overrides.
+ *
+ * @param isBranch
+ * Whether this item should be treated as a branch item.
+ *
+ * @return
+ * Resolved action item or undefined for unknown action ids.
+ */
+function resolveBuiltInAction(actionId, cell, override, isBranch) {
+    const definition = getBuiltInActionDefinition(actionId);
+    if (!definition) {
+        return;
+    }
+    const rowId = getCurrentRowId(cell);
+    if (definition.isVisible && !definition.isVisible(cell, rowId)) {
+        return;
+    }
+    const disabled = isBranch ?
+        !!override?.disabled :
+        definition.isDisabled(cell, rowId) || !!override?.disabled;
+    return {
+        label: override?.label || definition.getLabel(cell),
+        icon: override?.icon || definition.icon,
+        disabled,
+        onClick: isBranch ?
+            void 0 :
+            () => {
+                if (rowId === void 0) {
+                    return;
+                }
+                definition.onClick(cell, rowId);
+            }
+    };
+}
+/**
+ * Resolves raw item declarations recursively.
+ *
+ * @param cell
+ * Table cell for the context menu.
+ *
+ * @param rawItems
+ * Source item declarations.
+ *
+ * @param useDefaults
+ * Whether omitted items should resolve to top-level defaults.
+ *
+ * @return
+ * Resolved context menu items.
+ */
+function resolveCellContextMenuItemsAtLevel(cell, rawItems, useDefaults) {
+    const sourceItems = rawItems === void 0 ?
+        (useDefaults ? defaultBuiltInCellContextMenuActions : []) :
+        rawItems;
+    if (!sourceItems.length) {
+        return [];
+    }
+    const resolved = [];
+    for (const rawItem of sourceItems) {
+        if (isDivider(rawItem)) {
+            resolved.push(rawItem);
+            continue;
+        }
+        const isBranchCandidate = hasNestedItems(rawItem);
+        const childItems = isBranchCandidate ?
+            resolveCellContextMenuItemsAtLevel(cell, rawItem.items, false) :
+            [];
+        const isBranch = childItems.length > 0;
+        if (typeof rawItem === 'string') {
+            const builtInItem = resolveBuiltInAction(rawItem, cell);
+            if (builtInItem) {
+                resolved.push(builtInItem);
+            }
+            continue;
+        }
+        if (isBuiltInOverride(rawItem)) {
+            const builtInItem = resolveBuiltInAction(rawItem.actionId, cell, rawItem, isBranch);
+            if (builtInItem) {
+                if (isBranch) {
+                    builtInItem.items = childItems;
+                }
+                resolved.push(builtInItem);
+            }
+            continue;
+        }
+        const customItem = {
+            label: rawItem.label,
+            icon: rawItem.icon,
+            disabled: rawItem.disabled,
+            onClick: isBranch ? void 0 : rawItem.onClick,
+            items: isBranch ? childItems : void 0
+        };
+        resolved.push(customItem);
+    }
+    return resolved;
+}
+/**
+ * Resolves context menu items, including built-in action declarations.
+ *
+ * @param cell
+ * Table cell for the context menu.
+ *
+ * @return
+ * Resolved context menu items.
+ */
+function resolveCellContextMenuItems(cell) {
+    const options = cell.column?.options.cells?.contextMenu;
+    if (options?.enabled === false) {
+        return [];
+    }
+    const items = resolveCellContextMenuItemsAtLevel(cell, options?.items, true);
+    if (!items.length ||
+        options?.enabled === true ||
+        options?.items !== void 0) {
+        return items;
+    }
+    return items.some((item) => !('separator' in item) && !item.disabled) ? items : [];
+}
+/* *
+ *
+ *  Default export
+ *
+ * */
+/**
+ * Built-in cell context menu action helpers.
+ */
+/* harmony default export */ const CellContextMenuBuiltInActions = ({
+    defaultBuiltInCellContextMenuActions,
+    registerBuiltInAction,
+    resolveCellContextMenuItems
+});
+
+;// ./code/grid/es-modules/Grid/Core/Table/Body/CellContextSubMenu.js
+/* *
+ *
+ *  Grid Cell Context Submenu
+ *
+ *  (c) 2020-2026 Highsoft AS
+ *
+ *  A commercial license may be required depending on use.
+ *  See www.highcharts.com/license
+ *
+ *  Authors:
+ *  - Mikkel Espolin Birkeland
+ *
+ * */
+
+
+
+
+/* *
+ *
+ *  Functions
+ *
+ * */
+/**
+ * Closes all sibling submenus for a menu level.
+ *
+ * @param menu
+ * Parent menu level.
+ *
+ * @param activeButton
+ * Button that should keep its submenu open.
+ */
+function closeSiblingSubMenus(menu, activeButton) {
+    for (const button of menu.buttons) {
+        if (button === activeButton || !button.popup?.isVisible) {
+            continue;
+        }
+        button.popup.hide();
+    }
+}
+/**
+ * Checks whether item is a divider.
+ *
+ * @param item
+ * Resolved context menu item.
+ *
+ * @return
+ * True when the item is a divider.
+ */
+function isDividerItem(item) {
+    return 'separator' in item && item.separator === true;
+}
+/**
+ * Closes the full chain of menus from current submenu to root.
+ *
+ * @param menu
+ * Current menu in the chain.
+ */
+function closeCellContextMenuTree(menu) {
+    let currentMenu = menu;
+    while (currentMenu) {
+        const parentMenu = currentMenu instanceof CellContextSubMenu ?
+            currentMenu.openerButton?.contextMenu :
+            void 0;
+        currentMenu.hide();
+        currentMenu = parentMenu;
+    }
+}
+/**
+ * Opens focused branch submenu if available.
+ *
+ * @param menu
+ * Menu instance.
+ */
+function openFocusedSubMenu(menu) {
+    const focusedButton = menu.buttons[menu.focusCursor];
+    if (!focusedButton ||
+        focusedButton.wrapper?.querySelector('button[disabled]')) {
+        return;
+    }
+    focusedButton.click();
+}
+/**
+ * Renders resolved menu items into a context menu.
+ *
+ * @param menu
+ * Menu to render items into.
+ *
+ * @param cell
+ * Target table cell.
+ *
+ * @param items
+ * Resolved menu items.
+ */
+function renderResolvedCellContextMenuItems(menu, cell, items) {
+    for (const item of items) {
+        if (isDividerItem(item)) {
+            const container = menu.ensureItemsContainer();
+            if (container) {
+                const divider = document.createElement('li');
+                divider.className = Grid_Core_Globals.getClassName('menuDivider');
+                container.appendChild(divider);
+            }
+            continue;
+        }
+        const isBranch = !!item.items?.length;
+        const button = new UI_ContextMenuButton({
+            label: item.label,
+            icon: item.icon,
+            chevron: isBranch,
+            onClick: () => {
+                if (!button) {
+                    return;
+                }
+                if (item.disabled) {
+                    return;
+                }
+                if (isBranch) {
+                    closeSiblingSubMenus(menu, button);
+                    if (!button.popup) {
+                        button.popup = new CellContextSubMenu(menu.grid, button, cell, item.items);
+                    }
+                    if (!button.popup.isVisible) {
+                        button.popup.show(button.wrapper);
+                    }
+                    return;
+                }
+                item.onClick?.call(cell, cell);
+                closeCellContextMenuTree(menu);
+            }
+        }).add(menu);
+        if (button && item.disabled) {
+            button.wrapper?.querySelector('button')?.setAttribute('disabled', '');
+        }
+    }
+}
+/* *
+ *
+ *  Class
+ *
+ * */
+class CellContextSubMenu extends UI_ContextMenu {
+    /**
+     * Builds a submenu anchored next to its parent button.
+     *
+     * @param grid
+     * Grid instance.
+     *
+     * @param button
+     * Parent branch button.
+     *
+     * @param cell
+     * Target table cell.
+     *
+     * @param items
+     * Submenu items.
+     */
+    constructor(grid, button, cell, items) {
+        super(grid, button, { nextToAnchor: true });
+        this.cell = cell;
+        this.items = items;
+        this.openerButton = button;
+    }
+    renderContent() {
+        renderResolvedCellContextMenuItems(this, this.cell, this.items);
+    }
+    onKeyDown(event) {
+        if (event.key === 'ArrowRight') {
+            event.preventDefault();
+            openFocusedSubMenu(this);
+            return;
+        }
+        if (event.key === 'ArrowLeft') {
+            event.preventDefault();
+            this.hide();
+            this.openerButton.focus();
+            return;
+        }
+        super.onKeyDown(event);
+    }
+}
+/* *
+ *
+ *  Default Export
+ *
+ * */
+/* harmony default export */ const Body_CellContextSubMenu = ((/* unused pure expression or super */ null && (CellContextSubMenu)));
+
 ;// ./code/grid/es-modules/Grid/Core/Table/Body/CellContextMenu.js
 /* *
  *
@@ -19868,6 +21717,7 @@ class ColumnsResizer {
  *  - Mikkel Espolin Birkeland
  *
  * */
+
 
 
 
@@ -19912,30 +21762,20 @@ class CellContextMenu extends UI_ContextMenu {
         if (!cell) {
             return;
         }
-        const items = cell.column?.options.cells?.contextMenu?.items || [];
-        for (const item of items) {
-            if (item.separator) {
-                this.addDivider();
-                continue;
-            }
-            const btn = new UI_ContextMenuButton({
-                label: item.label,
-                icon: item.icon,
-                onClick: () => {
-                    if (item.disabled) {
-                        return;
-                    }
-                    item.onClick?.call(cell, cell);
-                    this.hide();
-                }
-            }).add(this);
-            if (btn && item.disabled) {
-                // Minimal disable support for v1. We don't currently have a
-                // dedicated ContextMenuButton API for disabled state.
-                // This keeps behavior consistent without introducing new CSS.
-                btn.wrapper?.querySelector('button')?.setAttribute('disabled', '');
-            }
+        const items = CellContextMenuBuiltInActions.resolveCellContextMenuItems(cell);
+        renderResolvedCellContextMenuItems(this, cell, items);
+    }
+    onKeyDown(event) {
+        if (event.key === 'ArrowRight') {
+            event.preventDefault();
+            openFocusedSubMenu(this);
+            return;
         }
+        if (event.key === 'ArrowLeft') {
+            event.preventDefault();
+            return;
+        }
+        super.onKeyDown(event);
     }
 }
 /* harmony default export */ const Body_CellContextMenu = (CellContextMenu);
@@ -19952,10 +21792,11 @@ class CellContextMenu extends UI_ContextMenu {
  *
  *
  *  Authors:
- *  - Dawid Dragula
+ *  - Dawid Draguła
  *  - Sebastian Bochan
  *
  * */
+
 
 
 
@@ -20000,9 +21841,27 @@ class Table {
          */
         this.rows = [];
         /**
+         * Additional rendered body sections composed into the table.
+         */
+        this.bodySections = [];
+        /**
+         * Whether the current logical focus belongs to a body cell that has been
+         * detached from the DOM by virtualization.
+         */
+        this.hasDetachedFocus = false;
+        /**
          * The flag that indicates if the table rows are virtualized.
          */
         this.virtualRows = true;
+        /**
+         * Async hooks executed after the main row update cycle.
+         * @internal
+         */
+        this.afterUpdateRowsHooks = [];
+        /**
+         * Whether the table body min-height was set by the grid.
+         */
+        this.tbodyMinHeightManaged = false;
         /**
          * Handles the focus event on the table body.
          *
@@ -20011,8 +21870,7 @@ class Table {
          */
         this.onTBodyFocus = (e) => {
             e.preventDefault();
-            this.rows[this.rowsVirtualizer.rowCursor - this.rows[0].index]
-                ?.cells[0]?.htmlElement.focus();
+            this.getRenderedRows()[0]?.cells[0]?.htmlElement.focus();
         };
         /**
          * Handles the resize event.
@@ -20028,6 +21886,47 @@ class Table {
                 void this.rowsVirtualizer.scroll();
             }
             this.header?.scrollHorizontally(this.tbodyElement.scrollLeft);
+            fireEvent(this, 'bodyScroll', {
+                scrollLeft: this.tbodyElement.scrollLeft,
+                scrollTop: this.tbodyElement.scrollTop
+            });
+        };
+        /**
+         * Handles document focus changes while a logically focused cell is
+         * temporarily detached by virtualization.
+         *
+         * @param e
+         * The focus event.
+         */
+        this.onDocumentFocusIn = (e) => {
+            if (!this.hasDetachedFocus) {
+                return;
+            }
+            const target = e.target;
+            if (target instanceof Node &&
+                this.tableElement.contains(target)) {
+                this.clearDetachedFocus();
+                return;
+            }
+            this.clearDetachedFocus(true);
+        };
+        /**
+         * Clears detached logical focus when the user interacts outside of the
+         * table while the focused cell is not rendered.
+         *
+         * @param e
+         * The pointer event.
+         */
+        this.onDocumentPointerDown = (e) => {
+            if (!this.hasDetachedFocus) {
+                return;
+            }
+            const target = e.target;
+            if (target instanceof Node &&
+                this.tableElement.contains(target)) {
+                return;
+            }
+            this.clearDetachedFocus(true);
         };
         /**
          * Delegated click handler for cells.
@@ -20103,24 +22002,17 @@ class Table {
             if (!cell) {
                 return;
             }
-            // Disabled until meaningful functionality is ready.
-            // const isContextMenuKey = (
-            //     e.key === 'ContextMenu' || (e.key === 'F10' && e.shiftKey)
-            // );
-            // if (isContextMenuKey && 'column' in cell && 'row' in cell) {
-            //     const tableCell = cell as TableCell;
-            //     const rect = tableCell.htmlElement.getBoundingClientRect();
-            //     const opened = this.openCellContextMenu(
-            //         tableCell,
-            //         rect.left + 4,
-            //         rect.bottom - 2
-            //     );
-            //     if (opened) {
-            //         e.preventDefault();
-            //         e.stopPropagation();
-            //         return;
-            //     }
-            // }
+            const isContextMenuKey = (e.key === 'ContextMenu' || (e.key === 'F10' && e.shiftKey));
+            if (isContextMenuKey && 'column' in cell && 'row' in cell) {
+                const tableCell = cell;
+                const rect = tableCell.htmlElement.getBoundingClientRect();
+                const opened = this.openCellContextMenu(tableCell, rect.left + 4, rect.bottom - 2);
+                if (opened) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    return;
+                }
+            }
             cell.onKeyDown(e);
         };
         this.grid = grid;
@@ -20136,33 +22028,15 @@ class Table {
         this.resizeObserver = new ResizeObserver(this.onResize);
         this.resizeObserver.observe(tableElement);
         this.tbodyElement.addEventListener('scroll', this.onScroll);
-        this.tbodyElement.addEventListener('focus', this.onTBodyFocus);
-        // Delegated cell events
-        this.tbodyElement.addEventListener('click', this.onCellClick);
-        this.tbodyElement.addEventListener('dblclick', this.onCellDblClick);
-        this.tbodyElement.addEventListener('contextmenu', this.onCellContextMenu);
-        this.tbodyElement.addEventListener('mousedown', this.onCellMouseDown);
-        this.tbodyElement.addEventListener('mouseover', this.onCellMouseOver);
-        this.tbodyElement.addEventListener('mouseout', this.onCellMouseOut);
-        this.tbodyElement.addEventListener('keydown', this.onCellKeyDown);
+        this.addBodyEventListeners(this.tbodyElement);
+        document.addEventListener('focusin', this.onDocumentFocusIn, true);
+        document.addEventListener('pointerdown', this.onDocumentPointerDown, true);
     }
     /* *
     *
     *  Methods
     *
     * */
-    /**
-     * The presentation version of the data table. It has applied modifiers
-     * and is ready to be rendered.
-     *
-     * @deprecated Use `grid.dataProvider` instead.
-     */
-    get dataTable() {
-        const dp = this.grid.dataProvider;
-        if (dp && 'getDataTable' in dp) {
-            return dp.getDataTable(true);
-        }
-    }
     /**
      * Initializes the table. Should be called after creation so that the table
      * can be asynchronously initialized.
@@ -20194,6 +22068,9 @@ class Table {
             // TODO(footer): Load & render footer
             // this.footer = new TableFooter(this);
             // this.footer.render();
+            // Ensure row widths are ready before first row render to prevent
+            // initial pinned-row misalignment.
+            this.columnResizing.reflow();
             await this.rowsVirtualizer.initialRender();
         }
         finally {
@@ -20202,6 +22079,55 @@ class Table {
             this.grid.hideLoading();
         }
     }
+    addBodyEventListeners(body) {
+        body.addEventListener('focus', this.onTBodyFocus);
+        body.addEventListener('click', this.onCellClick);
+        body.addEventListener('dblclick', this.onCellDblClick);
+        body.addEventListener('contextmenu', this.onCellContextMenu);
+        body.addEventListener('mousedown', this.onCellMouseDown);
+        body.addEventListener('mouseover', this.onCellMouseOver);
+        body.addEventListener('mouseout', this.onCellMouseOut);
+        body.addEventListener('keydown', this.onCellKeyDown);
+    }
+    removeBodyEventListeners(body) {
+        body.removeEventListener('focus', this.onTBodyFocus);
+        body.removeEventListener('click', this.onCellClick);
+        body.removeEventListener('dblclick', this.onCellDblClick);
+        body.removeEventListener('contextmenu', this.onCellContextMenu);
+        body.removeEventListener('mousedown', this.onCellMouseDown);
+        body.removeEventListener('mouseover', this.onCellMouseOver);
+        body.removeEventListener('mouseout', this.onCellMouseOut);
+        body.removeEventListener('keydown', this.onCellKeyDown);
+    }
+    /**
+     * Registers an auxiliary table body section.
+     *
+     * @param section
+     * Body section descriptor.
+     *
+     * @internal
+     */
+    registerBodySection(section) {
+        this.unregisterBodySection(section.id);
+        this.bodySections.push(section);
+        this.addBodyEventListeners(section.tbodyElement);
+    }
+    /**
+     * Unregisters an auxiliary table body section.
+     *
+     * @param sectionId
+     * Body section ID.
+     *
+     * @internal
+     */
+    unregisterBodySection(sectionId) {
+        const sectionIndex = this.bodySections.findIndex((section) => section.id === sectionId);
+        if (sectionIndex < 0) {
+            return;
+        }
+        this.removeBodyEventListeners(this.bodySections[sectionIndex].tbodyElement);
+        this.bodySections.splice(sectionIndex, 1);
+    }
     /**
      * Sets the minimum height of the table body.
      */
@@ -20209,10 +22135,21 @@ class Table {
         const { options } = this.grid;
         const minVisibleRows = options?.rendering?.rows?.minVisibleRows;
         const tbody = this.tbodyElement;
-        if (defined(minVisibleRows) &&
-            !getStyle(tbody, 'min-height', true)) {
-            tbody.style.minHeight = (minVisibleRows * this.rowsVirtualizer.defaultRowHeight) + 'px';
+        if (!defined(minVisibleRows)) {
+            if (this.tbodyMinHeightManaged) {
+                tbody.style.minHeight = '';
+                this.tbodyMinHeightManaged = false;
+            }
+            return;
         }
+        const hasUserMinHeight = !!getStyle(tbody, 'min-height', true);
+        if (!this.tbodyMinHeightManaged && hasUserMinHeight) {
+            return;
+        }
+        const extraRowsCount = this.bodySections.reduce((count, section) => count + section.getRows().length, 0);
+        const minScrollableRows = Math.max(0, minVisibleRows - extraRowsCount);
+        tbody.style.minHeight = (minScrollableRows * this.rowsVirtualizer.defaultRowHeight) + 'px';
+        this.tbodyMinHeightManaged = true;
     }
     /**
      * Checks if rows virtualization should be enabled.
@@ -20226,8 +22163,6 @@ class Table {
         if (defined(rows?.virtualization)) {
             return rows.virtualization;
         }
-        // Consider changing this to use the presentation table row count
-        // instead of the original data table row count.
         const rowCount = (await this.grid.dataProvider?.getRowCount()) ?? 0;
         const threshold = rows?.virtualizationThreshold ?? 50;
         if (grid.pagination) {
@@ -20261,7 +22196,7 @@ class Table {
         if (!dp) {
             return;
         }
-        vp.grid.querying.pagination.clampPage();
+        const focusCursor = vp.focusCursor;
         try {
             this.grid.showLoading();
             // Update data
@@ -20269,6 +22204,10 @@ class Table {
                 (vp.rows[vp.rows.length - 1]?.index ?? -1) + 1 :
                 0;
             await vp.grid.querying.proceed();
+            vp.grid.querying.pagination.clampPage();
+            if (vp.grid.querying.shouldBeUpdated) {
+                await vp.grid.querying.proceed();
+            }
             for (const column of vp.columns) {
                 column.loadData();
             }
@@ -20297,9 +22236,15 @@ class Table {
                     await rowsToUpdate[i].update();
                 }
             }
+            for (const hook of vp.afterUpdateRowsHooks) {
+                await hook();
+            }
             // Update the pagination controls
             vp.grid.pagination?.updateControls();
             vp.reflow();
+            if (focusCursor) {
+                vp.focusCellFromCursor(focusCursor, true);
+            }
         }
         finally {
             this.grid.hideLoading();
@@ -20315,6 +22260,11 @@ class Table {
         this.header?.reflow();
         // Reflow rows content dimensions
         this.rowsVirtualizer.reflowRows();
+        const measuredRowHeight = (this.rowsVirtualizer.measureRenderedRowHeight());
+        if (defined(measuredRowHeight)) {
+            this.rowsVirtualizer.applyMeasuredRowHeight(measuredRowHeight);
+        }
+        this.setTbodyMinHeight();
         // Reflow the pagination
         this.grid.pagination?.reflow();
         // Reflow popups
@@ -20322,6 +22272,7 @@ class Table {
             popup.reflow();
         });
         this.grid.dirtyFlags.delete('reflow');
+        fireEvent(this, 'afterReflow');
     }
     /**
      * Opens a cell context menu if configured and enabled.
@@ -20343,7 +22294,7 @@ class Table {
         if (options?.enabled === false) {
             return false;
         }
-        const items = options?.items || [];
+        const items = CellContextMenuBuiltInActions.resolveCellContextMenuItems(tableCell);
         if (!items.length) {
             return false; // Keep native browser menu
         }
@@ -20372,18 +22323,164 @@ class Table {
      * Try it: {@link https://jsfiddle.net/gh/get/library/pure/highcharts/highcharts/tree/master/samples/grid-lite/basic/scroll-to-row | Scroll to row}
      */
     scrollToRow(index) {
+        const viewportTopInset = this.getViewportTopInset();
         if (this.virtualRows) {
-            this.tbodyElement.scrollTop =
-                index * this.rowsVirtualizer.defaultRowHeight;
+            this.tbodyElement.scrollTop = Math.max(0, index * this.rowsVirtualizer.defaultRowHeight -
+                viewportTopInset);
             return;
         }
         const rowClass = '.' + Grid_Core_Globals.getClassName('rowElement');
-        const firstRowTop = this.tbodyElement
-            .querySelectorAll(rowClass)[0]
-            .getBoundingClientRect().top;
-        this.tbodyElement.scrollTop = (this.tbodyElement
-            .querySelectorAll(rowClass)[index]
-            .getBoundingClientRect().top) - firstRowTop;
+        const rows = this.tbodyElement.querySelectorAll(rowClass);
+        const firstRow = rows[0];
+        const safeIndex = Math.min(Math.max(0, index), Math.max(0, rows.length - 1));
+        const targetRow = rows[safeIndex];
+        if (!firstRow || !targetRow) {
+            return;
+        }
+        const firstRowTop = firstRow.getBoundingClientRect().top;
+        this.tbodyElement.scrollTop = Math.max(0, targetRow.getBoundingClientRect().top -
+            firstRowTop -
+            viewportTopInset);
+    }
+    /**
+     * Returns the top inset of the visible table body area. Composed modules
+     * can extend this via the `getViewportTopInset` event.
+     */
+    getViewportTopInset() {
+        const eventObject = {
+            top: 0
+        };
+        fireEvent(this, 'getViewportTopInset', eventObject);
+        return eventObject.top;
+    }
+    /**
+     * Ensures that a row is fully visible inside the scrollable body.
+     *
+     * @param row
+     * The row to reveal.
+     */
+    ensureRowFullyVisible(row) {
+        if (!row.htmlElement.isConnected ||
+            row.htmlElement.parentElement !== this.tbodyElement) {
+            return;
+        }
+        const tbodyRect = this.tbodyElement.getBoundingClientRect();
+        const rowRect = row.htmlElement.getBoundingClientRect();
+        const visibleTop = tbodyRect.top + this.getViewportTopInset();
+        const visibleBottom = tbodyRect.bottom;
+        const visibleHeight = Math.max(visibleBottom - visibleTop, 0);
+        const maxScrollTop = Math.max(this.tbodyElement.scrollHeight - this.tbodyElement.clientHeight, 0);
+        let nextScrollTop = this.tbodyElement.scrollTop;
+        if (rowRect.top < visibleTop) {
+            nextScrollTop -= visibleTop - rowRect.top;
+        }
+        else if (rowRect.bottom > visibleBottom) {
+            if (rowRect.height >= visibleHeight) {
+                nextScrollTop += rowRect.top - visibleTop;
+            }
+            else {
+                nextScrollTop += rowRect.bottom - visibleBottom;
+            }
+        }
+        this.tbodyElement.scrollTop = Math.max(0, Math.min(nextScrollTop, maxScrollTop));
+    }
+    /**
+     * Focuses a body cell by its row index in the rendered table order.
+     *
+     * @param rowIndex
+     * The target row index.
+     *
+     * @param columnIndex
+     * The target column index.
+     */
+    focusCellByRowIndex(rowIndex, columnIndex) {
+        if (columnIndex < 0 ||
+            columnIndex >= this.columns.length ||
+            rowIndex < 0 ||
+            rowIndex >= this.rowsVirtualizer.rowCount) {
+            return;
+        }
+        const targetRow = this.rows.find((row) => row.index === rowIndex);
+        const targetCell = targetRow?.cells[columnIndex];
+        if (targetCell) {
+            delete this.pendingFocusCursor;
+            this.clearDetachedFocus();
+            targetCell.htmlElement.focus({
+                preventScroll: true
+            });
+            if (targetRow?.htmlElement.parentElement === this.tbodyElement) {
+                this.ensureRowFullyVisible(targetRow);
+            }
+            return;
+        }
+        this.pendingFocusCursor = [rowIndex, columnIndex];
+        this.scrollToRow(rowIndex);
+    }
+    /**
+     * Marks the current logical focus as temporarily detached by
+     * virtualization.
+     */
+    preserveFocusDuringDetach() {
+        this.hasDetachedFocus = true;
+    }
+    /**
+     * Returns whether the provided cell currently owns detached logical focus.
+     *
+     * @param rowId
+     * Target row ID.
+     *
+     * @param columnIndex
+     * Target column index.
+     */
+    hasDetachedFocusAt(rowId, columnIndex) {
+        const focusCursor = this.focusCursor;
+        return !!(this.hasDetachedFocus &&
+            rowId !== void 0 &&
+            focusCursor &&
+            focusCursor.rowId === rowId &&
+            focusCursor.columnIndex === columnIndex);
+    }
+    /**
+     * Clears detached logical focus state and optionally the logical focus
+     * cursor itself.
+     *
+     * @param clearFocusCursor
+     * Whether to also clear the logical focus cursor.
+     */
+    clearDetachedFocus(clearFocusCursor = false) {
+        this.hasDetachedFocus = false;
+        if (clearFocusCursor) {
+            delete this.focusCursor;
+        }
+    }
+    /**
+     * Restores focus to a rendered body cell. Composed modules can prevent the
+     * default focus transfer via the `beforeRestoreCellFocus` event.
+     *
+     * @param cell
+     * Rendered body cell to focus.
+     *
+     * @param rowIndex
+     * Target row index in the rendered/projected order.
+     *
+     * @param columnIndex
+     * Target column index.
+     */
+    restoreRenderedCellFocus(cell, rowIndex, columnIndex) {
+        if (!cell) {
+            return;
+        }
+        const eventObject = {
+            cell,
+            columnIndex,
+            rowIndex
+        };
+        fireEvent(this, 'beforeRestoreCellFocus', eventObject, () => {
+            this.clearDetachedFocus();
+            cell.htmlElement.focus({
+                preventScroll: true
+            });
+        });
     }
     /**
      * Get the widthRatio value from the width in pixels. The widthRatio is
@@ -20428,41 +22525,49 @@ class Table {
         if (!(element instanceof Element)) {
             return;
         }
-        const td = element.closest('td');
-        if (!td) {
+        const cellElement = element.closest('.' + Grid_Core_Globals.getClassName('cell'));
+        if (!cellElement) {
             return;
         }
-        const tr = td.parentElement;
+        const tr = cellElement.parentElement;
         if (!tr) {
             return;
         }
-        const rowIndexAttr = tr.getAttribute('data-row-index');
-        if (rowIndexAttr === null) {
+        const tbody = tr.parentElement;
+        if (!tbody) {
             return;
         }
-        const rowIndex = parseInt(rowIndexAttr, 10);
-        const firstRowIndex = this.rows[0]?.index ?? 0;
-        const row = this.rows[rowIndex - firstRowIndex];
+        let row;
+        if (tbody === this.tbodyElement) {
+            const rowIndexAttr = tr.getAttribute('data-row-index');
+            if (rowIndexAttr === null) {
+                return;
+            }
+            const rowIndex = parseInt(rowIndexAttr, 10);
+            row = this.getRenderedRowByIndex(rowIndex);
+        }
+        else {
+            row = this.bodySections.find((section) => section.tbodyElement === tbody)?.getRowByElement(tr);
+        }
         if (!row) {
             return;
         }
         // Find cell index by position in row
-        const cellIndex = Array.prototype.indexOf.call(tr.children, td);
+        const cellIndex = Array.prototype.indexOf.call(tr.children, cellElement);
         return row.cells[cellIndex];
     }
     /**
      * Destroys the grid table.
      */
     destroy() {
-        this.tbodyElement.removeEventListener('focus', this.onTBodyFocus);
         this.tbodyElement.removeEventListener('scroll', this.onScroll);
-        this.tbodyElement.removeEventListener('click', this.onCellClick);
-        this.tbodyElement.removeEventListener('dblclick', this.onCellDblClick);
-        this.tbodyElement.removeEventListener('contextmenu', this.onCellContextMenu);
-        this.tbodyElement.removeEventListener('mousedown', this.onCellMouseDown);
-        this.tbodyElement.removeEventListener('mouseover', this.onCellMouseOver);
-        this.tbodyElement.removeEventListener('mouseout', this.onCellMouseOut);
-        this.tbodyElement.removeEventListener('keydown', this.onCellKeyDown);
+        document.removeEventListener('focusin', this.onDocumentFocusIn, true);
+        document.removeEventListener('pointerdown', this.onDocumentPointerDown, true);
+        this.removeBodyEventListeners(this.tbodyElement);
+        for (const section of this.bodySections) {
+            this.removeBodyEventListeners(section.tbodyElement);
+        }
+        this.bodySections.length = 0;
         this.resizeObserver.disconnect();
         this.columnsResizer?.removeEventListeners();
         this.header?.destroy();
@@ -20498,10 +22603,13 @@ class Table {
     applyStateMeta(meta) {
         this.tbodyElement.scrollTop = meta.scrollTop;
         this.tbodyElement.scrollLeft = meta.scrollLeft;
+        this.header?.scrollHorizontally(meta.scrollLeft);
+        fireEvent(this, 'bodyScroll', {
+            scrollLeft: meta.scrollLeft,
+            scrollTop: meta.scrollTop
+        });
         if (meta.focusCursor) {
-            const [rowIndex, columnIndex] = meta.focusCursor;
-            const row = this.rows[rowIndex - this.rows[0].index];
-            row?.cells[columnIndex]?.htmlElement.focus();
+            this.focusCellFromCursor(meta.focusCursor);
         }
     }
     /**
@@ -20539,7 +22647,76 @@ class Table {
      * The ID of the row.
      */
     getRow(id) {
-        return this.rows.find((row) => row.id === id);
+        return this.rows.find((row) => row.id === id) ||
+            this.getRenderedRows().find((row) => row.id === id);
+    }
+    /**
+     * Returns all rendered rows in visual order.
+     *
+     * @internal
+     */
+    getRenderedRows() {
+        return [
+            ...[].concat(...this.bodySections
+                .filter((section) => section.position === 'before')
+                .map((section) => section.getRows())),
+            ...this.rows,
+            ...[].concat(...this.bodySections
+                .filter((section) => section.position === 'after')
+                .map((section) => section.getRows()))
+        ];
+    }
+    /**
+     * Returns the rendered row with the provided presentation index.
+     *
+     * @param index
+     * The row index in the presentation table.
+     *
+     * @internal
+     */
+    getRenderedRowByIndex(index) {
+        return this.rows.find((row) => row.index === index);
+    }
+    async syncAriaRowIndexes() {
+        const headerRowsCount = this.header?.rows.length ?? 0;
+        const rows = this.getRenderedRows();
+        for (let i = 0, iEnd = rows.length; i < iEnd; ++i) {
+            this.grid.accessibility?.setRowIndex(rows[i].htmlElement, i + headerRowsCount + 1);
+        }
+        const baseRowCount = await this.grid.dataProvider?.getRowCount() || 0;
+        const tableElement = this.grid.tableElement;
+        if (tableElement) {
+            tableElement.setAttribute('aria-rowcount', (baseRowCount +
+                this.bodySections.reduce((count, section) => count + section.getRows().length, 0) +
+                headerRowsCount) + '');
+        }
+    }
+    focusCellFromCursor(cursor, defer = false) {
+        const focus = () => {
+            if (cursor.bodySectionId) {
+                this.bodySections.find((section) => section.id === cursor.bodySectionId)?.getRowById(cursor.rowId)
+                    ?.cells[cursor.columnIndex]
+                    ?.htmlElement.focus();
+                return;
+            }
+            void this.grid.dataProvider?.getRowIndex(cursor.rowId).then((rowIndex) => {
+                if (rowIndex === void 0) {
+                    return;
+                }
+                if (defer) {
+                    this.focusCellByRowIndex(rowIndex, cursor.columnIndex);
+                    return;
+                }
+                const row = this.getRenderedRowByIndex(rowIndex);
+                this.restoreRenderedCellFocus(row?.cells[cursor.columnIndex], rowIndex, cursor.columnIndex);
+            });
+        };
+        if (defer) {
+            setTimeout(focus);
+        }
+        else {
+            focus();
+        }
     }
 }
 /* *
@@ -20560,7 +22737,7 @@ class Table {
  *
  *  Authors:
  *  - Sophie Bremer
- *  - Dawid Dragula
+ *  - Dawid Draguła
  *
  * */
 
@@ -20732,7 +22909,7 @@ Modifiers_DataModifier.registerType('Sort', SortModifier);
  *
  *
  *  Authors:
- *  - Dawid Dragula
+ *  - Dawid Draguła
  *
  * */
 
@@ -20816,15 +22993,17 @@ class SortingController {
      * Returns the sorting options from the data grid options.
      */
     getSortingOptions() {
-        const grid = this.querying.grid, { columnOptionsMap } = grid;
-        if (!columnOptionsMap) {
-            return [];
-        }
-        const columnIDs = Object.keys(columnOptionsMap);
+        const grid = this.querying.grid;
+        const columnPolicy = grid.columnPolicy;
+        const columnIDs = columnPolicy.getColumnIds();
         const sortings = [];
         for (let i = 0, iEnd = columnIDs.length; i < iEnd; ++i) {
             const columnId = columnIDs[i];
-            const columnOptions = columnOptionsMap[columnId]?.options || {};
+            if (columnPolicy.isColumnUnbound(columnId)) {
+                continue;
+            }
+            const columnOptions = columnPolicy
+                .getIndividualColumnOptions(columnId) || {};
             const order = columnOptions.sorting?.order;
             if (order) {
                 sortings.push({
@@ -20871,19 +23050,31 @@ class SortingController {
      */
     createModifier() {
         const sortings = (this.currentSortings ||
-            (this.currentSorting ? [this.currentSorting] : [])).filter((sorting) => !!(sorting.columnId && sorting.order));
+            (this.currentSorting ? [this.currentSorting] : [])).filter((sorting) => !!(sorting.columnId &&
+            sorting.order &&
+            !this.querying.grid.columnPolicy.isColumnUnbound(sorting.columnId)));
         if (!sortings.length) {
             return;
         }
         const grid = this.querying.grid;
+        const sourceSortings = sortings
+            .map((sorting) => ({
+            ...sorting,
+            sourceColumnId: grid.columnPolicy.getColumnSourceId(sorting.columnId)
+        }))
+            .filter((sorting) => !!sorting.sourceColumnId);
+        if (!sourceSortings.length) {
+            return;
+        }
         const defaultCompare = grid.options?.columnDefaults?.sorting?.compare;
         return new Modifiers_SortModifier({
-            direction: sortings[0].order,
-            columns: sortings.map((sorting) => ({
-                column: sorting.columnId,
+            direction: sourceSortings[0].order,
+            columns: sourceSortings.map((sorting) => ({
+                column: sorting.sourceColumnId,
                 direction: sorting.order,
-                compare: grid.columnOptionsMap?.[sorting.columnId]
-                    ?.options?.sorting?.compare || defaultCompare
+                compare: grid.columnPolicy
+                    .getIndividualColumnOptions(sorting.columnId)
+                    ?.sorting?.compare || defaultCompare
             }))
         });
     }
@@ -20894,436 +23085,6 @@ class SortingController {
  *
  * */
 /* harmony default export */ const Querying_SortingController = (SortingController);
-
-;// ./code/grid/es-modules/Data/Modifiers/FilterModifier.js
-/* *
- *
- *  (c) 2009-2026 Highsoft AS
- *
- *  A commercial license may be required depending on use.
- *  See www.highcharts.com/license
- *
- *
- *  Authors:
- *  - Dawid Dragula
- *
- * */
-
-
-
-/* *
- *
- *  Class
- *
- * */
-/**
- * Filters out table rows matching a given condition.
- */
-class FilterModifier extends Modifiers_DataModifier {
-    /* *
-     *
-     *  Static Functions
-     *
-     * */
-    /**
-     * Compiles a filter condition into a callback function.
-     *
-     * @param {FilterCondition} condition
-     * Condition to compile.
-     */
-    static compile(condition) {
-        if (isFunction(condition)) {
-            return condition;
-        }
-        const op = condition.operator;
-        switch (op) {
-            case 'and': {
-                const subs = condition.conditions.map((c) => this.compile(c));
-                return (row, table, i) => subs.every((cond) => cond(row, table, i));
-            }
-            case 'or': {
-                const subs = condition.conditions.map((c) => this.compile(c));
-                return (row, table, i) => subs.some((cond) => cond(row, table, i));
-            }
-            case 'not': {
-                const sub = this.compile(condition.condition);
-                return (row, table, i) => !sub(row, table, i);
-            }
-        }
-        const { columnId: col, value } = condition;
-        switch (op) {
-            case '==':
-                // eslint-disable-next-line eqeqeq
-                return (row) => row[col] == value;
-            case '===':
-                return (row) => row[col] === value;
-            case '!=':
-                // eslint-disable-next-line eqeqeq
-                return (row) => row[col] != value;
-            case '!==':
-                return (row) => row[col] !== value;
-            case '>':
-                return (row) => (row[col] || 0) > (value || 0);
-            case '>=':
-                return (row) => (row[col] || 0) >= (value || 0);
-            case '<':
-                return (row) => (row[col] || 0) < (value || 0);
-            case '<=':
-                return (row) => (row[col] || 0) <= (value || 0);
-            case 'empty':
-                return (row) => row[col] === null || row[col] === '';
-        }
-        const { ignoreCase } = condition;
-        const str = (val) => {
-            const s = '' + val;
-            return (ignoreCase ?? true) ? s.toLowerCase() : s;
-        };
-        switch (op) {
-            case 'contains':
-                return (row) => str(row[col]).includes(str(value));
-            default:
-                return (row) => str(row[col])[op](str(value));
-        }
-    }
-    /* *
-     *
-     *  Constructor
-     *
-     * */
-    /**
-     * Constructs an instance of the filter modifier.
-     *
-     * @param {Partial<FilterModifierOptions>} [options]
-     * Options to configure the filter modifier.
-     */
-    constructor(options) {
-        super();
-        this.options = merge(FilterModifier.defaultOptions, options);
-    }
-    /* *
-     *
-     *  Functions
-     *
-     * */
-    /**
-     * Filters out table rows matching a given condition. If the given table
-     * does not have defined a `modified` property, the filtering is applied
-     * in-place on the original table rather than on a `modified` copy.
-     *
-     * @param {DataTable} table
-     * Table to modify.
-     *
-     * @param {DataEventDetail} [eventDetail]
-     * Custom information for pending events.
-     *
-     * @return {DataTable}
-     * Table with `modified` property as a reference or modified table, if
-     * `modified` property of the original table is undefined.
-     */
-    modifyTable(table, eventDetail) {
-        const modifier = this;
-        modifier.emit({ type: 'modify', detail: eventDetail, table });
-        const { condition } = modifier.options;
-        if (!condition) {
-            // If no condition is set, return the unmodified table.
-            return table;
-        }
-        const matchRow = FilterModifier.compile(condition);
-        const modified = table.getModified();
-        const rows = [];
-        const indexes = [];
-        for (let i = 0, iEnd = table.getRowCount(); i < iEnd; ++i) {
-            const row = table.getRowObject(i);
-            if (!row) {
-                continue;
-            }
-            if (matchRow(row, table, i)) {
-                rows.push(row);
-                indexes.push(table.getOriginalRowIndex(i));
-            }
-        }
-        modified.deleteRows();
-        modified.setRows(rows);
-        modified.setOriginalRowIndexes(indexes);
-        modifier.emit({ type: 'afterModify', detail: eventDetail, table });
-        return table;
-    }
-}
-/* *
- *
- *  Static Properties
- *
- * */
-/**
- * Default options for the filter modifier.
- */
-FilterModifier.defaultOptions = {
-    type: 'Filter'
-};
-Modifiers_DataModifier.registerType('Filter', FilterModifier);
-/* *
- *
- *  Default Export
- *
- * */
-/* harmony default export */ const Modifiers_FilterModifier = (FilterModifier);
-
-;// ./code/grid/es-modules/Grid/Core/Querying/FilteringController.js
-/* *
- *
- *  Grid Filtering Controller class
- *
- *  (c) 2020-2026 Highsoft AS
- *
- *  A commercial license may be required depending on use.
- *  See www.highcharts.com/license
- *
- *
- *  Authors:
- *  - Dawid Dragula
- *
- * */
-
-
-
-/* *
- *
- *  Class
- *
- * */
-/**
- * Class that manages one of the data grid querying types - filtering.
- */
-class FilteringController {
-    /* *
-    *
-    *  Constructor
-    *
-    * */
-    /**
-     * Constructs the FilteringController instance.
-     *
-     * @param querying
-     * The querying controller instance.
-     */
-    constructor(querying) {
-        /**
-         * A map of the filtering conditions for each column.
-         */
-        this.columnConditions = {};
-        this.querying = querying;
-    }
-    /* *
-    *
-    *  Functions
-    *
-    * */
-    /**
-     * Maps filtering options to the filtering condition.
-     *
-     * @param columnId
-     * Id of the column to filter.
-     *
-     * @param options
-     * Filtering options.
-     */
-    static mapOptionsToFilter(columnId, options) {
-        const { condition, value } = options;
-        const isStringValue = isString(value);
-        const stringifiedValue = isStringValue ? value : '';
-        const nonValueConditions = ['empty', 'notEmpty', 'true', 'false'];
-        if ((typeof value === 'undefined' ||
-            (isStringValue && !stringifiedValue)) && !nonValueConditions.includes(condition ?? '')) {
-            return;
-        }
-        switch (condition) {
-            case 'contains':
-                return {
-                    columnId,
-                    operator: 'contains',
-                    value: stringifiedValue
-                };
-            case 'doesNotContain':
-                return {
-                    operator: 'not',
-                    condition: {
-                        columnId,
-                        operator: 'contains',
-                        value: stringifiedValue
-                    }
-                };
-            case 'equals':
-                return {
-                    columnId,
-                    operator: '===',
-                    value
-                };
-            case 'doesNotEqual':
-                return {
-                    columnId,
-                    operator: '!==',
-                    value
-                };
-            case 'beginsWith':
-                return {
-                    columnId,
-                    operator: 'startsWith',
-                    value: stringifiedValue
-                };
-            case 'endsWith':
-                return {
-                    columnId,
-                    operator: 'endsWith',
-                    value: stringifiedValue
-                };
-            case 'greaterThan':
-                return {
-                    columnId,
-                    operator: '>',
-                    value
-                };
-            case 'greaterThanOrEqualTo':
-                return {
-                    columnId,
-                    operator: '>=',
-                    value
-                };
-            case 'lessThan':
-                return {
-                    columnId,
-                    operator: '<',
-                    value
-                };
-            case 'lessThanOrEqualTo':
-                return {
-                    columnId,
-                    operator: '<=',
-                    value
-                };
-            case 'before':
-                return {
-                    columnId,
-                    operator: '<',
-                    value
-                };
-            case 'after':
-                return {
-                    columnId,
-                    operator: '>',
-                    value
-                };
-            case 'empty':
-                return {
-                    columnId,
-                    operator: 'empty',
-                    value
-                };
-            case 'notEmpty':
-                return {
-                    operator: 'not',
-                    condition: {
-                        columnId,
-                        operator: 'empty',
-                        value
-                    }
-                };
-            case 'true':
-                return {
-                    columnId,
-                    operator: '===',
-                    value: true
-                };
-            case 'false':
-                return {
-                    columnId,
-                    operator: '===',
-                    value: false
-                };
-        }
-    }
-    /**
-     * Loads filtering options from the data grid options.
-     */
-    loadOptions() {
-        const columnOptionsMap = this.querying.grid.columnOptionsMap;
-        const newConditions = {};
-        if (columnOptionsMap) {
-            const columnIds = Object.keys(columnOptionsMap);
-            for (let i = 0, iEnd = columnIds.length; i < iEnd; ++i) {
-                const columnId = columnIds[i];
-                const filteringOptions = columnOptionsMap[columnId]?.options?.filtering;
-                if (!filteringOptions) {
-                    continue;
-                }
-                const condition = FilteringController.mapOptionsToFilter(columnId, filteringOptions);
-                if (condition) {
-                    newConditions[columnId] = condition;
-                }
-            }
-        }
-        this.columnConditions = newConditions;
-        this.updateModifier();
-    }
-    /**
-     * Adds a new filtering condition to the specified column.
-     *
-     * @param columnId
-     * The column ID to filter in.
-     *
-     * @param options
-     * The filtering options.
-     */
-    addColumnFilterCondition(columnId, options) {
-        const condition = FilteringController.mapOptionsToFilter(columnId, options);
-        if (condition) {
-            this.columnConditions[columnId] = condition;
-        }
-        else {
-            delete this.columnConditions[columnId];
-        }
-        this.updateModifier();
-    }
-    /**
-     * Clears the filtering condition for the specified column. If no column ID
-     * is provided, clears all the column filtering conditions.
-     *
-     * @param columnId
-     * The column ID to clear or `undefined` to clear all the column filtering
-     * conditions.
-     */
-    clearColumnFiltering(columnId) {
-        if (!columnId) {
-            this.columnConditions = {};
-        }
-        else {
-            delete this.columnConditions[columnId];
-        }
-        this.updateModifier();
-    }
-    /**
-     * Updates the modifier based on the current column conditions.
-     */
-    updateModifier() {
-        const columnConditions = Object.values(this.columnConditions);
-        this.querying.shouldBeUpdated = true;
-        if (columnConditions.length < 1) {
-            delete this.modifier;
-            return;
-        }
-        this.modifier = new Modifiers_FilterModifier({
-            condition: {
-                operator: 'and',
-                conditions: columnConditions
-            }
-        });
-    }
-}
-/* *
- *
- *  Default Export
- *
- * */
-/* harmony default export */ const Querying_FilteringController = (FilteringController);
 
 ;// ./code/grid/es-modules/Data/Modifiers/RangeModifier.js
 /* *
@@ -21336,7 +23097,7 @@ class FilteringController {
  *
  *  Authors:
  *  - Sophie Bremer
- *  - Dawid Dragula
+ *  - Dawid Draguła
  *
  * */
 
@@ -21438,6 +23199,12 @@ Modifiers_DataModifier.registerType('Range', RangeModifier);
  *
  * */
 
+/* *
+ *
+ *  Imports
+ *
+ * */
+
 
 /* *
  *
@@ -21486,12 +23253,16 @@ class PaginationController {
      * Gets the total number of pages.
      */
     get totalPages() {
-        return this.currentPageSize > 0 ? Math.ceil(this.totalItems / this.currentPageSize) : 1;
+        const computed = this.currentPageSize > 0 ? Math.ceil(this.totalItems / this.currentPageSize) : 1;
+        return Math.max(1, computed);
     }
     /**
      * Clamps the current page to the valid range [1, totalPages].
      */
     clampPage() {
+        if (this.totalItemsCount === void 0) {
+            return;
+        }
         const target = Math.max(1, Math.min(this.currentPage, this.totalPages || 1));
         if (this.currentPage === target) {
             return;
@@ -21543,7 +23314,9 @@ class PaginationController {
      * The number of rows before pagination. Default is the number of rows in
      * the original data table.
      */
-    createModifier(rowsCountBeforePagination = (this.querying.grid.dataTable?.rowCount || 0)) {
+    createModifier(rowsCountBeforePagination = (hasDataTableProvider(this.querying.grid.dataProvider) ?
+        this.querying.grid.dataProvider.getDataTable()?.rowCount || 0 :
+        0)) {
         if (!this.enabled) {
             return;
         }
@@ -21578,7 +23351,7 @@ class PaginationController {
  *
  *
  *  Authors:
- *  - Dawid Dragula
+ *  - Dawid Draguła
  *
  * */
 
@@ -21660,7 +23433,11 @@ class QueryingController {
      * Apply all modifiers to the data provider.
      */
     async modifyData() {
-        await this.grid.dataProvider?.applyQuery();
+        const dataProvider = this.grid.dataProvider;
+        if (!dataProvider) {
+            return;
+        }
+        await dataProvider.applyQuery();
         this.shouldBeUpdated = false;
     }
 }
@@ -21683,10 +23460,11 @@ class QueryingController {
  *
  *
  *  Authors:
- *  - Dawid Dragula
+ *  - Dawid Draguła
  *  - Sebastian Bochan
  *
  * */
+
 
 
 
@@ -21740,11 +23518,9 @@ class Grid {
      */
     constructor(renderTo, options, afterLoadCallback) {
         /**
-         * The user options declared for the columns as an object of column ID to
-         * column options.
-         * @internal
+         * Resolver for data binding and column capabilities.
          */
-        this.columnOptionsMap = {};
+        this.columnPolicy = new Core_ColumnPolicyResolver();
         /**
          * The options that were declared by the user when creating the Grid
          * or when updating it.
@@ -21770,6 +23546,10 @@ class Grid {
          */
         this.dirtyFlags = new Set();
         /**
+         * Per-row metadata shared across Grid modules.
+         */
+        this.rowMeta = new Map();
+        /**
          * Internal redraw queue used to prevent concurrent `redraw()` calls from
          * interleaving async DOM work and corrupting the state (for example
          * rendering duplicate pagination controls when `update()` is called
@@ -21794,31 +23574,6 @@ class Grid {
      *  Methods
      *
      * */
-    /**
-     * The data source of the Grid. It contains the original data table
-     * that was passed to the Grid.
-     *
-     * @deprecated Use `dataProvider` instead.
-     */
-    get dataTable() {
-        const dp = this.dataProvider;
-        if (dp && 'getDataTable' in dp) {
-            return dp.getDataTable();
-        }
-    }
-    /**
-     * The presentation table of the Grid. It contains a modified version
-     * of the data table that is used for rendering the Grid content. If
-     * not modified, just a reference to the original data table.
-     *
-     * @deprecated Use `dataProvider` instead.
-     */
-    get presentationTable() {
-        const dp = this.dataProvider;
-        if (dp && 'getDataTable' in dp) {
-            return dp.getDataTable(true);
-        }
-    }
     /*
      * Initializes the accessibility controller.
      */
@@ -21863,7 +23618,7 @@ class Grid {
     }
     /**
      * Loads the new user options to all the important fields (`userOptions`,
-     * `options` and `columnOptionsMap`).
+     * `options` and column policy state).
      *
      * @param newOptions
      * The options that were declared by the user.
@@ -21880,12 +23635,15 @@ class Grid {
         // Operate on a copy of the options argument
         newOptions = merge(newOptions);
         const diff = {};
+        const preserveIdOnlyColumnOptions = (newOptions.data?.autogenerateColumns ??
+            this.userOptions.data?.autogenerateColumns ??
+            this.options?.data?.autogenerateColumns) === false;
         if (newOptions.columns) {
             if (oneToOne) {
-                diff.columns = this.setColumnOptionsOneToOne(newOptions.columns);
+                diff.columns = this.setColumnOptionsOneToOne(newOptions.columns, preserveIdOnlyColumnOptions);
             }
             else {
-                diff.columns = this.setColumnOptions(newOptions.columns);
+                diff.columns = this.setColumnOptions(newOptions.columns, false, preserveIdOnlyColumnOptions);
             }
             delete newOptions.columns;
         }
@@ -21896,8 +23654,9 @@ class Grid {
         merge(true, diff, diffObjects(newOptions, this.userOptions));
         this.userOptions = merge(this.userOptions, newOptions);
         this.options = merge(this.options ?? Defaults_defaultOptions, this.userOptions);
+        this.columnPolicy.setColumnDefaults(this.options?.columnDefaults);
         this.viewport?.columns.forEach((column) => {
-            column.options = createOptionsProxy(this.columnOptionsMap?.[column.id]?.options ?? {}, this.options?.columnDefaults);
+            column.options = createOptionsProxy(this.columnPolicy.getIndividualColumnOptions(column.id) ?? {}, this.options?.columnDefaults);
         });
         return diff;
     }
@@ -21908,12 +23667,12 @@ class Grid {
     reloadColumnOptions() {
         const colOptions = this.userOptions.columns;
         if (!colOptions) {
-            this.columnOptionsMap = {};
+            this.columnPolicy.clearColumnOptions();
             return;
         }
         if (colOptions.length < 1) {
             delete this.userOptions.columns;
-            this.columnOptionsMap = {};
+            this.columnPolicy.clearColumnOptions();
             return;
         }
         const columnOptionsMap = {};
@@ -21923,7 +23682,13 @@ class Grid {
                 options: colOptions[i]
             };
         }
-        this.columnOptionsMap = columnOptionsMap;
+        this.columnPolicy.setColumnOptionsMap(columnOptionsMap);
+    }
+    /**
+     * Refreshes the cached source column ids available in the data provider.
+     */
+    async refreshAvailableSourceColumnIds() {
+        this.columnPolicy.setAvailableSourceColumnIds((await this.dataProvider?.getColumnIds()) || []);
     }
     /**
      * Sets the new column options to the userOptions field.
@@ -21935,13 +23700,16 @@ class Grid {
      * Whether to overwrite the existing column options with the new ones.
      * Default is `false`.
      *
+     * @param preserveIdOnlyColumnOptions
+     * Whether to preserve the id only column options. Default is `false`.
+     *
      * @returns
      * An object of the changed column options in form of a record of
      * `[column.id]: column.options`.
      *
      * @internal
      */
-    setColumnOptions(newColumnOptions, overwrite = false) {
+    setColumnOptions(newColumnOptions, overwrite = false, preserveIdOnlyColumnOptions = false) {
         const columnDiffOptions = {};
         if (!this.userOptions.columns) {
             this.userOptions.columns = this.options?.columns ?? [];
@@ -21949,9 +23717,13 @@ class Grid {
         const columnOptions = this.userOptions.columns;
         for (let i = 0, iEnd = newColumnOptions.length; i < iEnd; ++i) {
             const newOptions = newColumnOptions[i];
-            const colOptionsIndex = this.columnOptionsMap?.[newOptions.id]?.index ?? -1;
+            const colOptionsIndex = this.columnPolicy.getColumnOptionIndex(newOptions.id) ?? -1;
             // If the new column options contain only the id.
             if (Object.keys(newOptions).length < 2) {
+                if (preserveIdOnlyColumnOptions && colOptionsIndex === -1) {
+                    columnOptions.push(newOptions);
+                    continue;
+                }
                 if (overwrite && colOptionsIndex !== -1) {
                     columnDiffOptions[newOptions.id] = diffObjects(columnOptions[colOptionsIndex], { id: newOptions.id }, true);
                     columnOptions.splice(colOptionsIndex, 1);
@@ -21989,11 +23761,14 @@ class Grid {
      * @param newColumnOptions
      * The new column options that should be loaded.
      *
+     * @param preserveIdOnlyColumnOptions
+     * Whether to preserve the id only column options. Default is `false`.
+     *
      * @returns
      * The difference between the previous and the new column options in form
      * of a record of `[column.id]: column.options`.
      */
-    setColumnOptionsOneToOne(newColumnOptions) {
+    setColumnOptionsOneToOne(newColumnOptions, preserveIdOnlyColumnOptions = false) {
         const prevColumnOptions = this.userOptions.columns;
         const columnOptions = [];
         const columnDiffOptions = {};
@@ -22010,7 +23785,8 @@ class Grid {
                 columnDiffOptions[newOptions.id] = diffOptions;
             }
             const resultOptions = merge(prevOptions ?? {}, newOptions);
-            if (Object.keys(resultOptions).length > 1) {
+            if (preserveIdOnlyColumnOptions ||
+                Object.keys(resultOptions).length > 1) {
                 columnOptions.push(resultOptions);
             }
         }
@@ -22048,7 +23824,7 @@ class Grid {
             if (!this.dataProvider ||
                 ('data' in diff) ||
                 ('dataTable' in diff)) {
-                if ( // Handle backward compatibility
+                if ( // Preserve legacy root-level `dataTable` option
                 diff.dataTable &&
                     this.options?.dataTable &&
                     this.options?.data?.providerType === 'local') {
@@ -22225,6 +24001,7 @@ class Grid {
                 return;
             }
             await this.dataProvider?.init();
+            await this.refreshAvailableSourceColumnIds();
             if (flagsToProcess.has('sorting') ||
                 flagsToProcess.has('filtering') ||
                 paginationWasDirty) {
@@ -22327,7 +24104,9 @@ class Grid {
         if (viewport.validator?.errorCell) {
             return;
         }
-        const normalized = (sortings || []).filter((sorting) => !!(sorting.columnId && sorting.order));
+        const normalized = (sortings || []).filter((sorting) => !!(sorting.columnId &&
+            sorting.order &&
+            !this.columnPolicy.isColumnUnbound(sorting.columnId)));
         const sortingController = this.querying.sorting;
         const previousSortings = sortingController.currentSortings || [];
         const eventColumnIds = new Set();
@@ -22404,6 +24183,7 @@ class Grid {
         this.initContainer(this.renderTo);
         this.initAccessibility();
         this.initPagination();
+        await this.refreshAvailableSourceColumnIds();
         this.querying.loadOptions();
         await this.querying.proceed();
         await this.renderViewport();
@@ -22420,16 +24200,16 @@ class Grid {
      * The index of the row.
      */
     hoverRow(rowIndex) {
-        const rows = this.viewport?.rows;
-        if (!rows) {
+        const viewport = this.viewport;
+        if (!viewport) {
             return;
         }
-        const firstRowIndex = this.viewport?.rows[0]?.index ?? 0;
         if (this.hoveredRowIndex !== void 0) {
-            rows[this.hoveredRowIndex - firstRowIndex]?.setHoveredState(false);
+            viewport.getRenderedRowByIndex(this.hoveredRowIndex)
+                ?.setHoveredState(false);
         }
         if (rowIndex !== void 0) {
-            rows[rowIndex - firstRowIndex]?.setHoveredState(true);
+            viewport.getRenderedRowByIndex(rowIndex)?.setHoveredState(true);
         }
         this.hoveredRowIndex = rowIndex;
     }
@@ -22461,16 +24241,16 @@ class Grid {
      * The index of the row.
      */
     syncRow(rowIndex) {
-        const rows = this.viewport?.rows;
-        if (!rows) {
+        const viewport = this.viewport;
+        if (!viewport) {
             return;
         }
-        const firstRowIndex = this.viewport?.rows[0]?.index ?? 0;
         if (this.syncedRowIndex !== void 0) {
-            rows[this.syncedRowIndex - firstRowIndex]?.setSyncedState(false);
+            viewport.getRenderedRowByIndex(this.syncedRowIndex)
+                ?.setSyncedState(false);
         }
         if (rowIndex !== void 0) {
-            rows[rowIndex - firstRowIndex]?.setSyncedState(true);
+            viewport.getRenderedRowByIndex(rowIndex)?.setSyncedState(true);
         }
         this.syncedRowIndex = rowIndex;
     }
@@ -22632,42 +24412,33 @@ class Grid {
      * grid, in the correct order.
      */
     async getEnabledColumnIDs() {
-        const { columnOptionsMap } = this;
         const header = this.options?.header;
         const headerColumns = this.getColumnIds(header || [], false);
-        const columnsIncluded = this.options?.rendering?.columns?.included || (headerColumns && headerColumns.length > 0 ?
-            headerColumns : await this.dataProvider?.getColumnIds());
-        if (!columnsIncluded?.length) {
-            return [];
+        const dataOptions = this.options?.data;
+        const autogenerateColumns = !dataOptions ||
+            dataOptions.autogenerateColumns !== false;
+        let autoColumns = this.columnPolicy.getAvailableSourceColumnIds();
+        if (!autoColumns) {
+            await this.refreshAvailableSourceColumnIds();
+            autoColumns = this.columnPolicy.getAvailableSourceColumnIds() || [];
         }
-        if (!columnOptionsMap) {
-            return columnsIncluded;
-        }
-        let columnId;
-        const result = [];
-        for (let i = 0, iEnd = columnsIncluded.length; i < iEnd; ++i) {
-            columnId = columnsIncluded[i];
-            if (columnOptionsMap?.[columnId]?.options?.enabled !== false) {
-                result.push(columnId);
-            }
-        }
-        return result;
+        return this.columnPolicy.getColumnsForRender(headerColumns, autogenerateColumns, autoColumns, this.options?.columns?.map((column) => column.id));
     }
     loadDataProvider() {
         this.dataProvider?.destroy();
         this.querying.shouldBeUpdated = true;
+        this.columnPolicy.setAvailableSourceColumnIds();
         const userDT = this.options?.dataTable;
         const dataOptions = this.options?.data ?? {
             providerType: 'local',
             dataTable: userDT ?? {}
         };
-        // Just for the backward compatibility, remove in the future
+        // Preserve legacy root-level `dataTable` option for now.
         if (dataOptions.providerType === 'local' &&
             !dataOptions.dataTable && userDT) {
             dataOptions.dataTable = 'clone' in userDT ?
                 userDT : new Data_DataTable(userDT);
         }
-        // End of backward compatibility snippet
         const DataProviderConstructor = DataProviderRegistry.types[dataOptions.providerType ?? 'local'] ??
             DataProviderRegistry.types.local;
         this.dataProvider = new DataProviderConstructor(this.querying, dataOptions);
@@ -22708,7 +24479,7 @@ class Grid {
      * after destruction by calling the `render` method.
      */
     destroy(onlyDOM = false) {
-        fireEvent(this, 'beforeDestroy');
+        fireEvent(this, 'beforeDestroy', { onlyDOM });
         this.isRendered = false;
         const dgIndex = Grid.grids.findIndex((dg) => dg === this);
         this.dataProvider?.destroy();
@@ -22760,60 +24531,6 @@ class Grid {
         delete this.loadingWrapper;
     }
     /**
-     * Returns the grid data as a JSON string.
-     *
-     * **Note:** This method only works with `LocalDataProvider`.
-     * For other data providers, use your data source directly.
-     *
-     * @deprecated
-     *
-     * @param modified
-     * Whether to return the modified data table (after filtering/sorting/etc.)
-     * or the unmodified, original one. Default value is set to `true`.
-     *
-     * @return
-     * JSON representation of the data
-     */
-    getData(modified = true) {
-        if (!this.dataProvider || !('getDataTable' in this.dataProvider)) {
-            // eslint-disable-next-line no-console
-            console.warn('getData() works only with LocalDataProvider.');
-            return JSON.stringify({
-                error: 'getData() works only with LocalDataProvider.'
-            }, null, 2);
-        }
-        const dataTable = this.dataProvider.getDataTable(modified);
-        const tableColumns = dataTable?.columns;
-        const outputColumns = {};
-        if (!this.enabledColumns || !tableColumns) {
-            return '{}';
-        }
-        const typeParser = (type) => {
-            const TypeMap = {
-                number: Number,
-                datetime: Number,
-                string: String,
-                'boolean': Boolean
-            };
-            return (value) => (defined(value) ? TypeMap[type](value) : null);
-        };
-        for (const columnId of Object.keys(tableColumns)) {
-            const column = this.viewport?.getColumn(columnId);
-            if (column) {
-                const columnData = tableColumns[columnId];
-                const parser = typeParser(column.dataType);
-                outputColumns[columnId] = (() => {
-                    const result = [];
-                    for (let i = 0, iEnd = columnData.length; i < iEnd; ++i) {
-                        result.push(parser(columnData[i]));
-                    }
-                    return result;
-                })();
-            }
-        }
-        return JSON.stringify(outputColumns, null, 2);
-    }
-    /**
      * Returns the current Grid options.
      *
      * @param onlyUserOptions
@@ -22845,10 +24562,11 @@ class Grid {
         // Clean up the column options by removing the ones that have no other
         // options than `id`:
         const oldColumnOptions = options.columns;
+        const keepIdOnlyColumns = options.data?.autogenerateColumns === false;
         if (oldColumnOptions) {
             options.columns = [];
             for (const columnOption of oldColumnOptions) {
-                if (Object.keys(columnOption).length > 1) {
+                if (keepIdOnlyColumns || Object.keys(columnOption).length > 1) {
                     options.columns.push(columnOption);
                 }
             }
@@ -23155,7 +24873,7 @@ DataPool.defaultOptions = {
  *
  *
  *  Authors:
- *  - Dawid Dragula
+ *  - Dawid Draguła
  *
  * */
 
@@ -23427,7 +25145,7 @@ function onResize(entry) {
  *
  *
  *  Authors:
- *  - Dawid Dragula
+ *  - Dawid Draguła
  *
  * */
 
@@ -23541,7 +25259,7 @@ function GridEvents_compose(GridClass, ColumnClass, HeaderCellClass, TableCellCl
  *
  *
  *  Authors:
- *  - Dawid Dragula
+ *  - Dawid Draguła
  *  - Sebastian Bochan
  *
  * */
@@ -23751,7 +25469,7 @@ const classNames = {
  *
  *
  *  Authors:
- *  - Dawid Dragula
+ *  - Dawid Draguła
  *
  * */
 
@@ -23805,7 +25523,7 @@ function registerRenderer(key, CellRendererClass) {
  *
  *
  *  Authors:
- *  - Dawid Dragula
+ *  - Dawid Draguła
  *  - Sebastian Bochan
  *
  * */
@@ -23913,9 +25631,11 @@ function createEditModeRenderer(column) {
  * Callback function called after column initialization.
  */
 function afterColumnInit() {
-    const { options } = this;
-    if (options?.cells?.editMode?.enabled) {
+    if (this.viewport.grid.columnPolicy.isColumnEditable(this.id)) {
         this.editModeRenderer = createEditModeRenderer(this);
+    }
+    else {
+        delete this.editModeRenderer;
     }
 }
 /**
@@ -23949,7 +25669,8 @@ function addEditableCellA11yHint() {
     }
     const editableLang = this.row.viewport.grid.options
         ?.lang?.accessibility?.cellEditing?.editable;
-    if (!this.column.options.cells?.editMode?.enabled || !editableLang) {
+    if (!this.column.viewport.grid.columnPolicy.isColumnEditable(this.column.id) ||
+        !editableLang) {
         return;
     }
     this.a11yEditableHint = CellEditingComposition_makeHTMLElement('span', {
@@ -24004,7 +25725,7 @@ function announceA11yUserEditedCell(cell, msgType) {
  *
  *
  *  Authors:
- *  - Dawid Dragula
+ *  - Dawid Draguła
  *  - Sebastian Bochan
  *
  * */
@@ -24131,7 +25852,7 @@ Credits.defaultOptions = {
  *
  *
  *  Authors:
- *  - Dawid Dragula
+ *  - Dawid Draguła
  *  - Sebastian Bochan
  *
  * */
@@ -24245,7 +25966,7 @@ class CreditsPro extends Core_Credits {
  *
  *
  *  Authors:
- *  - Dawid Dragula
+ *  - Dawid Draguła
  *  - Sebastian Bochan
  *
  * */
@@ -24296,7 +26017,7 @@ function initCredits() {
 /* *
  *
  *  (c) 2015-2026 Highsoft AS
- *  Author: Oystein Moseng
+ *  Author: Øystein Moseng
  *
  *  A commercial license may be required depending on use.
  *  See www.highcharts.com/license
@@ -24431,7 +26152,7 @@ function getScript(scriptLocation) {
         // Set type and location for the script
         script.type = 'text/javascript';
         script.src = scriptLocation;
-        // Resolve in case of a succesful script fetching
+        // Resolve in case of a successful script fetching
         script.onload = () => {
             resolve();
         };
@@ -24506,9 +26227,10 @@ const DownloadURL = {
  *
  *
  *  Authors:
- *  - Karol Kolodziej
+ *  - Karol Kołodziej
  *
  * */
+
 
 
 
@@ -24576,7 +26298,7 @@ class Exporting {
      */
     getCSV(modified = true) {
         const { grid } = this;
-        const dataTable = modified ? grid.presentationTable : grid.dataTable;
+        const dataTable = this.getDataTable(modified);
         if (!dataTable) {
             return '';
         }
@@ -24592,7 +26314,7 @@ class Exporting {
         if (!itemDelimiter) {
             itemDelimiter = (decimalPoint === ',' ? ';' : ',');
         }
-        const columnIds = grid.enabledColumns ?? [];
+        const columnIds = (grid.enabledColumns ?? []).filter((columnId) => grid.columnPolicy.isColumnExportable(columnId));
         const columnsCount = columnIds?.length;
         const csvRows = [];
         const rowArray = [];
@@ -24618,7 +26340,9 @@ class Exporting {
             }
         };
         for (let columnIndex = 0; columnIndex < columnsCount; columnIndex++) {
-            const columnId = columnIds[columnIndex], column = grid.viewport?.getColumn(columnId), colType = column?.dataType, columnArray = dataTable.getColumn(columnId) ?? [], columnLength = columnArray?.length, parser = typeParser(colType ?? 'string');
+            const columnId = columnIds[columnIndex], column = grid.viewport?.getColumn(columnId), colType = column?.dataType, sourceColumnId = grid.columnPolicy.getColumnSourceId(columnId), columnArray = sourceColumnId ?
+                (dataTable.getColumn(sourceColumnId) ?? []) :
+                [], columnLength = columnArray?.length, parser = typeParser(colType ?? 'string');
             for (let rowIndex = 0; rowIndex < columnLength; rowIndex++) {
                 let row = rowArray[rowIndex];
                 if (!row) {
@@ -24656,7 +26380,50 @@ class Exporting {
      * JSON representation of the data
      */
     getJSON(modified = true) {
-        return this.grid.getData(modified);
+        const dataTable = this.getDataTable(modified);
+        const tableColumns = dataTable?.columns;
+        const outputColumns = {};
+        if (!dataTable) {
+            // eslint-disable-next-line no-console
+            console.warn('getJSON() works only with LocalDataProvider.');
+            return JSON.stringify({
+                error: 'getJSON() works only with LocalDataProvider.'
+            }, null, 2);
+        }
+        if (!this.grid.enabledColumns || !tableColumns) {
+            return '{}';
+        }
+        const typeParser = (type) => {
+            const TypeMap = {
+                number: Number,
+                datetime: Number,
+                string: String,
+                'boolean': Boolean
+            };
+            return (value) => (defined(value) ? TypeMap[type](value) : null);
+        };
+        for (const columnId of this.grid.enabledColumns) {
+            const column = this.grid.viewport?.getColumn(columnId);
+            const sourceColumnId = this.grid.columnPolicy.getColumnSourceId(columnId);
+            if (!column ||
+                !sourceColumnId ||
+                !this.grid.columnPolicy.isColumnExportable(columnId)) {
+                continue;
+            }
+            const columnData = tableColumns[sourceColumnId];
+            if (!columnData) {
+                continue;
+            }
+            const parser = typeParser(column.dataType);
+            outputColumns[columnId] = (() => {
+                const result = [];
+                for (let i = 0, iEnd = columnData.length; i < iEnd; ++i) {
+                    result.push(parser(columnData[i]));
+                }
+                return result;
+            })();
+        }
+        return JSON.stringify(outputColumns, null, 2);
     }
     /**
      * Get the default file name used for exported the grid.
@@ -24681,6 +26448,12 @@ class Exporting {
                 .replace(/[\-]+$/g, ''); // Dashes in the end;
         }
         return filename;
+    }
+    getDataTable(modified) {
+        const { dataProvider } = this.grid;
+        return hasDataTableProvider(dataProvider) ?
+            dataProvider.getDataTable(modified) :
+            void 0;
     }
 }
 /**
@@ -24714,7 +26487,7 @@ Exporting.defaultOptions = {
  *
  *
  *  Authors:
- *  - Karol Kolodziej
+ *  - Karol Kołodziej
  *
  * */
 
@@ -24768,7 +26541,7 @@ function initExporting() {
  *
  *
  *  Authors:
- *  - Dawid Dragula
+ *  - Dawid Draguła
  *
  * */
 
@@ -24815,7 +26588,7 @@ class Validator {
      */
     validate(cell, errors = []) {
         const { options, dataType } = cell.column;
-        const validationErrors = cell.row.viewport.grid.options?.lang?.validationErrors;
+        const validationNotifications = cell.row.viewport.grid.options?.lang?.validationNotifications;
         const rendererType = cell.column.options?.cells?.renderer?.type;
         let rules = Array.from(options?.cells?.editMode?.validationRules || []);
         // Remove duplicates in validationRules
@@ -24842,7 +26615,7 @@ class Validator {
             let err;
             if (typeof rule === 'string') {
                 ruleDef = Validator.rulesRegistry[rule];
-                err = validationErrors?.[rule]?.notification;
+                err = validationNotifications?.[rule];
             }
             else {
                 ruleDef = rule;
@@ -24860,7 +26633,10 @@ class Validator {
             if (typeof validateFn === 'function' &&
                 editModeContent &&
                 !validateFn.call(cell, editModeContent)) {
-                if (typeof ruleDef.notification === 'function') {
+                if (typeof err === 'function') {
+                    err = err.call(cell, editModeContent);
+                }
+                else if (typeof ruleDef.notification === 'function') {
                     err = ruleDef.notification.call(cell, editModeContent);
                 }
                 errors.push((err || ruleDef.notification));
@@ -25128,7 +26904,7 @@ function destroy() {
  *
  *
  *  Authors:
- *  - Dawid Dragula
+ *  - Dawid Draguła
  *
  * */
 
@@ -25270,6 +27046,5387 @@ function PaginationComposition_compose(PaginationClass) {
     compose: PaginationComposition_compose
 });
 
+;// ./code/grid/es-modules/Grid/Pro/License/LicenseValidation.js
+/* *
+ *
+ *  License Validation for Grid Pro
+ *
+ *  (c) 2020-2025 Highsoft AS
+ *
+ *  License: www.highcharts.com/license
+ *
+ *  !!!!!!! SOURCE GETS TRANSPILED BY TYPESCRIPT. EDIT TS FILE ONLY. !!!!!!!
+ *
+ *  Author:
+ *  - Mikkel Espolin Birkeland
+ *  - Sebastian Bochan
+ * */
+
+
+
+/* *
+ *
+ *  Constants
+ *
+ * */
+const GRID_KEY_PART = /^[A-Z0-9]{4}$/;
+const GRID_KEY_EPOCH = Date.UTC(2020, 0, 1);
+const GRID_KEY_DOC = 'https://www.highcharts.com/docs/grid/grid-key';
+/** Hostnames (exact or `*.domain`) where a Grid Key is not required. */
+const GRID_KEY_WILDCARD_DOMAINS = [
+    'highcharts.com',
+    'jsfiddle.net',
+    'stackblitz.com',
+    'highcharts.com.cn'
+];
+/* *
+ *
+ *  Declarations
+ *
+ * */
+/**
+ * Result of status for a Grid Key string.
+ * @internal
+ */
+const licenseStatus = {
+    VALID: 'valid',
+    INVALID: 'invalid',
+    MISSING: 'missing',
+    EXPIRED: 'expired'
+};
+/* *
+ *
+ *  Module state
+ *
+ * */
+/** Set after the first full license check for a non-whitelisted page. */
+let hasValidatedLicenseKey = false;
+/* *
+ *
+ *  Functions
+ *
+ * */
+/**
+ * Segment 5 checksum: weighted char sum of payload, mod `36^4`, 4-char
+ * upper base-36.
+ * @internal
+ *
+ * @param integrityPayload16 segments 1–4 joined, no hyphens (16 chars).
+ * @returns Four upper-case base-36 checksum characters.
+ */
+function calculateChecksum(integrityPayload16) {
+    let sum = 0;
+    for (let i = 0; i < integrityPayload16.length; i++) {
+        sum += integrityPayload16.charCodeAt(i) * (i + 1);
+    }
+    const mod = sum % 1679616;
+    let checksum = mod.toString(36).toUpperCase();
+    while (checksum.length < 4) {
+        checksum = '0' + checksum;
+    }
+    return checksum;
+}
+/**
+ * Parse a Grid Key (`XXXX-…-WWWW`, six hyphen-separated groups of four
+ * `A–Z`/`0–9`).
+ * @internal
+ *
+ * @param key raw key.
+ *
+ * @returns expiry segment, end date, and checksum matches.
+ */
+function parseKey(key) {
+    // 1. Normalize (trim spaces, upper case).
+    const normalizedKey = key.replace(/\s/g, '').toUpperCase();
+    const segments = normalizedKey.split('-');
+    const expirySegment = segments[3] ?? '';
+    let daysSinceEpoch = 0;
+    let invalidSegment4Digits = false;
+    // 2. Convert base-36 digits to days since epoch.
+    for (let i = 1; i < 4; i++) {
+        const codeUnit = expirySegment.charCodeAt(i);
+        const digit = codeUnit <= 57 ? codeUnit - 48 : 10 + (codeUnit - 65);
+        if (digit < 0 || digit > 35) {
+            invalidSegment4Digits = true;
+            break;
+        }
+        daysSinceEpoch = daysSinceEpoch * 36 + digit;
+    }
+    // 3. Calculate license expiry date.
+    const endDate = new Date(GRID_KEY_EPOCH + daysSinceEpoch * 864e5);
+    // 4. Checksum of joined segments 1–4.
+    const integrityPayload = segments.slice(0, 4).join('');
+    const expectedSegment5 = calculateChecksum(integrityPayload);
+    const checksumMatches = segments[4] === expectedSegment5;
+    if (!normalizedKey.length ||
+        segments.length !== 6 ||
+        !segments.every((part) => GRID_KEY_PART.test(part)) ||
+        !/^[AP]/.test(expirySegment) ||
+        invalidSegment4Digits ||
+        !Utilities_isNumber(endDate.getTime())) {
+        return null;
+    }
+    return {
+        expirySegment,
+        endDate,
+        checksumMatches
+    };
+}
+/**
+ * License status from key shape, checksum, and expiry.
+ * @internal
+ *
+ * **Annual:** calendar check against the current date (`new Date()`).
+ * **Perpetual:** the date in the key is the end of the support window;
+ *   the bundle may be used for releases **on or before** that date. The
+ *   reference day is only `getGridBuildDate()` from `Globals.buildDate`
+ *   (`YYYY-MM-DD` in a built bundle). If that value is not set, the
+ *   status is `EXPIRED` (no date substitution).
+ *
+ * @param key Grid Key (optional).
+ * @returns License status value for `key`.
+ */
+function getStatus(key) {
+    // Check if the key is a string and not empty.
+    if (!isString(key)) {
+        return licenseStatus.MISSING;
+    }
+    const x = parseKey(key);
+    // Check if the key is valid and the checksum matches.
+    if (!x || !x.checksumMatches) {
+        return licenseStatus.INVALID;
+    }
+    const isPerpetual = x.expirySegment[0] === 'P';
+    const ref = isPerpetual ? getGridBuildDate() : new Date();
+    // Expired: annual vs today, or perpetual build vs support end.
+    if (isExpired(x.endDate, ref)) {
+        return licenseStatus.EXPIRED;
+    }
+    // Valid key.
+    return licenseStatus.VALID;
+}
+/**
+ * Build date of this bundle (`Grid/Core/Globals` `buildDate` as
+ * `YYYY-MM-DD` in production).
+ * @internal
+ * @returns UTC start-of-day for the `buildDate` string, or `undefined` if
+ *   it is not a `YYYY-MM-DD` value. Perpetual license checks do not
+ *   substitute a fallback `Date` when this is missing.
+ */
+function getGridBuildDate() {
+    const raw = Grid_Core_Globals.buildDate;
+    if (isString(raw) && /^[0-9]{4}-[0-9]{2}-[0-9]{2}$/.test(raw)) {
+        const n = raw.split('-').map(Number);
+        return new Date(Date.UTC(n[0], n[1] - 1, n[2]));
+    }
+    return void 0;
+}
+/**
+ * True when `now` (UTC date) is strictly after `end` (UTC date).
+ * @internal
+ *
+ * @param end Parsed license end date.
+ * @param now Defaults to `new Date()`.
+ * @returns True if the `now` UTC calendar day is strictly after `end`.
+ */
+function isExpired(end, now = new Date()) {
+    const y = now.getUTCFullYear(), m = now.getUTCMonth(), d = now.getUTCDate(), ey = end.getUTCFullYear(), em = end.getUTCMonth(), ed = end.getUTCDate();
+    return (y > ey ||
+        (y === ey && m > em) ||
+        (y === ey && m === em && d > ed));
+}
+/**
+ * Lowercased `window.location.hostname` when a location exists.
+ * @internal
+ * @returns Lowercased host, or `undefined` when `location` is missing.
+ */
+function getPageHostname() {
+    const { win } = Grid_Core_Globals;
+    if (!defined(win.location)) {
+        return void 0;
+    }
+    return win.location.hostname.toLowerCase();
+}
+/**
+ * True for typical local dev hostnames.
+ * @internal
+ * @returns True for `localhost` and common loopback hostnames.
+ */
+function isLocalhostURL() {
+    const host = getPageHostname();
+    if (!defined(host)) {
+        return false;
+    }
+    return (host === 'localhost' ||
+        host === '127.0.0.1' ||
+        host === '[::1]' ||
+        host === '::1');
+}
+/**
+ * Checks if domain is whitelisted (including subdomains).
+ * @internal
+ * @returns True if the current host matches a whitelisted domain (or
+ *   subdomain).
+ */
+function isWhitelistedURL() {
+    const host = getPageHostname();
+    if (!defined(host)) {
+        return false;
+    }
+    // Support subdomains
+    return GRID_KEY_WILDCARD_DOMAINS.some((domain) => host === domain || host.endsWith('.' + domain));
+}
+/**
+ * Checks key and errors once if not valid.
+ * @internal
+ *
+ * @param grid Grid instance
+ */
+function validate(grid) {
+    const userOptions = grid.userOptions;
+    const options = grid.options;
+    const userGridKey = defined(userOptions?.gridKey) ?
+        userOptions.gridKey : void 0;
+    const optionsGridKey = defined(options?.gridKey) ?
+        options.gridKey : void 0;
+    if (isWhitelistedURL() ||
+        (hasValidatedLicenseKey &&
+            userGridKey === optionsGridKey)) {
+        return;
+    }
+    const status = getStatus(optionsGridKey);
+    hasValidatedLicenseKey = true;
+    if (status === licenseStatus.VALID) {
+        return;
+    }
+    let statusMsg;
+    switch (status) {
+        case licenseStatus.MISSING:
+            statusMsg = 'missing a valid Grid Key.';
+            break;
+        case licenseStatus.EXPIRED:
+            statusMsg = 'using an expired Grid Key.';
+            break;
+        default:
+            statusMsg = 'using an invalid Grid Key.';
+            break;
+    }
+    const message = [
+        `Highcharts Grid Pro is ${statusMsg}`,
+        `Please visit ${GRID_KEY_DOC} for more details.`
+    ];
+    /* eslint-disable no-console */
+    if (isLocalhostURL()) {
+        console.warn(message.join(' '));
+    }
+    else {
+        console.error('**************************************************');
+        console.error(message.join('\n'));
+        console.error('**************************************************');
+    }
+    /* eslint-enable no-console */
+}
+
+;// ./code/grid/es-modules/Grid/Pro/License/LicenseValidationComposition.js
+/* *
+ *
+ *  License Validation Composition for Grid Pro
+ *
+ *  (c) 2020-2025 Highsoft AS
+ *
+ *  License: www.highcharts.com/license
+ *
+ *  !!!!!!! SOURCE GETS TRANSPILED BY TYPESCRIPT. EDIT TS FILE ONLY. !!!!!!!
+ *
+ *  Author:
+ *  - Mikkel Espolin Birkeland
+ *  - Sebastian Bochan
+ *
+ * */
+
+
+
+
+/* *
+ *
+ *  Composition
+ *
+ * */
+/**
+ * Extends the grid classes with license validation.
+ *
+ * @param GridClass
+ * The class to extend.
+ *
+ */
+function LicenseValidationComposition_compose(GridClass) {
+    if (!pushUnique(Grid_Core_Globals.composed, 'LicenseValidation')) {
+        return;
+    }
+    addEvent(GridClass, 'afterLoad', validateLicense);
+    addEvent(GridClass, 'afterUpdate', validateLicense);
+}
+/**
+ * Callback function called after the grid is loaded or updated.
+ *
+ * @param this Grid instance.
+ */
+function validateLicense() {
+    validate(this);
+}
+/* *
+ *
+ *  Default Export
+ *
+ * */
+/* harmony default export */ const LicenseValidationComposition = ({
+    compose: LicenseValidationComposition_compose
+});
+
+;// ./code/grid/es-modules/Grid/Pro/RowPinning/RowPinningController.js
+/* *
+ *
+ *  Grid Row Pinning controller
+ *
+ *  (c) 2020-2026 Highsoft AS
+ *
+ *  A commercial license may be required depending on use.
+ *  See www.highcharts.com/license
+ *
+ *
+ *  Author:
+ *  - Mikkel Espolin Birkeland
+ *
+ * */
+
+
+
+
+/**
+ * Returns whether row pinning was explicitly configured by the user.
+ *
+ * @param grid
+ * Grid instance options container.
+ */
+function hasConfiguredGridRowPinningOptions(grid) {
+    return grid.userOptions?.rendering?.rows?.pinning !== void 0;
+}
+/**
+ * Returns merged row pinning options from the grid.
+ *
+ * @param grid
+ * Grid instance options container.
+ */
+function getGridRowPinningOptions(grid) {
+    return grid.options?.rendering?.rows?.pinning;
+}
+/**
+ * Compare row id arrays by value and order.
+ *
+ * @param a
+ * First row id array.
+ *
+ * @param b
+ * Second row id array.
+ */
+function sameIds(a, b) {
+    if (a.length !== b.length) {
+        return false;
+    }
+    for (let i = 0, iEnd = a.length; i < iEnd; ++i) {
+        if (a[i] !== b[i]) {
+            return false;
+        }
+    }
+    return true;
+}
+/**
+ * Returns whether two pinned row states differ.
+ *
+ * @param previous
+ * Previous pinned row state.
+ *
+ * @param next
+ * Next pinned row state.
+ */
+function didPinnedRowsChange(previous, next) {
+    return (!sameIds(previous.topIds, next.topIds) ||
+        !sameIds(previous.bottomIds, next.bottomIds));
+}
+/**
+ * Stores row pinning state from two sources:
+ * - explicit pinned ids from config/runtime API
+ * - resolved pinned ids produced by `pinning.resolve`
+ *
+ * The effective pinned state is the normalized combination of both, minus
+ * rows explicitly unpinned at runtime.
+ */
+class RowPinningController {
+    /**
+     * Creates a new row pinning controller for the given grid.
+     *
+     * @param grid
+     * Owning grid instance.
+     */
+    constructor(grid) {
+        /**
+         * Explicitly pinned top row IDs from config or runtime API calls.
+         */
+        this.topRowIds = [];
+        /**
+         * Explicitly pinned bottom row IDs from config or runtime API calls.
+         */
+        this.bottomRowIds = [];
+        /**
+         * Top row IDs produced by the `pinning.resolve` callback.
+         */
+        this.resolvedTopRowIds = [];
+        /**
+         * Bottom row IDs produced by the `pinning.resolve` callback.
+         */
+        this.resolvedBottomRowIds = [];
+        /**
+         * Set of row IDs that were explicitly unpinned at runtime, overriding
+         * resolved pins.
+         */
+        this.explicitUnpinned = new Set();
+        /**
+         * Cache of row data objects for all currently pinned rows.
+         */
+        this.pinnedRowObjects = new Map();
+        /**
+         * Whether the explicit pinned IDs need to be reloaded from options.
+         */
+        this.optionsDirty = true;
+        this.grid = grid;
+    }
+    /**
+     * Returns the current row pinning options from the grid.
+     */
+    getPinningOptions() {
+        return getGridRowPinningOptions(this.grid);
+    }
+    /**
+     * Reloads explicit pinned IDs from options when they are marked dirty.
+     */
+    loadOptions() {
+        if (!this.optionsDirty) {
+            return;
+        }
+        this.optionsDirty = false;
+        const pinningOptions = this.getPinningOptions();
+        const top = pinningOptions?.topIds || [];
+        const bottom = pinningOptions?.bottomIds || [];
+        const normalized = RowPinningController.normalizeSections(top, bottom);
+        this.topRowIds = normalized.topIds;
+        this.bottomRowIds = normalized.bottomIds;
+        this.resolvedTopRowIds.length = 0;
+        this.resolvedBottomRowIds.length = 0;
+        this.syncPinnedRowObjects();
+    }
+    /**
+     * Marks pinning options as dirty so they are reloaded on the next access.
+     */
+    markOptionsDirty() {
+        this.optionsDirty = true;
+    }
+    /**
+     * Returns whether row pinning is effectively active (any rows are pinned
+     * or a resolve function is configured).
+     */
+    isEnabled() {
+        this.loadOptions();
+        const explicit = this.getExplicitPinnedRows();
+        const pinningOptions = this.getPinningOptions();
+        return !!(explicit.topIds.length ||
+            explicit.bottomIds.length ||
+            this.resolvedTopRowIds.length ||
+            this.resolvedBottomRowIds.length ||
+            pinningOptions?.resolve);
+    }
+    /**
+     * Returns whether the `enabled` pinning option is not explicitly `false`.
+     */
+    isOptionEnabled() {
+        return this.getPinningOptions()?.enabled !== false;
+    }
+    /**
+     * Pins a row to the given section.
+     *
+     * @param rowId
+     * Row identifier to pin.
+     *
+     * @param position
+     * Target section — `'top'` (default) or `'bottom'`.
+     *
+     * @param index
+     * Zero-based insertion index within the section. Appends when omitted.
+     */
+    async pin(rowId, position = 'top', index) {
+        const previous = this.getPinnedRows();
+        const eventPayload = this.createChangeEvent(previous, 'pin', rowId, 'pin', position, index);
+        await this.runRuntimeChange(eventPayload, async () => {
+            await this.applyPin(rowId, position, index);
+        }, 'pin', position);
+    }
+    /**
+     * Toggles a row between pinned and unpinned state.
+     *
+     * @param rowId
+     * Row identifier to toggle.
+     *
+     * @param position
+     * Section to pin to when the row is currently unpinned.
+     */
+    async toggle(rowId, position = 'top') {
+        const previous = this.getPinnedRows();
+        const isPinned = (previous.topIds.includes(rowId) ||
+            previous.bottomIds.includes(rowId));
+        const nextAction = isPinned ? 'unpin' : 'pin';
+        const eventPayload = this.createChangeEvent(previous, 'toggle', rowId, nextAction, isPinned ? void 0 : position);
+        await this.runRuntimeChange(eventPayload, async () => {
+            if (isPinned) {
+                this.applyUnpin(rowId);
+            }
+            else {
+                await this.applyPin(rowId, position);
+            }
+        }, isPinned ? 'unpin' : 'pin', isPinned ? void 0 : position);
+    }
+    /**
+     * Unpins a row from whichever section it currently belongs to.
+     *
+     * @param rowId
+     * Row identifier to unpin.
+     */
+    async unpin(rowId) {
+        const previous = this.getPinnedRows();
+        const eventPayload = this.createChangeEvent(previous, 'unpin', rowId, 'unpin');
+        await this.runRuntimeChange(eventPayload, () => {
+            this.applyUnpin(rowId);
+        }, 'unpin');
+    }
+    /**
+     * Returns the pinned row state that would result from applying an action,
+     * without mutating any internal state.
+     *
+     * @param previous
+     * Current pinned row state to derive from.
+     *
+     * @param action
+     * Whether to simulate a pin or unpin.
+     *
+     * @param rowId
+     * Row identifier to act on.
+     *
+     * @param position
+     * Target section for a pin action.
+     *
+     * @param index
+     * Insertion index within the section for a pin action.
+     */
+    previewPinnedRowsChange(previous, action, rowId, position = 'top', index) {
+        const topIds = previous.topIds.slice();
+        const bottomIds = previous.bottomIds.slice();
+        const source = position === 'top' ? topIds : bottomIds;
+        const other = position === 'top' ? bottomIds : topIds;
+        erase(source, rowId);
+        erase(other, rowId);
+        if (action === 'pin') {
+            if (typeof index === 'number' && index >= 0) {
+                source.splice(Math.min(index, source.length), 0, rowId);
+            }
+            else {
+                source.push(rowId);
+            }
+        }
+        return { topIds, bottomIds };
+    }
+    /**
+     * Replaces the resolved (callback-derived) pinned row IDs.
+     *
+     * @param topIds
+     * Resolved top-section row IDs.
+     *
+     * @param bottomIds
+     * Resolved bottom-section row IDs.
+     */
+    setResolvedIds(topIds, bottomIds) {
+        const normalized = RowPinningController.normalizeSections(topIds, bottomIds);
+        this.resolvedTopRowIds = normalized.topIds;
+        this.resolvedBottomRowIds = normalized.bottomIds;
+        this.syncPinnedRowObjects();
+    }
+    /**
+     * Removes the given row IDs from the explicit pin lists.
+     *
+     * @param rowIds
+     * Row IDs confirmed to be absent from the data source.
+     */
+    pruneMissingExplicitIds(rowIds) {
+        if (!rowIds.length) {
+            return;
+        }
+        const missing = new Set(rowIds);
+        this.topRowIds = this.topRowIds.filter((rowId) => !missing.has(rowId));
+        this.bottomRowIds = this.bottomRowIds.filter((rowId) => !missing.has(rowId));
+        this.syncPinnedRowObjects();
+    }
+    /**
+     * Returns the effective pinned row state — the union of explicit and
+     * resolved IDs, deduplicated and filtered by explicit unpins.
+     */
+    getPinnedRows() {
+        this.loadOptions();
+        const normalized = RowPinningController.normalizeSections([
+            ...this.topRowIds,
+            ...this.resolvedTopRowIds
+        ], [
+            ...this.bottomRowIds,
+            ...this.resolvedBottomRowIds
+        ]);
+        const topIds = normalized.topIds.filter((rowId) => !this.explicitUnpinned.has(rowId));
+        const topSet = new Set(topIds);
+        const bottomIds = normalized.bottomIds.filter((rowId) => !this.explicitUnpinned.has(rowId) && !topSet.has(rowId));
+        return {
+            topIds,
+            bottomIds
+        };
+    }
+    /**
+     * Returns the cached row data object for a pinned row, if available.
+     *
+     * @param rowId
+     * Row identifier to look up.
+     */
+    getPinnedRowObject(rowId) {
+        return this.pinnedRowObjects.get(rowId);
+    }
+    /**
+     * Caches the data object of a materialized row if it is currently pinned.
+     *
+     * @param rowId
+     * Row identifier.
+     *
+     * @param row
+     * Row data object to cache.
+     */
+    rememberMaterializedRow(rowId, row) {
+        if (rowId === void 0 || !this.isPinnedRowId(rowId)) {
+            return;
+        }
+        this.pinnedRowObjects.set(rowId, row);
+    }
+    /**
+     * Attempts to hydrate row data objects for the given pinned row IDs from
+     * the materialized viewport rows or the source data table.
+     *
+     * @param rowIds
+     * Pinned row IDs to hydrate.
+     */
+    ensurePinnedRowsAvailable(rowIds) {
+        const hydratedRowIds = [];
+        const definitiveMissingRowIds = [];
+        if (!rowIds.length) {
+            return Promise.resolve({
+                hydratedRowIds,
+                definitiveMissingRowIds
+            });
+        }
+        const dataProvider = this.grid.dataProvider;
+        const dataTable = hasDataTableProvider(dataProvider) ?
+            dataProvider.getDataTable() :
+            void 0;
+        const dataOptions = this.grid.options?.data;
+        const idColumn = dataOptions?.idColumn;
+        const sourceRowIndexesMap = (dataTable && idColumn ?
+            this.getSourceRowIndexesMap(dataTable, idColumn) :
+            void 0);
+        for (const rowId of RowPinningController.uniqueRowIds(rowIds)) {
+            if (this.pinnedRowObjects.has(rowId)) {
+                continue;
+            }
+            const row = this.getMaterializedRowObjectById(rowId) ||
+                this.getSourceRowObjectById(rowId, dataTable, idColumn, sourceRowIndexesMap);
+            if (row) {
+                this.pinnedRowObjects.set(rowId, row);
+                hydratedRowIds.push(rowId);
+            }
+            else if (this.canDeterminePinnedRowAbsence(rowId, dataTable, idColumn, sourceRowIndexesMap)) {
+                definitiveMissingRowIds.push(rowId);
+            }
+            else {
+                this.pinnedRowObjects.delete(rowId);
+            }
+        }
+        this.syncPinnedRowObjects();
+        return Promise.resolve({
+            hydratedRowIds,
+            definitiveMissingRowIds
+        });
+    }
+    /**
+     * Updates a single cell value in the cached row data object of a pinned
+     * row.
+     *
+     * @param rowId
+     * Row identifier whose cache entry to update.
+     *
+     * @param columnId
+     * Column identifier of the cell to update.
+     *
+     * @param value
+     * New cell value.
+     */
+    updatePinnedRowValue(rowId, columnId, value) {
+        const row = this.pinnedRowObjects.get(rowId);
+        if (row) {
+            row[columnId] = value;
+        }
+    }
+    /**
+     * Clears all cached row data objects, forcing re-hydration on next render.
+     */
+    invalidatePinnedRowObjects() {
+        this.pinnedRowObjects.clear();
+    }
+    /**
+     * Re-runs the `pinning.resolve` callback over all rows in the data
+     * provider and updates the resolved pinned IDs accordingly.
+     */
+    async recomputeResolvedFromMaterializedRows() {
+        const resolve = this.getPinningOptions()?.resolve;
+        const dataProvider = this.grid.dataProvider;
+        if (!dataProvider) {
+            this.setResolvedIds([], []);
+            return;
+        }
+        if (!resolve) {
+            this.setResolvedIds([], []);
+            const pinned = this.getPinnedRows();
+            await this.ensurePinnedRowsAvailable([
+                ...pinned.topIds,
+                ...pinned.bottomIds
+            ]);
+            return;
+        }
+        const explicit = this.getExplicitPinnedRows();
+        const used = new Set([
+            ...explicit.topIds,
+            ...explicit.bottomIds
+        ]);
+        const topResolved = [];
+        const bottomResolved = [];
+        const rowCount = await dataProvider.getRowCount();
+        for (let i = 0; i < rowCount; ++i) {
+            const rowId = await dataProvider.getRowId(i);
+            const row = await dataProvider.getRowObject(i);
+            if (rowId === void 0 || !row) {
+                continue;
+            }
+            if (used.has(rowId) || this.explicitUnpinned.has(rowId)) {
+                continue;
+            }
+            let position;
+            try {
+                position = resolve(row);
+            }
+            catch {
+                continue;
+            }
+            if (position === 'top') {
+                topResolved.push(rowId);
+                used.add(rowId);
+            }
+            else if (position === 'bottom') {
+                bottomResolved.push(rowId);
+                used.add(rowId);
+            }
+        }
+        this.setResolvedIds(topResolved, bottomResolved);
+        const pinned = this.getPinnedRows();
+        await this.ensurePinnedRowsAvailable([
+            ...pinned.topIds,
+            ...pinned.bottomIds
+        ]);
+    }
+    /**
+     * Handles missing pinned rows reported after a render cycle by
+     * attempting to hydrate them or pruning them from the pin lists.
+     *
+     * @param result
+     * Render result containing IDs of rows that could not be rendered.
+     *
+     * @param result.missingPinnedRowIds
+     * IDs of pinned rows that were not found during the render cycle.
+     *
+     * @param source
+     * Whether the render was triggered by a query cycle or a runtime API call.
+     */
+    async handlePinnedRenderResult(result, source) {
+        void source;
+        if (!result.missingPinnedRowIds.length) {
+            return;
+        }
+        const { hydratedRowIds, definitiveMissingRowIds } = await this.ensurePinnedRowsAvailable(result.missingPinnedRowIds);
+        if (definitiveMissingRowIds.length) {
+            this.pruneMissingExplicitIds(definitiveMissingRowIds);
+        }
+        if (this.grid.viewport &&
+            (hydratedRowIds.length || definitiveMissingRowIds.length)) {
+            await this.grid.viewport.rowPinningView?.render(true);
+        }
+    }
+    /**
+     * Returns the normalized explicit (non-resolved) pinned row state.
+     */
+    getExplicitPinnedRows() {
+        return RowPinningController.normalizeSections(this.topRowIds, this.bottomRowIds);
+    }
+    /**
+     * Mutates internal state to pin a row without firing events.
+     *
+     * @param rowId
+     * Row identifier to pin.
+     *
+     * @param position
+     * Target section.
+     *
+     * @param index
+     * Insertion index within the section.
+     */
+    async applyPin(rowId, position = 'top', index) {
+        this.loadOptions();
+        this.explicitUnpinned.delete(rowId);
+        const next = this.previewPinnedRowsChange(this.getExplicitPinnedRows(), 'pin', rowId, position, index);
+        this.topRowIds = next.topIds;
+        this.bottomRowIds = next.bottomIds;
+        await this.ensurePinnedRowsAvailable([rowId]);
+    }
+    /**
+     * Mutates internal state to unpin a row without firing events.
+     *
+     * @param rowId
+     * Row identifier to unpin.
+     */
+    applyUnpin(rowId) {
+        this.loadOptions();
+        const next = this.previewPinnedRowsChange(this.getExplicitPinnedRows(), 'unpin', rowId);
+        this.topRowIds = next.topIds;
+        this.bottomRowIds = next.bottomIds;
+        this.explicitUnpinned.add(rowId);
+        this.pinnedRowObjects.delete(rowId);
+    }
+    /**
+     * Builds the event payload for a pin/unpin/toggle operation.
+     *
+     * @param previous
+     * Pinned row state before the change.
+     *
+     * @param action
+     * Public action name (`'pin'`, `'unpin'`, or `'toggle'`).
+     *
+     * @param rowId
+     * Row identifier being acted on.
+     *
+     * @param nextAction
+     * Resolved action to apply (`'pin'` or `'unpin'`).
+     *
+     * @param position
+     * Target section for a pin action.
+     *
+     * @param index
+     * Insertion index within the section for a pin action.
+     */
+    createChangeEvent(previous, action, rowId, nextAction, position, index) {
+        const next = this.previewPinnedRowsChange(previous, nextAction, rowId, position, index);
+        return {
+            rowId,
+            action,
+            position,
+            index,
+            changed: didPinnedRowsChange(previous, next),
+            previousTopIds: previous.topIds.slice(),
+            previousBottomIds: previous.bottomIds.slice(),
+            topIds: next.topIds.slice(),
+            bottomIds: next.bottomIds.slice()
+        };
+    }
+    /**
+     * Fires events, applies a pin/unpin mutation, triggers a render, and
+     * announces the change for accessibility.
+     *
+     * @param eventPayload
+     * Pre-built event payload describing the change.
+     *
+     * @param applyChange
+     * Callback that mutates the internal pin state.
+     *
+     * @param announcementAction
+     * Whether to announce a pin or unpin for accessibility.
+     *
+     * @param announcementPosition
+     * Section to include in the pin announcement.
+     */
+    async runRuntimeChange(eventPayload, applyChange, announcementAction, announcementPosition) {
+        const { grid } = this;
+        const compensationState = eventPayload.changed ?
+            grid.viewport?.rowPinningView?.captureViewportCompensation(eventPayload.rowId) :
+            void 0;
+        fireEvent(grid, 'beforeRowPin', eventPayload);
+        this.callEventCallback('beforeRowPin', eventPayload);
+        await applyChange();
+        if (grid.viewport && grid.querying.pagination.enabled) {
+            await grid.viewport.rowsVirtualizer.refreshRows();
+        }
+        const renderResult = grid.viewport ?
+            await grid.viewport.rowPinningView?.render(true) ||
+                { missingPinnedRowIds: [] } :
+            { missingPinnedRowIds: [] };
+        await this.handlePinnedRenderResult(renderResult, 'runtime');
+        grid.viewport?.reflow();
+        if (compensationState) {
+            grid.viewport?.rowPinningView?.restoreViewportCompensation(compensationState);
+        }
+        if (announcementAction === 'pin' &&
+            eventPayload.changed &&
+            eventPayload.position) {
+            grid.viewport?.rowPinningView?.revealRowInSection(eventPayload.rowId, eventPayload.position);
+        }
+        fireEvent(grid, 'afterRowPin', eventPayload);
+        this.callEventCallback('afterRowPin', eventPayload);
+        if (eventPayload.changed) {
+            this.announceChange(announcementAction, eventPayload.rowId, announcementPosition);
+        }
+    }
+    /**
+     * Invokes the user-configured event callback for a pin change event.
+     *
+     * @param eventName
+     * Event name to look up in the pinning options.
+     *
+     * @param eventPayload
+     * Event payload to pass to the callback.
+     */
+    callEventCallback(eventName, eventPayload) {
+        const callback = this.getPinningOptions()?.events?.[eventName];
+        if (!callback) {
+            return;
+        }
+        callback.call(this.grid, {
+            target: this.grid,
+            ...eventPayload
+        });
+    }
+    /**
+     * Sends an accessibility announcement for a completed pin/unpin change.
+     *
+     * @param action
+     * Whether the row was pinned or unpinned.
+     *
+     * @param rowId
+     * Row identifier that was changed.
+     *
+     * @param position
+     * Section the row was pinned to (only relevant for pin actions).
+     */
+    announceChange(action, rowId, position) {
+        const { grid } = this;
+        if (!grid.options?.accessibility?.announcements?.rowPinning) {
+            return;
+        }
+        const lang = grid.options?.lang?.accessibility?.rowPinning
+            ?.announcements;
+        let msg;
+        if (action === 'pin' && position) {
+            msg = formatText(lang?.pinned || '', {
+                rowId: String(rowId),
+                position
+            });
+        }
+        else {
+            msg = formatText(lang?.unpinned || '', {
+                rowId: String(rowId)
+            });
+        }
+        if (msg) {
+            grid.accessibility?.announce(msg, true);
+        }
+    }
+    /**
+     * Prunes cached pinned row objects for rows that are no longer pinned.
+     *
+     * @param state
+     * Explicit pinned state snapshot. When omitted, the current state is used.
+     */
+    syncPinnedRowObjects(state) {
+        const pinned = state || this.getPinnedRows();
+        const activeIds = new Set([
+            ...pinned.topIds,
+            ...pinned.bottomIds
+        ]);
+        for (const rowId of this.pinnedRowObjects.keys()) {
+            if (!activeIds.has(rowId)) {
+                this.pinnedRowObjects.delete(rowId);
+            }
+        }
+    }
+    /**
+     * Returns whether a row ID appears in the effective pinned row state.
+     *
+     * @param rowId
+     * Row identifier to check.
+     *
+     * @param state
+     * Pinned row state to check against. Defaults to the current state.
+     */
+    isPinnedRowId(rowId, state = this.getPinnedRows()) {
+        return (state.topIds.includes(rowId) ||
+            state.bottomIds.includes(rowId));
+    }
+    /**
+     * Returns the row data object from a currently rendered viewport row.
+     *
+     * @param rowId
+     * Row identifier to look up.
+     */
+    getMaterializedRowObjectById(rowId) {
+        return this.grid.viewport?.getRow(rowId)?.data;
+    }
+    /**
+     * Returns the row data object from the source data table by row ID.
+     *
+     * @param rowId
+     * Row identifier to look up.
+     *
+     * @param dataTable
+     * Source data table to search.
+     *
+     * @param idColumn
+     * Column name used as the row identifier.
+     *
+     * @param sourceRowIndexesMap
+     * Pre-built map from row ID to row index for `idColumn` lookups.
+     */
+    getSourceRowObjectById(rowId, dataTable, idColumn, sourceRowIndexesMap) {
+        const rowIndex = this.getSourceRowIndexById(rowId, dataTable, idColumn, sourceRowIndexesMap);
+        if (!dataTable || rowIndex === void 0) {
+            return;
+        }
+        return dataTable.getRowObject(rowIndex);
+    }
+    /**
+     * Returns the numeric row index in the source data table for a given row
+     * ID.
+     *
+     * @param rowId
+     * Row identifier to resolve.
+     *
+     * @param dataTable
+     * Source data table.
+     *
+     * @param idColumn
+     * Column name used as the row identifier.
+     *
+     * @param sourceRowIndexesMap
+     * Pre-built map from row ID to row index for `idColumn` lookups.
+     */
+    getSourceRowIndexById(rowId, dataTable, idColumn, sourceRowIndexesMap) {
+        if (!dataTable) {
+            return;
+        }
+        if (idColumn) {
+            return sourceRowIndexesMap?.get(rowId);
+        }
+        if (Utilities_isNumber(rowId)) {
+            return rowId;
+        }
+    }
+    /**
+     * Builds a map from row ID to row index by scanning `idColumn` in the
+     * source data table.
+     *
+     * @param dataTable
+     * Source data table to scan.
+     *
+     * @param idColumn
+     * Column name whose values are the row identifiers.
+     */
+    getSourceRowIndexesMap(dataTable, idColumn) {
+        const idColumnValues = dataTable.getColumn(idColumn, true);
+        if (!idColumnValues) {
+            return;
+        }
+        const rowIndexes = new Map();
+        for (let i = 0, iEnd = idColumnValues.length; i < iEnd; ++i) {
+            const rowId = idColumnValues[i];
+            if (isString(rowId) || Utilities_isNumber(rowId)) {
+                rowIndexes.set(rowId, i);
+            }
+        }
+        return rowIndexes;
+    }
+    /**
+     * Returns whether the data source has enough information to confirm that a
+     * row ID does not exist (as opposed to simply not being loaded yet).
+     *
+     * @param rowId
+     * Row identifier to verify.
+     *
+     * @param dataTable
+     * Source data table.
+     *
+     * @param idColumn
+     * Column name used as the row identifier.
+     *
+     * @param sourceRowIndexesMap
+     * Pre-built map from row ID to row index for `idColumn` lookups.
+     */
+    canDeterminePinnedRowAbsence(rowId, dataTable, idColumn, sourceRowIndexesMap) {
+        if (!dataTable) {
+            return false;
+        }
+        if (idColumn) {
+            return !!sourceRowIndexesMap;
+        }
+        return Utilities_isNumber(rowId);
+    }
+    /**
+     * Deduplicates and resolves conflicts between top and bottom ID arrays,
+     * giving priority to top.
+     *
+     * @param topIds
+     * Candidate top-section row IDs.
+     *
+     * @param bottomIds
+     * Candidate bottom-section row IDs.
+     */
+    static normalizeSections(topIds, bottomIds) {
+        const uniqueTopIds = RowPinningController.uniqueRowIds(topIds);
+        const topSet = new Set(uniqueTopIds);
+        const uniqueBottomIds = RowPinningController.uniqueRowIds(bottomIds)
+            .filter((rowId) => !topSet.has(rowId));
+        return {
+            topIds: uniqueTopIds,
+            bottomIds: uniqueBottomIds
+        };
+    }
+    /**
+     * Filters an array to unique, valid row IDs (strings and numbers only).
+     *
+     * @param values
+     * Raw values to filter and deduplicate.
+     */
+    static uniqueRowIds(values) {
+        const result = [];
+        const seen = new Set();
+        for (const value of values) {
+            if (!Utilities_isNumber(value) && !isString(value)) {
+                continue;
+            }
+            if (seen.has(value)) {
+                continue;
+            }
+            seen.add(value);
+            result.push(value);
+        }
+        return result;
+    }
+}
+/* harmony default export */ const RowPinning_RowPinningController = (RowPinningController);
+
+;// ./code/grid/es-modules/Grid/Pro/RowPinning/PinnedTableCell.js
+/* *
+ *
+ *  Grid Pro pinned table cell
+ *
+ *  (c) 2020-2026 Highsoft AS
+ *
+ *  A commercial license may be required depending on use.
+ *  See www.highcharts.com/license
+ *
+ * */
+
+
+
+class PinnedTableCell extends Body_TableCell {
+    async setValue(value, updateDataset = false) {
+        if (!defined(value)) {
+            const sourceColumnId = this.column.viewport.grid.columnPolicy
+                .getColumnSourceId(this.column.id);
+            value = (sourceColumnId && sourceColumnId in this.row.data ?
+                this.row.data[sourceColumnId] :
+                this.row.data[this.column.id]);
+        }
+        await super.setValue(value, updateDataset);
+    }
+    async updateDataset() {
+        const sourceColumnId = this.column.viewport.grid.columnPolicy
+            .getColumnSourceId(this.column.id);
+        if (!sourceColumnId) {
+            return false;
+        }
+        const oldValue = (sourceColumnId in this.row.data ?
+            this.row.data[sourceColumnId] :
+            this.row.data[this.column.id]);
+        if (oldValue === this.value) {
+            return false;
+        }
+        const vp = this.column.viewport;
+        const { dataProvider: dp } = vp.grid;
+        const rowId = this.row.id;
+        if (!dp || rowId === void 0) {
+            return false;
+        }
+        this.row.data[this.column.id] = this.value;
+        if (sourceColumnId !== this.column.id) {
+            this.row.data[sourceColumnId] = this.value;
+        }
+        await dp.setValue(this.value, sourceColumnId, rowId);
+        vp.grid.rowPinning?.updatePinnedRowValue(rowId, this.column.id, this.value);
+        if (vp.grid.querying.willNotModify()) {
+            await vp.rowPinningView?.syncRenderedMirrors(rowId, this.column.id, this.value, this.row, sourceColumnId);
+            return false;
+        }
+        await vp.updateRows();
+        return true;
+    }
+    onFocus() {
+        super.onFocus();
+        const rowId = this.row.id;
+        if (rowId === void 0) {
+            return;
+        }
+        this.row.viewport.focusCursor = {
+            bodySectionId: this.row.bodySectionId,
+            rowId,
+            columnIndex: this.column.index
+        };
+    }
+    onMouseOver() {
+        this.row.setHoveredState(true);
+        super.onMouseOver();
+    }
+    onMouseOut() {
+        this.row.setHoveredState(false);
+        super.onMouseOut();
+    }
+}
+/* harmony default export */ const RowPinning_PinnedTableCell = (PinnedTableCell);
+
+;// ./code/grid/es-modules/Grid/Pro/RowPinning/PinnedTableRow.js
+/* *
+ *
+ *  Grid Pro pinned table row
+ *
+ *  (c) 2020-2026 Highsoft AS
+ *
+ *  A commercial license may be required depending on use.
+ *  See www.highcharts.com/license
+ *
+ * */
+
+
+
+
+class PinnedTableRow extends Body_TableRow {
+    constructor(viewport, section, index) {
+        super(viewport, index);
+        this.bodySectionId = section;
+    }
+    init() {
+        this.setRowAttributes();
+        return Promise.resolve();
+    }
+    createCell(column) {
+        return new RowPinning_PinnedTableCell(this, column);
+    }
+    async update() {
+        await this.sync(this.id, this.data, this.index);
+    }
+    async sync(rowId, data, index = this.index, doReflow = true) {
+        this.index = index;
+        this.id = rowId;
+        this.data = data;
+        this.setRowAttributes();
+        if (this.rendered) {
+            for (let i = 0, iEnd = this.cells.length; i < iEnd; ++i) {
+                await this.cells[i].setValue();
+            }
+        }
+        if (doReflow) {
+            this.reflow();
+        }
+    }
+    setHoveredState(hovered) {
+        this.htmlElement.classList[hovered ? 'add' : 'remove'](Grid_Core_Globals.getClassName('hoveredRow'));
+    }
+    setSyncedState(synced) {
+        this.htmlElement.classList[synced ? 'add' : 'remove'](Grid_Core_Globals.getClassName('syncedRow'));
+    }
+    setRowAttributes() {
+        const el = this.htmlElement;
+        el.classList.add(Grid_Core_Globals.getClassName('rowElement'));
+        el.removeAttribute('data-row-index');
+        el.setAttribute('data-pinned-section', this.bodySectionId);
+        this.updateRowAttributes();
+        this.updateParityClass();
+        this.updateStateClasses();
+    }
+    updateRowAttributes() {
+        const el = this.htmlElement;
+        if (this.id !== void 0) {
+            el.setAttribute('data-row-id', this.id);
+        }
+        el.removeAttribute('aria-rowindex');
+    }
+    updateParityClass() {
+        const el = this.htmlElement;
+        el.classList.remove(Grid_Core_Globals.getClassName('rowEven'), Grid_Core_Globals.getClassName('rowOdd'));
+        el.classList.add(Grid_Core_Globals.getClassName(this.index % 2 ? 'rowEven' : 'rowOdd'));
+    }
+    updateStateClasses() {
+        const el = this.htmlElement;
+        el.classList.remove(Grid_Core_Globals.getClassName('hoveredRow'), Grid_Core_Globals.getClassName('syncedRow'));
+    }
+}
+/* harmony default export */ const RowPinning_PinnedTableRow = (PinnedTableRow);
+
+;// ./code/grid/es-modules/Grid/Pro/RowPinning/RowPinningView.js
+/* *
+ *
+ *  Grid Row Pinning viewport helper
+ *
+ *  (c) 2020-2026 Highsoft AS
+ *
+ *  A commercial license may be required depending on use.
+ *  See www.highcharts.com/license
+ *
+ *
+ *  Author:
+ *  - Mikkel Espolin Birkeland
+ *  - Dawid Dragula
+ *
+ * */
+
+
+
+
+
+
+const { makeHTMLElement: RowPinningView_makeHTMLElement } = GridUtils;
+/**
+ * The class names used by the row pinning functionality.
+ */
+const RowPinningView_classNames = {
+    pinnedTbodyElement: Grid_Core_Globals.classNamePrefix + 'tbody-pinned',
+    pinnedTopTbodyElement: Grid_Core_Globals.classNamePrefix + 'tbody-pinned-top',
+    pinnedBottomTbodyElement: Grid_Core_Globals.classNamePrefix + 'tbody-pinned-bottom',
+    rowPinned: Grid_Core_Globals.classNamePrefix + 'row-pinned',
+    rowPinnedTop: Grid_Core_Globals.classNamePrefix + 'row-pinned-top',
+    rowPinnedBottom: Grid_Core_Globals.classNamePrefix + 'row-pinned-bottom'
+};
+class RowPinningView {
+    constructor(viewport) {
+        this.pinnedTopRows = [];
+        this.pinnedBottomRows = [];
+        this.pinnedTopRowById = new Map();
+        this.pinnedBottomRowById = new Map();
+        this.scrollbarCompensationQueued = false;
+        this.viewport = viewport;
+        this.pinnedTopTbodyElement = RowPinningView_makeHTMLElement('tbody', {
+            className: [
+                RowPinningView_classNames.pinnedTbodyElement,
+                RowPinningView_classNames.pinnedTopTbodyElement
+            ].join(' ')
+        });
+        this.pinnedTopTbodyElement.setAttribute('aria-label', 'Pinned top rows');
+        this.pinnedBottomTbodyElement = RowPinningView_makeHTMLElement('tbody', {
+            className: [
+                RowPinningView_classNames.pinnedTbodyElement,
+                RowPinningView_classNames.pinnedBottomTbodyElement
+            ].join(' ')
+        });
+        this.pinnedBottomTbodyElement.setAttribute('aria-label', 'Pinned bottom rows');
+        viewport.registerBodySection({
+            id: 'top',
+            position: 'before',
+            tbodyElement: this.pinnedTopTbodyElement,
+            getRows: () => this.pinnedTopRows,
+            getRowByElement: (rowElement) => this.pinnedTopRows.find((row) => row.htmlElement === rowElement),
+            getRowById: (rowId) => this.pinnedTopRowById.get(rowId)
+        });
+        viewport.registerBodySection({
+            id: 'bottom',
+            position: 'after',
+            tbodyElement: this.pinnedBottomTbodyElement,
+            getRows: () => this.pinnedBottomRows,
+            getRowByElement: (rowElement) => this.pinnedBottomRows.find((row) => row.htmlElement === rowElement),
+            getRowById: (rowId) => this.pinnedBottomRowById.get(rowId)
+        });
+    }
+    getRows(section) {
+        return section === 'top' ? this.pinnedTopRows : this.pinnedBottomRows;
+    }
+    getPinnedRowsCount() {
+        return this.pinnedTopRows.length + this.pinnedBottomRows.length;
+    }
+    getRenderedPinnedRowById(rowId, section) {
+        return section === 'top' ?
+            this.pinnedTopRowById.get(rowId) :
+            this.pinnedBottomRowById.get(rowId);
+    }
+    getBodyForSection(section) {
+        return section === 'top' ?
+            this.pinnedTopTbodyElement :
+            this.pinnedBottomTbodyElement;
+    }
+    getSectionForBody(tbody) {
+        if (tbody === this.pinnedTopTbodyElement) {
+            return 'top';
+        }
+        if (tbody === this.pinnedBottomTbodyElement) {
+            return 'bottom';
+        }
+    }
+    getPinnedBodyMaxHeightSignature() {
+        return [
+            this.normalizeMaxHeight(this.getPinnedBodyMaxHeight('top')),
+            this.normalizeMaxHeight(this.getPinnedBodyMaxHeight('bottom'))
+        ].join('|');
+    }
+    async refreshFromQueryCycle(deferLayout = false) {
+        await this.viewport.grid.rowPinning
+            ?.recomputeResolvedFromMaterializedRows();
+        const renderResult = await this.render(deferLayout);
+        await this.viewport.grid.rowPinning?.handlePinnedRenderResult(renderResult, 'query');
+    }
+    async render(deferLayout = false) {
+        const { viewport } = this;
+        const cellEditing = viewport.cellEditing;
+        // Cancel any active cell editing before destroying/moving rows to
+        // prevent orphaned inputs and stale cell references.
+        if (cellEditing?.editedCell) {
+            cellEditing.stopEditing(false);
+        }
+        const pinnedRows = viewport.grid.rowPinning?.getPinnedRows() || {
+            topIds: [],
+            bottomIds: []
+        };
+        const hasPinning = pinnedRows.topIds.length > 0 ||
+            pinnedRows.bottomIds.length > 0;
+        const pinnedSections = this.getPinnedSections(pinnedRows);
+        this.ensurePinnedBodiesRendered(pinnedSections);
+        if (!hasPinning) {
+            this.clearPinnedRows();
+            viewport.tbodyElement.style.display = '';
+            if (!deferLayout) {
+                this.applyPinnedBodyMaxHeights();
+            }
+            this.updateScrollableRowAttributes();
+            await viewport.syncAriaRowIndexes();
+            return { missingPinnedRowIds: [] };
+        }
+        const missingPinnedRowIds = [];
+        for (const section of pinnedSections) {
+            missingPinnedRowIds.push(...await this.syncPinnedRowsByIds(section.rows, section.tbody, section.rowIds, section.position));
+        }
+        this.rebuildPinnedRowLookupMaps();
+        this.updateScrollableRowAttributes();
+        await viewport.syncAriaRowIndexes();
+        viewport.tbodyElement.style.display = '';
+        if (!deferLayout) {
+            this.applyPinnedBodyMaxHeights();
+            this.syncHorizontalScroll(viewport.tbodyElement.scrollLeft);
+            this.applyPinnedScrollbarCompensation();
+        }
+        return { missingPinnedRowIds };
+    }
+    reflow() {
+        for (const row of this.pinnedTopRows.concat(this.pinnedBottomRows)) {
+            row.reflow();
+        }
+        this.applyPinnedBodyMaxHeights();
+        this.applyPinnedScrollbarCompensation();
+        this.syncHorizontalScroll(this.viewport.tbodyElement.scrollLeft);
+    }
+    destroy() {
+        this.viewport.unregisterBodySection('top');
+        this.viewport.unregisterBodySection('bottom');
+        for (let i = 0, iEnd = this.pinnedTopRows.length; i < iEnd; ++i) {
+            this.pinnedTopRows[i].destroy();
+        }
+        for (let i = 0, iEnd = this.pinnedBottomRows.length; i < iEnd; ++i) {
+            this.pinnedBottomRows[i].destroy();
+        }
+        this.pinnedTopRows.length = 0;
+        this.pinnedBottomRows.length = 0;
+        this.pinnedTopRowById.clear();
+        this.pinnedBottomRowById.clear();
+        this.pinnedTopTbodyElement.remove();
+        this.pinnedBottomTbodyElement.remove();
+    }
+    revealRowInSection(rowId, section) {
+        const tbody = this.getBodyForSection(section);
+        const row = this.getRenderedPinnedRowById(rowId, section);
+        const rowElement = row?.htmlElement;
+        if (!rowElement || !tbody.isConnected || tbody.clientHeight <= 0) {
+            return;
+        }
+        const viewportTop = tbody.scrollTop;
+        const viewportBottom = viewportTop + tbody.clientHeight;
+        const rowTop = rowElement.offsetTop;
+        const rowBottom = rowTop + rowElement.offsetHeight;
+        if (rowTop < viewportTop) {
+            tbody.scrollTop = Math.max(0, rowTop);
+            return;
+        }
+        if (rowBottom > viewportBottom) {
+            tbody.scrollTop = Math.max(0, rowBottom - tbody.clientHeight);
+        }
+    }
+    captureViewportCompensation(rowId) {
+        const compensationState = {
+            pinnedTopHeight: this.pinnedTopTbodyElement.isConnected ?
+                this.pinnedTopTbodyElement.offsetHeight :
+                0
+        };
+        const anchorRow = this.viewport.rows.find((row) => row.id === rowId);
+        if (!anchorRow?.htmlElement.isConnected) {
+            return compensationState;
+        }
+        const tbodyRect = this.viewport.tbodyElement.getBoundingClientRect();
+        const rowRect = anchorRow.htmlElement.getBoundingClientRect();
+        if (rowRect.bottom <= tbodyRect.top ||
+            rowRect.top >= tbodyRect.bottom) {
+            return compensationState;
+        }
+        compensationState.anchorRowId = rowId;
+        compensationState.anchorRowTop = rowRect.top;
+        return compensationState;
+    }
+    restoreViewportCompensation(compensationState) {
+        let delta;
+        if (compensationState.anchorRowId !== void 0 &&
+            compensationState.anchorRowTop !== void 0) {
+            const anchorRow = this.viewport.rows.find((row) => row.id === compensationState.anchorRowId);
+            const anchorElement = anchorRow?.htmlElement;
+            if (anchorElement?.isConnected) {
+                delta = (anchorElement.getBoundingClientRect().top -
+                    compensationState.anchorRowTop);
+            }
+        }
+        if (delta === void 0) {
+            delta = ((this.pinnedTopTbodyElement.isConnected ?
+                this.pinnedTopTbodyElement.offsetHeight :
+                0) -
+                compensationState.pinnedTopHeight);
+        }
+        if (!delta) {
+            return;
+        }
+        this.viewport.tbodyElement.scrollTop = Math.max(0, this.viewport.tbodyElement.scrollTop + delta);
+    }
+    syncHorizontalScroll(scrollLeft) {
+        const hasPinnedBody = this.getPinnedSections()
+            .some((section) => section.tbody.isConnected);
+        if (!hasPinnedBody) {
+            return;
+        }
+        const offset = -scrollLeft;
+        const transform = offset ? `translateX(${offset}px)` : '';
+        for (const section of this.getPinnedSections()) {
+            if (!section.tbody.isConnected) {
+                continue;
+            }
+            // Keep pinned rows aligned via transform only. Updating both the
+            // tbody scroll position and the row transform shifts content twice.
+            section.tbody.scrollLeft = 0;
+            for (let i = 0, iEnd = section.rows.length; i < iEnd; ++i) {
+                section.rows[i].htmlElement.style.transform = transform;
+            }
+        }
+    }
+    updateRowAttributes(row) {
+        const vp = this.viewport;
+        const el = row.htmlElement;
+        const rowPinningDescriptions = vp.grid.options?.lang?.accessibility
+            ?.rowPinning?.descriptions;
+        el.classList.remove(RowPinningView_classNames.rowPinned, RowPinningView_classNames.rowPinnedTop, RowPinningView_classNames.rowPinnedBottom);
+        if (row instanceof RowPinning_PinnedTableRow &&
+            row.bodySectionId === 'top') {
+            el.classList.add(RowPinningView_classNames.rowPinned);
+            el.setAttribute('aria-roledescription', rowPinningDescriptions?.pinnedTop ||
+                'Pinned row in top section.');
+            return;
+        }
+        if (row instanceof RowPinning_PinnedTableRow &&
+            row.bodySectionId === 'bottom') {
+            el.classList.add(RowPinningView_classNames.rowPinned);
+            el.setAttribute('aria-roledescription', rowPinningDescriptions?.pinnedBottom ||
+                'Pinned row in bottom section.');
+            return;
+        }
+        if (row.id === void 0) {
+            el.removeAttribute('aria-roledescription');
+            return;
+        }
+        const pinnedRows = vp.grid.rowPinning?.getPinnedRows();
+        if (pinnedRows?.topIds.includes(row.id)) {
+            el.classList.add(RowPinningView_classNames.rowPinned);
+            el.classList.add(RowPinningView_classNames.rowPinnedTop);
+            el.setAttribute('aria-roledescription', rowPinningDescriptions?.alsoPinnedTop ||
+                'This row is also pinned to top section.');
+            return;
+        }
+        if (pinnedRows?.bottomIds.includes(row.id)) {
+            el.classList.add(RowPinningView_classNames.rowPinned);
+            el.classList.add(RowPinningView_classNames.rowPinnedBottom);
+            el.setAttribute('aria-roledescription', rowPinningDescriptions?.alsoPinnedBottom ||
+                'This row is also pinned to bottom section.');
+            return;
+        }
+        el.removeAttribute('aria-roledescription');
+    }
+    async syncRenderedMirrors(rowId, columnId, value, sourceRow, sourceColumnId) {
+        const renderedRows = new Set();
+        const dataProvider = this.viewport.grid.dataProvider;
+        const mainRowIndex = await dataProvider?.getRowIndex(rowId);
+        const topRow = this.getRenderedPinnedRowById(rowId, 'top');
+        if (topRow) {
+            renderedRows.add(topRow);
+        }
+        const bottomRow = this.getRenderedPinnedRowById(rowId, 'bottom');
+        if (bottomRow) {
+            renderedRows.add(bottomRow);
+        }
+        if (typeof mainRowIndex === 'number') {
+            const scrollRow = this.viewport.getRenderedRowByIndex(mainRowIndex);
+            if (scrollRow) {
+                renderedRows.add(scrollRow);
+            }
+        }
+        for (const row of renderedRows) {
+            if (row === sourceRow) {
+                continue;
+            }
+            row.data[columnId] = value;
+            if (sourceColumnId && sourceColumnId !== columnId) {
+                row.data[sourceColumnId] = value;
+            }
+            const cell = row.cells.find((tableCell) => tableCell instanceof Body_TableCell &&
+                tableCell.column.id === columnId);
+            if (cell) {
+                await cell.setValue(value);
+            }
+        }
+    }
+    async syncPinnedRowsFromMaterializedRows() {
+        const { grid } = this.viewport;
+        if (!grid.rowPinning?.isEnabled()) {
+            return;
+        }
+        const pinnedRows = grid.rowPinning.getPinnedRows();
+        const pinnedIds = [
+            ...pinnedRows.topIds,
+            ...pinnedRows.bottomIds
+        ];
+        const hasPendingRenderedRows = this.hasPendingRenderedPinnedRows(pinnedRows);
+        if (!pinnedIds.length) {
+            return;
+        }
+        const { hydratedRowIds, definitiveMissingRowIds } = await grid.rowPinning.ensurePinnedRowsAvailable(pinnedIds);
+        if (definitiveMissingRowIds.length) {
+            grid.rowPinning.pruneMissingExplicitIds(definitiveMissingRowIds);
+        }
+        if (hasPendingRenderedRows ||
+            hydratedRowIds.length ||
+            definitiveMissingRowIds.length) {
+            await this.render(true);
+        }
+    }
+    async getScrollableRowCount(providerRowCount) {
+        const { grid } = this.viewport;
+        if (!grid.querying.pagination.enabled) {
+            return providerRowCount;
+        }
+        const pinnedRows = grid.rowPinning?.getPinnedRows();
+        const pinnedSet = new Set([
+            ...(pinnedRows?.topIds || []),
+            ...(pinnedRows?.bottomIds || [])
+        ]);
+        let pinnedCount = 0;
+        const dataProvider = grid.dataProvider;
+        for (let i = 0; i < providerRowCount; ++i) {
+            const rowId = await dataProvider?.getRowId(i);
+            if (rowId !== void 0 && pinnedSet.has(rowId)) {
+                ++pinnedCount;
+            }
+        }
+        return Math.max(providerRowCount - pinnedCount, 0);
+    }
+    getPinnedBodyMaxHeight(position) {
+        const pinningOptions = getGridRowPinningOptions(this.viewport.grid);
+        return position === 'top' ?
+            pinningOptions?.top?.maxHeight :
+            pinningOptions?.bottom?.maxHeight;
+    }
+    normalizeMaxHeight(value) {
+        if (typeof value === 'number' && value >= 0) {
+            return value + 'px';
+        }
+        if (typeof value !== 'string') {
+            return '';
+        }
+        const trimmed = value.trim();
+        const percentMatch = trimmed.match(/^(\d+(\.\d+)?)%$/);
+        if (percentMatch) {
+            const percent = parseFloat(percentMatch[1]);
+            const tableHeight = this.viewport.tableElement.clientHeight ||
+                this.viewport.tbodyElement.clientHeight;
+            const pxHeight = Math.max(0, Math.round(tableHeight * percent / 100));
+            return pxHeight + 'px';
+        }
+        if (/^\d+(\.\d+)?px$/.test(trimmed)) {
+            return trimmed;
+        }
+        return '';
+    }
+    applyPinnedBodyMaxHeights() {
+        const apply = (tbody, value) => {
+            const maxHeight = this.normalizeMaxHeight(value);
+            tbody.style.maxHeight = maxHeight;
+            tbody.style.overflowY = maxHeight ? 'auto' : '';
+            tbody.style.overflowX = maxHeight ? 'hidden' : '';
+        };
+        for (const section of this.getPinnedSections()) {
+            apply(section.tbody, this.getPinnedBodyMaxHeight(section.position));
+        }
+    }
+    async syncPinnedRowsByIds(targetRows, tbody, rowIds, section) {
+        const missingPinnedRowIds = [];
+        const nextRows = [];
+        for (let i = 0; i < rowIds.length; ++i) {
+            const rowId = rowIds[i];
+            const rowData = this.viewport.grid.rowPinning?.getPinnedRowObject(rowId);
+            if (!rowData) {
+                missingPinnedRowIds.push(rowId);
+                continue;
+            }
+            const nextIndex = nextRows.length;
+            let row = targetRows[nextIndex];
+            if (!row) {
+                row = new RowPinning_PinnedTableRow(this.viewport, section, nextIndex);
+                await row.sync(rowId, rowData, nextIndex, false);
+                await row.init();
+                await row.render();
+                tbody.appendChild(row.htmlElement);
+            }
+            else {
+                await row.sync(rowId, rowData, nextIndex, false);
+                if (!row.htmlElement.isConnected) {
+                    tbody.appendChild(row.htmlElement);
+                }
+            }
+            this.updateRowAttributes(row);
+            row.reflow();
+            nextRows.push(row);
+        }
+        for (let i = nextRows.length; i < targetRows.length; ++i) {
+            targetRows[i].destroy();
+        }
+        targetRows.length = 0;
+        for (const row of nextRows) {
+            targetRows.push(row);
+        }
+        return missingPinnedRowIds;
+    }
+    rebuildPinnedRowLookupMaps() {
+        for (const section of this.getPinnedSections()) {
+            section.rowById.clear();
+            for (const row of section.rows) {
+                if (row.id !== void 0) {
+                    section.rowById.set(row.id, row);
+                }
+            }
+        }
+    }
+    updateScrollableRowAttributes() {
+        for (let i = 0, iEnd = this.viewport.rows.length; i < iEnd; ++i) {
+            this.updateRowAttributes(this.viewport.rows[i]);
+        }
+    }
+    /**
+     * Keeps pinned sections aligned with the scrollable tbody content width by
+     * compensating for the vertical scrollbar gutter.
+     */
+    applyPinnedScrollbarCompensation() {
+        const scrollableBody = this.viewport.tbodyElement;
+        const mainGutterWidth = Math.max(0, scrollableBody.offsetWidth - scrollableBody.clientWidth);
+        const applyToPinnedBody = (pinnedBody) => {
+            if (!pinnedBody.isConnected) {
+                pinnedBody.style.width = '';
+                return;
+            }
+            const pinnedGutterWidth = Math.max(0, pinnedBody.offsetWidth - pinnedBody.clientWidth);
+            const compensation = Math.max(0, mainGutterWidth - pinnedGutterWidth);
+            pinnedBody.style.width = compensation > 0 ?
+                `calc(100% - ${compensation}px)` :
+                '';
+        };
+        for (const section of this.getPinnedSections()) {
+            applyToPinnedBody(section.tbody);
+        }
+        if (!this.scrollbarCompensationQueued) {
+            this.scrollbarCompensationQueued = true;
+            requestAnimationFrame(() => {
+                this.scrollbarCompensationQueued = false;
+                for (const section of this.getPinnedSections()) {
+                    applyToPinnedBody(section.tbody);
+                }
+            });
+        }
+    }
+    ensurePinnedBodiesRendered(pinnedSections) {
+        const tableElement = this.viewport.tableElement;
+        for (const section of pinnedSections) {
+            if (!section.rowIds.length) {
+                if (section.tbody.parentElement === tableElement) {
+                    section.tbody.remove();
+                }
+                continue;
+            }
+            if (section.tbody.parentElement !== tableElement) {
+                if (section.position === 'top') {
+                    tableElement.insertBefore(section.tbody, this.viewport.tbodyElement);
+                }
+                else {
+                    tableElement.appendChild(section.tbody);
+                }
+            }
+        }
+    }
+    hasPendingRenderedPinnedRows(pinnedRows) {
+        const { rowPinning } = this.viewport.grid;
+        if (!rowPinning) {
+            return false;
+        }
+        for (const section of this.getPinnedSections(pinnedRows)) {
+            for (const rowId of section.rowIds) {
+                if (rowPinning.getPinnedRowObject(rowId) &&
+                    !section.rowById.has(rowId)) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+    clearPinnedRows() {
+        for (const section of this.getPinnedSections()) {
+            section.rows.forEach((row) => row.destroy());
+            section.rows.length = 0;
+            section.rowById.clear();
+        }
+    }
+    getPinnedSections(pinnedRows = {
+        topIds: [],
+        bottomIds: []
+    }) {
+        return [{
+                position: 'top',
+                rowIds: pinnedRows.topIds,
+                rows: this.pinnedTopRows,
+                tbody: this.pinnedTopTbodyElement,
+                rowById: this.pinnedTopRowById
+            }, {
+                position: 'bottom',
+                rowIds: pinnedRows.bottomIds,
+                rows: this.pinnedBottomRows,
+                tbody: this.pinnedBottomTbodyElement,
+                rowById: this.pinnedBottomRowById
+            }];
+    }
+}
+/* harmony default export */ const RowPinning_RowPinningView = (RowPinningView);
+
+;// ./code/grid/es-modules/Grid/Pro/RowPinning/RowPinningComposition.js
+/* *
+ *
+ *  Grid Row Pinning composition
+ *
+ *  (c) 2020-2026 Highsoft AS
+ *
+ *  A commercial license may be required depending on use.
+ *  See www.highcharts.com/license
+ *
+ *
+ *  Author:
+ *  - Mikkel Espolin Birkeland
+ *
+ * */
+
+
+
+
+
+
+
+
+/**
+ * Default options for row pinning.
+ */
+const RowPinningComposition_defaultOptions = {
+    accessibility: {
+        announcements: {
+            rowPinning: true
+        }
+    },
+    lang: {
+        pinRowTop: 'Pin row to top',
+        pinRowBottom: 'Pin row to bottom',
+        unpinRow: 'Unpin row',
+        accessibility: {
+            rowPinning: {
+                announcements: {
+                    pinned: 'Row {rowId} pinned to {position}.',
+                    unpinned: 'Row {rowId} unpinned.'
+                },
+                descriptions: {
+                    pinnedTop: 'Pinned row in top section.',
+                    pinnedBottom: 'Pinned row in bottom section.',
+                    alsoPinnedTop: 'This row is also pinned to top section.',
+                    alsoPinnedBottom: 'This row is also pinned to bottom section.'
+                }
+            }
+        }
+    },
+    rendering: {
+        rows: {
+            pinning: {
+                enabled: true,
+                topIds: [],
+                bottomIds: [],
+                events: {},
+                top: {},
+                bottom: {}
+            }
+        }
+    }
+};
+
+const defaultPinnedRowsState = {
+    topIds: [],
+    bottomIds: []
+};
+/**
+ * Compose row pinning APIs into Grid Pro.
+ *
+ * @param GridClass
+ * Grid class to compose into.
+ *
+ * @param TableClass
+ * Table class to compose into.
+ *
+ * @param ColumnClass
+ * Column class to compose into.
+ *
+ * @param TableRowClass
+ * TableRow class to compose into.
+ *
+ * @param TableCellClass
+ * TableCell class to compose into.
+ */
+function RowPinningComposition_compose(GridClass, TableClass, ColumnClass, TableRowClass, TableCellClass) {
+    void ColumnClass;
+    if (!pushUnique(Grid_Core_Globals.composed, 'RowPinning')) {
+        return;
+    }
+    merge(true, Defaults_defaultOptions, RowPinningComposition_defaultOptions);
+    registerBuiltInActions();
+    addEvent(GridClass, 'beforeLoad', initRowPinning);
+    addEvent(GridClass, 'beforeUpdate', onBeforeGridUpdate);
+    addEvent(TableClass, 'beforeInit', initRowPinningView);
+    addEvent(TableClass, 'afterReflow', onAfterTableReflow);
+    addEvent(TableClass, 'bodyScroll', onTableBodyScroll);
+    addEvent(TableClass, 'afterDestroy', destroyRowPinningView);
+    addEvent(TableRowClass, 'afterLoadData', rememberMaterializedRowData);
+    addEvent(TableRowClass, 'afterUpdateAttributes', syncRenderedRowAttrs);
+    addEvent(TableCellClass, 'afterEditValue', syncEditedCellMirrors);
+}
+/**
+ * Registers row pinning built-in context menu actions.
+ */
+function registerBuiltInActions() {
+    registerBuiltInAction('pinRowTop', {
+        getLabel: (cell) => cell.row.viewport.grid.options?.lang?.pinRowTop || '',
+        icon: 'pin',
+        isVisible: (cell, rowId) => isRowPinningActionVisible(cell, rowId),
+        isDisabled: (cell, rowId) => isRowPinningActionDisabled('pinRowTop', cell, rowId),
+        onClick: (cell, rowId) => {
+            void cell.row.viewport.grid.rowPinning?.pin(rowId, 'top');
+        }
+    }, true);
+    registerBuiltInAction('pinRowBottom', {
+        getLabel: (cell) => cell.row.viewport.grid.options?.lang?.pinRowBottom || '',
+        icon: 'pin',
+        isVisible: (cell, rowId) => isRowPinningActionVisible(cell, rowId),
+        isDisabled: (cell, rowId) => isRowPinningActionDisabled('pinRowBottom', cell, rowId),
+        onClick: (cell, rowId) => {
+            void cell.row.viewport.grid.rowPinning?.pin(rowId, 'bottom');
+        }
+    }, true);
+    registerBuiltInAction('unpinRow', {
+        getLabel: (cell) => cell.row.viewport.grid.options?.lang?.unpinRow || '',
+        icon: 'unpin',
+        isVisible: (cell, rowId) => isRowPinningActionVisible(cell, rowId),
+        isDisabled: (cell, rowId) => isRowPinningActionDisabled('unpinRow', cell, rowId),
+        onClick: (cell, rowId) => {
+            void cell.row.viewport.grid.rowPinning?.unpin(rowId);
+        }
+    }, true);
+}
+/**
+ * Initializes row pinning state for a grid instance.
+ */
+function initRowPinning() {
+    syncPinningIdColumnOption(this.userOptions);
+    syncPinningIdColumnOption(this.options);
+    this.rowPinning = new RowPinning_RowPinningController(this);
+    this.rowPinning.loadOptions();
+}
+/**
+ * Creates the row pinning view helper for a table instance.
+ */
+function initRowPinningView() {
+    this.rowPinningView = new RowPinning_RowPinningView(this);
+    const previousGetEffectiveRowCount = this.rowsVirtualizer
+        .getEffectiveRowCount;
+    this.rowsVirtualizer.getEffectiveRowCount = async (providerRowCount) => await this.rowPinningView?.getScrollableRowCount(await previousGetEffectiveRowCount?.(providerRowCount) ??
+        providerRowCount) ?? providerRowCount;
+    this.rowsVirtualizer.beforeInitialRenderRows = async () => {
+        await this.rowPinningView?.refreshFromQueryCycle(true);
+    };
+    const previousAfterRenderRows = this.rowsVirtualizer.afterRenderRows;
+    this.rowsVirtualizer.afterRenderRows = async () => {
+        await previousAfterRenderRows?.();
+        await this.rowPinningView?.syncPinnedRowsFromMaterializedRows();
+    };
+    this.afterUpdateRowsHooks.push(async () => {
+        await this.rowPinningView?.refreshFromQueryCycle(true);
+    });
+}
+/**
+ * Triggers a reflow of the pinned rows view after the table reflowed.
+ */
+function onAfterTableReflow() {
+    this.rowPinningView?.reflow();
+}
+/**
+ * Syncs horizontal scroll position of pinned rows with the table body.
+ *
+ * @param e
+ * Scroll event payload.
+ *
+ * @param e.scrollLeft
+ * Horizontal scroll offset.
+ *
+ * @param e.scrollTop
+ * Vertical scroll offset (unused).
+ */
+function onTableBodyScroll(e) {
+    void e.scrollTop;
+    this.rowPinningView?.syncHorizontalScroll(e.scrollLeft || 0);
+}
+/**
+ * Destroys the row pinning view and cleans up its reference on the table.
+ */
+function destroyRowPinningView() {
+    this.rowPinningView?.destroy();
+    delete this.rowPinningView;
+}
+/**
+ * Caches the materialized row data in the row pinning controller.
+ */
+function rememberMaterializedRowData() {
+    this.viewport.grid.rowPinning?.rememberMaterializedRow(this.id, this.data);
+}
+/**
+ * Syncs HTML attributes of a rendered row into its pinned mirror rows.
+ */
+function syncRenderedRowAttrs() {
+    this.viewport.rowPinningView?.updateRowAttributes(this);
+}
+/**
+ * Propagates an edited cell value to pinned mirror rows of the same data row.
+ */
+function syncEditedCellMirrors() {
+    if (this instanceof RowPinning_PinnedTableCell) {
+        return;
+    }
+    const rowId = this.row.id;
+    if (rowId === void 0) {
+        return;
+    }
+    const sourceColumnId = this.column.viewport.grid.columnPolicy
+        .getColumnSourceId(this.column.id);
+    if (!sourceColumnId) {
+        return;
+    }
+    this.row.viewport.grid.rowPinning?.updatePinnedRowValue(rowId, this.column.id, this.value);
+    if (!this.row.viewport.grid.querying.willNotModify()) {
+        return;
+    }
+    void this.row.viewport.rowPinningView?.syncRenderedMirrors(rowId, this.column.id, this.value, this.row, sourceColumnId);
+}
+/**
+ * Syncs row pinning state before a grid update is applied.
+ *
+ * @param e
+ * Pending update payload.
+ *
+ * @param e.options
+ * Pending update options.
+ *
+ * @param e.scope
+ * Update scope.
+ */
+function onBeforeGridUpdate(e) {
+    const updateOptions = e.options;
+    if (!updateOptions || typeof updateOptions !== 'object') {
+        return;
+    }
+    syncPinningIdColumnOption(updateOptions);
+    if (hasOwnPath(updateOptions, ['rendering', 'rows', 'pinning'])) {
+        this.rowPinning?.markOptionsDirty();
+    }
+    if (this.rowPinning &&
+        hasDataSourceOptionChanges(updateOptions)) {
+        this.rowPinning.invalidatePinnedRowObjects();
+    }
+}
+/**
+ * Returns whether a row pinning built-in action should be visible.
+ *
+ * @param cell
+ * Context menu cell context.
+ *
+ * @param cell.row
+ * Row context.
+ *
+ * @param cell.row.viewport
+ * Viewport context.
+ *
+ * @param cell.row.viewport.grid
+ * Owning grid instance.
+ *
+ * @param rowId
+ * Current row identifier.
+ */
+function isRowPinningActionVisible(cell, rowId) {
+    const { grid } = cell.row.viewport;
+    return (rowId !== void 0 &&
+        hasConfiguredGridRowPinningOptions(grid) &&
+        grid.rowPinning?.isOptionEnabled() === true);
+}
+/**
+ * Returns whether a row pinning built-in action should be disabled.
+ *
+ * @param actionId
+ * Built-in action identifier.
+ *
+ * @param cell
+ * Context menu cell context.
+ *
+ * @param cell.row
+ * Row context.
+ *
+ * @param cell.row.id
+ * Current row identifier.
+ *
+ * @param cell.row.viewport
+ * Viewport context.
+ *
+ * @param cell.row.viewport.grid
+ * Owning grid instance.
+ *
+ * @param rowId
+ * Current row identifier.
+ */
+function isRowPinningActionDisabled(actionId, cell, rowId) {
+    const { grid } = cell.row.viewport;
+    if (rowId === void 0 ||
+        !hasConfiguredGridRowPinningOptions(grid) ||
+        grid.rowPinning?.isOptionEnabled() !== true) {
+        return true;
+    }
+    const pinned = grid.rowPinning?.getPinnedRows() ||
+        defaultPinnedRowsState;
+    const inTop = pinned.topIds.includes(rowId);
+    const inBottom = pinned.bottomIds.includes(rowId);
+    if (actionId === 'pinRowTop') {
+        return inTop;
+    }
+    if (actionId === 'pinRowBottom') {
+        return inBottom;
+    }
+    return !inTop && !inBottom;
+}
+/**
+ * Returns whether an object defines every segment in a nested path.
+ *
+ * @param obj
+ * Object to inspect.
+ *
+ * @param path
+ * Property path to verify.
+ */
+function hasOwnPath(obj, path) {
+    let cursor = obj;
+    for (const segment of path) {
+        if (!cursor ||
+            typeof cursor !== 'object' ||
+            !Object.prototype.hasOwnProperty.call(cursor, segment)) {
+            return false;
+        }
+        cursor = cursor[segment];
+    }
+    return true;
+}
+/**
+ * Mirrors `rendering.rows.pinning.idColumn` into `data.idColumn`.
+ *
+ * @param options
+ * Options object to normalize.
+ */
+function syncPinningIdColumnOption(options) {
+    if (!options || typeof options !== 'object') {
+        return;
+    }
+    const rendering = options.rendering;
+    const idColumn = rendering?.rows?.pinning?.idColumn;
+    if (!idColumn) {
+        return;
+    }
+    if (!options.data) {
+        options.data = {};
+    }
+    if (options.data?.idColumn === void 0) {
+        options.data.idColumn = idColumn;
+    }
+}
+/**
+ * Returns whether an update includes a data source change.
+ *
+ * @param options
+ * Update options to inspect.
+ */
+function hasDataSourceOptionChanges(options) {
+    return (Object.prototype.hasOwnProperty.call(options, 'data') ||
+        Object.prototype.hasOwnProperty.call(options, 'dataTable'));
+}
+/* harmony default export */ const RowPinningComposition = ({
+    compose: RowPinningComposition_compose
+});
+
+;// ./code/grid/es-modules/Grid/Pro/TreeView/InputAdapters/PathTreeInputAdapter.js
+/* *
+ *
+ *  Grid Tree View Path Input Adapter
+ *
+ *  (c) 2020-2026 Highsoft AS
+ *
+ *  A commercial license may be required depending on use.
+ *  See www.highcharts.com/license
+ *
+ *  Authors:
+ *  - Dawid Dragula
+ *
+ * */
+
+
+/**
+ * Builds a canonical tree index from full path definitions.
+ *
+ * @param columns
+ * Source columns.
+ *
+ * @param idColumn
+ * Column ID containing stable row IDs.
+ *
+ * @param input
+ * Normalized tree input options.
+ *
+ * @returns
+ * Canonical tree index.
+ */
+function buildIndexFromColumns(columns, idColumn, input) {
+    const { pathColumn, separator } = input;
+    const idValues = columns[idColumn];
+    if (!idValues) {
+        throw new Error(`TreeView: idColumn "${idColumn}" not found.`);
+    }
+    const pathValues = columns[pathColumn];
+    if (!pathValues) {
+        throw new Error(`TreeView: pathColumn "${pathColumn}" not found.`);
+    }
+    if (!separator) {
+        throw new Error('TreeView: `data.treeView.input.separator` must not be empty.');
+    }
+    const rowCount = Math.max(idValues.length, pathValues.length);
+    const nodes = new Map();
+    const rowOrder = [];
+    const pathToId = new Map();
+    const pathById = new Map();
+    const hierarchyById = new Map();
+    const parentPathByPath = new Map();
+    const rootIds = [];
+    for (let rowIndex = 0; rowIndex < rowCount; ++rowIndex) {
+        const id = normalizeRowIdValue(idValues[rowIndex], idColumn, rowIndex);
+        const normalizedPath = normalizePathValue(pathValues[rowIndex], pathColumn, rowIndex, separator);
+        const { hierarchy, path } = normalizedPath;
+        if (nodes.has(id)) {
+            throw new Error(`TreeView: Duplicate row id "${String(id)}" in column ` +
+                `"${idColumn}" at row ${rowIndex}.`);
+        }
+        if (pathToId.has(path)) {
+            throw new Error(`TreeView: Duplicate path "${path}" in column ` +
+                `"${pathColumn}" at row ${rowIndex}.`);
+        }
+        nodes.set(id, {
+            id,
+            parentId: null,
+            rowIndex,
+            path,
+            childrenIds: []
+        });
+        rowOrder.push(id);
+        pathToId.set(path, id);
+        pathById.set(id, path);
+        hierarchyById.set(id, hierarchy);
+        for (let i = 0, iEnd = hierarchy.length; i < iEnd; ++i) {
+            const hierarchyPath = hierarchy[i];
+            if (parentPathByPath.has(hierarchyPath)) {
+                continue;
+            }
+            parentPathByPath.set(hierarchyPath, i === 0 ? null : hierarchy[i - 1]);
+        }
+    }
+    const sourceRowOrder = rowOrder.slice();
+    /**
+     * Ensures a node for a given path.
+     *
+     * @param path
+     * Path to ensure node for.
+     *
+     * @returns
+     * Existing or generated node ID.
+     */
+    function ensureNodeForPath(path) {
+        const existingId = pathToId.get(path);
+        if (defined(existingId)) {
+            return existingId;
+        }
+        const parentPath = parentPathByPath.get(path) ?? null;
+        const parentId = (parentPath === null ?
+            null :
+            ensureNodeForPath(parentPath));
+        const generatedId = createGeneratedRowId(path, nodes);
+        nodes.set(generatedId, {
+            id: generatedId,
+            parentId,
+            rowIndex: null,
+            isGenerated: true,
+            path,
+            childrenIds: []
+        });
+        rowOrder.push(generatedId);
+        pathToId.set(path, generatedId);
+        pathById.set(generatedId, path);
+        if (parentId === null) {
+            rootIds.push(generatedId);
+        }
+        else {
+            nodes.get(parentId)?.childrenIds.push(generatedId);
+        }
+        return generatedId;
+    }
+    for (let i = 0, iEnd = sourceRowOrder.length; i < iEnd; ++i) {
+        const nodeId = sourceRowOrder[i];
+        const node = nodes.get(nodeId);
+        const hierarchy = hierarchyById.get(nodeId);
+        const path = pathById.get(nodeId);
+        if (!node || !defined(path) || !hierarchy) {
+            continue;
+        }
+        const parentPath = parentPathByPath.get(path) ?? null;
+        if (parentPath === null) {
+            rootIds.push(node.id);
+            continue;
+        }
+        const parentId = ensureNodeForPath(parentPath);
+        node.parentId = parentId;
+        nodes.get(parentId)?.childrenIds.push(node.id);
+    }
+    return {
+        nodes,
+        rowOrder,
+        rootIds
+    };
+}
+/**
+ * Normalizes row ID values to valid `RowId`.
+ *
+ * @param value
+ * Raw cell value.
+ *
+ * @param columnId
+ * Source column ID.
+ *
+ * @param rowIndex
+ * Row index of the value.
+ *
+ * @returns
+ * Normalized row ID.
+ */
+function normalizeRowIdValue(value, columnId, rowIndex) {
+    if (!defined(value)) {
+        throw new Error(`TreeView: Missing value in "${columnId}" at row ${rowIndex}.`);
+    }
+    if (isString(value) || Utilities_isNumber(value)) {
+        return value;
+    }
+    throw new Error(`TreeView: "${columnId}" must contain only string or number values. ` +
+        `Invalid value at row ${rowIndex}.`);
+}
+/**
+ * Normalizes and validates path values.
+ *
+ * @param value
+ * Raw path value.
+ *
+ * @param columnId
+ * Source column ID.
+ *
+ * @param rowIndex
+ * Row index of the value.
+ *
+ * @param separator
+ * Path segment separator.
+ *
+ * @returns
+ * Normalized path.
+ */
+function normalizePathValue(value, columnId, rowIndex, separator) {
+    if (!isString(value)) {
+        throw new Error(`TreeView: "${columnId}" must contain only string values. ` +
+            `Invalid value at row ${rowIndex}.`);
+    }
+    if (!value.length) {
+        throw new Error(`TreeView: Empty path in "${columnId}" at row ${rowIndex}.`);
+    }
+    const segments = getPathSegments(value, separator);
+    return {
+        hierarchy: buildPathHierarchy(value, columnId, rowIndex, segments, separator),
+        path: value
+    };
+}
+/**
+ * Resolves ordered path segments from a raw path value.
+ *
+ * @param value
+ * Raw path value.
+ *
+ * @param separator
+ * Path separator definition.
+ *
+ * @returns
+ * Ordered path segments.
+ */
+function getPathSegments(value, separator) {
+    if (isFunction(separator)) {
+        const segments = separator(value);
+        if (!isArray(segments)) {
+            throw new Error('TreeView: `data.treeView.input.separator` callback must ' +
+                'return an array.');
+        }
+        return segments;
+    }
+    if (separator instanceof RegExp) {
+        const regex = new RegExp(separator.source, separator.flags.includes('g') ?
+            separator.flags :
+            separator.flags + 'g');
+        const segments = [];
+        let match;
+        while ((match = regex.exec(value)) !== null) {
+            segments.push(match[0]);
+            if (match[0] === '') {
+                ++regex.lastIndex;
+            }
+        }
+        return segments;
+    }
+    if (!separator) {
+        throw new Error('TreeView: `data.treeView.input.separator` must not be empty.');
+    }
+    return value.split(separator);
+}
+/**
+ * Builds cumulative path hierarchy from ordered path segments.
+ *
+ * @param value
+ * Raw path value.
+ *
+ * @param columnId
+ * Source column ID.
+ *
+ * @param rowIndex
+ * Row index of the value.
+ *
+ * @param segments
+ * Ordered path segments.
+ *
+ * @param separator
+ * Path separator definition.
+ *
+ * @returns
+ * Cumulative path hierarchy from root to leaf.
+ */
+function buildPathHierarchy(value, columnId, rowIndex, segments, separator) {
+    const hierarchy = [];
+    let path = '';
+    const joinWithSeparator = isString(separator);
+    for (let i = 0, iEnd = segments.length; i < iEnd; ++i) {
+        const segment = segments[i];
+        if (!isString(segment) || !segment.length) {
+            throw new Error(`TreeView: Invalid path "${value}" in "${columnId}" at row ` +
+                `${rowIndex}. Empty path segments are not allowed.`);
+        }
+        if (joinWithSeparator && path.length) {
+            path += separator;
+        }
+        path += segment;
+        hierarchy.push(path);
+    }
+    return hierarchy;
+}
+/**
+ * Creates a deterministic generated row ID for a missing path node.
+ *
+ * @param path
+ * Missing path represented by the generated row.
+ *
+ * @param nodes
+ * Current node map used for collision checks.
+ *
+ * @returns
+ * Unique generated row ID.
+ */
+function createGeneratedRowId(path, nodes) {
+    const base = '__hcg_tree_path__:' + path;
+    let candidate = base;
+    let suffix = 0;
+    while (nodes.has(candidate)) {
+        ++suffix;
+        candidate = `${base}#${suffix}`;
+    }
+    return candidate;
+}
+
+;// ./code/grid/es-modules/Grid/Pro/TreeView/InputAdapters/ParentIdTreeInputAdapter.js
+/* *
+ *
+ *  Grid Tree View Parent ID Input Adapter
+ *
+ *  (c) 2020-2026 Highsoft AS
+ *
+ *  A commercial license may be required depending on use.
+ *  See www.highcharts.com/license
+ *
+ *  Authors:
+ *  - Dawid Dragula
+ *
+ * */
+
+
+/* *
+ *
+ *  Functions
+ *
+ * */
+/**
+ * Builds a canonical tree index from flat columns using `id` and `parentId`.
+ *
+ * @param columns
+ * Source columns.
+ *
+ * @param idColumn
+ * Column ID containing stable row IDs.
+ *
+ * @param input
+ * Normalized tree input options.
+ *
+ * @returns
+ * Canonical tree index.
+ */
+function ParentIdTreeInputAdapter_buildIndexFromColumns(columns, idColumn, input) {
+    const { parentIdColumn } = input;
+    const idValues = columns[idColumn];
+    if (!idValues) {
+        throw new Error(`TreeView: idColumn "${idColumn}" not found.`);
+    }
+    const parentValues = columns[parentIdColumn];
+    if (!parentValues) {
+        throw new Error(`TreeView: parentIdColumn "${parentIdColumn}" not found.`);
+    }
+    const rowCount = Math.max(idValues.length, parentValues.length);
+    const nodes = new Map();
+    const rowOrder = [];
+    for (let rowIndex = 0; rowIndex < rowCount; ++rowIndex) {
+        const id = ParentIdTreeInputAdapter_normalizeRowIdValue(idValues[rowIndex], idColumn, rowIndex, false);
+        const parentId = ParentIdTreeInputAdapter_normalizeRowIdValue(parentValues[rowIndex], parentIdColumn, rowIndex, true);
+        if (nodes.has(id)) {
+            throw new Error(`TreeView: Duplicate row id "${String(id)}" in column ` +
+                `"${idColumn}" at row ${rowIndex}.`);
+        }
+        nodes.set(id, {
+            id,
+            parentId,
+            rowIndex,
+            childrenIds: []
+        });
+        rowOrder.push(id);
+    }
+    const rootIds = [];
+    for (let i = 0, iEnd = rowOrder.length; i < iEnd; ++i) {
+        const id = rowOrder[i];
+        const node = nodes.get(id);
+        if (!node) {
+            continue;
+        }
+        if (node.parentId === null) {
+            rootIds.push(node.id);
+            continue;
+        }
+        if (!nodes.has(node.parentId)) {
+            throw new Error(`TreeView: Missing parent "${String(node.parentId)}" for ` +
+                `row id "${String(node.id)}".`);
+        }
+        const parentNode = nodes.get(node.parentId);
+        parentNode?.childrenIds.push(node.id);
+    }
+    validateAcyclic(nodes, rowOrder);
+    return {
+        nodes,
+        rowOrder,
+        rootIds
+    };
+}
+/**
+ * Normalizes row ID values to `RowId` or `null`.
+ *
+ * @param value
+ * Raw cell value.
+ *
+ * @param columnId
+ * Source column ID.
+ *
+ * @param rowIndex
+ * Row index of the value.
+ *
+ * @param allowNull
+ * Whether null-like values are allowed.
+ */
+function ParentIdTreeInputAdapter_normalizeRowIdValue(value, columnId, rowIndex, allowNull) {
+    if (!defined(value)) {
+        if (allowNull) {
+            return null;
+        }
+        throw new Error(`TreeView: Missing value in "${columnId}" at row ${rowIndex}.`);
+    }
+    if (isString(value) || Utilities_isNumber(value)) {
+        return value;
+    }
+    throw new Error(`TreeView: "${columnId}" must contain only string, number${allowNull ? ', null, or undefined' : ''} values. Invalid value at row ${rowIndex}.`);
+}
+/**
+ * Validates that parent references form an acyclic graph.
+ *
+ * @param nodes
+ * Canonical node map.
+ *
+ * @param rowOrder
+ * Row IDs in source order.
+ */
+function validateAcyclic(nodes, rowOrder) {
+    const checked = new Set();
+    for (let i = 0, iEnd = rowOrder.length; i < iEnd; ++i) {
+        const startId = rowOrder[i];
+        if (checked.has(startId)) {
+            continue;
+        }
+        const path = [];
+        const pathIndex = new Map();
+        let current = startId;
+        while (current !== null) {
+            if (checked.has(current)) {
+                break;
+            }
+            const loopStart = pathIndex.get(current);
+            if (defined(loopStart)) {
+                const cycle = path
+                    .slice(loopStart)
+                    .concat(current)
+                    .map((id) => String(id))
+                    .join(' -> ');
+                throw new Error(`TreeView: Cycle detected in parentId references: ${cycle}.`);
+            }
+            pathIndex.set(current, path.length);
+            path.push(current);
+            const node = nodes.get(current);
+            current = node ? node.parentId : null;
+        }
+        for (let j = 0, jEnd = path.length; j < jEnd; ++j) {
+            checked.add(path[j]);
+        }
+    }
+}
+
+;// ./code/grid/es-modules/Grid/Pro/TreeView/TreeViewOptionsNormalizer.js
+/* *
+ *
+ *  Grid Tree View Options Normalizer
+ *
+ *  (c) 2020-2026 Highsoft AS
+ *
+ *  A commercial license may be required depending on use.
+ *  See www.highcharts.com/license
+ *
+ *  Authors:
+ *  - Dawid Dragula
+ *
+ * */
+
+
+const defaultParentIdInput = {
+    type: 'parentId',
+    parentIdColumn: 'parentId'
+};
+const defaultPathInput = {
+    type: 'path',
+    pathColumn: 'path',
+    separator: '/',
+    showFullPath: false
+};
+/* *
+ *
+ *  Functions
+ *
+ * */
+/**
+ * Validates and normalizes TreeView options from Grid config.
+ *
+ * @param treeView
+ * Raw TreeView options.
+ *
+ * @returns
+ * Normalized options or `undefined` when TreeView is disabled.
+ */
+function normalizeTreeViewOptions(treeView) {
+    if (!treeView || treeView.enabled === false) {
+        return;
+    }
+    const expandedRowIds = treeView.expandedRowIds ?? [];
+    const normalizedInput = (!treeView.input ?
+        void 0 :
+        treeView.input.type === 'path' ?
+            merge(defaultPathInput, treeView.input) :
+            merge(defaultParentIdInput, treeView.input));
+    return {
+        input: normalizedInput,
+        treeColumn: treeView.treeColumn,
+        expandedRowIds: (expandedRowIds === 'all' ?
+            expandedRowIds :
+            expandedRowIds.slice()),
+        stickyParents: treeView.stickyParents !== false
+    };
+}
+
+;// ./code/grid/es-modules/Grid/Pro/TreeView/TreeProjectionController.js
+/* *
+ *
+ *  Grid Tree Projection Controller
+ *
+ *  (c) 2020-2026 Highsoft AS
+ *
+ *  A commercial license may be required depending on use.
+ *  See www.highcharts.com/license
+ *
+ *  Authors:
+ *  - Dawid Dragula
+ *
+ * */
+
+
+
+
+
+
+
+/* *
+ *
+ *  Class
+ *
+ * */
+/**
+ * Infrastructure controller for TreeView projection state.
+ *
+ * Validates tree input options, builds a canonical relation index and projects
+ * queried tables into tree order before pagination.
+ */
+class TreeProjectionController {
+    /* *
+     *
+     *  Constructor
+     *
+     * */
+    constructor(grid) {
+        this.grid = grid;
+    }
+    /* *
+     *
+     *  Methods
+     *
+     * */
+    /**
+     * Synchronizes internal state from current Grid options and provider.
+     */
+    sync() {
+        const dataOptions = this.getDataOptions();
+        const normalizedOptions = normalizeTreeViewOptions(dataOptions?.treeView);
+        if (!normalizedOptions) {
+            this.resolvedOptions = void 0;
+            this.clearCache();
+            return;
+        }
+        const dataProvider = this.grid.dataProvider;
+        if (!hasDataTableProvider(dataProvider)) {
+            // Remote provider runtime support is intentionally deferred.
+            this.resolvedOptions = void 0;
+            this.clearCache();
+            return;
+        }
+        const table = dataProvider.getDataTable(false);
+        if (!table) {
+            this.resolvedOptions = void 0;
+            this.clearCache();
+            return;
+        }
+        const versionTag = table.getVersionTag();
+        const idColumn = dataOptions?.idColumn;
+        if (!idColumn) {
+            throw new Error('TreeView: `data.idColumn` is required for tree input.');
+        }
+        let resolvedInput;
+        try {
+            resolvedInput = TreeProjectionController.resolveInputOptions(table.columns, normalizedOptions.input);
+        }
+        catch (error) {
+            this.resolvedOptions = void 0;
+            this.clearCache();
+            throw error;
+        }
+        const options = {
+            ...normalizedOptions,
+            input: resolvedInput
+        };
+        this.resolvedOptions = options;
+        const isCacheValid = (this.cacheSource?.table === table &&
+            this.cacheSource?.versionTag === versionTag &&
+            this.cacheSource?.idColumn === idColumn &&
+            isDeepEqual(this.cacheSource?.input, options.input));
+        if (!isCacheValid) {
+            this.indexCache = this.buildIndexFromInput(table.columns, idColumn, options.input);
+            this.cacheSource = {
+                table,
+                versionTag,
+                idColumn,
+                input: options.input
+            };
+        }
+        this.syncExpandedRowIdsState();
+    }
+    /**
+     * Returns resolved TreeView options for the current source table.
+     */
+    get options() {
+        return this.resolvedOptions;
+    }
+    /**
+     * Returns metadata for currently projected rows.
+     */
+    getProjectionState() {
+        return this.projectionStateCache;
+    }
+    /**
+     * Toggles expansion state for a row in current projection.
+     *
+     * @param rowId
+     * Row ID to toggle.
+     *
+     * @param redraw
+     * Whether to redraw rows after state change.
+     *
+     * @param originalEvent
+     * Browser event that initiated the toggle.
+     *
+     * @returns
+     * Promise resolving to `true` when state changed, otherwise `false`.
+     */
+    async toggleRow(rowId, redraw = true, originalEvent) {
+        const options = this.options;
+        const projectionState = this.projectionStateCache;
+        if (!options || !projectionState) {
+            return false;
+        }
+        const rowState = projectionState.rowsById.get(rowId);
+        if (!rowState?.hasChildren) {
+            return false;
+        }
+        const newExpanded = !rowState.isExpanded;
+        const beforeEvent = {
+            expanded: newExpanded,
+            originalEvent,
+            rowId
+        };
+        fireEvent(this.grid, 'beforeTreeRowToggle', beforeEvent);
+        if (beforeEvent.defaultPrevented) {
+            return false;
+        }
+        const changed = this.setRowMetaExpanded(rowId, newExpanded);
+        if (!changed) {
+            return false;
+        }
+        this.projectionStateCache = void 0;
+        await this.requestRowsRedraw(redraw);
+        fireEvent(this.grid, 'afterTreeRowToggle', {
+            expanded: newExpanded,
+            originalEvent,
+            rowId
+        });
+        return true;
+    }
+    /**
+     * Expands all currently expandable tree rows.
+     *
+     * @param redraw
+     * Whether to redraw rows after state change.
+     *
+     * @returns
+     * Promise resolving to `true` when state changed, otherwise `false`.
+     */
+    async expandAll(redraw = true) {
+        this.sync();
+        const index = this.indexCache;
+        if (!index) {
+            return false;
+        }
+        let changed = false;
+        for (const [nodeId, node] of index.nodes) {
+            if (!node.childrenIds.length) {
+                continue;
+            }
+            changed = this.setRowMetaExpanded(nodeId, true) || changed;
+        }
+        if (changed) {
+            this.projectionStateCache = void 0;
+            await this.requestRowsRedraw(redraw);
+        }
+        return changed;
+    }
+    /**
+     * Collapses all currently expandable tree rows.
+     *
+     * @param redraw
+     * Whether to redraw rows after state change.
+     *
+     * @returns
+     * Promise resolving to `true` when state changed, otherwise `false`.
+     */
+    async collapseAll(redraw = true) {
+        this.sync();
+        if (!this.indexCache) {
+            return false;
+        }
+        let changed = false;
+        for (const [nodeId, node] of this.indexCache.nodes) {
+            if (!node.childrenIds.length) {
+                continue;
+            }
+            changed = this.setRowMetaExpanded(nodeId, false) || changed;
+        }
+        if (!changed) {
+            return false;
+        }
+        this.projectionStateCache = void 0;
+        await this.requestRowsRedraw(redraw);
+        return true;
+    }
+    /**
+     * Projects a queried table into TreeView row order and visibility.
+     *
+     * @param table
+     * Table after sort/filter and before pagination.
+     *
+     * The input table is expected to be after sort/filter, but before
+     * pagination. If TreeView is disabled, unchanged table is returned.
+     */
+    projectTable(table) {
+        const options = this.options;
+        const index = this.indexCache;
+        if (!options || !index) {
+            this.projectionStateCache = void 0;
+            return table;
+        }
+        const idColumn = this.getDataOptions()?.idColumn;
+        if (!idColumn) {
+            throw new Error('TreeView: `data.idColumn` is required for tree input.');
+        }
+        const projectionState = this.projectToVisibleState(table, idColumn);
+        this.projectionStateCache = projectionState;
+        if (TreeProjectionController.areRowIndexesIdentity(projectionState.rowIndexes, table.getRowCount())) {
+            return table;
+        }
+        return this.createProjectedTable(table, projectionState, idColumn);
+    }
+    /**
+     * Destroys controller state.
+     */
+    destroy() {
+        this.clearTreeRowMetaState();
+        this.expansionStateSeedKey = void 0;
+        this.clearCache();
+    }
+    /**
+     * Clears cached index, projection state, and source metadata.
+     */
+    clearCache() {
+        this.indexCache = void 0;
+        this.projectionStateCache = void 0;
+        this.injectedAncestorIds = void 0;
+        this.cacheSource = void 0;
+    }
+    /**
+     * Marks rows as dirty and schedules redraw after projection state updates.
+     *
+     * @param redraw
+     * Whether to redraw rows immediately.
+     */
+    async requestRowsRedraw(redraw = true) {
+        this.grid.querying.shouldBeUpdated = true;
+        this.grid.dirtyFlags.add('rows');
+        if (redraw) {
+            await this.grid.redraw();
+        }
+    }
+    /**
+     * Ensures row metadata record exists for a row.
+     *
+     * @param rowId
+     * Row ID.
+     *
+     * @returns
+     * Row metadata record.
+     */
+    ensureRowMetaRecord(rowId) {
+        let rowMeta = this.grid.rowMeta.get(rowId);
+        if (!rowMeta) {
+            rowMeta = {};
+            this.grid.rowMeta.set(rowId, rowMeta);
+        }
+        return rowMeta;
+    }
+    /**
+     * Removes empty row metadata records.
+     *
+     * @param rowId
+     * Row ID.
+     */
+    cleanupRowMeta(rowId) {
+        const rowMeta = this.grid.rowMeta.get(rowId);
+        if (!rowMeta) {
+            return;
+        }
+        if (!Object.keys(rowMeta).length) {
+            this.grid.rowMeta.delete(rowId);
+        }
+    }
+    /**
+     * Clears TreeView metadata state for all rows.
+     */
+    clearTreeRowMetaState() {
+        for (const [rowId, rowMeta] of this.grid.rowMeta) {
+            if (!defined(rowMeta.expanded)) {
+                continue;
+            }
+            delete rowMeta.expanded;
+            if (!Object.keys(rowMeta).length) {
+                this.grid.rowMeta.delete(rowId);
+            }
+        }
+    }
+    /**
+     * Sets explicit expanded state for a row.
+     *
+     * @param rowId
+     * Row ID.
+     *
+     * @param expanded
+     * Whether row should be explicitly expanded.
+     *
+     * @returns
+     * `true` when state changed.
+     */
+    setRowMetaExpanded(rowId, expanded) {
+        const rowMeta = this.grid.rowMeta.get(rowId);
+        if (!defined(expanded)) {
+            if (!defined(rowMeta?.expanded)) {
+                return false;
+            }
+            delete rowMeta.expanded;
+            this.cleanupRowMeta(rowId);
+            return true;
+        }
+        if (rowMeta?.expanded === expanded) {
+            return false;
+        }
+        this.ensureRowMetaRecord(rowId).expanded = expanded;
+        return true;
+    }
+    /**
+     * Returns data options with TreeView extension for local provider.
+     */
+    getDataOptions() {
+        const dataOptions = this.grid.options?.data;
+        if (!TreeProjectionController.isLocalDataOptions(dataOptions)) {
+            return;
+        }
+        return dataOptions;
+    }
+    /**
+     * Builds canonical tree index for currently selected input type.
+     *
+     * @param columns
+     * Source columns.
+     *
+     * @param idColumn
+     * Column ID containing stable row IDs.
+     *
+     * @param input
+     * Normalized input configuration.
+     *
+     * @returns
+     * Canonical tree index.
+     */
+    buildIndexFromInput(columns, idColumn, input) {
+        if (input.type === 'parentId') {
+            return ParentIdTreeInputAdapter_buildIndexFromColumns(columns, idColumn, input);
+        }
+        return buildIndexFromColumns(columns, idColumn, input);
+    }
+    /**
+     * Synchronizes expansion state for tree nodes with children.
+     *
+     * Re-initializes state when expansion seed changes, otherwise prunes
+     * entries that are no longer expandable.
+     */
+    syncExpandedRowIdsState() {
+        const options = this.options;
+        const index = this.indexCache;
+        if (!options || !index) {
+            return;
+        }
+        const seedKey = TreeProjectionController.getExpansionSeedKey(options);
+        const expandAll = options.expandedRowIds === 'all';
+        const explicitExpanded = expandAll ?
+            void 0 :
+            new Set(options.expandedRowIds);
+        if (this.expansionStateSeedKey !== seedKey) {
+            this.expansionStateSeedKey = seedKey;
+            this.clearTreeRowMetaState();
+            for (const [nodeId, node] of index.nodes) {
+                if (!node.childrenIds.length) {
+                    continue;
+                }
+                if (expandAll || explicitExpanded?.has(nodeId)) {
+                    this.setRowMetaExpanded(nodeId, true);
+                }
+            }
+            return;
+        }
+        for (const [rowId, meta] of this.grid.rowMeta) {
+            if (!defined(meta.expanded)) {
+                continue;
+            }
+            const node = index.nodes.get(rowId);
+            if (!node || !node.childrenIds.length) {
+                this.setRowMetaExpanded(rowId, void 0);
+            }
+        }
+    }
+    /**
+     * Computes projected row order and per-row tree metadata for visible rows.
+     *
+     * @param table
+     * Queried table after sort/filter and before pagination.
+     *
+     * @param idColumn
+     * Column containing row IDs.
+     *
+     * @returns
+     * Projection state describing visible rows in tree order.
+     */
+    projectToVisibleState(table, idColumn) {
+        const index = this.indexCache;
+        if (!index) {
+            throw new Error('TreeView: Source tree index is not initialized.');
+        }
+        const idValues = table.columns[idColumn];
+        if (!idValues) {
+            throw new Error(`TreeView: idColumn "${idColumn}" not found in ` +
+                'presentation table.');
+        }
+        const visibleRowIds = [];
+        const visibleSet = new Set();
+        const rowIndexById = new Map();
+        for (let rowIndex = 0, rowCount = table.getRowCount(); rowIndex < rowCount; ++rowIndex) {
+            const rowId = idValues[rowIndex];
+            if (!index.nodes.has(rowId)) {
+                throw new Error(`TreeView: Row id "${String(rowId)}" is not present in ` +
+                    'the source tree index.');
+            }
+            visibleRowIds.push(rowId);
+            visibleSet.add(rowId);
+            rowIndexById.set(rowId, rowIndex);
+        }
+        const rootIds = [];
+        const rootIdSet = new Set();
+        const childrenByParent = new Map();
+        const childSetByParent = new Map();
+        const sourceOrderById = new Map();
+        const inheritedOrderById = new Map();
+        for (let i = 0, iEnd = index.rowOrder.length; i < iEnd; ++i) {
+            sourceOrderById.set(index.rowOrder[i], i);
+        }
+        const addRoot = (nodeId) => {
+            if (!rootIdSet.has(nodeId)) {
+                rootIdSet.add(nodeId);
+                rootIds.push(nodeId);
+            }
+        };
+        const addChild = (parentId, childId) => {
+            let childSet = childSetByParent.get(parentId);
+            if (!childSet) {
+                childSet = new Set();
+                childSetByParent.set(parentId, childSet);
+            }
+            if (childSet.has(childId)) {
+                return;
+            }
+            childSet.add(childId);
+            const children = childrenByParent.get(parentId);
+            if (children) {
+                children.push(childId);
+            }
+            else {
+                childrenByParent.set(parentId, [childId]);
+            }
+        };
+        const setInheritedOrder = (nodeId, order) => {
+            if (rowIndexById.has(nodeId)) {
+                return;
+            }
+            const currentOrder = inheritedOrderById.get(nodeId);
+            if (typeof currentOrder !== 'number' ||
+                order < currentOrder) {
+                inheritedOrderById.set(nodeId, order);
+            }
+        };
+        const getNodeOrder = (nodeId) => {
+            const rowIndex = rowIndexById.get(nodeId);
+            if (typeof rowIndex === 'number') {
+                return rowIndex;
+            }
+            return inheritedOrderById.get(nodeId) ??
+                Number.POSITIVE_INFINITY;
+        };
+        const compareNodeOrder = (a, b) => {
+            const aOrder = getNodeOrder(a);
+            const bOrder = getNodeOrder(b);
+            if (aOrder !== bOrder) {
+                return aOrder - bOrder;
+            }
+            const aSourceOrder = sourceOrderById.get(a) ??
+                Number.POSITIVE_INFINITY;
+            const bSourceOrder = sourceOrderById.get(b) ??
+                Number.POSITIVE_INFINITY;
+            if (aSourceOrder !== bSourceOrder) {
+                return aSourceOrder - bSourceOrder;
+            }
+            const aId = String(a);
+            const bId = String(b);
+            return (aId < bId ? -1 :
+                aId > bId ? 1 :
+                    0);
+        };
+        const injectedAncestorIds = new Set();
+        for (let i = 0, iEnd = visibleRowIds.length; i < iEnd; ++i) {
+            let currentId = visibleRowIds[i];
+            while (currentId !== null) {
+                setInheritedOrder(currentId, i);
+                const currentNode = index.nodes.get(currentId);
+                if (!currentNode) {
+                    break;
+                }
+                const parentId = currentNode.parentId;
+                if (parentId === null) {
+                    addRoot(currentId);
+                    break;
+                }
+                const parentNode = index.nodes.get(parentId);
+                if (!parentNode) {
+                    addRoot(currentId);
+                    break;
+                }
+                if (!visibleSet.has(parentId) &&
+                    !parentNode.isGenerated) {
+                    visibleSet.add(parentId);
+                    injectedAncestorIds.add(parentId);
+                }
+                addChild(parentId, currentId);
+                currentId = parentId;
+            }
+        }
+        rootIds.sort(compareNodeOrder);
+        for (const children of childrenByParent.values()) {
+            children.sort(compareNodeOrder);
+        }
+        const projectedRowIds = [];
+        const rowsById = new Map();
+        const visitNode = (nodeId, depth, parentId) => {
+            projectedRowIds.push(nodeId);
+            const children = childrenByParent.get(nodeId);
+            const hasChildren = !!(children && children.length);
+            const explicitExpanded = this.grid.rowMeta.get(nodeId)?.expanded;
+            const isAncestorOnly = injectedAncestorIds.has(nodeId);
+            const isExpanded = (hasChildren &&
+                (explicitExpanded === true ||
+                    (!defined(explicitExpanded) &&
+                        isAncestorOnly)));
+            const rowState = {
+                id: nodeId,
+                parentId,
+                depth,
+                hasChildren,
+                isExpanded
+            };
+            if (isAncestorOnly) {
+                rowState.isAncestorOnly = true;
+            }
+            rowsById.set(nodeId, rowState);
+            if (!children || !isExpanded) {
+                return;
+            }
+            for (let i = 0, iEnd = children.length; i < iEnd; ++i) {
+                visitNode(children[i], depth + 1, nodeId);
+            }
+        };
+        for (let i = 0, iEnd = rootIds.length; i < iEnd; ++i) {
+            visitNode(rootIds[i], 0, null);
+        }
+        const rowStateStack = [];
+        let lastVisitedRowId;
+        for (let i = 0, iEnd = projectedRowIds.length; i < iEnd; ++i) {
+            const rowState = rowsById.get(projectedRowIds[i]);
+            if (!rowState) {
+                continue;
+            }
+            while (rowStateStack.length > rowState.depth) {
+                const completedState = rowStateStack.pop();
+                if (completedState &&
+                    typeof lastVisitedRowId !== 'undefined') {
+                    completedState.lastVisibleDescendantId = lastVisitedRowId;
+                }
+            }
+            rowStateStack.push(rowState);
+            lastVisitedRowId = rowState.id;
+        }
+        while (rowStateStack.length) {
+            const completedState = rowStateStack.pop();
+            if (completedState &&
+                typeof lastVisitedRowId !== 'undefined') {
+                completedState.lastVisibleDescendantId = lastVisitedRowId;
+            }
+        }
+        this.injectedAncestorIds = injectedAncestorIds;
+        const projectedIndexes = new Array(projectedRowIds.length);
+        for (let i = 0, iEnd = projectedRowIds.length; i < iEnd; ++i) {
+            const rowIndex = rowIndexById.get(projectedRowIds[i]);
+            if (typeof rowIndex === 'number') {
+                projectedIndexes[i] = rowIndex;
+                continue;
+            }
+            const nodeId = projectedRowIds[i];
+            const node = index.nodes.get(nodeId);
+            if (!node ||
+                (!node.isGenerated && !injectedAncestorIds.has(nodeId))) {
+                throw new Error('TreeView: Could not resolve row index for id "' +
+                    String(nodeId) +
+                    '".');
+            }
+            projectedIndexes[i] = void 0;
+        }
+        return {
+            rowIds: projectedRowIds,
+            rowIndexes: projectedIndexes,
+            rowsById
+        };
+    }
+    /**
+     * Builds a projected table by reordering all columns to projected indexes.
+     *
+     * @param table
+     * Input queried table.
+     *
+     * @param projectionState
+     * Projection state for table rebuild.
+     *
+     * @param idColumn
+     * Column containing stable row IDs.
+     *
+     * @returns
+     * Cloned table with projected column values and row index references.
+     */
+    createProjectedTable(table, projectionState, idColumn) {
+        const { rowIds, rowIndexes } = projectionState;
+        const projectedTable = table.clone(true);
+        const sourceColumnIds = table.getColumnIds();
+        const projectedColumns = {};
+        for (let i = 0, iEnd = sourceColumnIds.length; i < iEnd; ++i) {
+            const columnId = sourceColumnIds[i];
+            const sourceColumn = table.columns[columnId];
+            const projectedColumn = new Array(rowIndexes.length);
+            for (let j = 0, jEnd = rowIndexes.length; j < jEnd; ++j) {
+                const rowIndex = rowIndexes[j];
+                if (typeof rowIndex === 'number') {
+                    projectedColumn[j] = sourceColumn?.[rowIndex];
+                    continue;
+                }
+                if (this.injectedAncestorIds?.has(rowIds[j])) {
+                    projectedColumn[j] = this.getSourceTableCellValue(columnId, rowIds[j]);
+                }
+                else {
+                    projectedColumn[j] = this.getGeneratedCellValue(columnId, rowIds[j], idColumn);
+                }
+            }
+            projectedColumns[columnId] = projectedColumn;
+        }
+        projectedTable.setColumns(projectedColumns);
+        const originalRowIndexes = new Array(rowIndexes.length);
+        for (let i = 0, iEnd = rowIndexes.length; i < iEnd; ++i) {
+            const rowIndex = rowIndexes[i];
+            if (typeof rowIndex === 'number') {
+                originalRowIndexes[i] = table.getOriginalRowIndex(rowIndex);
+            }
+            else if (this.injectedAncestorIds?.has(rowIds[i])) {
+                const node = this.indexCache?.nodes.get(rowIds[i]);
+                originalRowIndexes[i] = node?.rowIndex ?? void 0;
+            }
+            else {
+                originalRowIndexes[i] = void 0;
+            }
+        }
+        projectedTable.setOriginalRowIndexes(originalRowIndexes);
+        return projectedTable;
+    }
+    /**
+     * Resolves column value for an auto-generated tree path row.
+     *
+     * @param columnId
+     * Target column ID.
+     *
+     * @param rowId
+     * Generated row ID.
+     *
+     * @param idColumn
+     * Column containing stable row IDs.
+     *
+     * @returns
+     * Cell value for generated row, or `null` for unsupported columns.
+     */
+    getGeneratedCellValue(columnId, rowId, idColumn) {
+        const index = this.indexCache;
+        const input = this.options?.input;
+        if (!index || !input) {
+            return null;
+        }
+        const node = index.nodes.get(rowId);
+        if (!node || !node.isGenerated) {
+            return null;
+        }
+        if (columnId === idColumn) {
+            return node.id;
+        }
+        if (input.type === 'path' &&
+            columnId === input.pathColumn &&
+            node.path) {
+            return node.path;
+        }
+        return null;
+    }
+    /**
+     * Resolves cell value for an injected ancestor row from the source table.
+     *
+     * @param columnId
+     * Target column ID.
+     *
+     * @param rowId
+     * Ancestor row ID.
+     *
+     * @returns
+     * Cell value from the source table, or `null` when unavailable.
+     */
+    getSourceTableCellValue(columnId, rowId) {
+        const index = this.indexCache;
+        const sourceTable = this.cacheSource?.table;
+        if (!index || !sourceTable) {
+            return null;
+        }
+        const node = index.nodes.get(rowId);
+        if (!node || node.rowIndex === null) {
+            return null;
+        }
+        const column = sourceTable.columns[columnId];
+        return column?.[node.rowIndex] ?? null;
+    }
+    /**
+     * Checks whether provided row indexes represent identity mapping.
+     *
+     * @param rowIndexes
+     * Row indexes to verify.
+     *
+     * @param rowCount
+     * Expected number of rows in identity mapping.
+     *
+     * @returns
+     * `true` for `[0, 1, 2, ...]`, otherwise `false`.
+     */
+    static areRowIndexesIdentity(rowIndexes, rowCount) {
+        if (rowIndexes.length !== rowCount) {
+            return false;
+        }
+        for (let i = 0; i < rowCount; ++i) {
+            if (rowIndexes[i] !== i) {
+                return false;
+            }
+        }
+        return true;
+    }
+    /**
+     * Builds a stable key for expansion state seeds from options.
+     *
+     * @param options
+     * Resolved TreeView options.
+     *
+     * @returns
+     * Expansion seed key used to decide whether state should be reinitialized.
+     */
+    static getExpansionSeedKey(options) {
+        if (options.expandedRowIds === 'all') {
+            return 'all';
+        }
+        const parts = [];
+        for (let i = 0, iEnd = options.expandedRowIds.length; i < iEnd; ++i) {
+            const id = options.expandedRowIds[i];
+            parts.push(typeof id + ':' + String(id));
+        }
+        return parts.join('|');
+    }
+    /**
+     * Resolves effective tree input configuration for source columns.
+     *
+     * @param columns
+     * Source columns.
+     *
+     * @param input
+     * Normalized input configuration. When omitted, the controller
+     * auto-detects the standard `parentId` or `path` columns.
+     *
+     * @returns
+     * Resolved normalized input configuration.
+     */
+    static resolveInputOptions(columns, input) {
+        if (input) {
+            return input;
+        }
+        const parentIdColumn = 'parentId';
+        const pathColumn = 'path';
+        const separator = '/';
+        const hasParentIdColumn = !!columns[parentIdColumn];
+        const hasPathColumn = !!columns[pathColumn];
+        if (hasPathColumn) {
+            return {
+                type: 'path',
+                pathColumn,
+                separator,
+                showFullPath: false
+            };
+        }
+        if (hasParentIdColumn) {
+            return {
+                type: 'parentId',
+                parentIdColumn
+            };
+        }
+        throw new Error('TreeView: Could not autodetect input type. Expected either ' +
+            `"${parentIdColumn}" or "${pathColumn}" column, ` +
+            'or set `data.treeView.input.type` explicitly.');
+    }
+    /**
+     * Runtime type guard for local data provider options.
+     *
+     * @param dataOptions
+     * Data provider options to test.
+     *
+     * @returns
+     * `true` when options belong to the local data provider.
+     */
+    static isLocalDataOptions(dataOptions) {
+        return !!(dataOptions &&
+            (typeof dataOptions.providerType === 'undefined' ||
+                dataOptions.providerType === 'local'));
+    }
+}
+/* *
+ *
+ *  Default export
+ *
+ * */
+/* harmony default export */ const TreeView_TreeProjectionController = (TreeProjectionController);
+
+;// ./code/grid/es-modules/Grid/Pro/TreeView/TreeViewGlobals.js
+/* *
+ *
+ *  Grid Tree View globals
+ *
+ *  (c) 2020-2026 Highsoft AS
+ *
+ *  A commercial license may be required depending on use.
+ *  See www.highcharts.com/license
+ *
+ *  Authors:
+ *  - Dawid Dragula
+ *
+ * */
+
+/* *
+ *
+ *  Imports
+ *
+ * */
+
+/* *
+ *
+ *  Constants
+ *
+ * */
+const TreeViewGlobals_classNames = {
+    tbodySticky: Grid_Core_Globals.classNamePrefix + 'tbody-sticky',
+    tbodyStickyActive: Grid_Core_Globals.classNamePrefix + 'tbody-sticky-active',
+    tree: Grid_Core_Globals.classNamePrefix + 'tree',
+    toggle: Grid_Core_Globals.classNamePrefix + 'tree-toggle',
+    toggleIcon: Grid_Core_Globals.classNamePrefix + 'tree-toggle-icon',
+    value: Grid_Core_Globals.classNamePrefix + 'tree-value'
+};
+const cssVariables = {
+    depth: '--ig-tree-depth'
+};
+/* *
+ *
+ *  Default Export
+ *
+ * */
+/* harmony default export */ const TreeViewGlobals = ({
+    classNames: TreeViewGlobals_classNames,
+    cssVariables
+});
+
+;// ./code/grid/es-modules/Grid/Pro/TreeView/TreeStickyRowController.js
+/* *
+ *
+ *  Grid Tree Sticky Row Controller
+ *
+ *  (c) 2020-2026 Highsoft AS
+ *
+ *  A commercial license may be required depending on use.
+ *  See www.highcharts.com/license
+ * */
+
+
+
+
+
+const rowsContentNowrapClassName = Grid_Core_Globals.getClassName('rowsContentNowrap');
+const rowEvenClassName = Grid_Core_Globals.getClassName('rowEven');
+const rowOddClassName = Grid_Core_Globals.getClassName('rowOdd');
+const maxStickyRows = 10;
+/* *
+ *
+ *  Class
+ *
+ * */
+class TreeStickyRowController {
+    /* *
+     *
+     *  Constructor
+     *
+     * */
+    /**
+     * Constructs the sticky row controller.
+     *
+     * @param viewport
+     * The viewport table instance.
+     */
+    constructor(viewport) {
+        /**
+         * Row IDs currently rendered as sticky rows.
+         */
+        this.activeRowIds = [];
+        /**
+         * Whether sticky rows need reflow during the next refresh.
+         */
+        this.needsRowReflow = false;
+        /**
+         * Whether sticky rows need synchronization during the next refresh.
+         */
+        this.needsRowSync = false;
+        /**
+         * Refresh token used to discard stale async work.
+         */
+        this.refreshToken = 0;
+        /**
+         * Currently rendered sticky row instances.
+         */
+        this.stickyRows = [];
+        /**
+         * Whether the controller applied positioning to the table element.
+         */
+        this.ownsTablePosition = false;
+        this.viewport = viewport;
+    }
+    /* *
+     *
+     *  Methods
+     *
+     * */
+    /**
+     * Returns whether sticky parent rows are enabled.
+     */
+    get enabled() {
+        return !!this.viewport.grid.treeView?.options?.stickyParents;
+    }
+    /**
+     * Destroys sticky rows and pending controller state.
+     */
+    destroy() {
+        if (typeof this.animationFrameId === 'number') {
+            cancelAnimationFrame(this.animationFrameId);
+            delete this.animationFrameId;
+        }
+        this.clearStickyRows();
+        this.destroyStickyBody();
+    }
+    /**
+     * Returns the rendered sticky row instances.
+     */
+    getRenderedStickyRows() {
+        if (!this.enabled) {
+            return [];
+        }
+        return this.stickyRows;
+    }
+    /**
+     * Returns the total height of the rendered sticky rows.
+     */
+    getStickyRowsHeight() {
+        if (!this.enabled) {
+            return 0;
+        }
+        return this.stickyRows.reduce((height, row) => height + (row.htmlElement.offsetHeight ||
+            this.viewport.rowsVirtualizer.defaultRowHeight), 0);
+    }
+    /**
+     * Returns the sticky body container element.
+     */
+    getStickyBodyElement() {
+        return this.ensureStickyBody();
+    }
+    /**
+     * Returns whether an element belongs to the viewport body or sticky body.
+     *
+     * @param element
+     * DOM element to resolve.
+     */
+    containsElement(element) {
+        return this.viewport.tbodyElement.contains(element) ||
+            this.ensureStickyBody().contains(element);
+    }
+    /**
+     * Resolves a cell from either the viewport body or sticky body.
+     *
+     * @param element
+     * Event target that originated within a table cell.
+     */
+    getCellFromElement(element) {
+        if (!(element instanceof Element)) {
+            return;
+        }
+        const td = element.closest('td');
+        if (!td) {
+            return;
+        }
+        const tr = td.parentElement;
+        if (!tr) {
+            return;
+        }
+        const stickyRow = this.getRenderedStickyRows().find((row) => row.htmlElement === tr);
+        if (stickyRow) {
+            const cellIndex = Array.prototype.indexOf.call(tr.children, td);
+            return stickyRow.cells[cellIndex];
+        }
+        return this.viewport.getCellFromElement(element);
+    }
+    /**
+     * Returns a rendered row from either the sticky body or viewport body.
+     *
+     * @param rowId
+     * Target row ID.
+     */
+    getRenderedRow(rowId) {
+        return this.getRenderedStickyRows().find((row) => row.id === rowId) || this.viewport.getRow(rowId);
+    }
+    /**
+     * Returns a rendered sticky cell for the provided row and column index.
+     *
+     * @param rowIndex
+     * Target row index in the projected row order.
+     *
+     * @param columnIndex
+     * Target column index.
+     */
+    getRenderedStickyCell(rowIndex, columnIndex) {
+        const stickyRow = this.getRenderedStickyRows().find((row) => row.index === rowIndex);
+        return stickyRow?.cells[columnIndex];
+    }
+    /**
+     * Focuses a sticky cell when present, otherwise falls back to the viewport.
+     *
+     * @param rowIndex
+     * Target row index in the projected row order.
+     *
+     * @param columnIndex
+     * Target column index.
+     */
+    focusCellByRowIndex(rowIndex, columnIndex) {
+        if (columnIndex < 0 ||
+            columnIndex >= this.viewport.columns.length) {
+            return;
+        }
+        const stickyCell = this.getRenderedStickyCell(rowIndex, columnIndex);
+        if (stickyCell) {
+            delete this.viewport.pendingFocusCursor;
+            stickyCell.htmlElement.focus({
+                preventScroll: true
+            });
+            return;
+        }
+        this.viewport.focusCellByRowIndex(rowIndex, columnIndex);
+    }
+    /**
+     * Updates sticky rows in response to viewport scrolling.
+     */
+    handleScroll() {
+        const focusState = this.captureFocusState();
+        if (!this.enabled) {
+            this.clearStickyRows();
+            this.restoreFocusState(focusState);
+            return;
+        }
+        const candidates = this.getCurrentCandidates();
+        if (!candidates.length) {
+            this.clearStickyRows();
+            this.restoreFocusState(focusState);
+            return;
+        }
+        if (this.stickyRows.length === candidates.length &&
+            this.areSameActiveRowIds(candidates)) {
+            this.positionStickyRows(candidates);
+            this.restoreFocusState(focusState);
+            return;
+        }
+        this.scheduleRefresh();
+    }
+    /**
+     * Schedules sticky row refresh on the next animation frame.
+     *
+     * @param syncRow
+     * Whether sticky rows should be synchronized with source rows.
+     *
+     * @param reflowRow
+     * Whether sticky rows should be reflowed after synchronization.
+     */
+    scheduleRefresh(syncRow = false, reflowRow = false) {
+        if (!this.enabled) {
+            const focusState = this.captureFocusState();
+            if (typeof this.animationFrameId === 'number') {
+                cancelAnimationFrame(this.animationFrameId);
+                delete this.animationFrameId;
+            }
+            this.needsRowSync = false;
+            this.needsRowReflow = false;
+            this.clearStickyRows();
+            this.restoreFocusState(focusState);
+            return;
+        }
+        this.needsRowSync = this.needsRowSync || syncRow;
+        this.needsRowReflow = this.needsRowReflow || reflowRow;
+        if (typeof this.animationFrameId === 'number') {
+            return;
+        }
+        this.animationFrameId = requestAnimationFrame(() => {
+            delete this.animationFrameId;
+            void this.refresh();
+        });
+    }
+    /**
+     * Checks whether current sticky rows match the candidate row IDs.
+     *
+     * @param candidates
+     * Sticky row candidates to compare with the current rendered state.
+     */
+    areSameActiveRowIds(candidates) {
+        if (this.activeRowIds.length !== candidates.length) {
+            return false;
+        }
+        for (let i = 0, iEnd = candidates.length; i < iEnd; ++i) {
+            if (this.activeRowIds[i] !== candidates[i].rowId) {
+                return false;
+            }
+        }
+        return true;
+    }
+    /**
+     * Captures current table cell focus shared with the sticky overlay.
+     */
+    captureFocusState() {
+        const focusCursor = this.viewport.focusCursor;
+        const activeElement = document.activeElement;
+        if (!focusCursor ||
+            focusCursor.bodySectionId ||
+            !(activeElement instanceof HTMLTableCellElement)) {
+            return;
+        }
+        const inStickyBody = !!(this.stickyBodyElement?.contains(activeElement));
+        if (!inStickyBody &&
+            !this.viewport.tbodyElement.contains(activeElement)) {
+            return;
+        }
+        const activeCellCoordinates = this.getActiveFocusedCellCoordinates();
+        if (!activeCellCoordinates) {
+            return;
+        }
+        return {
+            columnIndex: activeCellCoordinates.columnIndex,
+            inStickyBody,
+            rowId: focusCursor.rowId,
+            rowIndex: activeCellCoordinates.rowIndex,
+            sourceElement: activeElement
+        };
+    }
+    /**
+     * Clears and destroys all rendered sticky rows.
+     */
+    clearStickyRows() {
+        ++this.refreshToken;
+        this.activeRowIds.length = 0;
+        if (this.stickyBodyElement) {
+            this.stickyBodyElement.style.height = '0';
+            this.syncStickyBodyClasses(this.stickyBodyElement);
+        }
+        if (!this.stickyRows.length) {
+            return;
+        }
+        for (let i = 0, iEnd = this.stickyRows.length; i < iEnd; ++i) {
+            this.stickyRows[i].destroy();
+        }
+        this.stickyRows.length = 0;
+    }
+    /**
+     * Destroys the sticky body container and restores table positioning.
+     */
+    destroyStickyBody() {
+        if (this.stickyBodyElement) {
+            this.stickyBodyElement.remove();
+            delete this.stickyBodyElement;
+        }
+        if (this.ownsTablePosition) {
+            this.viewport.tableElement.style.position = '';
+            this.ownsTablePosition = false;
+        }
+    }
+    /**
+     * Ensures the sticky body container exists and is attached.
+     */
+    ensureStickyBody() {
+        let stickyBodyElement = this.stickyBodyElement;
+        if (stickyBodyElement?.isConnected) {
+            this.syncStickyBodyClasses(stickyBodyElement);
+            return stickyBodyElement;
+        }
+        stickyBodyElement = document.createElement('tbody');
+        stickyBodyElement.className = TreeViewGlobals.classNames.tbodySticky;
+        this.viewport.tableElement.insertBefore(stickyBodyElement, this.viewport.tbodyElement);
+        this.stickyBodyElement = stickyBodyElement;
+        if (!this.viewport.tableElement.style.position ||
+            this.viewport.tableElement.style.position === 'static') {
+            this.viewport.tableElement.style.position = 'relative';
+            this.ownsTablePosition = true;
+        }
+        this.syncStickyBodyClasses(stickyBodyElement);
+        return stickyBodyElement;
+    }
+    /**
+     * Synchronizes tbody-level classes that affect sticky row layout.
+     *
+     * @param stickyBodyElement
+     * Sticky body hosting overlay rows.
+     */
+    syncStickyBodyClasses(stickyBodyElement) {
+        stickyBodyElement.classList.toggle(TreeViewGlobals.classNames.tbodyStickyActive, this.activeRowIds.length > 0);
+        stickyBodyElement.classList.toggle(rowsContentNowrapClassName, this.viewport.tbodyElement.classList.contains(rowsContentNowrapClassName));
+    }
+    /**
+     * Finds the first rendered row intersecting the given scroll position.
+     *
+     * @param visibleTop
+     * Scroll position within the viewport body.
+     *
+     * @param projectionState
+     * Current projection metadata for visible tree rows.
+     */
+    findTopVisibleRow(visibleTop, projectionState) {
+        const { rows } = this.viewport;
+        const rowsLength = rows.length;
+        if (!rowsLength) {
+            return;
+        }
+        for (let i = 0; i < rowsLength; ++i) {
+            const row = rows[i];
+            const rowTop = this.getRowTop(row);
+            const rowBottom = rowTop + row.htmlElement.offsetHeight;
+            if (rowBottom > visibleTop) {
+                return row;
+            }
+        }
+        if (!this.viewport.virtualRows) {
+            return rows[rowsLength - 1];
+        }
+        const firstRow = rows[0];
+        const lastRow = rows[rowsLength - 1];
+        const firstRowTop = this.getRowTop(firstRow);
+        const lastRowBottom = (this.getRowTop(lastRow) +
+            lastRow.htmlElement.offsetHeight);
+        const rowHeight = this.viewport.rowsVirtualizer.defaultRowHeight;
+        let estimatedRowIndex = lastRow.index;
+        if (visibleTop < firstRowTop) {
+            estimatedRowIndex = firstRow.index - Math.ceil((firstRowTop - visibleTop) / rowHeight);
+        }
+        else if (visibleTop >= lastRowBottom) {
+            estimatedRowIndex = lastRow.index + Math.floor((visibleTop - lastRowBottom) / rowHeight) + 1;
+        }
+        estimatedRowIndex = Math.max(0, Math.min(estimatedRowIndex, projectionState.rowIds.length - 1));
+        return {
+            id: projectionState.rowIds[estimatedRowIndex],
+            index: estimatedRowIndex
+        };
+    }
+    /**
+     * Returns the rendered or estimated height for a row.
+     *
+     * @param rowId
+     * ID of the row to measure.
+     */
+    getRowHeight(rowId) {
+        const renderedRow = this.getRenderedViewportRow(rowId);
+        if (renderedRow?.htmlElement.offsetHeight) {
+            return renderedRow.htmlElement.offsetHeight;
+        }
+        for (let i = 0, iEnd = this.stickyRows.length; i < iEnd; ++i) {
+            if (this.stickyRows[i].id === rowId) {
+                return (this.stickyRows[i].htmlElement.offsetHeight ||
+                    this.viewport.rowsVirtualizer.defaultRowHeight);
+            }
+        }
+    }
+    /**
+     * Returns the height used for a sticky row candidate.
+     *
+     * @param candidate
+     * Sticky row candidate to measure.
+     */
+    getCandidateRowHeight(candidate) {
+        return this.getRowHeight(candidate.rowId) ||
+            this.viewport.rowsVirtualizer.defaultRowHeight;
+    }
+    /**
+     * Returns the rendered or estimated top position for a candidate row.
+     *
+     * @param candidate
+     * Sticky row candidate to position.
+     */
+    getCandidateRowTop(candidate) {
+        const renderedRow = this.getRenderedViewportRow(candidate.rowId);
+        if (renderedRow) {
+            return this.getRowTop(renderedRow);
+        }
+        if (this.viewport.virtualRows) {
+            return this.viewport.rowsVirtualizer.getEstimatedRowTop(candidate.rowIndex);
+        }
+    }
+    /**
+     * Returns sticky row candidates for the current viewport state.
+     */
+    getCurrentCandidates() {
+        const projectionState = this.viewport.grid.treeView
+            ?.getProjectionState();
+        if (!this.enabled ||
+            !projectionState ||
+            !this.viewport.tbodyElement.isConnected ||
+            this.viewport.tbodyElement.clientHeight <= 0) {
+            return [];
+        }
+        return this.getStackCandidates(projectionState);
+    }
+    /**
+     * Builds the current sticky row stack from the projection state.
+     *
+     * @param projectionState
+     * Current projection metadata for visible tree rows.
+     */
+    getStackCandidates(projectionState) {
+        const activeCandidates = [];
+        let slotTop = this.viewport.tbodyElement.scrollTop;
+        for (let i = 0; i < maxStickyRows; ++i) {
+            const topVisibleRow = this.findTopVisibleRow(slotTop, projectionState);
+            if (!topVisibleRow ||
+                typeof topVisibleRow.id === 'undefined') {
+                break;
+            }
+            const candidatePath = this.getStickyCandidates(topVisibleRow, projectionState);
+            if (!this.hasMatchingCandidatePrefix(activeCandidates, candidatePath)) {
+                break;
+            }
+            const candidate = candidatePath[activeCandidates.length];
+            if (!candidate) {
+                break;
+            }
+            const rowTop = this.getCandidateRowTop(candidate);
+            if (!defined(rowTop) || rowTop >= slotTop) {
+                break;
+            }
+            activeCandidates.push(candidate);
+            slotTop += this.getCandidateRowHeight(candidate);
+        }
+        return activeCandidates;
+    }
+    /**
+     * Returns the projected row index for a row ID.
+     *
+     * @param rowId
+     * ID of the row to resolve.
+     *
+     * @param projectionState
+     * Current projection metadata for visible tree rows.
+     *
+     * @param topVisibleRow
+     * Currently resolved top visible row in the viewport.
+     */
+    getProjectedRowIndex(rowId, projectionState, topVisibleRow) {
+        if (topVisibleRow.id === rowId) {
+            return topVisibleRow.index;
+        }
+        const renderedRow = this.viewport.getRow(rowId);
+        if (renderedRow) {
+            return renderedRow.index;
+        }
+        const projectedRowIndex = projectionState.rowIds.indexOf(rowId);
+        if (projectedRowIndex > -1) {
+            return projectedRowIndex;
+        }
+    }
+    /**
+     * Returns the rendered top position of a viewport row.
+     *
+     * @param row
+     * Rendered viewport row to position.
+     */
+    getRowTop(row) {
+        if (this.viewport.virtualRows) {
+            return row.translateY;
+        }
+        const { tbodyElement } = this.viewport;
+        const rowRect = row.htmlElement.getBoundingClientRect();
+        const tbodyRect = tbodyElement.getBoundingClientRect();
+        return rowRect.top - tbodyRect.top + tbodyElement.scrollTop;
+    }
+    /**
+     * Returns the rendered viewport row for a row ID.
+     *
+     * @param rowId
+     * ID of the row to resolve.
+     */
+    getRenderedViewportRow(rowId) {
+        return this.viewport.rows.find((row) => row.id === rowId);
+    }
+    /**
+     * Returns the rendered or estimated bottom position of a row.
+     *
+     * @param rowId
+     * ID of the row to position.
+     *
+     * @param rowIndex
+     * Projected row index used for virtual estimation.
+     *
+     * @param rowHeight
+     * Optional row height hint used for virtual estimation.
+     */
+    getRowBottom(rowId, rowIndex, rowHeight) {
+        const renderedRow = this.getRenderedViewportRow(rowId);
+        const resolvedRowHeight = rowHeight ||
+            this.getRowHeight(rowId) ||
+            this.viewport.rowsVirtualizer.defaultRowHeight;
+        if (renderedRow) {
+            return this.getRowTop(renderedRow) +
+                renderedRow.htmlElement.offsetHeight;
+        }
+        if (this.viewport.virtualRows) {
+            return this.viewport.rowsVirtualizer.getEstimatedRowBottom(rowIndex, resolvedRowHeight);
+        }
+    }
+    /**
+     * Checks whether the left candidates match the right candidate prefix.
+     *
+     * @param left
+     * Currently active sticky row candidates.
+     *
+     * @param right
+     * Candidate chain resolved for the current top row.
+     */
+    hasMatchingCandidatePrefix(left, right) {
+        if (left.length > right.length) {
+            return false;
+        }
+        for (let i = 0, iEnd = left.length; i < iEnd; ++i) {
+            if (left[i].rowId !== right[i].rowId) {
+                return false;
+            }
+        }
+        return true;
+    }
+    /**
+     * Returns the expanded ancestor chain eligible for sticky rendering.
+     *
+     * @param topVisibleRow
+     * Currently resolved top visible row in the viewport.
+     *
+     * @param projectionState
+     * Current projection metadata for visible tree rows.
+     */
+    getStickyCandidates(topVisibleRow, projectionState) {
+        let currentRowId = topVisibleRow.id;
+        const candidates = [];
+        while (currentRowId !== null && typeof currentRowId !== 'undefined') {
+            const rowState = projectionState.rowsById.get(currentRowId);
+            if (!rowState) {
+                return [];
+            }
+            if (rowState.hasChildren &&
+                rowState.isExpanded) {
+                const rowIndex = this.getProjectedRowIndex(currentRowId, projectionState, topVisibleRow);
+                if (!defined(rowIndex)) {
+                    return [];
+                }
+                candidates.push({
+                    lastDescendantIndex: this.getProjectedRowIndex(rowState.lastVisibleDescendantId || currentRowId, projectionState, topVisibleRow) ?? rowIndex,
+                    lastDescendantId: rowState.lastVisibleDescendantId || currentRowId,
+                    rowId: currentRowId,
+                    rowIndex
+                });
+            }
+            currentRowId = rowState.parentId;
+        }
+        return candidates.reverse();
+    }
+    /**
+     * Refreshes sticky rows using the current viewport state.
+     */
+    async refresh() {
+        const syncRow = this.needsRowSync;
+        const reflowRow = this.needsRowReflow;
+        const focusState = this.captureFocusState();
+        this.needsRowSync = false;
+        this.needsRowReflow = false;
+        const candidates = this.getCurrentCandidates();
+        if (!candidates.length) {
+            this.clearStickyRows();
+            this.restoreFocusState(focusState);
+            return;
+        }
+        const refreshToken = ++this.refreshToken;
+        const isSynced = await this.syncStickyRows(candidates, syncRow, reflowRow, refreshToken);
+        if (!isSynced || refreshToken !== this.refreshToken) {
+            return;
+        }
+        this.positionStickyRows(candidates);
+        this.restoreFocusState(focusState);
+    }
+    /**
+     * Positions rendered sticky rows within the sticky body.
+     *
+     * @param candidates
+     * Sticky row candidates to position.
+     */
+    positionStickyRows(candidates) {
+        if (!this.stickyRows.length) {
+            return;
+        }
+        this.syncStickyRowParity(candidates);
+        const { tbodyElement, rowsVirtualizer } = this.viewport;
+        const scrollTop = tbodyElement.scrollTop;
+        let stickyStackHeight = 0;
+        let cumulativePushOff = 0;
+        this.syncStickyBodyPosition(false);
+        for (let i = 0, iEnd = candidates.length; i < iEnd; ++i) {
+            const candidate = candidates[i];
+            const stickyRow = this.stickyRows[i];
+            if (!stickyRow) {
+                continue;
+            }
+            const stickyHeight = (stickyRow.htmlElement.offsetHeight ||
+                rowsVirtualizer.defaultRowHeight);
+            let pushOff = 0;
+            const lastDescendantBottom = this.getRowBottom(candidate.lastDescendantId, candidate.lastDescendantIndex);
+            if (typeof lastDescendantBottom === 'number') {
+                pushOff = Math.min(0, lastDescendantBottom -
+                    scrollTop -
+                    stickyStackHeight -
+                    cumulativePushOff -
+                    stickyHeight);
+            }
+            cumulativePushOff += pushOff;
+            stickyRow.translateY = stickyStackHeight + cumulativePushOff;
+            stickyRow.htmlElement.style.zIndex = String(candidates.length - i);
+            stickyRow.htmlElement.style.transform = cumulativePushOff ?
+                `translateY(${Math.floor(cumulativePushOff)}px)` :
+                '';
+            stickyRow.htmlElement.style.visibility = '';
+            stickyStackHeight += stickyHeight;
+        }
+        this.syncStickyBodyRenderedHeight();
+    }
+    /**
+     * Syncs sticky row parity classes with the visual sticky stack order.
+     *
+     * @param candidates
+     * Sticky row candidates rendered in the overlay.
+     */
+    syncStickyRowParity(candidates) {
+        const firstCandidate = candidates[0];
+        if (!firstCandidate) {
+            return;
+        }
+        const stickyRowsCount = Math.min(candidates.length, this.stickyRows.length);
+        let visualRowIndex = firstCandidate.rowIndex;
+        for (let i = 0, iEnd = stickyRowsCount; i < iEnd; ++i, ++visualRowIndex) {
+            const rowElement = this.stickyRows[i].htmlElement;
+            const isEvenRow = !!(visualRowIndex % 2);
+            rowElement.classList.toggle(rowEvenClassName, isEvenRow);
+            rowElement.classList.toggle(rowOddClassName, !isEvenRow);
+        }
+    }
+    /**
+     * Syncs sticky body height to the rendered bottom of the sticky row stack.
+     */
+    syncStickyBodyRenderedHeight() {
+        const stickyBodyElement = this.stickyBodyElement;
+        if (!stickyBodyElement || !this.stickyRows.length) {
+            return;
+        }
+        const { defaultRowHeight } = this.viewport.rowsVirtualizer;
+        let height = 0;
+        for (let i = 0, iEnd = this.stickyRows.length; i < iEnd; ++i) {
+            const row = this.stickyRows[i];
+            const rowHeight = row.htmlElement.offsetHeight || defaultRowHeight;
+            height = Math.max(height, row.translateY + rowHeight);
+        }
+        stickyBodyElement.style.height = Math.ceil(height) + 'px';
+    }
+    /**
+     * Returns the focused tree cell coordinates when focus is within the body
+     * or sticky overlay.
+     */
+    getActiveFocusedCellCoordinates() {
+        const activeElement = document.activeElement;
+        if (!(activeElement instanceof HTMLTableCellElement)) {
+            return;
+        }
+        const rowElement = activeElement.parentElement;
+        if (!rowElement) {
+            return;
+        }
+        if (this.stickyBodyElement?.contains(activeElement)) {
+            const stickyRow = this.stickyRows.find((row) => row.htmlElement === rowElement);
+            const columnIndex = Array.prototype.indexOf.call(rowElement.children, activeElement);
+            if (!stickyRow ||
+                columnIndex < 0) {
+                return;
+            }
+            return {
+                columnIndex,
+                rowId: stickyRow.id,
+                rowIndex: stickyRow.index
+            };
+        }
+        if (!this.viewport.tbodyElement.contains(activeElement)) {
+            return;
+        }
+        const cell = this.viewport.getCellFromElement(activeElement);
+        const columnIndex = cell?.column?.index;
+        const rowIndex = cell?.row?.index;
+        if (!defined(columnIndex) || !defined(rowIndex)) {
+            return;
+        }
+        return {
+            columnIndex,
+            rowId: cell?.row?.id,
+            rowIndex
+        };
+    }
+    /**
+     * Restores focus after sticky rows move between the body and overlay.
+     *
+     * @param focusState
+     * Captured focus state from before the sticky row update.
+     */
+    restoreFocusState(focusState) {
+        if (!focusState ||
+            !this.shouldRestoreFocusState(focusState)) {
+            return;
+        }
+        const stickyCell = this.stickyRows.find((row) => row.id === focusState.rowId)?.cells[focusState.columnIndex];
+        if (stickyCell) {
+            if (document.activeElement !== stickyCell.htmlElement) {
+                delete this.viewport.pendingFocusCursor;
+                stickyCell.htmlElement.focus({
+                    preventScroll: true
+                });
+            }
+            return;
+        }
+        if (!focusState.inStickyBody) {
+            return;
+        }
+        const viewportCell = this.viewport.rows.find((row) => row.id === focusState.rowId)?.cells[focusState.columnIndex];
+        if (viewportCell &&
+            document.activeElement !== viewportCell.htmlElement) {
+            delete this.viewport.pendingFocusCursor;
+            viewportCell.htmlElement.focus({
+                preventScroll: true
+            });
+        }
+    }
+    /**
+     * Synchronizes rendered sticky rows with the current candidates.
+     *
+     * @param candidates
+     * Sticky row candidates to synchronize.
+     *
+     * @param syncRow
+     * Whether sticky rows should be synchronized with source rows.
+     *
+     * @param reflowRow
+     * Whether sticky rows should be reflowed after synchronization.
+     *
+     * @param refreshToken
+     * Refresh token used to discard stale async work.
+     */
+    async syncStickyRows(candidates, syncRow, reflowRow, refreshToken) {
+        const currentRowsById = new Map();
+        for (let i = 0, iEnd = this.stickyRows.length; i < iEnd; ++i) {
+            const row = this.stickyRows[i];
+            if (typeof row.id !== 'undefined') {
+                currentRowsById.set(row.id, row);
+            }
+        }
+        const nextStickyRows = [];
+        for (let i = 0, iEnd = candidates.length; i < iEnd; ++i) {
+            const candidate = candidates[i];
+            let stickyRow = currentRowsById.get(candidate.rowId);
+            if (stickyRow) {
+                currentRowsById.delete(candidate.rowId);
+            }
+            if (!stickyRow) {
+                stickyRow = new Body_TableRow(this.viewport, candidate.rowIndex);
+                await stickyRow.init();
+                if (refreshToken !== this.refreshToken) {
+                    stickyRow.destroy();
+                    return false;
+                }
+                await stickyRow.render();
+            }
+            else if (syncRow ||
+                stickyRow.index !== candidate.rowIndex) {
+                await stickyRow.reuse(candidate.rowIndex);
+            }
+            if (refreshToken !== this.refreshToken) {
+                return false;
+            }
+            if (reflowRow) {
+                stickyRow.reflow();
+            }
+            stickyRow.htmlElement.style.position = 'relative';
+            stickyRow.htmlElement.style.top = '';
+            stickyRow.htmlElement.style.left = '';
+            stickyRow.htmlElement.style.right = '';
+            nextStickyRows.push(stickyRow);
+        }
+        currentRowsById.forEach((row) => row.destroy());
+        this.stickyRows = nextStickyRows;
+        this.activeRowIds = candidates.map((candidate) => candidate.rowId);
+        const stickyBodyElement = this.ensureStickyBody();
+        this.syncStickyRowOrder(nextStickyRows, stickyBodyElement);
+        this.syncStickyBodyClasses(stickyBodyElement);
+        this.syncStickyBodyPosition();
+        return true;
+    }
+    /**
+     * Synchronizes sticky row DOM order without remounting unchanged rows.
+     *
+     * @param stickyRows
+     * Sticky rows in the desired DOM order.
+     *
+     * @param stickyBodyElement
+     * Sticky body hosting the rows.
+     */
+    syncStickyRowOrder(stickyRows, stickyBodyElement) {
+        let expectedNode = stickyBodyElement.firstChild;
+        for (let i = 0, iEnd = stickyRows.length; i < iEnd; ++i) {
+            const rowElement = stickyRows[i].htmlElement;
+            if (rowElement === expectedNode) {
+                expectedNode = expectedNode?.nextSibling || null;
+                continue;
+            }
+            stickyBodyElement.insertBefore(rowElement, expectedNode);
+        }
+    }
+    /**
+     * Returns whether the previously captured focus should be restored.
+     *
+     * @param focusState
+     * Captured focus state from before the sticky row update.
+     */
+    shouldRestoreFocusState(focusState) {
+        const activeCellCoordinates = this.getActiveFocusedCellCoordinates();
+        if (activeCellCoordinates) {
+            return (activeCellCoordinates.columnIndex === focusState.columnIndex &&
+                (activeCellCoordinates.rowId === focusState.rowId ||
+                    activeCellCoordinates.rowIndex === focusState.rowIndex));
+        }
+        const activeElement = document.activeElement;
+        return (activeElement === focusState.sourceElement ||
+            activeElement === document.body);
+    }
+    /**
+     * Synchronizes sticky body position and dimensions with the viewport.
+     *
+     * @param syncDimensions
+     * Whether sticky body dimensions should be recalculated.
+     */
+    syncStickyBodyPosition(syncDimensions = true) {
+        const stickyBodyElement = this.ensureStickyBody();
+        const { tbodyElement } = this.viewport;
+        if (syncDimensions) {
+            const { rowsWidth } = this.viewport;
+            const bodyWidth = Math.max(rowsWidth || 0, tbodyElement.scrollWidth, tbodyElement.clientWidth);
+            const tableRect = this.viewport.tableElement.getBoundingClientRect();
+            const tbodyRect = tbodyElement.getBoundingClientRect();
+            const stickyTop = (tbodyRect.top -
+                tableRect.top -
+                this.viewport.tableElement.clientTop);
+            stickyBodyElement.style.top = stickyTop + 'px';
+            stickyBodyElement.style.width = bodyWidth + 'px';
+            stickyBodyElement.style.height = this.getStickyRowsHeight() + 'px';
+        }
+        stickyBodyElement.style.transform = tbodyElement.scrollLeft ?
+            `translateX(${-tbodyElement.scrollLeft}px)` :
+            '';
+    }
+}
+/* *
+ *
+ *  Default Export
+ *
+ * */
+/* harmony default export */ const TreeView_TreeStickyRowController = (TreeStickyRowController);
+
+;// ./code/grid/es-modules/Grid/Pro/TreeView/TreeViewComposition.js
+/* *
+ *
+ *  Grid Tree View Composition
+ *
+ *  (c) 2020-2026 Highsoft AS
+ *
+ *  A commercial license may be required depending on use.
+ *  See www.highcharts.com/license
+ *
+ *  Authors:
+ *  - Dawid Dragula
+ *
+ * */
+
+
+
+
+
+
+
+
+const treeToggleAttribute = 'data-hcg-tree-toggle';
+const treeToggleSelector = '[' + treeToggleAttribute + ']';
+const treeToggleListeners = new WeakMap();
+/**
+ * Composes Grid Pro with TreeView projection infrastructure.
+ *
+ * @param GridClass
+ * Grid class to extend.
+ *
+ * @param TableClass
+ * Table class to extend.
+ *
+ * @param TableCellClass
+ * TableCell class to extend.
+ */
+function TreeViewComposition_compose(GridClass, TableClass, TableCellClass) {
+    if (!pushUnique(Grid_Core_Globals.composed, 'TreeView')) {
+        return;
+    }
+    addEvent(GridClass, 'beforeLoad', onBeforeLoad);
+    addEvent(GridClass, 'afterLoad', onAfterLoad);
+    addEvent(GridClass, 'beforeDestroy', onBeforeDestroy);
+    addEvent(GridClass, 'afterRedraw', onAfterRedraw);
+    addEvent(GridClass, 'beforeTreeRowToggle', onBeforeTreeRowToggle);
+    addEvent(GridClass, 'afterTreeRowToggle', onAfterTreeRowToggle);
+    addEvent(TableClass, 'beforeInit', onTableBeforeInit);
+    addEvent(TableClass, 'afterInit', onTableAfterInit);
+    addEvent(TableClass, 'afterReflow', onTableAfterReflow);
+    addEvent(TableClass, 'beforeRestoreCellFocus', onTableBeforeRestoreCellFocus);
+    addEvent(TableClass, 'getViewportTopInset', onTableGetViewportTopInset);
+    addEvent(TableClass, 'afterDestroy', onTableAfterDestroy);
+    addEvent(TableCellClass, 'afterRender', onAfterCellRender);
+}
+/**
+ * Focuses a rendered row in a way that preserves viewport scroll behavior.
+ *
+ * @param table
+ * Table viewport handling the event.
+ *
+ * @param row
+ * Target row.
+ *
+ * @param columnIndex
+ * Target column index.
+ */
+function focusRenderedRow(table, row, columnIndex) {
+    if (!row) {
+        return false;
+    }
+    if (row.htmlElement.parentElement === table.tbodyElement) {
+        table.focusCellByRowIndex(row.index, columnIndex);
+    }
+    else {
+        row.cells[columnIndex]?.htmlElement.focus({
+            preventScroll: true
+        });
+    }
+    return true;
+}
+/**
+ * Handles tree-aware keyboard navigation for body and sticky rows.
+ *
+ * @param table
+ * Table viewport handling the event.
+ *
+ * @param cell
+ * Focused cell.
+ *
+ * @param event
+ * Keyboard event to handle.
+ */
+function handleTreeBodyNavigation(table, cell, event) {
+    const { column, row } = cell;
+    const { header } = table;
+    const changeFocusKeys = {
+        ArrowDown: [1, 0],
+        ArrowUp: [-1, 0],
+        ArrowLeft: [0, -1],
+        ArrowRight: [0, 1]
+    };
+    const dir = changeFocusKeys[event.key];
+    if (!dir) {
+        return false;
+    }
+    event.preventDefault();
+    event.stopImmediatePropagation();
+    const nextColumnIndex = column.index + dir[1];
+    if (!dir[0]) {
+        row.cells[nextColumnIndex]?.htmlElement.focus({
+            preventScroll: true
+        });
+        return true;
+    }
+    const renderedRows = table.getRenderedRows();
+    const renderedRowIndex = renderedRows.indexOf(row);
+    const nextRenderedRow = renderedRows[renderedRowIndex + dir[0]];
+    const isViewportBodyRow = row.htmlElement.parentElement ===
+        table.tbodyElement;
+    const nextRowIndex = row.index + dir[0];
+    if (renderedRowIndex > -1) {
+        if (!isViewportBodyRow ||
+            nextRowIndex < 0 ||
+            nextRowIndex >= table.rowsVirtualizer.rowCount) {
+            if (focusRenderedRow(table, nextRenderedRow, nextColumnIndex)) {
+                return true;
+            }
+        }
+    }
+    if (nextRowIndex < 0 && header) {
+        const extraRowIdx = header.rows.length + nextRowIndex;
+        if (extraRowIdx + 1 > header.levels) {
+            header.rows[extraRowIdx]
+                .cells[nextColumnIndex]?.htmlElement.focus();
+        }
+        else {
+            table.columns[nextColumnIndex]
+                ?.header?.htmlElement.focus();
+        }
+        return true;
+    }
+    const stickyRowController = table.treeStickyRowController;
+    if (stickyRowController) {
+        stickyRowController.focusCellByRowIndex(nextRowIndex, nextColumnIndex);
+    }
+    else {
+        table.focusCellByRowIndex(nextRowIndex, nextColumnIndex);
+    }
+    return true;
+}
+/**
+ * Prevents viewport body focus restoration when the target cell is already
+ * focused in the sticky overlay.
+ *
+ * @param event
+ * Focus restoration event emitted by the viewport.
+ */
+function onTableBeforeRestoreCellFocus(event) {
+    const stickyCell = this.treeStickyRowController?.getRenderedStickyCell(event.rowIndex, event.columnIndex);
+    if (stickyCell?.htmlElement === document.activeElement) {
+        event.preventDefault?.();
+    }
+}
+/**
+ * Initializes TreeView projection infrastructure before first data querying.
+ */
+function onBeforeLoad() {
+    if (!this.treeView) {
+        this.treeView = new TreeView_TreeProjectionController(this);
+    }
+}
+/**
+ * Schedules sticky parent row refresh after initial render.
+ */
+function onAfterLoad() {
+    this.viewport?.treeStickyRowController?.scheduleRefresh(false, true);
+}
+/**
+ * Cleans up TreeView projection infrastructure on Grid destroy.
+ *
+ * @param e
+ * Grid destroy event metadata.
+ *
+ * @param e.onlyDOM
+ * Whether destroy is limited to DOM teardown before a re-render.
+ */
+function onBeforeDestroy(e) {
+    if (e.onlyDOM) {
+        return;
+    }
+    this.treeView?.destroy();
+    delete this.treeView;
+}
+/**
+ * Runs grid callback before a tree row toggle.
+ *
+ * @param e
+ * Tree row toggle event payload.
+ */
+function onBeforeTreeRowToggle(e) {
+    this.options?.events?.beforeTreeRowToggle?.call(this, e);
+}
+/**
+ * Runs grid callback after a tree row toggle.
+ *
+ * @param e
+ * Tree row toggle event payload.
+ */
+function onAfterTreeRowToggle(e) {
+    this.options?.events?.afterTreeRowToggle?.call(this, e);
+}
+/**
+ * Schedules sticky parent row refresh after grid redraws.
+ */
+function onAfterRedraw() {
+    this.viewport?.treeStickyRowController?.scheduleRefresh(true, true);
+}
+/**
+ * Returns tree-toggle context for an element within a tree cell.
+ *
+ * @param table
+ * Table viewport handling the tree cell.
+ *
+ * @param element
+ * Element within the tree cell or toggle button.
+ */
+function getTreeToggleContext(table, element) {
+    const cell = table.treeStickyRowController?.getCellFromElement(element) ||
+        table.getCellFromElement(element);
+    if (!cell) {
+        return;
+    }
+    const controller = cell.row.viewport.grid.treeView;
+    const options = controller?.options;
+    const projectionState = controller?.getProjectionState();
+    const treeColumn = (options?.treeColumn ||
+        cell.row.viewport.columns[0]?.id);
+    if (!controller || !projectionState || !treeColumn) {
+        return;
+    }
+    if (cell.column.id !== treeColumn) {
+        return;
+    }
+    const rowId = cell.row.id ?? projectionState?.rowIds[cell.row.index];
+    const rowState = rowId !== void 0 ?
+        projectionState.rowsById.get(rowId) :
+        void 0;
+    if (rowId === void 0 || !rowState?.hasChildren) {
+        return;
+    }
+    return {
+        cell,
+        controller,
+        isExpanded: rowState.isExpanded,
+        rowId
+    };
+}
+/**
+ * Returns the last path segment rendered for a path-based tree node.
+ *
+ * @param value
+ * Raw path value.
+ *
+ * @param separator
+ * Path separator definition.
+ */
+function getLastPathSegment(value, separator) {
+    if (typeof separator === 'function') {
+        const segments = separator(value);
+        const lastSegment = Array.isArray(segments) ?
+            segments[segments.length - 1] :
+            void 0;
+        return typeof lastSegment === 'string' && lastSegment.length ?
+            lastSegment :
+            value;
+    }
+    if (separator instanceof RegExp) {
+        const regex = new RegExp(separator.source, separator.flags.includes('g') ?
+            separator.flags :
+            separator.flags + 'g');
+        let lastMatch;
+        let match;
+        while ((match = regex.exec(value)) !== null) {
+            if (match[0]) {
+                lastMatch = match[0];
+            }
+            else {
+                ++regex.lastIndex;
+            }
+        }
+        return lastMatch || value;
+    }
+    const separatorIndex = value.lastIndexOf(separator);
+    if (separatorIndex < 0) {
+        return value;
+    }
+    return value.slice(separatorIndex + separator.length);
+}
+/**
+ * Returns the path segment that should be rendered in the tree column.
+ *
+ * @param value
+ * Raw cell value.
+ *
+ * @param columnId
+ * Rendered column ID.
+ *
+ * @param options
+ * Normalized Tree View options.
+ */
+function getPathSegmentDisplayValue(value, columnId, options) {
+    const input = options.input;
+    if (!input ||
+        input.type !== 'path' ||
+        input.showFullPath ||
+        columnId !== input.pathColumn ||
+        typeof value !== 'string') {
+        return;
+    }
+    return getLastPathSegment(value, input.separator);
+}
+/**
+ * Returns whether the event target is a focusable tree column cell with a
+ * toggleable row.
+ *
+ * @param table
+ * Table viewport handling the keydown event.
+ *
+ * @param event
+ * Keyboard event originating from a table cell.
+ */
+function getTreeToggleContextFromKeyboardEvent(table, event) {
+    if (!(event.target instanceof HTMLTableCellElement)) {
+        return;
+    }
+    return getTreeToggleContext(table, event.target);
+}
+/**
+ * Restores focus to the tree cell after a redraw caused by toggle.
+ *
+ * @param context
+ * Tree-toggle context captured before the redraw.
+ */
+function restoreTreeCellFocus(context) {
+    const columnIndex = context.cell.column.index;
+    const viewport = context.cell.row.viewport;
+    const restoredCell = (viewport.treeStickyRowController?.getRenderedRow(context.rowId) ||
+        viewport.getRow(context.rowId))?.cells[columnIndex];
+    if (restoredCell) {
+        restoredCell.htmlElement.focus({
+            preventScroll: true
+        });
+        return;
+    }
+    const rowIndex = context.controller
+        .getProjectionState()
+        ?.rowIds.indexOf(context.rowId);
+    if (typeof rowIndex === 'number' && rowIndex > -1) {
+        const stickyRowController = viewport.treeStickyRowController;
+        if (stickyRowController) {
+            stickyRowController.focusCellByRowIndex(rowIndex, columnIndex);
+        }
+        else {
+            viewport.focusCellByRowIndex(rowIndex, columnIndex);
+        }
+    }
+}
+/**
+ * Captures the current visual anchor for a collapsing tree row.
+ *
+ * @param context
+ * Tree-toggle context captured from the current DOM cell.
+ */
+function captureTreeToggleAnchor(context) {
+    if (!context.isExpanded) {
+        return;
+    }
+    const rowElement = context.cell.htmlElement.parentElement;
+    if (!(rowElement instanceof HTMLTableRowElement)) {
+        return;
+    }
+    return {
+        top: rowElement.getBoundingClientRect().top
+    };
+}
+/**
+ * Restores the collapsed tree row to its previous visual anchor position.
+ *
+ * @param context
+ * Tree-toggle context captured from the current DOM cell.
+ *
+ * @param anchor
+ * Previously captured anchor position.
+ */
+async function restoreTreeToggleAnchor(context, anchor) {
+    if (!anchor) {
+        return;
+    }
+    const viewport = context.cell.row.viewport;
+    const renderedRow = (viewport.treeStickyRowController?.getRenderedRow(context.rowId) ||
+        viewport.getRow(context.rowId));
+    if (!renderedRow?.htmlElement.isConnected) {
+        return;
+    }
+    const tbody = viewport.tbodyElement;
+    const delta = renderedRow.htmlElement.getBoundingClientRect().top -
+        anchor.top;
+    if (Math.abs(delta) < 1) {
+        return;
+    }
+    const nextScrollTop = Math.max(0, Math.min(tbody.scrollTop + delta, Math.max(tbody.scrollHeight - tbody.clientHeight, 0)));
+    if (nextScrollTop === tbody.scrollTop) {
+        return;
+    }
+    tbody.scrollTop = nextScrollTop;
+    if (viewport.virtualRows) {
+        viewport.rowsVirtualizer.scroll();
+    }
+    viewport.treeStickyRowController?.handleScroll();
+    await waitForAnimationFrame();
+}
+/**
+ * Converts wheel delta to CSS pixels.
+ *
+ * @param event
+ * Wheel event raised over the sticky overlay.
+ *
+ * @param viewportSize
+ * The relevant viewport size for page-based deltas.
+ *
+ * @param lineSize
+ * Pixel size used for line-based deltas.
+ */
+function normalizeWheelDelta(event, viewportSize, lineSize) {
+    if (event.deltaMode === WheelEvent.DOM_DELTA_LINE) {
+        return [
+            event.deltaX * lineSize,
+            event.deltaY * lineSize
+        ];
+    }
+    if (event.deltaMode === WheelEvent.DOM_DELTA_PAGE) {
+        return [
+            event.deltaX * viewportSize,
+            event.deltaY * viewportSize
+        ];
+    }
+    return [event.deltaX, event.deltaY];
+}
+/**
+ * Toggles tree row and restores focus when redraw replaces the DOM cell.
+ *
+ * @param context
+ * Tree-toggle context captured from the current DOM cell.
+ *
+ * @param originalEvent
+ * Browser event that initiated the toggle.
+ */
+async function toggleTreeRow(context, originalEvent) {
+    const anchor = captureTreeToggleAnchor(context);
+    const changed = await context.controller.toggleRow(context.rowId, true, originalEvent);
+    if (changed) {
+        await waitForAnimationFrame();
+        await restoreTreeToggleAnchor(context, anchor);
+        restoreTreeCellFocus(context);
+    }
+}
+/**
+ * Adds delegated listeners for tree toggle buttons and keyboard shortcuts.
+ */
+function onTableBeforeInit() {
+    const stickyRowController = new TreeView_TreeStickyRowController(this);
+    this.treeStickyRowController = stickyRowController;
+    const stickyBody = stickyRowController.getStickyBodyElement();
+    const clickListener = (event) => {
+        if (!(event.target instanceof Element)) {
+            return;
+        }
+        const toggleButton = event.target.closest(treeToggleSelector);
+        if (toggleButton &&
+            stickyRowController.containsElement(toggleButton)) {
+            event.preventDefault();
+            event.stopImmediatePropagation();
+            const context = getTreeToggleContext(this, toggleButton);
+            if (!context) {
+                return;
+            }
+            void toggleTreeRow(context, event);
+            return;
+        }
+        if (event.currentTarget === stickyBody) {
+            stickyRowController.getCellFromElement(event.target)?.onClick();
+        }
+    };
+    const dblClickListener = (event) => {
+        if (!(event.target instanceof Element)) {
+            return;
+        }
+        if (event.target.closest(treeToggleSelector)) {
+            return;
+        }
+        const context = getTreeToggleContext(this, event.target);
+        if (!context) {
+            if (event.currentTarget === stickyBody) {
+                const cell = stickyRowController.getCellFromElement(event.target);
+                if (cell && 'onDblClick' in cell) {
+                    cell.onDblClick(event);
+                }
+            }
+            return;
+        }
+        event.preventDefault();
+        event.stopImmediatePropagation();
+        context.cell.htmlElement.focus();
+        void toggleTreeRow(context, event);
+    };
+    const mouseDownListener = (event) => {
+        if (!(event.target instanceof Element)) {
+            return;
+        }
+        const toggleButton = event.target.closest(treeToggleSelector);
+        if (toggleButton &&
+            stickyRowController.containsElement(toggleButton)) {
+            const context = getTreeToggleContext(this, toggleButton);
+            if (!context) {
+                return;
+            }
+            event.preventDefault();
+            context.cell.htmlElement.focus();
+            return;
+        }
+        if (event.currentTarget === stickyBody) {
+            const cell = stickyRowController.getCellFromElement(event.target);
+            if (cell && 'onMouseDown' in cell) {
+                cell.onMouseDown(event);
+            }
+        }
+    };
+    const keyDownListener = (event) => {
+        const cell = stickyRowController.getCellFromElement(event.target);
+        if ((event.key === 'Enter' ||
+            event.key === ' ' ||
+            event.key === 'Spacebar') &&
+            cell) {
+            const context = getTreeToggleContextFromKeyboardEvent(this, event);
+            if (context) {
+                event.preventDefault();
+                event.stopImmediatePropagation();
+                void toggleTreeRow(context, event);
+                return;
+            }
+        }
+        if (!cell) {
+            return;
+        }
+        if (handleTreeBodyNavigation(this, cell, event)) {
+            return;
+        }
+        if (event.currentTarget === stickyBody &&
+            event.key === 'Enter') {
+            event.preventDefault();
+            event.stopImmediatePropagation();
+            cell.onClick();
+        }
+    };
+    const wheelListener = (event) => {
+        if (event.ctrlKey) {
+            return;
+        }
+        const tbody = this.tbodyElement;
+        const [deltaX, deltaY] = normalizeWheelDelta(event, tbody.clientHeight, this.rowsVirtualizer.defaultRowHeight);
+        const maxScrollTop = Math.max(tbody.scrollHeight - tbody.clientHeight, 0);
+        const maxScrollLeft = Math.max(tbody.scrollWidth - tbody.clientWidth, 0);
+        const nextScrollTop = Math.max(0, Math.min(tbody.scrollTop + deltaY, maxScrollTop));
+        const nextScrollLeft = Math.max(0, Math.min(tbody.scrollLeft + deltaX, maxScrollLeft));
+        if (nextScrollTop === tbody.scrollTop &&
+            nextScrollLeft === tbody.scrollLeft) {
+            return;
+        }
+        event.preventDefault();
+        tbody.scrollTop = nextScrollTop;
+        tbody.scrollLeft = nextScrollLeft;
+    };
+    this.tbodyElement.addEventListener('click', clickListener);
+    this.tbodyElement.addEventListener('dblclick', dblClickListener);
+    this.tbodyElement.addEventListener('mousedown', mouseDownListener);
+    this.tbodyElement.addEventListener('keydown', keyDownListener);
+    stickyBody.addEventListener('click', clickListener);
+    stickyBody.addEventListener('dblclick', dblClickListener);
+    stickyBody.addEventListener('mousedown', mouseDownListener);
+    stickyBody.addEventListener('keydown', keyDownListener);
+    stickyBody.addEventListener('wheel', wheelListener, {
+        passive: false
+    });
+    treeToggleListeners.set(this, {
+        click: clickListener,
+        dblClick: dblClickListener,
+        mouseDown: mouseDownListener,
+        keyDown: keyDownListener,
+        wheel: wheelListener,
+        stickyBody
+    });
+}
+/**
+ * Adds scroll listener for sticky parent row positioning after the table is
+ * fully initialized.
+ */
+function onTableAfterInit() {
+    const listeners = treeToggleListeners.get(this);
+    if (!listeners) {
+        return;
+    }
+    const scrollListener = () => {
+        this.treeStickyRowController?.handleScroll();
+    };
+    this.tbodyElement.addEventListener('scroll', scrollListener);
+    listeners.scroll = scrollListener;
+    this.treeStickyRowController?.scheduleRefresh(false, true);
+}
+/**
+ * Repositions sticky parent rows after table reflow.
+ */
+function onTableAfterReflow() {
+    this.treeStickyRowController?.scheduleRefresh(false, true);
+}
+/**
+ * Extends the visible viewport inset by the current sticky tree stack height.
+ *
+ * @param e
+ * Event payload with the current top inset.
+ *
+ * @param e.top
+ * Current top inset reserved by composed table features.
+ */
+function onTableGetViewportTopInset(e) {
+    e.top = Math.max(e.top, this.treeStickyRowController?.getStickyRowsHeight() || 0);
+}
+/**
+ * Removes the delegated click listener for tree toggle buttons.
+ */
+function onTableAfterDestroy() {
+    const listeners = treeToggleListeners.get(this);
+    if (!listeners) {
+        return;
+    }
+    this.tbodyElement.removeEventListener('click', listeners.click);
+    this.tbodyElement.removeEventListener('dblclick', listeners.dblClick);
+    this.tbodyElement.removeEventListener('mousedown', listeners.mouseDown);
+    this.tbodyElement.removeEventListener('keydown', listeners.keyDown);
+    listeners.stickyBody?.removeEventListener('click', listeners.click);
+    listeners.stickyBody?.removeEventListener('dblclick', listeners.dblClick);
+    listeners.stickyBody?.removeEventListener('mousedown', listeners.mouseDown);
+    listeners.stickyBody?.removeEventListener('keydown', listeners.keyDown);
+    if (listeners.wheel) {
+        listeners.stickyBody?.removeEventListener('wheel', listeners.wheel);
+    }
+    if (listeners.scroll) {
+        this.tbodyElement.removeEventListener('scroll', listeners.scroll);
+    }
+    treeToggleListeners.delete(this);
+    this.treeStickyRowController?.destroy();
+    delete this.treeStickyRowController;
+}
+/**
+ * Decorates tree column cells with indentation and toggle control.
+ */
+function onAfterCellRender() {
+    const grid = this.row.viewport.grid;
+    const controller = grid.treeView;
+    const options = controller?.options;
+    const projectionState = controller?.getProjectionState();
+    if (!options || !projectionState) {
+        return;
+    }
+    const treeColumn = (options.treeColumn ||
+        this.row.viewport.columns[0]?.id);
+    if (!treeColumn || this.column.id !== treeColumn) {
+        return;
+    }
+    const rendererType = this.column.options.cells?.renderer?.type;
+    if (rendererType && rendererType !== 'text') {
+        return;
+    }
+    const rowId = (this.row.id ??
+        projectionState.rowIds[this.row.index]);
+    if (rowId === void 0) {
+        return;
+    }
+    const rowState = projectionState.rowsById.get(rowId);
+    if (!rowState) {
+        return;
+    }
+    const cellElement = this.htmlElement;
+    const wrapper = document.createElement('div');
+    wrapper.className = TreeViewGlobals.classNames.tree;
+    wrapper.style.setProperty(TreeViewGlobals.cssVariables.depth, String(rowState.depth));
+    const toggleContainer = document.createElement('span');
+    toggleContainer.className = TreeViewGlobals.classNames.toggle;
+    if (rowState.hasChildren) {
+        const toggleButton = document.createElement('button');
+        toggleButton.type = 'button';
+        toggleButton.className = Grid_Core_Globals.getClassName('icon');
+        toggleButton.setAttribute('aria-label', rowState.isExpanded ? 'Collapse row' : 'Expand row');
+        toggleButton.setAttribute('aria-expanded', rowState.isExpanded ? 'true' : 'false');
+        toggleButton.setAttribute('tabindex', '-1');
+        toggleButton.setAttribute(treeToggleAttribute, '');
+        const toggleIcon = createGridIcon('chevronRight', grid.options?.rendering?.icons);
+        toggleIcon.classList.add(TreeViewGlobals.classNames.toggleIcon);
+        toggleIcon.setAttribute('aria-hidden', 'true');
+        toggleButton.appendChild(toggleIcon);
+        toggleContainer.appendChild(toggleButton);
+    }
+    const valueContainer = document.createElement('span');
+    valueContainer.className = TreeViewGlobals.classNames.value;
+    const pathDisplayValue = getPathSegmentDisplayValue(this.value, this.column.id, options);
+    if (!defined(this.column.options.cells?.format) &&
+        !defined(this.column.options.cells?.formatter) &&
+        defined(pathDisplayValue)) {
+        cellElement.textContent = '';
+        valueContainer.textContent = pathDisplayValue;
+    }
+    else {
+        while (cellElement.firstChild) {
+            valueContainer.appendChild(cellElement.firstChild);
+        }
+    }
+    wrapper.appendChild(toggleContainer);
+    wrapper.appendChild(valueContainer);
+    cellElement.appendChild(wrapper);
+}
+/* *
+ *
+ *  Default export
+ *
+ * */
+/* harmony default export */ const TreeViewComposition = ({
+    compose: TreeViewComposition_compose
+});
+
 ;// ./code/grid/es-modules/Grid/Pro/CellRendering/CellContentPro.js
 /* *
  *
@@ -25282,7 +32439,7 @@ function PaginationComposition_compose(PaginationClass) {
  *
  *
  *  Authors:
- *  - Dawid Dragula
+ *  - Dawid Draguła
  *
  * */
 
@@ -25329,7 +32486,7 @@ class CellContentPro extends CellContent_CellContent {
  *
  *
  *  Authors:
- *  - Dawid Dragula
+ *  - Dawid Draguła
  *
  * */
 
@@ -25633,7 +32790,7 @@ class CSVConverter extends Converters_DataConverter {
         }, linesCount = lines.length;
         for (let i = 0; i < linesCount; i++) {
             let inStr = false, c, cn, cl, token = '';
-            // We should be able to detect dateformats within 13 rows
+            // We should be able to detect dateFormats within 13 rows
             if (i > 13) {
                 break;
             }
@@ -26728,7 +33885,7 @@ Connectors_DataConnector.registerType('HTMLTable', HTMLTableConnector);
  *
  *
  *  Authors:
- *  - Pawel Lysy
+ *  - Paweł Lysy
  *  - Kamil Kubik
  *
  * */
@@ -26969,7 +34126,7 @@ Converters_DataConverter.registerType('JSON', JSONConverter);
  *
  *
  *  Authors:
- *  - Pawel Lysy
+ *  - Paweł Lysy
  *  - Kamil Kubik
  *
  * */
@@ -27127,7 +34284,7 @@ Connectors_DataConnector.registerType('JSON', JSONConnector);
  *
  *  Authors:
  *  - Sophie Bremer
- *  - Dawid Dragula
+ *  - Dawid Draguła
  *
  * */
 
@@ -27477,7 +34634,7 @@ Modifiers_DataModifier.registerType('Invert', InvertModifier);
  *
  *
  *  Authors:
- *  - Dawid Dragula
+ *  - Dawid Draguła
  *
  * */
 
@@ -27552,7 +34709,7 @@ registerRenderer('text', TextRenderer);
  *
  *
  *  Authors:
- *  - Dawid Dragula
+ *  - Dawid Draguła
  *  - Sebastian Bochan
  *
  * */
@@ -27676,7 +34833,7 @@ class CheckboxContent extends CellRendering_CellContentPro {
  *
  *
  *  Authors:
- *  - Dawid Dragula
+ *  - Dawid Draguła
  *  - Sebastian Bochan
  *
  * */
@@ -27742,7 +34899,7 @@ registerRenderer('checkbox', CheckboxRenderer);
  *
  *
  *  Authors:
- *  - Dawid Dragula
+ *  - Dawid Draguła
  *  - Sebastian Bochan
  *
  * */
@@ -27919,7 +35076,7 @@ class SelectContent extends CellRendering_CellContentPro {
  *
  *
  *  Authors:
- *  - Dawid Dragula
+ *  - Dawid Draguła
  *  - Sebastian Bochan
  *
  * */
@@ -27986,7 +35143,7 @@ registerRenderer('select', SelectRenderer);
  *
  *
  *  Authors:
- *  - Dawid Dragula
+ *  - Dawid Draguła
  *  - Sebastian Bochan
  *
  * */
@@ -28157,7 +35314,7 @@ class TextInputContent extends CellRendering_CellContentPro {
  *
  *
  *  Authors:
- *  - Dawid Dragula
+ *  - Dawid Draguła
  *  - Sebastian Bochan
  *
  * */
@@ -28223,7 +35380,7 @@ registerRenderer('textInput', TextInputRenderer);
  *
  *
  *  Authors:
- *  - Dawid Dragula
+ *  - Dawid Draguła
  *
  * */
 
@@ -28372,7 +35529,7 @@ class DateInputContentBase extends CellRendering_CellContentPro {
  *
  *
  *  Authors:
- *  - Dawid Dragula
+ *  - Dawid Draguła
  *  - Sebastian Bochan
  *
  * */
@@ -28413,7 +35570,7 @@ class DateInputContent extends ContentTypes_DateInputContentBase {
  *
  *
  *  Authors:
- *  - Dawid Dragula
+ *  - Dawid Draguła
  *  - Sebastian Bochan
  *
  * */
@@ -28479,7 +35636,7 @@ registerRenderer('dateInput', DateInputRenderer);
  *
  *
  *  Authors:
- *  - Dawid Dragula
+ *  - Dawid Draguła
  *
  * */
 
@@ -28519,7 +35676,7 @@ class DateTimeInputContent extends ContentTypes_DateInputContentBase {
  *
  *
  *  Authors:
- *  - Dawid Dragula
+ *  - Dawid Draguła
  *
  * */
 
@@ -28584,7 +35741,7 @@ registerRenderer('dateTimeInput', DateTimeInputRenderer);
  *
  *
  *  Authors:
- *  - Dawid Dragula
+ *  - Dawid Draguła
  *
  * */
 
@@ -28627,7 +35784,7 @@ class TimeInputContent extends ContentTypes_DateInputContentBase {
  *
  *
  *  Authors:
- *  - Dawid Dragula
+ *  - Dawid Draguła
  *
  * */
 
@@ -28692,7 +35849,7 @@ registerRenderer('timeInput', TimeInputRenderer);
  *
  *
  *  Authors:
- *  - Dawid Dragula
+ *  - Dawid Draguła
  *  - Sebastian Bochan
  *
  * */
@@ -28854,7 +36011,7 @@ SparklineContent.defaultChartOptions = {
  *
  *
  *  Authors:
- *  - Dawid Dragula
+ *  - Dawid Draguła
  *  - Sebastian Bochan
  *
  * */
@@ -29150,97 +36307,6 @@ registerRenderer('numberInput', NumberInputRenderer);
  * */
 /* harmony default export */ const Renderers_NumberInputRenderer = ((/* unused pure expression or super */ null && (NumberInputRenderer)));
 
-;// ./code/grid/es-modules/Grid/Core/Data/DataProvider.js
-/* *
- *
- *  Data Provider abstract class
- *
- *  (c) 2020-2025 Highsoft AS
- *
- *  License: www.highcharts.com/license
- *
- *  !!!!!!! SOURCE GETS TRANSPILED BY TYPESCRIPT. EDIT TS FILE ONLY. !!!!!!!
- *
- *  Authors:
- *  - Dawid Dragula
- *
- * */
-
-
-/**
- * Base class for Grid data providers.
- *
- * Data providers are responsible for serving data to the grid, applying query
- * modifiers and persisting edits.
- */
-class DataProvider {
-    /* *
-     *
-     *  Constructor
-     *
-     * */
-    constructor(queryingController, options) {
-        this.querying = queryingController;
-        this.options = options;
-    }
-    /* *
-     *
-     *  Methods
-     *
-     * */
-    /**
-     * Initializes the data provider.
-     */
-    init() {
-        return Promise.resolve();
-    }
-    /**
-     * Returns the number of items before pagination has been applied.
-     */
-    async getPrePaginationRowCount() {
-        return await this.getRowCount();
-    }
-    /**
-     * Helper method to assume the data type of a column based on the sample
-     * of the column data.
-     *
-     * @param columnSample
-     * The sample of the column data to determine the data type from.
-     *
-     * @param columnId
-     * The id of the column to determine the data type for.
-     */
-    static assumeColumnDataType(columnSample, columnId) {
-        for (let i = 0, iEnd = columnSample.length; i < iEnd; ++i) {
-            if (!defined(columnSample[i])) {
-                // If the data is null or undefined, we should look
-                // at the next value to determine the type.
-                continue;
-            }
-            switch (typeof columnSample[i]) {
-                case 'number':
-                    return 'number';
-                case 'boolean':
-                    return 'boolean';
-                default:
-                    return 'string';
-            }
-        }
-        // eslint-disable-next-line no-console
-        console.warn(`Column "${columnId}" sample does not contain any defined ` +
-            'values; defaulting dataType to "string". Set `dataType` option ' +
-            'for the column to determine the data type and avoid unnecessary ' +
-            'column scanning.');
-        return 'string';
-    }
-}
-/* *
- *
- * Default Export
- *
- * */
-/* harmony default export */ const Data_DataProvider = ((/* unused pure expression or super */ null && (DataProvider)));
-
 ;// ./code/grid/es-modules/Grid/Core/Data/LocalDataProvider.js
 /* *
  *
@@ -29253,7 +36319,7 @@ class DataProvider {
  *  !!!!!!! SOURCE GETS TRANSPILED BY TYPESCRIPT. EDIT TS FILE ONLY. !!!!!!!
  *
  *  Authors:
- *  - Dawid Dragula
+ *  - Dawid Draguła
  *
  * */
 
@@ -29324,25 +36390,7 @@ class LocalDataProvider extends DataProvider {
             });
             this.dataTableEventDestructors.push(fn);
         }
-        const idColId = this.options.idColumn;
-        if (idColId) {
-            const idColumn = table.getColumn(idColId, true);
-            if (!idColumn) {
-                throw new Error(`Column "${idColId}" not found in table.`);
-            }
-            const map = new Map();
-            for (let i = 0, len = idColumn.length; i < len; ++i) {
-                const value = idColumn[i];
-                if (!isString(value) && !Utilities_isNumber(value)) {
-                    throw new Error('idColumn must contain only string or number values.');
-                }
-                map.set(value, i);
-            }
-            if (map.size !== idColumn.length) {
-                throw new Error('idColumn must contain unique values.');
-            }
-            this.originalRowIndexesMap = map;
-        }
+        this.originalRowIndexesMap = this.createOriginalRowIndexesMap();
     }
     async handleTableChange(e) {
         this.querying.shouldBeUpdated = true;
@@ -29423,11 +36471,17 @@ class LocalDataProvider extends DataProvider {
      * The local (presentation table) row index to get the row ID for.
      */
     async getRowId(rowIndex) {
+        const idColId = this.options.idColumn;
+        if (idColId) {
+            const rawId = this.presentationTable?.getCell(idColId, rowIndex);
+            if (isString(rawId) || Utilities_isNumber(rawId)) {
+                return Promise.resolve(rawId);
+            }
+        }
         const originalRowIndex = await this.getOriginalRowIndexFromLocal(rowIndex);
         if (!defined(originalRowIndex) || !this.dataTable) {
             return Promise.resolve(void 0);
         }
-        const idColId = this.options.idColumn;
         if (!idColId) {
             return Promise.resolve(originalRowIndex);
         }
@@ -29465,12 +36519,10 @@ class LocalDataProvider extends DataProvider {
         return Promise.resolve(this.presentationTable?.getOriginalRowIndex(localRowIndex));
     }
     /**
-     * Returns the local (presentation table) row index for a given original
-     * data table row index.
+     * Returns the local row index for a given original row index.
      *
      * @param originalRowIndex
-     * The original data table row index to get the presentation table row index
-     * for.
+     * The original row index to get the local row index for.
      */
     getLocalRowIndexFromOriginal(originalRowIndex) {
         return Promise.resolve(this.presentationTable?.getLocalRowIndex(originalRowIndex));
@@ -29487,21 +36539,17 @@ class LocalDataProvider extends DataProvider {
     getValue(columnId, rowIndex) {
         return Promise.resolve(this.presentationTable?.getCell(columnId, rowIndex));
     }
-    async setValue(value, columnId, rowId) {
-        const localRowIndex = await this.getRowIndex(rowId);
-        if (!defined(localRowIndex)) {
+    setValue(value, columnId, rowId) {
+        const originalIndex = this.resolveOriginalRowIndex(rowId);
+        if (originalIndex === void 0) {
             // eslint-disable-next-line no-console
             console.error('[setValue] Wrong row ID:', rowId);
-            return;
+            return Promise.resolve();
         }
-        const rowIndex = await this.getOriginalRowIndexFromLocal(localRowIndex);
-        if (!defined(rowIndex)) {
-            // eslint-disable-next-line no-console
-            console.error('[setValue] Wrong local row index:', localRowIndex);
-            return;
-        }
-        this.dataTable?.setCell(columnId, rowIndex, value, { fromGrid: true });
-        return;
+        this.dataTable?.setCell(columnId, originalIndex, value, {
+            fromGrid: true
+        });
+        return Promise.resolve();
     }
     /**
      * Applies querying modifiers and updates the presentation table.
@@ -29524,6 +36572,17 @@ class LocalDataProvider extends DataProvider {
         else {
             interTable = originalDataTable.getModified();
         }
+        const grid = this.querying.grid;
+        if ('treeView' in grid && grid.treeView) {
+            try {
+                grid.treeView.sync();
+                interTable = grid.treeView.projectTable(interTable);
+            }
+            catch (error) {
+                // eslint-disable-next-line no-console
+                console.error(error.message);
+            }
+        }
         this.prePaginationRowCount = interTable.rowCount;
         // Pagination modifier
         const paginationModifier = controller.pagination.createModifier(interTable.rowCount);
@@ -29533,6 +36592,37 @@ class LocalDataProvider extends DataProvider {
             interTable = interTable.getModified();
         }
         this.presentationTable = interTable;
+    }
+    createOriginalRowIndexesMap() {
+        const idColId = this.options.idColumn;
+        const table = this.dataTable;
+        if (!idColId || !table) {
+            return;
+        }
+        const idColumn = table.getColumn(idColId, true);
+        if (!idColumn) {
+            throw new Error(`Column "${idColId}" not found in table.`);
+        }
+        const map = new Map();
+        for (let i = 0, len = idColumn.length; i < len; ++i) {
+            const value = idColumn[i];
+            if (!isString(value) && !Utilities_isNumber(value)) {
+                throw new Error('idColumn must contain only string or number values.');
+            }
+            map.set(value, i);
+        }
+        if (map.size !== idColumn.length) {
+            throw new Error('idColumn must contain unique values.');
+        }
+        return map;
+    }
+    resolveOriginalRowIndex(rowId) {
+        if (this.originalRowIndexesMap) {
+            return this.originalRowIndexesMap.get(rowId);
+        }
+        if (Utilities_isNumber(rowId)) {
+            return rowId;
+        }
     }
     destroy() {
         this.clearDataTableEvents();
@@ -29595,7 +36685,7 @@ DataProviderRegistry.registerDataProvider('local', LocalDataProvider);
  *  See www.highcharts.com/license
  *
  *  Authors:
- *  - Dawid Dragula
+ *  - Dawid Draguła
  *
  * */
 
@@ -29767,7 +36857,7 @@ function hashString(str) {
  *  !!!!!!! SOURCE GETS TRANSPILED BY TYPESCRIPT. EDIT TS FILE ONLY. !!!!!!!
  *
  *  Authors:
- *  - Dawid Dragula
+ *  - Dawid Draguła
  *
  * */
 
@@ -29909,7 +36999,8 @@ const defaultParseResponse = async (res) => {
     return {
         columns: data || {},
         totalRowCount: meta?.totalRowCount || 0,
-        rowIds: meta?.rowIds
+        rowIds: meta?.rowIds,
+        pageSize: meta?.pageSize
     };
 };
 /**
@@ -30025,7 +37116,7 @@ async function dataSourceFetch(options, state) {
  *  !!!!!!! SOURCE GETS TRANSPILED BY TYPESCRIPT. EDIT TS FILE ONLY. !!!!!!!
  *
  *  Authors:
- *  - Dawid Dragula
+ *  - Dawid Draguła
  *
  * */
 
@@ -30080,10 +37171,20 @@ class RemoteDataProvider extends DataProvider {
          */
         this.pendingChunks = null;
         /**
-         * Reverse lookup map from rowId to { chunkIndex, localIndex } for O(1)
+         * Reverse lookup map from rowId to { offset, localIndex } for O(1)
          * lookup in getRowIndex.
          */
         this.rowIdToChunkInfo = null;
+        /**
+         * Effective chunk size reported by the backend for the current query.
+         * When defined, it takes precedence over the configured chunk size.
+         */
+        this.effectiveChunkSize = null;
+        /**
+         * Epoch used to invalidate stale in-flight requests when the chunk layout
+         * changes (for example when the backend clamps the requested page size).
+         */
+        this.chunkLayoutEpoch = 0;
         /**
          * Fingerprint of the last applied query; used to avoid clearing caches
          * when the query did not actually change.
@@ -30099,17 +37200,25 @@ class RemoteDataProvider extends DataProvider {
         this.pendingControllers = new Set();
     }
     /**
-     * Returns the effective chunk size.
-     * When pagination is enabled, uses the page size as chunk size,
-     * so that one chunk = one page.
+     * Returns the configured chunk size for the current query.
+     * When pagination is enabled, one chunk always equals one page.
      */
-    get maxChunkSize() {
+    get configuredChunkSize() {
         const pagination = this.querying.pagination;
         // When pagination is enabled, chunk size = page size
         if (pagination.enabled) {
             return pagination.currentPageSize;
         }
         return this.options.chunkSize ?? RemoteDataProvider.DEFAULT_CHUNK_SIZE;
+    }
+    /**
+     * Returns the effective chunk size used for index calculations.
+     */
+    get activeChunkSize() {
+        if (this.querying.pagination.enabled) {
+            return this.querying.pagination.currentPageSize;
+        }
+        return this.effectiveChunkSize ?? this.configuredChunkSize;
     }
     /* *
      *
@@ -30131,7 +37240,7 @@ class RemoteDataProvider extends DataProvider {
         if (this.querying.pagination.enabled) {
             return await this.fetchChunk(0);
         }
-        const chunkIndex = Math.floor(rowIndex / this.maxChunkSize);
+        const chunkIndex = Math.floor(rowIndex / this.activeChunkSize);
         return await this.fetchChunk(chunkIndex);
     }
     /**
@@ -30148,7 +37257,7 @@ class RemoteDataProvider extends DataProvider {
         if (this.querying.pagination.enabled) {
             return 0;
         }
-        return Math.floor(rowIndex / this.maxChunkSize);
+        return Math.floor(rowIndex / this.activeChunkSize);
     }
     /**
      * Gets the local index within the cached chunk data.
@@ -30158,17 +37267,47 @@ class RemoteDataProvider extends DataProvider {
      * @param rowIndex
      * The row index passed from the grid.
      *
+     * @param chunk
+     * The data chunk containing the row. Optional, used to optimize index
+     *
      * @returns
      * The local index within the chunk.
      */
-    getLocalIndexInChunk(rowIndex) {
+    getLocalIndexInChunk(rowIndex, chunk) {
         // When pagination enabled, rowIndex is already page-relative
         if (this.querying.pagination.enabled) {
             return rowIndex;
         }
-        // Standard chunking: calculate local offset within chunk
-        const chunkIndex = Math.floor(rowIndex / this.maxChunkSize);
-        return rowIndex - (chunkIndex * this.maxChunkSize);
+        return rowIndex - (chunk?.offset ??
+            this.getChunkIndexForRow(rowIndex) * this.activeChunkSize);
+    }
+    /**
+     * Clears cached chunk data and reverse lookup maps.
+     */
+    clearChunkCache() {
+        this.dataChunks = null;
+        this.pendingChunks = null;
+        this.rowIdToChunkInfo = null;
+    }
+    /**
+     * Adopts the effective chunk size reported by the backend for the current
+     * query and invalidates chunk caches that were built with the previous
+     * layout.
+     *
+     * @param chunkSize
+     * The chunk size confirmed by the backend.
+     */
+    adoptEffectiveChunkSize(chunkSize) {
+        if (this.querying.pagination.enabled ||
+            this.effectiveChunkSize === chunkSize) {
+            return;
+        }
+        this.effectiveChunkSize = chunkSize;
+        this.chunkLayoutEpoch++;
+        if (this.requestPolicy === 'latest') {
+            this.abortPendingRequests();
+        }
+        this.clearChunkCache();
     }
     /**
      * Evicts the least recently used chunk if the cache limit is reached.
@@ -30221,44 +37360,52 @@ class RemoteDataProvider extends DataProvider {
         if (!this.pendingChunks) {
             this.pendingChunks = new Map();
         }
-        if (this.pendingChunks.has(chunkIndex)) {
-            // Return the existing pending request to avoid duplicate fetches
-            const pendingRequest = this.pendingChunks.get(chunkIndex);
-            return pendingRequest;
+        const pendingRequest = this.pendingChunks.get(chunkIndex);
+        if (pendingRequest) {
+            if (pendingRequest.requestEpoch === this.requestEpoch &&
+                pendingRequest.chunkLayoutEpoch === this.chunkLayoutEpoch) {
+                // Return the existing pending request to avoid
+                // duplicate fetches
+                return pendingRequest.promise;
+            }
+            this.pendingChunks.delete(chunkIndex);
         }
         // Start a new fetch
         const requestEpoch = this.requestEpoch;
+        const chunkLayoutEpoch = this.chunkLayoutEpoch;
         const controller = this.requestPolicy === 'latest' ?
             new AbortController() :
             null;
         if (controller) {
             this.pendingControllers.add(controller);
         }
+        let requestOffset = 0;
+        // eslint-disable-next-line prefer-const
+        let pendingChunkRequest;
         const fetchPromise = (async () => {
             try {
                 const pagination = this.querying.pagination;
-                let offset;
                 let limit;
                 if (pagination.enabled) {
                     // When pagination is enabled, fetch the current page
-                    offset = (pagination.currentPage - 1) *
+                    requestOffset = (pagination.currentPage - 1) *
                         pagination.currentPageSize;
                     limit = pagination.currentPageSize;
                 }
                 else {
                     // Standard chunking
-                    offset = chunkIndex * this.maxChunkSize;
-                    limit = this.maxChunkSize;
+                    requestOffset = chunkIndex * this.activeChunkSize;
+                    limit = this.activeChunkSize;
                 }
                 let result;
                 const { fetchCallback, dataSource } = this.options;
                 if (fetchCallback) {
-                    result = await fetchCallback.call(this, this.querying, offset, limit, controller?.signal);
+                    result = await fetchCallback.call(this, this.querying, requestOffset, limit, controller?.signal);
                 }
                 else if (dataSource) {
                     result = await dataSourceFetch(dataSource, {
                         query: this.querying,
-                        offset,
+                        offset: requestOffset,
                         limit,
                         signal: controller?.signal
                     });
@@ -30268,12 +37415,26 @@ class RemoteDataProvider extends DataProvider {
                         '`fetchCallback` must be provided in options.');
                 }
                 if (requestEpoch !== this.requestEpoch ||
+                    chunkLayoutEpoch !== this.chunkLayoutEpoch ||
                     controller?.signal.aborted) {
                     return {
                         index: chunkIndex,
+                        offset: requestOffset,
                         data: {},
                         rowIds: []
                     };
+                }
+                if (!pagination.enabled &&
+                    typeof result.pageSize === 'number' &&
+                    isFinite(result.pageSize) &&
+                    result.pageSize > 0 &&
+                    result.pageSize !== this.activeChunkSize) {
+                    const effectiveChunkSize = Math.floor(result.pageSize);
+                    const expectedOffset = chunkIndex * effectiveChunkSize;
+                    this.adoptEffectiveChunkSize(effectiveChunkSize);
+                    if (requestOffset !== expectedOffset) {
+                        return await this.fetchChunk(chunkIndex);
+                    }
                 }
                 this.columnIds = Object.keys(result.columns);
                 this.prePaginationRowCount = result.totalRowCount;
@@ -30294,13 +37455,17 @@ class RemoteDataProvider extends DataProvider {
                     idColumn = result.columns[idColId];
                 }
                 if (!idColumn) {
-                    idColumn = result.rowIds ?? Array.from({ length: chunkRowCount }, (_, i) => i + offset);
+                    idColumn = result.rowIds ?? Array.from({ length: chunkRowCount }, (_, i) => i + requestOffset);
                 }
                 const chunk = {
                     index: chunkIndex,
+                    offset: requestOffset,
                     data: result.columns,
                     rowIds: idColumn
                 };
+                if (!this.dataChunks) {
+                    this.dataChunks = new Map();
+                }
                 // Evict LRU chunk if limit is reached
                 this.evictLRUChunkIfNeeded();
                 // DataChunks guaranteed to exist (checked at start)
@@ -30311,7 +37476,7 @@ class RemoteDataProvider extends DataProvider {
                 }
                 for (let i = 0; i < chunk.rowIds.length; i++) {
                     this.rowIdToChunkInfo.set(chunk.rowIds[i], {
-                        chunkIndex,
+                        offset: chunk.offset,
                         localIndex: i
                     });
                 }
@@ -30322,6 +37487,7 @@ class RemoteDataProvider extends DataProvider {
                     (err instanceof DOMException && err.name === 'AbortError')) {
                     return {
                         index: chunkIndex,
+                        offset: requestOffset,
                         data: {},
                         rowIds: []
                     };
@@ -30330,20 +37496,29 @@ class RemoteDataProvider extends DataProvider {
                 console.error('Error fetching data from remote server.\n', err);
                 return {
                     index: chunkIndex,
+                    offset: requestOffset,
                     data: {},
                     rowIds: []
                 };
             }
             finally {
                 // Remove from pending requests when done (success or error)
-                this.pendingChunks?.delete(chunkIndex);
+                if (pendingChunkRequest &&
+                    this.pendingChunks?.get(chunkIndex) === pendingChunkRequest) {
+                    this.pendingChunks.delete(chunkIndex);
+                }
                 if (controller) {
                     this.pendingControllers.delete(controller);
                 }
             }
         })();
         // Store the pending request
-        this.pendingChunks.set(chunkIndex, fetchPromise);
+        pendingChunkRequest = {
+            requestEpoch,
+            chunkLayoutEpoch,
+            promise: fetchPromise
+        };
+        this.pendingChunks.set(chunkIndex, pendingChunkRequest);
         return fetchPromise;
     }
     async getColumnIds() {
@@ -30356,7 +37531,7 @@ class RemoteDataProvider extends DataProvider {
     }
     async getRowId(rowIndex) {
         const chunk = await this.getChunkForRowIndex(rowIndex);
-        const localIndex = this.getLocalIndexInChunk(rowIndex);
+        const localIndex = this.getLocalIndexInChunk(rowIndex, chunk);
         if (localIndex < chunk.rowIds.length) {
             return chunk.rowIds[localIndex];
         }
@@ -30370,8 +37545,7 @@ class RemoteDataProvider extends DataProvider {
                 // When pagination is enabled, return page-relative index
                 return Promise.resolve(info.localIndex);
             }
-            // Global index: chunk offset + local index
-            return Promise.resolve(info.chunkIndex * this.maxChunkSize + info.localIndex);
+            return Promise.resolve(info.offset + info.localIndex);
         }
         // Not found in cached chunks - return undefined
         // (the chunk containing this rowId hasn't been fetched yet)
@@ -30405,7 +37579,7 @@ class RemoteDataProvider extends DataProvider {
         // Calculate local index within the chunk.
         // When pagination is enabled, rowIndex is already page-relative.
         // When disabled, need to calculate from global index.
-        const localIndex = this.getLocalIndexInChunk(rowIndex);
+        const localIndex = this.getLocalIndexInChunk(rowIndex, chunk);
         // Get the column from chunk data
         const column = chunk.data[columnId];
         if (!column || localIndex >= column.length) {
@@ -30455,7 +37629,7 @@ class RemoteDataProvider extends DataProvider {
         if (!chunk) {
             return;
         }
-        const localIndex = this.getLocalIndexInChunk(rowIndex);
+        const localIndex = this.getLocalIndexInChunk(rowIndex, chunk);
         const rowObject = {};
         for (const columnId of this.columnIds) {
             const column = chunk.data[columnId];
@@ -30487,12 +37661,12 @@ class RemoteDataProvider extends DataProvider {
             this.abortPendingRequests();
         }
         // Clear cached chunks when query changes.
-        this.dataChunks = null;
-        this.pendingChunks = null;
-        this.rowIdToChunkInfo = null;
+        this.clearChunkCache();
         this.columnIds = null;
         this.prePaginationRowCount = null;
         this.rowCount = null;
+        this.effectiveChunkSize = null;
+        this.chunkLayoutEpoch++;
         // When pagination is enabled, update the total items count
         // for the pagination controller (used to calculate total pages).
         if (this.querying.pagination.enabled) {
@@ -30502,20 +37676,24 @@ class RemoteDataProvider extends DataProvider {
     }
     destroy() {
         this.abortPendingRequests();
-        this.dataChunks = null;
-        this.pendingChunks = null;
-        this.rowIdToChunkInfo = null;
+        this.clearChunkCache();
         this.columnIds = null;
         this.prePaginationRowCount = null;
         this.rowCount = null;
         this.lastQueryFingerprint = null;
         this.requestEpoch++;
+        this.effectiveChunkSize = null;
+        this.chunkLayoutEpoch++;
     }
 }
 RemoteDataProvider.DEFAULT_CHUNK_SIZE = 50;
 DataProviderRegistry.registerDataProvider('remote', RemoteDataProvider);
 
 ;// ./code/grid/es-modules/masters/grid-pro.src.js
+
+
+
+
 
 
 
@@ -30570,8 +37748,9 @@ DataProviderRegistry.registerDataProvider('remote', RemoteDataProvider);
 
 
 
-// Cell Renderers
 
+
+// Cell Renderers
 
 
 
@@ -30620,6 +37799,7 @@ const G = {
     SvgIcons: SvgIcons,
     Table: Table_Table,
     TableCell: Body_TableCell,
+    TableRow: Body_TableRow,
     Templating: Core_Templating,
     version: Grid_Core_Globals.version,
     win: Grid_Core_Globals.win
@@ -30631,6 +37811,9 @@ ExportingComposition.compose(G.Grid);
 ValidatorComposition.compose(G.Table);
 CellRenderersComposition.compose(G.Column);
 PaginationComposition.compose(G.Pagination);
+LicenseValidationComposition.compose(G.Grid);
+RowPinningComposition.compose(G.Grid, G.Table, G.Column, G.TableRow, G.TableCell);
+TreeViewComposition.compose(G.Grid, G.Table, G.TableCell);
 ResponsiveComposition.compose(G.Grid);
 /* *
  *

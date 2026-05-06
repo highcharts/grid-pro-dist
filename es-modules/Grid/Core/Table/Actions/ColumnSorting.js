@@ -9,7 +9,7 @@
  *
  *
  *  Authors:
- *  - Dawid Dragula
+ *  - Dawid Draguła
  *  - Sebastian Bochan
  *
  * */
@@ -90,9 +90,8 @@ class ColumnSorting {
         this.column = column;
         this.headerCellElement = headerCellElement;
         this.addHeaderElementAttributes();
-        const sortingOptions = column.options.sorting;
-        const sortingEnabled = sortingOptions?.enabled ??
-            sortingOptions?.sortable;
+        const sortingEnabled = column.viewport.grid.columnPolicy
+            .isColumnSortingEnabled(column.id);
         if (sortingEnabled) {
             headerCellElement.classList.add(Globals.getClassName('columnSortable'));
         }
@@ -108,13 +107,12 @@ class ColumnSorting {
     addHeaderElementAttributes() {
         const col = this.column;
         const a11y = col.viewport.grid.accessibility;
-        const sortingOptions = col.options.sorting;
         const { currentSorting, currentSortings } = col.viewport.grid.querying.sorting;
         const sortedAscClassName = Globals.getClassName('columnSortedAsc');
         const sortedDescClassName = Globals.getClassName('columnSortedDesc');
         const el = this.headerCellElement;
-        const sortingEnabled = sortingOptions?.enabled ??
-            sortingOptions?.sortable;
+        const sortingEnabled = col.viewport.grid.columnPolicy
+            .isColumnSortingEnabled(col.id);
         const columnSorting = (currentSortings?.find((sorting) => sorting.columnId === col.id) ||
             (currentSorting?.columnId === col.id ?
                 currentSorting :

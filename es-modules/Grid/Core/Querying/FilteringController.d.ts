@@ -36,6 +36,16 @@ declare class FilteringController {
      */
     static mapOptionsToFilter(columnId: string, options: FilteringCondition): FilterCondition | undefined;
     /**
+     * Compares two serializable filter conditions produced from Grid options.
+     *
+     * @param left
+     * The current filter condition.
+     *
+     * @param right
+     * The next filter condition.
+     */
+    static filterConditionsEqual(left?: FilterCondition, right?: FilterCondition): boolean;
+    /**
      * Loads filtering options from the data grid options.
      */
     loadOptions(): void;

@@ -1,8 +1,7 @@
-import type TableRow from './Body/TableRow';
-import type DataTable from '../../../Data/DataTable';
 import type { RowId } from '../Data/DataProvider';
 import ColumnResizingMode from './ColumnResizing/ResizingMode.js';
 import Column from './Column.js';
+import TableRow from './Body/TableRow.js';
 import TableHeader from './Header/TableHeader.js';
 import Grid from '../Grid.js';
 import Cell from './Cell.js';
@@ -39,19 +38,32 @@ declare class Table {
      */
     rows: TableRow[];
     /**
+     * Additional rendered body sections composed into the table.
+     */
+    private readonly bodySections;
+    /**
      * The column distribution.
      */
     readonly columnResizing: ColumnResizingMode;
     /**
-     * The focus cursor position: [rowIndex, columnIndex] or `undefined` if the
-     * table cell is not focused.
+     * The focus cursor position or `undefined` if no table cell is focused.
      */
-    focusCursor?: [number, number];
+    focusCursor?: FocusCursor;
+    /**
+     * Pending focus target used while virtualization scrolls a body row into
+     * the render window.
+     */
+    pendingFocusCursor?: [number, number];
     /**
      * The only cell that is to be focusable using tab key - a table focus
      * entry point.
      */
     focusAnchorCell?: Cell;
+    /**
+     * Whether the current logical focus belongs to a body cell that has been
+     * detached from the DOM by virtualization.
+     */
+    private hasDetachedFocus;
     /**
      * The flag that indicates if the table rows are virtualized.
      */
@@ -60,6 +72,10 @@ declare class Table {
      * Cell context menu instance (lazy created).
      */
     private cellContextMenu?;
+    /**
+     * Whether the table body min-height was set by the grid.
+     */
+    private tbodyMinHeightManaged;
     /**
      * Constructs a new data grid table.
      *
@@ -71,17 +87,12 @@ declare class Table {
      */
     constructor(grid: Grid, tableElement: HTMLTableElement);
     /**
-     * The presentation version of the data table. It has applied modifiers
-     * and is ready to be rendered.
-     *
-     * @deprecated Use `grid.dataProvider` instead.
-     */
-    get dataTable(): DataTable | undefined;
-    /**
      * Initializes the table. Should be called after creation so that the table
      * can be asynchronously initialized.
      */
     init(): Promise<void>;
+    private addBodyEventListeners;
+    private removeBodyEventListeners;
     /**
      * Sets the minimum height of the table body.
      */
@@ -120,6 +131,22 @@ declare class Table {
      * Handles the scroll event.
      */
     private onScroll;
+    /**
+     * Handles document focus changes while a logically focused cell is
+     * temporarily detached by virtualization.
+     *
+     * @param e
+     * The focus event.
+     */
+    private onDocumentFocusIn;
+    /**
+     * Clears detached logical focus when the user interacts outside of the
+     * table while the focused cell is not rendered.
+     *
+     * @param e
+     * The pointer event.
+     */
+    private onDocumentPointerDown;
     /**
      * Delegated click handler for cells.
      * @param e Mouse event
@@ -181,6 +208,65 @@ declare class Table {
      */
     scrollToRow(index: number): void;
     /**
+     * Returns the top inset of the visible table body area. Composed modules
+     * can extend this via the `getViewportTopInset` event.
+     */
+    getViewportTopInset(): number;
+    /**
+     * Ensures that a row is fully visible inside the scrollable body.
+     *
+     * @param row
+     * The row to reveal.
+     */
+    ensureRowFullyVisible(row: TableRow): void;
+    /**
+     * Focuses a body cell by its row index in the rendered table order.
+     *
+     * @param rowIndex
+     * The target row index.
+     *
+     * @param columnIndex
+     * The target column index.
+     */
+    focusCellByRowIndex(rowIndex: number, columnIndex: number): void;
+    /**
+     * Marks the current logical focus as temporarily detached by
+     * virtualization.
+     */
+    preserveFocusDuringDetach(): void;
+    /**
+     * Returns whether the provided cell currently owns detached logical focus.
+     *
+     * @param rowId
+     * Target row ID.
+     *
+     * @param columnIndex
+     * Target column index.
+     */
+    hasDetachedFocusAt(rowId: RowId | undefined, columnIndex: number): boolean;
+    /**
+     * Clears detached logical focus state and optionally the logical focus
+     * cursor itself.
+     *
+     * @param clearFocusCursor
+     * Whether to also clear the logical focus cursor.
+     */
+    clearDetachedFocus(clearFocusCursor?: boolean): void;
+    /**
+     * Restores focus to a rendered body cell. Composed modules can prevent the
+     * default focus transfer via the `beforeRestoreCellFocus` event.
+     *
+     * @param cell
+     * Rendered body cell to focus.
+     *
+     * @param rowIndex
+     * Target row index in the rendered/projected order.
+     *
+     * @param columnIndex
+     * Target column index.
+     */
+    restoreRenderedCellFocus(cell: Cell | undefined, rowIndex: number, columnIndex: number): void;
+    /**
      * Destroys the grid table.
      */
     destroy(): void;
@@ -221,6 +307,21 @@ declare class Table {
      * The ID of the row.
      */
     getRow(id: RowId): TableRow | undefined;
+    syncAriaRowIndexes(): Promise<void>;
+    private focusCellFromCursor;
+}
+export interface FocusCursor {
+    rowId: RowId;
+    columnIndex: number;
+    bodySectionId?: string;
+}
+export interface TableBodySection {
+    id: string;
+    position: 'before' | 'after';
+    tbodyElement: HTMLElement;
+    getRows: () => TableRow[];
+    getRowByElement: (rowElement: HTMLElement) => TableRow | undefined;
+    getRowById: (rowId: RowId) => TableRow | undefined;
 }
 /**
  * Represents the metadata of the viewport state. It is used to save the
@@ -230,6 +331,16 @@ export interface ViewportStateMetadata {
     scrollTop: number;
     scrollLeft: number;
     columnResizing: ColumnResizingMode;
-    focusCursor?: [number, number];
+    focusCursor?: FocusCursor;
+}
+/**
+ * Event object emitted before focus is restored to a rendered body cell.
+ */
+export interface RestoreCellFocusEvent {
+    cell: Cell;
+    columnIndex: number;
+    rowIndex: number;
+    defaultPrevented?: boolean;
+    preventDefault?: () => void;
 }
 export default Table;

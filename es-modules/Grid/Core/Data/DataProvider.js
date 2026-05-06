@@ -9,7 +9,7 @@
  *  !!!!!!! SOURCE GETS TRANSPILED BY TYPESCRIPT. EDIT TS FILE ONLY. !!!!!!!
  *
  *  Authors:
- *  - Dawid Dragula
+ *  - Dawid Draguła
  *
  * */
 'use strict';
@@ -80,6 +80,19 @@ export class DataProvider {
             'column scanning.');
         return 'string';
     }
+}
+/**
+ * Returns whether the provider exposes `getDataTable`.
+ *
+ * @param provider
+ * Data provider instance to test.
+ *
+ * @returns
+ * `true` when provider exposes `getDataTable`.
+ */
+export function hasDataTableProvider(provider) {
+    return !!(provider &&
+        typeof provider.getDataTable === 'function');
 }
 /* *
  *

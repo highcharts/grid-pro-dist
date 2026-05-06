@@ -15,6 +15,8 @@ declare module '../Options' {
         /**
          * Allows setting a set of rules to apply for different screen or grid
          * sizes. Each rule specifies additional grid options.
+         *
+         * @sample grid-lite/demo/responsive-rules Responsive rules
          */
         responsive?: ResponsiveOptions;
     }

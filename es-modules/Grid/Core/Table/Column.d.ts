@@ -2,7 +2,7 @@ import type { IndividualColumnOptions } from '../Options';
 import type Cell from './Cell';
 import type CellContent from './CellContent/CellContent';
 import type HeaderCell from './Header/HeaderCell';
-import type { Column as DataTableColumn } from '../../../Data/DataTable';
+import type { CellType as DataTableCellType, Column as DataTableColumn } from '../../../Data/DataTable';
 import Table from './Table.js';
 import ColumnSorting from './Actions/ColumnSorting';
 import ColumnFiltering from './Actions/ColumnFiltering/ColumnFiltering.js';
@@ -75,6 +75,13 @@ export declare class Column {
      * Loads the data of the column from the viewport's data table.
      */
     loadData(): void;
+    /**
+     * Resolves the raw value for a table cell.
+     *
+     * @param cell
+     * The cell to resolve the value for.
+     */
+    getCellValue(cell: TableCell): Promise<DataTableCellType>;
     /**
      * Creates a cell content instance.
      *

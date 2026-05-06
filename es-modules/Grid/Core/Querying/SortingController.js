@@ -9,7 +9,7 @@
  *
  *
  *  Authors:
- *  - Dawid Dragula
+ *  - Dawid Draguła
  *
  * */
 'use strict';
@@ -93,15 +93,17 @@ class SortingController {
      * Returns the sorting options from the data grid options.
      */
     getSortingOptions() {
-        const grid = this.querying.grid, { columnOptionsMap } = grid;
-        if (!columnOptionsMap) {
-            return [];
-        }
-        const columnIDs = Object.keys(columnOptionsMap);
+        const grid = this.querying.grid;
+        const columnPolicy = grid.columnPolicy;
+        const columnIDs = columnPolicy.getColumnIds();
         const sortings = [];
         for (let i = 0, iEnd = columnIDs.length; i < iEnd; ++i) {
             const columnId = columnIDs[i];
-            const columnOptions = columnOptionsMap[columnId]?.options || {};
+            if (columnPolicy.isColumnUnbound(columnId)) {
+                continue;
+            }
+            const columnOptions = columnPolicy
+                .getIndividualColumnOptions(columnId) || {};
             const order = columnOptions.sorting?.order;
             if (order) {
                 sortings.push({
@@ -148,19 +150,31 @@ class SortingController {
      */
     createModifier() {
         const sortings = (this.currentSortings ||
-            (this.currentSorting ? [this.currentSorting] : [])).filter((sorting) => !!(sorting.columnId && sorting.order));
+            (this.currentSorting ? [this.currentSorting] : [])).filter((sorting) => !!(sorting.columnId &&
+            sorting.order &&
+            !this.querying.grid.columnPolicy.isColumnUnbound(sorting.columnId)));
         if (!sortings.length) {
             return;
         }
         const grid = this.querying.grid;
+        const sourceSortings = sortings
+            .map((sorting) => ({
+            ...sorting,
+            sourceColumnId: grid.columnPolicy.getColumnSourceId(sorting.columnId)
+        }))
+            .filter((sorting) => !!sorting.sourceColumnId);
+        if (!sourceSortings.length) {
+            return;
+        }
         const defaultCompare = grid.options?.columnDefaults?.sorting?.compare;
         return new SortModifier({
-            direction: sortings[0].order,
-            columns: sortings.map((sorting) => ({
-                column: sorting.columnId,
+            direction: sourceSortings[0].order,
+            columns: sourceSortings.map((sorting) => ({
+                column: sorting.sourceColumnId,
                 direction: sorting.order,
-                compare: grid.columnOptionsMap?.[sorting.columnId]
-                    ?.options?.sorting?.compare || defaultCompare
+                compare: grid.columnPolicy
+                    .getIndividualColumnOptions(sorting.columnId)
+                    ?.sorting?.compare || defaultCompare
             }))
         });
     }

@@ -6,12 +6,6 @@ declare module '../../Core/Axis/AxisOptions' {
         description?: AxisAccessibilityOptions['description'];
     }
 }
-declare module '../../Core/Options' {
-    interface Options {
-        /** @deprecated */
-        exposeElementToA11y?: SeriesAccessibilityOptions['exposeAsGroupOnly'];
-    }
-}
 declare module '../../Core/Series/SeriesOptions' {
     interface SeriesOptions {
         /**
@@ -27,6 +21,18 @@ declare module '../../Core/Series/SeriesOptions' {
          * @deprecated 8.0.0
          */
         description?: SeriesAccessibilityOptions['description'];
+        /**
+         * Deprecated. Use
+         * [plotOptions.series.accessibility.exposeAsGroupOnly](#plotOptions.series.accessibility.exposeAsGroupOnly)
+         * instead.
+         *
+         * Expose only the series element to screen readers, not its points.
+         *
+         * @since      5.0.0
+         * @requires   modules/accessibility
+         * @deprecated 8.0.0
+         */
+        exposeElementToA11y?: SeriesAccessibilityOptions['exposeAsGroupOnly'];
         /**
          * Deprecated. Use
          * [plotOptions.series.accessibility.point.descriptionFormatter](#plotOptions.series.accessibility.point.descriptionFormatter)

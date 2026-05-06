@@ -9,7 +9,7 @@
  *
  *
  *  Authors:
- *  - Dawid Dragula
+ *  - Dawid Draguła
  *
  * */
 'use strict';
@@ -91,7 +91,11 @@ class QueryingController {
      * Apply all modifiers to the data provider.
      */
     async modifyData() {
-        await this.grid.dataProvider?.applyQuery();
+        const dataProvider = this.grid.dataProvider;
+        if (!dataProvider) {
+            return;
+        }
+        await dataProvider.applyQuery();
         this.shouldBeUpdated = false;
     }
 }

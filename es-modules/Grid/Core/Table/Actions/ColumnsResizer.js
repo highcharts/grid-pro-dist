@@ -9,7 +9,7 @@
  *
  *
  *  Authors:
- *  - Dawid Dragula
+ *  - Dawid Draguła
  *  - Sebastian Bochan
  *
  * */
@@ -38,22 +38,35 @@ class ColumnsResizer {
          */
         this.isResizing = false;
         /**
-         * The handles and their mouse down event listeners.
+         * The handles and their drag event listeners.
          */
         this.handles = [];
         /**
-         * Handles the mouse move event on the document.
+         * Handles the drag move event on the document.
          *
          * @param e
-         * The mouse event.
+         * The drag event.
          *
          * @internal
          */
-        this.onDocumentMouseMove = (e) => {
+        this.onDocumentDragMove = (e) => {
             if (!this.draggedResizeHandle || !this.draggedColumn) {
                 return;
             }
-            const diff = e.pageX - (this.dragStartX || 0);
+            /*
+             * In iOS, a touchmove event with e.touches[0].pageX === 0 can fire
+             * while holding the finger in place. Ignore it to avoid collapsing the
+             * column to its minimum width.
+             */
+            if ('touches' in e && e.touches[0]?.pageX === 0) {
+                return;
+            }
+            const pageX = ColumnsResizer.getPageX(e);
+            if (pageX === void 0) {
+                return;
+            }
+            ColumnsResizer.preventTouchDefault(e);
+            const diff = pageX - (this.dragStartX || 0);
             const vp = this.viewport;
             vp.columnResizing.resize(this, diff);
             vp.reflow();
@@ -63,9 +76,9 @@ class ColumnsResizer {
             });
         };
         /**
-         * Handles the mouse up event on the document.
+         * Handles the drag end event on the document.
          */
-        this.onDocumentMouseUp = () => {
+        this.onDocumentDragEnd = () => {
             this.draggedColumn?.header?.htmlElement?.classList.remove(Globals.getClassName('resizedColumn'));
             if (!this.draggedResizeHandle?.matches(':hover')) {
                 this.draggedResizeHandle?.classList.remove('hovered');
@@ -80,8 +93,11 @@ class ColumnsResizer {
             });
         };
         this.viewport = viewport;
-        document.addEventListener('mousemove', this.onDocumentMouseMove);
-        document.addEventListener('mouseup', this.onDocumentMouseUp);
+        document.addEventListener('mousemove', this.onDocumentDragMove);
+        document.addEventListener('mouseup', this.onDocumentDragEnd);
+        document.addEventListener('touchmove', this.onDocumentDragMove, { passive: false });
+        document.addEventListener('touchend', this.onDocumentDragEnd);
+        document.addEventListener('touchcancel', this.onDocumentDragEnd);
     }
     /* *
      *
@@ -108,6 +124,29 @@ class ColumnsResizer {
         }
     }
     /**
+     * Returns the page X coordinate for a mouse or touch event.
+     *
+     * @param e
+     * The drag event.
+     */
+    static getPageX(e) {
+        if ('touches' in e) {
+            return e.touches[0]?.pageX ?? e.changedTouches[0]?.pageX;
+        }
+        return e.pageX;
+    }
+    /**
+     * Prevents touch scrolling from interrupting column dragging.
+     *
+     * @param e
+     * The drag event.
+     */
+    static preventTouchDefault(e) {
+        if ('touches' in e && e.cancelable) {
+            e.preventDefault();
+        }
+    }
+    /**
      * Adds event listeners to the handle.
      *
      * @param handle
@@ -117,12 +156,18 @@ class ColumnsResizer {
      * The column the handle belongs to.
      */
     addHandleListeners(handle, column) {
-        const onHandleMouseDown = (e) => {
+        const onHandleMouseDown = (event) => {
+            const e = event;
             const vp = column.viewport;
+            const pageX = ColumnsResizer.getPageX(e);
+            if (pageX === void 0) {
+                return;
+            }
+            ColumnsResizer.preventTouchDefault(e);
             this.isResizing = true;
             handle.classList.add('hovered');
             vp.reflow();
-            this.dragStartX = e.pageX;
+            this.dragStartX = pageX;
             this.draggedColumn = column;
             this.draggedResizeHandle = handle;
             this.columnStartWidth = column.getWidth();
@@ -146,6 +191,9 @@ class ColumnsResizer {
                 eventName: 'mousedown',
                 listener: onHandleMouseDown
             }, {
+                eventName: 'touchstart',
+                listener: onHandleMouseDown
+            }, {
                 eventName: 'mouseover',
                 listener: onHandleMouseOver
             }, {
@@ -162,8 +210,11 @@ class ColumnsResizer {
      * should be called on the destroy of the data grid.
      */
     removeEventListeners() {
-        document.removeEventListener('mousemove', this.onDocumentMouseMove);
-        document.removeEventListener('mouseup', this.onDocumentMouseUp);
+        document.removeEventListener('mousemove', this.onDocumentDragMove);
+        document.removeEventListener('mouseup', this.onDocumentDragEnd);
+        document.removeEventListener('touchmove', this.onDocumentDragMove);
+        document.removeEventListener('touchend', this.onDocumentDragEnd);
+        document.removeEventListener('touchcancel', this.onDocumentDragEnd);
         for (let i = 0, iEnd = this.handles.length; i < iEnd; i++) {
             const [handle, listeners] = this.handles[i];
             for (const { eventName, listener } of listeners) {

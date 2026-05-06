@@ -24,6 +24,11 @@ declare class NumberInputRenderer extends CellRenderer implements EditModeRender
  * Options to control the number input renderer content.
  */
 export interface NumberInputRendererOptions extends CellRendererOptions {
+    /**
+     * Use the built-in number input renderer.
+     *
+     * @default 'numberInput'
+     */
     type: 'numberInput';
     /**
      * Whether the number input is disabled.
@@ -38,8 +43,17 @@ export interface NumberInputRendererOptions extends CellRendererOptions {
  * Attributes to control the number input.
  */
 export interface NumberInputAttributes {
+    /**
+     * Minimum accepted numeric value.
+     */
     min?: number;
+    /**
+     * Maximum accepted numeric value.
+     */
     max?: number;
+    /**
+     * Step interval used by the number input controls.
+     */
     step?: number;
 }
 declare module '../CellRendererType' {

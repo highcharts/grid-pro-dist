@@ -55,7 +55,7 @@ import type { DeepPartial } from '../../Shared/Types';
  *        Chart context.
  *
  * @param {global.GlobalEventHandlers} [ctx]
- *        Since v12.5.0, the global event handlers context passed as an extra
+ *        Since v12.6.0, the global event handlers context passed as an extra
  *        argument for arrow functions.
  *
  * @return {void}
@@ -69,7 +69,7 @@ import type { DeepPartial } from '../../Shared/Types';
  *        Context to format
  *
  * @param {*} [outerContext]
- *        Since v12.5.0, the outer context passed as an extra argument for
+ *        Since v12.6.0, the outer context passed as an extra argument for
  *        arrow functions.
  *
  * @return {string}

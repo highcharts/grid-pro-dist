@@ -3,7 +3,8 @@ export type DeepRequired<T> = {
 };
 export type ClassNameKey = keyof typeof rawClassNames;
 export declare const classNamePrefix: string;
-export declare const version = "2.3.1";
+export declare const version = "3.0.0";
+export declare const buildDate = "2026-05-06";
 export declare const rawClassNames: {
     readonly container: "container";
     readonly tableElement: "table";
@@ -11,6 +12,7 @@ export declare const rawClassNames: {
     readonly descriptionElement: "description";
     readonly theadElement: "thead";
     readonly tbodyElement: "tbody";
+    readonly cell: "cell";
     readonly rowElement: "row";
     readonly rowEven: "row-even";
     readonly rowOdd: "row-odd";
@@ -54,9 +56,10 @@ export declare const rawClassNames: {
     readonly popup: "popup";
     readonly button: "button";
     readonly buttonSelected: "button-selected";
-    readonly buttonHighlighted: "button-highlighted";
     readonly input: "input";
     readonly icon: "icon";
+    readonly iconSelected: "icon-selected";
+    readonly iconHighlighted: "icon-highlighted";
     readonly iconSearch: "icon-search";
     readonly popupContent: "popup-content";
     readonly columnFilterWrapper: "column-filter-wrapper";
@@ -84,7 +87,7 @@ export declare const rawClassNames: {
     readonly centerAlign: "center";
     readonly leftAlign: "left";
 };
-export declare const win: Window & typeof globalThis;
+export declare const win: (Window & typeof globalThis);
 export declare const composed: Array<string>;
 export declare const userAgent: string;
 export declare const isChrome: boolean;
@@ -92,7 +95,8 @@ export declare const isSafari: boolean;
 export declare const getClassName: (classNameKey: ClassNameKey) => string;
 declare const _default: {
     readonly classNamePrefix: string;
-    readonly version: "2.3.1";
+    readonly version: "3.0.0";
+    readonly buildDate: "2026-05-06";
     readonly rawClassNames: {
         readonly container: "container";
         readonly tableElement: "table";
@@ -100,6 +104,7 @@ declare const _default: {
         readonly descriptionElement: "description";
         readonly theadElement: "thead";
         readonly tbodyElement: "tbody";
+        readonly cell: "cell";
         readonly rowElement: "row";
         readonly rowEven: "row-even";
         readonly rowOdd: "row-odd";
@@ -143,9 +148,10 @@ declare const _default: {
         readonly popup: "popup";
         readonly button: "button";
         readonly buttonSelected: "button-selected";
-        readonly buttonHighlighted: "button-highlighted";
         readonly input: "input";
         readonly icon: "icon";
+        readonly iconSelected: "icon-selected";
+        readonly iconHighlighted: "icon-highlighted";
         readonly iconSearch: "icon-search";
         readonly popupContent: "popup-content";
         readonly columnFilterWrapper: "column-filter-wrapper";

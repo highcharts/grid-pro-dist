@@ -9,7 +9,7 @@
  *
  *
  *  Authors:
- *  - Dawid Dragula
+ *  - Dawid Draguła
  *  - Sebastian Bochan
  *
  * */
@@ -117,9 +117,11 @@ function createEditModeRenderer(column) {
  * Callback function called after column initialization.
  */
 function afterColumnInit() {
-    const { options } = this;
-    if (options?.cells?.editMode?.enabled) {
+    if (this.viewport.grid.columnPolicy.isColumnEditable(this.id)) {
         this.editModeRenderer = createEditModeRenderer(this);
+    }
+    else {
+        delete this.editModeRenderer;
     }
 }
 /**
@@ -153,7 +155,8 @@ function addEditableCellA11yHint() {
     }
     const editableLang = this.row.viewport.grid.options
         ?.lang?.accessibility?.cellEditing?.editable;
-    if (!this.column.options.cells?.editMode?.enabled || !editableLang) {
+    if (!this.column.viewport.grid.columnPolicy.isColumnEditable(this.column.id) ||
+        !editableLang) {
         return;
     }
     this.a11yEditableHint = makeHTMLElement('span', {

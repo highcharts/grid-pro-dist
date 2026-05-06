@@ -9,7 +9,7 @@
  *
  *
  *  Authors:
- *  - Dawid Dragula
+ *  - Dawid Draguła
  *
  * */
 'use strict';
@@ -59,9 +59,9 @@ class ToolbarButton {
         }, toolbar.container);
         this.wrapper = wrapper;
         const button = this.buttonEl = makeHTMLElement('button', {
-            className: (Globals.getClassName('button') +
+            className: (Globals.getClassName('icon') +
                 (this.isActive ?
-                    ' ' + Globals.getClassName('buttonSelected') :
+                    ' ' + Globals.getClassName('iconSelected') :
                     ''))
         }, wrapper);
         button.setAttribute('type', 'button');
@@ -109,10 +109,10 @@ class ToolbarButton {
     }
     setActive(active) {
         this.isActive = active;
-        this.buttonEl?.classList.toggle(Globals.getClassName('buttonSelected'), active);
+        this.buttonEl?.classList.toggle(Globals.getClassName('iconSelected'), active);
     }
     setHighlighted(highlighted) {
-        this.buttonEl?.classList.toggle(Globals.getClassName('buttonHighlighted'), highlighted);
+        this.buttonEl?.classList.toggle(Globals.getClassName('iconHighlighted'), highlighted);
         const ariaExpanded = this.options.accessibility?.ariaExpanded;
         if (typeof ariaExpanded === 'boolean') {
             this.buttonEl?.setAttribute('aria-expanded', highlighted);

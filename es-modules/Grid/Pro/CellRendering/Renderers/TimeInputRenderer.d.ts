@@ -25,6 +25,11 @@ declare class TimeInputRenderer extends CellRenderer implements EditModeRenderer
  * Options to control the time input renderer content.
  */
 export interface TimeInputRendererOptions extends DateInputRendererBaseOptions {
+    /**
+     * Use the built-in time input renderer.
+     *
+     * @default 'timeInput'
+     */
     type: 'timeInput';
 }
 declare module '../CellRendererType' {

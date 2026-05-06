@@ -9,11 +9,12 @@
  *
  *
  *  Authors:
- *  - Dawid Dragula
+ *  - Dawid Draguła
  *  - Sebastian Bochan
  *
  * */
 'use strict';
+import { hasDataTableProvider } from '../Data/DataProvider.js';
 import ColumnFiltering from './Actions/ColumnFiltering/ColumnFiltering.js';
 import Templating from '../../../Core/Templating.js';
 import TextContent from './CellContent/TextContent.js';
@@ -63,18 +64,15 @@ export class Column {
         this.viewport = viewport;
         // Populate column options map if not exists, to prepare option
         // references for each column.
-        if (grid.options && !grid.columnOptionsMap?.[id]) {
+        if (grid.options && !grid.columnPolicy.hasColumnOptions(id)) {
             const columnOptions = { id };
             ((_a = grid.options).columns ?? (_a.columns = [])).push(columnOptions);
-            grid.columnOptionsMap[id] = {
+            grid.columnPolicy.setColumnOption(id, {
                 index: grid.options.columns.length - 1,
                 options: columnOptions
-            };
+            });
         }
-        this.options = createOptionsProxy(grid.columnOptionsMap?.[id]?.options ?? {}, grid.options?.columnDefaults);
-        if (this.options.filtering?.enabled) {
-            this.filtering = new ColumnFiltering(this);
-        }
+        this.options = createOptionsProxy(grid.columnPolicy.getIndividualColumnOptions(id) ?? {}, grid.options?.columnDefaults);
     }
     /* *
     *
@@ -87,19 +85,50 @@ export class Column {
     async init() {
         this.loadData();
         this.dataType = await this.assumeDataType();
+        if (this.viewport.grid.columnPolicy.isColumnFilteringEnabled(this.id)) {
+            this.filtering = new ColumnFiltering(this);
+        }
         fireEvent(this, 'afterInit');
     }
     /**
      * Loads the data of the column from the viewport's data table.
      */
     loadData() {
-        const dp = this.viewport.grid.dataProvider;
-        if (dp && 'getDataTable' in dp) {
-            this.data = dp.getDataTable(true)?.getColumn(this.id, true);
+        const grid = this.viewport.grid;
+        const dp = grid.dataProvider;
+        const sourceColumnId = grid.columnPolicy.getColumnSourceId(this.id);
+        const isUnbound = grid.columnPolicy.isColumnUnbound(this.id);
+        if (hasDataTableProvider(dp) &&
+            sourceColumnId && !isUnbound) {
+            this.data = dp.getDataTable(true)?.getColumn(sourceColumnId, true);
         }
         else {
             delete this.data;
         }
+        if (grid.columnPolicy.isColumnFilteringEnabled(this.id)) {
+            this.filtering ?? (this.filtering = new ColumnFiltering(this));
+        }
+        else {
+            delete this.filtering;
+        }
+    }
+    /**
+     * Resolves the raw value for a table cell.
+     *
+     * @param cell
+     * The cell to resolve the value for.
+     */
+    async getCellValue(cell) {
+        const valueGetter = this.options.cells?.valueGetter;
+        if (valueGetter) {
+            return await valueGetter.call(cell, cell);
+        }
+        const sourceColumnId = this.viewport.grid.columnPolicy
+            .getColumnSourceId(this.id);
+        if (!sourceColumnId) {
+            return void 0;
+        }
+        return this.viewport.grid.dataProvider?.getValue(sourceColumnId, cell.row.index);
     }
     /**
      * Creates a cell content instance.
@@ -118,12 +147,17 @@ export class Column {
     async assumeDataType() {
         const { grid } = this.viewport;
         const dp = grid.dataProvider;
-        const type = grid.columnOptionsMap?.[this.id]?.options.dataType ??
+        const type = grid.columnPolicy
+            .getIndividualColumnOptions(this.id)?.dataType ??
             grid.options?.columnDefaults?.dataType;
         if (type) {
             return type;
         }
-        return (await dp?.getColumnDataType(this.id)) ?? 'string';
+        const sourceColumnId = grid.columnPolicy.getColumnSourceId(this.id);
+        if (grid.columnPolicy.isColumnUnbound(this.id) || !sourceColumnId) {
+            return 'string';
+        }
+        return (await dp?.getColumnDataType(sourceColumnId)) ?? 'string';
     }
     /**
      * Registers a cell in the column.

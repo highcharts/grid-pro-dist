@@ -1,3 +1,4 @@
+import type DataTable from '../../../Data/DataTable';
 import type { RowObject as RowObjectType, CellType as DataTableCellType, Column as DataTableColumnType } from '../../../Data/DataTable';
 import type QueryingController from '../Querying/QueryingController';
 import type { ColumnDataType } from '../Table/Column';
@@ -84,6 +85,22 @@ export declare abstract class DataProvider {
  */
 export type RowId = number | string;
 /**
+ * A data provider that can expose the underlying data table.
+ */
+export interface DataTableProvider extends DataProvider {
+    getDataTable(presentation?: boolean): DataTable | undefined;
+}
+/**
+ * Returns whether the provider exposes `getDataTable`.
+ *
+ * @param provider
+ * Data provider instance to test.
+ *
+ * @returns
+ * `true` when provider exposes `getDataTable`.
+ */
+export declare function hasDataTableProvider(provider: unknown): provider is DataTableProvider;
+/**
  * A base interface for the data provider options (`grid.options.data`).
  */
 export interface DataProviderOptions {
@@ -93,5 +110,21 @@ export interface DataProviderOptions {
      * @default 'local'
      */
     providerType?: string;
+    /**
+     * Whether columns should be generated automatically from data source
+     * column ids.
+     *
+     * If set to `false`, only columns explicitly configured in `columns[]`
+     * (or referenced by `header`) will be rendered.
+     *
+     * With `autogenerateColumns: true` and no `header`, source columns are
+     * rendered in provider order, and custom configured columns are appended
+     * at the end in their definition order.
+     *
+     * @sample grid-lite/basic/autogenerate-columns-disabled Manual columns only
+     *
+     * @default true
+     */
+    autogenerateColumns?: boolean;
 }
 export default DataProvider;

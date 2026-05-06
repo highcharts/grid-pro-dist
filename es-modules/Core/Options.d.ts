@@ -223,7 +223,7 @@ export interface LoadingOptions {
  * The input number to format.
  *
  * @param {number} decimals
- * The amount of decimals. A value of -1 preserves the amount in the inpu
+ * The amount of decimals. A value of -1 preserves the amount in the input
  * number.
  *
  * @param {string} [decimalPoint]
@@ -234,7 +234,7 @@ export interface LoadingOptions {
  * space character.
  *
  * @param {Highcharts.Chart} [ctx]
- * Since v12.5.0, the chart context passed as an extra argument for arrow
+ * Since v12.6.0, the chart context passed as an extra argument for arrow
  * functions.
  *
  * @return {string}

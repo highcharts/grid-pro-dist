@@ -9,7 +9,7 @@
  *
  *
  *  Authors:
- *  - Dawid Dragula
+ *  - Dawid Draguła
  *
  * */
 'use strict';
@@ -114,7 +114,7 @@ class ResizingMode {
         }
     }
     /**
-     * Recaulculates the changing dimentions of the table.
+     * Recalculates the changing dimensions of the table.
      */
     reflow() {
         const vp = this.viewport;

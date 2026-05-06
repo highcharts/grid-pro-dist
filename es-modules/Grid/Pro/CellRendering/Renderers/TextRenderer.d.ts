@@ -31,6 +31,11 @@ declare class TextRenderer extends CellRenderer {
  * Options to control the text renderer content.
  */
 export interface TextRendererOptions extends CellRendererOptions {
+    /**
+     * Use the built-in plain text renderer.
+     *
+     * @default 'text'
+     */
     type: 'text';
 }
 declare module '../CellRendererType' {

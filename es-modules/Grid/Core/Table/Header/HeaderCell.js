@@ -9,7 +9,7 @@
  *
  *
  *  Authors:
- *  - Dawid Dragula
+ *  - Dawid Draguła
  *  - Sebastian Bochan
  *
  * */
@@ -165,7 +165,8 @@ class HeaderCell extends Cell {
             return resolveStyleValue(this.superColumnOptions.header?.style);
         }
         const { grid } = this.row.viewport;
-        const rawColumnOptions = grid.columnOptionsMap?.[column.id]?.options;
+        const rawColumnOptions = grid.columnPolicy
+            .getIndividualColumnOptions(column.id);
         return {
             ...mergeStyleValues(column, grid.options?.columnDefaults?.style, rawColumnOptions?.style),
             ...mergeStyleValues(column, grid.options?.columnDefaults?.header?.style, rawColumnOptions?.header?.style)
@@ -197,20 +198,21 @@ class HeaderCell extends Cell {
         super.onKeyDown(e);
     }
     onClick(e) {
-        if (!this.column ||
+        const { column } = this;
+        if (!column ||
             !this.htmlElement.contains(e.target) ||
-            this.column.viewport.columnsResizer?.isResizing) {
+            this.toolbar?.container?.contains(e.target) ||
+            column.viewport.columnsResizer?.isResizing) {
             return;
         }
+        const grid = column.viewport.grid;
         // Toggle sort only when clicking header text/area, not toolbar icons
-        if (!this.toolbar?.container?.contains(e.target) &&
-            (this.column.options.sorting?.enabled ??
-                this.column.options.sorting?.sortable)) {
-            this.column.sorting?.toggle(e);
+        if (grid.columnPolicy.isColumnSortingEnabled(column.id)) {
+            column.sorting?.toggle(e);
         }
         fireEvent(this, 'click', {
             originalEvent: e,
-            column: this.column
+            column
         });
     }
     /**

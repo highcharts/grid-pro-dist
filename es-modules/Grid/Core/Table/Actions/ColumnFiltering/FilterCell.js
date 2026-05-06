@@ -9,7 +9,7 @@
  *
  *
  *  Authors:
- *  - Dawid Dragula
+ *  - Dawid Draguła
  *
  * */
 'use strict';
@@ -56,9 +56,10 @@ class FilterCell extends HeaderCell {
         fireEvent(this, 'afterRender', { column, filtering: true });
     }
     onKeyDown(e) {
-        this.column.filtering?.onKeyDown(e);
         if (e.target === this.htmlElement) {
-            if (e.key === 'Enter') {
+            if (e.key === 'Enter' &&
+                this.column.viewport.grid.columnPolicy
+                    .isColumnInlineFilteringEnabled(this.column.id)) {
                 this.column.filtering?.filterSelect?.focus();
             }
             else {
@@ -66,6 +67,7 @@ class FilterCell extends HeaderCell {
             }
         }
         else {
+            this.column.filtering?.onKeyDown(e);
             if (e.key === 'Escape') {
                 this.htmlElement.focus();
             }

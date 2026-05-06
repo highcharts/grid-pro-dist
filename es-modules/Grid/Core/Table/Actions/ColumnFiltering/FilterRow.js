@@ -9,7 +9,7 @@
  *
  *
  *  Authors:
- *  - Dawid Dragula
+ *  - Dawid Draguła
  *
  * */
 'use strict';
@@ -60,7 +60,7 @@ class FilterRow extends HeaderRow {
             }
             const cell = this.createCell(column);
             await cell.render();
-            if (column.options.filtering?.inline) {
+            if (vp.grid.columnPolicy.isColumnInlineFilteringEnabled(column.id)) {
                 column.filtering?.renderFilteringContent(cell.htmlElement);
             }
         }

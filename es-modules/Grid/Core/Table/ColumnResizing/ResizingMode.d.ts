@@ -75,7 +75,7 @@ declare abstract class ResizingMode {
      */
     loadColumns(): void;
     /**
-     * Recaulculates the changing dimentions of the table.
+     * Recalculates the changing dimensions of the table.
      */
     reflow(): void;
     /**

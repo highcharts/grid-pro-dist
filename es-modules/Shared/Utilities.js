@@ -245,8 +245,8 @@ export function createElement(tag, attribs, styles, parent, nopad) {
     return el;
 }
 /**
- * Utility for crisping a line position to the nearest full pixel depening on
- * the line width
+ * Utility for crisping a line position to the nearest full pixel depending on
+ * the line width.
  *
  * @internal
  * @param {number} value       The raw pixel position
@@ -396,7 +396,7 @@ export function diffObjects(newer, older, keepOlder, collectionsWithUpdate) {
     return ret;
 }
 /**
- * Remove the last occurence of an item from an array.
+ * Remove the last occurrence of an item from an array.
  *
  * @function Highcharts.erase
  *
@@ -1267,7 +1267,7 @@ export function splat(obj) {
 }
 /**
  * Sort an object array and keep the order of equal items. The ECMAScript
- * standard does not specify the behaviour when items are equal.
+ * standard does not specify the behavior when items are equal.
  *
  * @function Highcharts.stableSort
  *

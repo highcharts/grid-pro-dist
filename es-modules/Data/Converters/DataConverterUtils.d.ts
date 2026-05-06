@@ -60,7 +60,7 @@ export declare function guessType(value: unknown, converter: DataConverter): 'nu
  * Remove all spaces between numbers.
  *
  * @return {string}
- * Trimed string
+ * Trimmed string
  */
 export declare function trim(str: string, inside?: boolean): string;
 /**

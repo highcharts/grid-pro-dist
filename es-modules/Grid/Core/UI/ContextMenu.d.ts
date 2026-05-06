@@ -33,6 +33,17 @@ export declare abstract class ContextMenu extends Popup {
      */
     protected addDivider(): HTMLElement | undefined;
     protected onClickOutside(event: MouseEvent): void;
+    /**
+     * Checks whether an element is contained in any descendant popup.
+     *
+     * @param target
+     * Target node from click event.
+     *
+     * @returns
+     * True when the target is inside any descendant popup container.
+     */
+    private isInDescendantPopup;
+    protected addEventListeners(): void;
     protected onKeyDown(e: KeyboardEvent): void;
 }
 export default ContextMenu;

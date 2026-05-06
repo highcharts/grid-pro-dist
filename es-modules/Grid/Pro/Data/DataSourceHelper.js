@@ -9,7 +9,7 @@
  *  !!!!!!! SOURCE GETS TRANSPILED BY TYPESCRIPT. EDIT TS FILE ONLY. !!!!!!!
  *
  *  Authors:
- *  - Dawid Dragula
+ *  - Dawid Draguła
  *
  * */
 'use strict';
@@ -151,7 +151,8 @@ const defaultParseResponse = async (res) => {
     return {
         columns: data || {},
         totalRowCount: meta?.totalRowCount || 0,
-        rowIds: meta?.rowIds
+        rowIds: meta?.rowIds,
+        pageSize: meta?.pageSize
     };
 };
 /**

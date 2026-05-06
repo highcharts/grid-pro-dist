@@ -9,13 +9,14 @@
  *
  *
  *  Authors:
- *  - Dawid Dragula
+ *  - Dawid Draguła
  *  - Sebastian Bochan
  *  - Kamil Kubik
  *
  * */
 'use strict';
 import GU from '../../../GridUtils.js';
+import FilteringController from '../../../Querying/FilteringController.js';
 import Globals from '../../../Globals.js';
 import { conditionsMap } from './FilteringTypes.js';
 import { defined, fireEvent } from '../../../../../Shared/Utilities.js';
@@ -86,7 +87,7 @@ class ColumnFiltering {
                 'ArrowDown': 1,
                 'ArrowUp': -1
             }[e.key];
-            if (direction) {
+            if (direction && contentOrder.length) {
                 e.preventDefault();
                 const currentIndex = contentOrder.indexOf(e.target);
                 const n = contentOrder.length;
@@ -157,7 +158,7 @@ class ColumnFiltering {
     renderFilteringContent(container) {
         const column = this.column;
         const columnType = column.dataType;
-        if (!column.options.filtering?.enabled) {
+        if (!column.viewport.grid.columnPolicy.isColumnFilteringEnabled(column.id)) {
             return;
         }
         // Render the input wrapper.
@@ -217,6 +218,9 @@ class ColumnFiltering {
                     break;
             }
         }
+        if (this.hasSameFilterCondition(columnId, condition)) {
+            return;
+        }
         this.column.setOptions({
             filtering: {
                 condition: condition.condition,
@@ -235,6 +239,21 @@ class ColumnFiltering {
         fireEvent(this.column, 'afterFilter', {
             target: this.column
         });
+    }
+    /**
+     * Returns whether the next filtering options would produce the same
+     * semantic filter condition as the current one.
+     *
+     * @param columnId
+     * The column ID to compare filtering state for.
+     *
+     * @param options
+     * The next filtering options to compare.
+     */
+    hasSameFilterCondition(columnId, options) {
+        const currentCondition = FilteringController.mapOptionsToFilter(columnId, this.column.options.filtering ?? {});
+        const nextCondition = FilteringController.mapOptionsToFilter(columnId, options);
+        return FilteringController.filterConditionsEqual(currentCondition, nextCondition);
     }
     /**
      * Render the filtering input element, based on the column type.
@@ -262,7 +281,7 @@ class ColumnFiltering {
         }
         else {
             this.filterInput.type = 'text';
-            this.filterInput.classList.add(Globals.getClassName('icon'), Globals.getClassName('iconSearch'));
+            this.filterInput.classList.add(Globals.getClassName('iconSearch'));
         }
         // Assign the default input value.
         const { value } = this.column.options.filtering ?? {};

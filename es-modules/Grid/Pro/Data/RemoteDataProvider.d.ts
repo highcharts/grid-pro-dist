@@ -41,10 +41,20 @@ export declare class RemoteDataProvider extends DataProvider {
      */
     private pendingChunks;
     /**
-     * Reverse lookup map from rowId to { chunkIndex, localIndex } for O(1)
+     * Reverse lookup map from rowId to { offset, localIndex } for O(1)
      * lookup in getRowIndex.
      */
     private rowIdToChunkInfo;
+    /**
+     * Effective chunk size reported by the backend for the current query.
+     * When defined, it takes precedence over the configured chunk size.
+     */
+    private effectiveChunkSize;
+    /**
+     * Epoch used to invalidate stale in-flight requests when the chunk layout
+     * changes (for example when the backend clamps the requested page size).
+     */
+    private chunkLayoutEpoch;
     /**
      * Fingerprint of the last applied query; used to avoid clearing caches
      * when the query did not actually change.
@@ -59,11 +69,14 @@ export declare class RemoteDataProvider extends DataProvider {
      */
     private pendingControllers;
     /**
-     * Returns the effective chunk size.
-     * When pagination is enabled, uses the page size as chunk size,
-     * so that one chunk = one page.
+     * Returns the configured chunk size for the current query.
+     * When pagination is enabled, one chunk always equals one page.
      */
-    private get maxChunkSize();
+    private get configuredChunkSize();
+    /**
+     * Returns the effective chunk size used for index calculations.
+     */
+    private get activeChunkSize();
     private get requestPolicy();
     private abortPendingRequests;
     private getChunkForRowIndex;
@@ -86,10 +99,26 @@ export declare class RemoteDataProvider extends DataProvider {
      * @param rowIndex
      * The row index passed from the grid.
      *
+     * @param chunk
+     * The data chunk containing the row. Optional, used to optimize index
+     *
      * @returns
      * The local index within the chunk.
      */
     private getLocalIndexInChunk;
+    /**
+     * Clears cached chunk data and reverse lookup maps.
+     */
+    private clearChunkCache;
+    /**
+     * Adopts the effective chunk size reported by the backend for the current
+     * query and invalidates chunk caches that were built with the previous
+     * layout.
+     *
+     * @param chunkSize
+     * The chunk size confirmed by the backend.
+     */
+    private adoptEffectiveChunkSize;
     /**
      * Evicts the least recently used chunk if the cache limit is reached.
      * Also cleans up the reverse lookup map for evicted rowIds.
@@ -130,24 +159,71 @@ export declare class RemoteDataProvider extends DataProvider {
     destroy(): void;
 }
 export interface RemoteFetchCallbackResult {
+    /**
+     * Column data keyed by column ID, where each value is an array of cell
+     * values for the fetched rows.
+     */
     columns: Record<string, DataTableColumnType>;
+    /**
+     * Total number of rows available on the server for the current query.
+     * Used to calculate page count and scrollbar size.
+     */
     totalRowCount: number;
+    /**
+     * Stable identifiers for the fetched rows. When omitted, the Grid assigns
+     * sequential numeric IDs starting from `offset`.
+     */
     rowIds?: RowId[];
+    /**
+     * Effective page size used by the backend for the returned chunk.
+     * Return this when the server can clamp or otherwise adjust the requested
+     * page size so the Grid can keep chunk indexing aligned.
+     */
+    pageSize?: number;
 }
 export interface DataChunk {
     index: number;
+    offset: number;
     data: Record<string, DataTableColumnType>;
     rowIds: RowId[];
 }
 export interface RemoteDataProviderOptions extends DataProviderOptions {
+    /**
+     * The remote data provider type.
+     *
+     * @default 'remote'
+     */
     providerType: 'remote';
     /**
      * Serialized data source configuration, alternatively to `fetchCallback`.
+     *
+     * @sample grid-pro/demo/serverside-data
+     *         Server-side data source
      */
     dataSource?: DataSourceOptions;
     /**
      * Custom callback to fetch data from the remote server. Has higher priority
      * than `dataSource`.
+     *
+     * @param query
+     * The current query state (sorting, filtering, pagination).
+     *
+     * @param offset
+     * Zero-based index of the first row to fetch.
+     *
+     * @param limit
+     * Number of rows to fetch.
+     *
+     * @param signal
+     * Abort signal that fires when the request is superseded by a newer one.
+     *
+     * @returns
+     * A `RemoteFetchCallbackResult` with `columns`, `totalRowCount`, and
+     * optionally `rowIds` and `pageSize`. See `RemoteFetchCallbackResult` for
+     * field descriptions.
+     *
+     * @sample grid-pro/options/remote-fetch-callback
+     *         Remote fetch callback
      */
     fetchCallback?: (this: RemoteDataProvider, query: QueryingController, offset: number, limit: number, signal?: AbortSignal) => Promise<RemoteFetchCallbackResult>;
     /**

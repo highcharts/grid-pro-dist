@@ -9,7 +9,7 @@
  *
  *
  *  Authors:
- *  - Dawid Dragula
+ *  - Dawid Draguła
  *  - Sebastian Bochan
  *
  * */
@@ -64,8 +64,7 @@ class TableRow extends Row {
     *
     * */
     async init() {
-        const dp = this.viewport.grid.dataProvider;
-        this.id = await dp?.getRowId(this.index);
+        this.id = await this.viewport.grid.dataProvider?.getRowId(this.index);
         await this.loadData();
         this.setRowAttributes();
     }
@@ -82,6 +81,9 @@ class TableRow extends Row {
             return;
         }
         this.data = data;
+        fireEvent(this, 'afterLoadData', {
+            data
+        });
     }
     /**
      * Updates the row data and its cells with the latest values from the data
@@ -102,8 +104,6 @@ class TableRow extends Row {
      *
      * @param index
      * The index of the row in the data table.
-     *
-     * @internal
      */
     async reuse(index) {
         for (let i = 0, iEnd = this.cells.length; i < iEnd; ++i) {
@@ -114,8 +114,8 @@ class TableRow extends Row {
             return;
         }
         this.index = index;
-        this.id = await this.viewport.grid.dataProvider?.getRowId(this.index);
-        this.htmlElement.setAttribute('data-row-index', index);
+        this.id = await this.viewport.grid.dataProvider?.getRowId(index);
+        this.htmlElement.setAttribute('data-row-index', index + '');
         this.updateRowAttributes();
         this.updateParityClass();
         this.updateStateClasses();
@@ -157,8 +157,7 @@ class TableRow extends Row {
         const idx = this.index;
         const el = this.htmlElement;
         el.classList.add(Globals.getClassName('rowElement'));
-        // Index of the row in the presentation data table
-        el.setAttribute('data-row-index', idx);
+        el.setAttribute('data-row-index', idx + '');
         this.updateRowAttributes();
         // Indexing from 0, so rows with even index are odd.
         this.updateParityClass();
@@ -179,6 +178,7 @@ class TableRow extends Row {
         }
         // Calculate levels of header, 1 to avoid indexing from 0
         a11y?.setRowIndex(el, idx + (vp.header?.rows.length ?? 0) + 1);
+        fireEvent(this, 'afterUpdateAttributes');
     }
     /**
      * Updates the row parity class based on index.

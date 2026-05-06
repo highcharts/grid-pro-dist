@@ -1,7 +1,7 @@
 /* SPDX-License-Identifier: LicenseRef-Highcharts */
 
 /**
- * @license Highcharts Grid Pro v2.3.1
+ * @license Highcharts Grid Pro v3.0.0
  *
  * (c) 2009-2025 Highsoft AS
  *
@@ -241,12 +241,12 @@
      Defaults (internal base tokens)
      ------------------------------------------------------------- */
     --ig-input-padding-base: var(--hcg-input-padding, 5px);
-    --ig-input-color-base: var(--hcg-input-color, var(--ig-color));
+    --ig-input-color-base: var(--hcg-input-color, inherit);
     --ig-input-text-align-base: var(--hcg-input-text-align, var(--ig-text-align));
     --ig-input-border-radius-base: var(--hcg-input-border-radius, 0);
     --ig-input-border-width-base: var(--hcg-input-border-width, 1px);
     --ig-input-border-style-base: var(--hcg-input-border-style, solid);
-    --ig-input-border-color-base: var(--hcg-input-border-color, var(--ig-color));
+    --ig-input-border-color-base: var(--hcg-input-border-color, currentColor);
     --ig-input-background-base: var(--hcg-input-background, var(--highcharts-background-color));
     --ig-input-hover-color-base: var(--hcg-input-hover-color, var(--ig-input-color-base));
     --ig-input-hover-background-base: var(--hcg-input-hover-background, var(--ig-input-background-base));
@@ -288,7 +288,7 @@
         --ig-input-hover-border-color: var(--hcg-header-input-hover-border-color, var(--hcg-input-hover-border-color, var(--hcg-header-input-border-color, var(--ig-input-border-color-base))));
     }
 
-    tbody td {
+    tbody :where(.hcg-cell) {
         --ig-input-padding: var(--hcg-cell-input-padding, var(--ig-input-padding-base));
         --ig-input-font-weight: var(--hcg-cell-input-font-weight, var(--hcg-input-font-weight, inherit));
         --ig-input-font-size: var(--hcg-cell-input-font-size, var(--hcg-input-font-size, inherit));
@@ -346,7 +346,7 @@
         }
 
         &[type="checkbox"]:checked::before {
-            background-color: var(--ig-input-color);
+            background-color: currentColor;
         }
     }
 }
@@ -357,11 +357,11 @@
      ───────────────────────────────────────────────────────────── */
     --ig-button-border-width-base: var(--hcg-button-border-width, 1px);
     --ig-button-border-style-base: var(--hcg-button-border-style, solid);
-    --ig-button-border-color-base: var(--hcg-button-border-color, var(--ig-default-color));
+    --ig-button-border-color-base: var(--hcg-button-border-color, currentColor);
     --ig-button-border-radius-base: var(--hcg-button-border-radius, 0);
     --ig-button-background-base: var(--hcg-button-background, transparent);
     --ig-button-padding-base: var(--hcg-button-padding, 6px);
-    --ig-button-color-base: var(--hcg-button-color, var(--ig-default-color));
+    --ig-button-color-base: var(--hcg-button-color, inherit);
     --ig-button-hover-color-base: var(--hcg-button-hover-color, var(--ig-default-background));
     --ig-button-hover-background-base: var(--hcg-button-hover-background, var(--ig-default-color));
     --ig-button-hover-border-color-base: var(--hcg-button-hover-border-color, var(--ig-button-border-color-base));
@@ -390,29 +390,7 @@
     --ig-button-selected-border-color: var(--hcg-button-selected-border-color, var(--ig-button-selected-border-color-base));
     --ig-button-focus-ring: 0 0 0 var(--ig-focus-ring-width) var(--ig-focus-ring-color);
 
-    thead th {
-        --ig-button-background: var(--hcg-header-button-background, var(--ig-button-background-base));
-        --ig-button-border-width: var(--hcg-header-button-border-width, var(--ig-button-border-width-base));
-        --ig-button-border-style: var(--hcg-header-button-border-style, var(--ig-button-border-style-base));
-        --ig-button-border-color: var(--hcg-header-button-border-color, var(--ig-button-border-color-base));
-        --ig-button-border-radius: var(--hcg-header-button-border-radius, var(--ig-button-border-radius-base));
-        --ig-button-padding: var(--hcg-header-button-padding, var(--ig-button-padding-base));
-        --ig-button-font-weight: var(--hcg-header-button-font-weight, var(--hcg-button-font-weight, inherit));
-        --ig-button-font-size: var(--hcg-header-button-font-size, var(--hcg-button-font-size, inherit));
-        --ig-button-font-family: var(--hcg-header-button-font-family, var(--hcg-button-font-family, inherit));
-        --ig-button-hover-border-color: var(--hcg-header-button-hover-border-color, var(--hcg-button-hover-border-color, var(--hcg-header-button-border-color, var(--ig-button-hover-border-color-base))));
-        --ig-button-selected-border-color: var(--hcg-header-button-selected-border-color, var(--ig-button-selected-border-color-base));
-        --ig-button-focus-ring: inset 0 0 0 var(--ig-focus-ring-width) var(--ig-focus-ring-color);
-
-        /* Header-specific color logic */
-        --ig-button-color: var(--hcg-header-button-color, var(--ig-header-current-color));
-        --ig-button-hover-color: var(--hcg-header-button-hover-color, var(--hcg-button-hover-color, var(--hcg-header-button-color, var(--ig-header-current-color))));
-        --ig-button-hover-background: var(--hcg-header-button-hover-background, var(--hcg-button-hover-background, var(--hcg-header-button-background, color-mix(in oklch, var(--ig-header-hover-background) 90%, var(--ig-default-color)))));
-        --ig-button-selected-color: var(--hcg-header-button-selected-color, var(--ig-header-current-color));
-        --ig-button-selected-background: var(--hcg-header-button-selected-background, var(--ig-button-background));
-    }
-
-    tbody td {
+    tbody :where(.hcg-cell) {
         --ig-button-background: var(--hcg-cell-button-background, var(--ig-button-background-base));
         --ig-button-color: var(--hcg-cell-button-color, var(--ig-button-color-base));
         --ig-button-border-width: var(--hcg-cell-button-border-width, var(--ig-button-border-width-base));
@@ -479,8 +457,7 @@
             background: var(--ig-button-hover-color);
         }
 
-        &:hover:not(:disabled),
-        &.hcg-button-highlighted {
+        &:hover:not(:disabled) {
             color: var(--ig-button-hover-color);
             background: var(--ig-button-hover-background);
             border-color: var(--ig-button-hover-border-color);
@@ -488,6 +465,105 @@
 
         &:focus-visible {
             box-shadow: var(--ig-button-focus-ring);
+        }
+    }
+}
+
+.hcg-container {
+    /* ─────────────────────────────────────────────────────────────
+     Defaults (internal base tokens)
+     ───────────────────────────────────────────────────────────── */
+    --ig-icon-border-width-base: var(--hcg-icon-border-width, 1px);
+    --ig-icon-border-style-base: var(--hcg-icon-border-style, solid);
+    --ig-icon-border-color-base: var(--hcg-icon-border-color, transparent);
+    --ig-icon-border-radius-base: var(--hcg-icon-border-radius, 0);
+    --ig-icon-padding-base: var(--hcg-icon-padding, 6px);
+    --ig-icon-font-weight-base: var(--hcg-icon-font-weight, inherit);
+    --ig-icon-font-size-base: var(--hcg-icon-font-size, inherit);
+    --ig-icon-font-family-base: var(--hcg-icon-font-family, inherit);
+    --ig-icon-background-base: var(--hcg-icon-background, transparent);
+    --ig-icon-color-base: var(--hcg-icon-color, inherit);
+    --ig-icon-hover-color-base: var(--hcg-icon-hover-color, var(--ig-icon-color-base));
+    --ig-icon-hover-background-source-base: var(--hcg-icon-hover-background, var(--ig-default-color));
+    --ig-icon-hover-background-base: color-mix(in srgb, var(--ig-icon-hover-background-source-base) 12%, transparent);
+    --ig-icon-hover-border-color-base: var(--hcg-icon-hover-border-color, var(--ig-icon-border-color-base));
+    --ig-icon-focus-ring: inset 0 0 0 var(--ig-focus-ring-width) var(--ig-focus-ring-color);
+
+    /* ─────────────────────────────────────────────────────────────
+     Public theme overrides (external hcg tokens)
+     ───────────────────────────────────────────────────────────── */
+    --ig-icon-border-width: var(--hcg-icon-border-width, var(--ig-icon-border-width-base));
+    --ig-icon-border-style: var(--hcg-icon-border-style, var(--ig-icon-border-style-base));
+    --ig-icon-border-color: var(--hcg-icon-border-color, var(--ig-icon-border-color-base));
+    --ig-icon-border-radius: var(--hcg-icon-border-radius, var(--ig-icon-border-radius-base));
+    --ig-icon-padding: var(--hcg-icon-padding, var(--ig-icon-padding-base));
+    --ig-icon-font-weight: var(--hcg-icon-font-weight, var(--ig-icon-font-weight-base));
+    --ig-icon-font-size: var(--hcg-icon-font-size, var(--ig-icon-font-size-base));
+    --ig-icon-font-family: var(--hcg-icon-font-family, var(--ig-icon-font-family-base));
+    --ig-icon-background: var(--hcg-icon-background, var(--ig-icon-background-base));
+    --ig-icon-color: var(--hcg-icon-color, var(--ig-icon-color-base));
+    --ig-icon-hover-color: var(--hcg-icon-hover-color, var(--ig-icon-hover-color-base));
+    --ig-icon-hover-background-source: var(--hcg-icon-hover-background, var(--ig-icon-hover-background-source-base));
+    --ig-icon-hover-background: color-mix(in srgb, var(--ig-icon-hover-background-source) 12%, transparent);
+    --ig-icon-hover-border-color: var(--hcg-icon-hover-border-color, var(--ig-icon-hover-border-color-base));
+
+    thead th {
+        --ig-icon-background: var(--hcg-header-icon-background, var(--ig-icon-background-base));
+        --ig-icon-color: var(--hcg-header-icon-color, var(--ig-icon-color-base));
+        --ig-icon-border-width: var(--hcg-header-icon-border-width, var(--ig-icon-border-width-base));
+        --ig-icon-border-style: var(--hcg-header-icon-border-style, var(--ig-icon-border-style-base));
+        --ig-icon-border-color: var(--hcg-header-icon-border-color, var(--ig-icon-border-color-base));
+        --ig-icon-border-radius: var(--hcg-header-icon-border-radius, var(--ig-icon-border-radius-base));
+        --ig-icon-padding: var(--hcg-header-icon-padding, var(--ig-icon-padding-base));
+        --ig-icon-font-weight: var(--hcg-header-icon-font-weight, var(--ig-icon-font-weight-base));
+        --ig-icon-font-size: var(--hcg-header-icon-font-size, var(--ig-icon-font-size-base));
+        --ig-icon-font-family: var(--hcg-header-icon-font-family, var(--ig-icon-font-family-base));
+        --ig-icon-hover-color: var(--hcg-header-icon-hover-color, var(--hcg-icon-hover-color, var(--hcg-header-icon-color, var(--ig-icon-hover-color-base))));
+        --ig-icon-hover-background-source: var(--hcg-header-icon-hover-background, var(--hcg-icon-hover-background, var(--ig-icon-hover-background-source-base)));
+        --ig-icon-hover-background: color-mix(in srgb, var(--ig-icon-hover-background-source) 12%, transparent);
+        --ig-icon-hover-border-color: var(--hcg-header-icon-hover-border-color, var(--hcg-icon-hover-border-color, var(--hcg-header-icon-border-color, var(--ig-icon-hover-border-color-base))));
+    }
+
+    tbody :where(.hcg-cell) {
+        --ig-icon-background: var(--hcg-cell-icon-background, var(--ig-icon-background-base));
+        --ig-icon-color: var(--hcg-cell-icon-color, var(--ig-icon-color-base));
+        --ig-icon-border-width: var(--hcg-cell-icon-border-width, var(--ig-icon-border-width-base));
+        --ig-icon-border-style: var(--hcg-cell-icon-border-style, var(--ig-icon-border-style-base));
+        --ig-icon-border-color: var(--hcg-cell-icon-border-color, var(--ig-icon-border-color-base));
+        --ig-icon-border-radius: var(--hcg-cell-icon-border-radius, var(--ig-icon-border-radius-base));
+        --ig-icon-padding: var(--hcg-cell-icon-padding, var(--ig-icon-padding-base));
+        --ig-icon-font-weight: var(--hcg-cell-icon-font-weight, var(--ig-icon-font-weight-base));
+        --ig-icon-font-size: var(--hcg-cell-icon-font-size, var(--ig-icon-font-size-base));
+        --ig-icon-font-family: var(--hcg-cell-icon-font-family, var(--ig-icon-font-family-base));
+        --ig-icon-hover-color: var(--hcg-cell-icon-hover-color, var(--hcg-icon-hover-color, var(--hcg-cell-icon-color, var(--ig-icon-hover-color-base))));
+        --ig-icon-hover-background-source: var(--hcg-cell-icon-hover-background, var(--hcg-icon-hover-background, var(--ig-icon-hover-background-source-base)));
+        --ig-icon-hover-background: color-mix(in srgb, var(--ig-icon-hover-background-source) 12%, transparent);
+        --ig-icon-hover-border-color: var(--hcg-cell-icon-hover-border-color, var(--hcg-icon-hover-border-color, var(--hcg-cell-icon-border-color, var(--ig-icon-hover-border-color-base))));
+    }
+
+    :where(.hcg-icon) {
+        font-weight: var(--ig-icon-font-weight);
+        font-size: var(--ig-icon-font-size);
+        font-family: var(--ig-icon-font-family);
+        color: var(--ig-icon-color);
+        background: var(--ig-icon-background);
+        padding-block: var(--ig-icon-padding);
+        padding-inline: var(--ig-icon-padding);
+        min-height: calc(1em + (2 * var(--ig-icon-padding)));
+        border-width: var(--ig-icon-border-width);
+        border-style: var(--ig-icon-border-style);
+        border-color: var(--ig-icon-border-color);
+        border-radius: var(--ig-icon-border-radius);
+
+        &:hover:not(:disabled),
+        &.hcg-icon-highlighted {
+            color: var(--ig-icon-hover-color);
+            background: var(--ig-icon-hover-background);
+            border-color: var(--ig-icon-hover-border-color);
+        }
+
+        &:focus-visible {
+            box-shadow: var(--ig-icon-focus-ring);
         }
     }
 }
@@ -662,15 +738,15 @@
     /* End header hover & sync */
 
     /* <tbody> */
-    .hcg-table tbody tr:last-of-type td:first-child {
+    .hcg-table > tbody:last-of-type > tr:last-of-type > :where(.hcg-cell):first-child {
         border-bottom-left-radius: var(--ig-border-radius);
     }
 
-    .hcg-table tbody tr:last-of-type td:last-child {
+    .hcg-table > tbody:last-of-type > tr:last-of-type > :where(.hcg-cell):last-child {
         border-bottom-right-radius: var(--ig-border-radius);
     }
 
-    .hcg-table tbody {
+    .hcg-table > tbody:last-of-type {
         border-bottom-left-radius: var(--hcg-border-radius);
         border-bottom-right-radius: var(--hcg-border-radius);
     }
@@ -691,8 +767,7 @@
         --ig-row-font-family-current: var(--hcg-row-even-font-family, var(--hcg-row-font-family));
     }
 
-    .hcg-table tbody tr.hcg-mocked-row td,
-    .hcg-table tbody tr td {
+    .hcg-table tbody tr > :where(.hcg-cell) {
         --ig-cell-column-background: var(--hcg-column-background);
         --ig-cell-column-color: var(--hcg-column-color);
         --ig-cell-column-font-weight: var(--hcg-column-font-weight);
@@ -728,7 +803,7 @@
         text-align: var(--ig-cell-text-align);
     }
 
-    .hcg-table tbody tr td:nth-child(even) {
+    .hcg-table tbody tr > :where(.hcg-cell):nth-child(even) {
         --ig-cell-column-background: var(--hcg-column-even-background, var(--hcg-column-background));
         --ig-cell-column-color: var(--hcg-column-even-color, var(--hcg-column-color));
         --ig-cell-column-font-weight: var(--hcg-column-even-font-weight, var(--hcg-column-font-weight));
@@ -736,12 +811,12 @@
         --ig-cell-column-font-family: var(--hcg-column-even-font-family, var(--hcg-column-font-family));
     }
 
-    .hcg-table tbody td:focus {
+    .hcg-table tbody :where(.hcg-cell):focus {
         box-shadow: inset var(--ig-focus-ring);
     }
 
     /* Start column hover & sync */
-    .hcg-table td.hcg-hovered-column {
+    .hcg-table tbody :where(.hcg-cell).hcg-hovered-column {
         --ig-column-layer:
             color-mix(
                 in srgb,
@@ -751,7 +826,7 @@
         --ig-column-text-layer: var(--hcg-cell-hovered-column-color, var(--hcg-column-hover-color, var(--ig-cell-base-color)));
     }
 
-    .hcg-table td.hcg-synced-column {
+    .hcg-table tbody :where(.hcg-cell).hcg-synced-column {
         --ig-column-layer:
             color-mix(
                 in srgb,
@@ -769,7 +844,7 @@
             );
     }
 
-    .hcg-table th.hcg-hovered-column:not(:hover) {
+    .hcg-table thead th.hcg-hovered-column:not(:hover) {
         --ig-header-column-hover-color:
             color-mix(
                 in srgb,
@@ -783,7 +858,7 @@
         color: var(--ig-header-current-color);
     }
 
-    .hcg-table th.hcg-synced-column:not(:hover) {
+    .hcg-table thead th.hcg-synced-column:not(:hover) {
         --ig-header-sync-opacity:
             var(
                 --hcg-header-sync-opacity,
@@ -829,7 +904,7 @@
     /* End column hover & sync */
 
     /* Start row hover & sync */
-    .hcg-table tr:hover td {
+    .hcg-table tbody tr:hover > :where(.hcg-cell) {
         --ig-row-hover-color:
             color-mix(
                 in srgb,
@@ -843,7 +918,7 @@
         color: var(--ig-cell-hover-text-color);
     }
 
-    .hcg-table tr.hcg-synced-row td {
+    .hcg-table tbody tr.hcg-synced-row > :where(.hcg-cell) {
         --ig-row-hover-color:
             color-mix(
                 in srgb,
@@ -869,9 +944,9 @@
     /* End row hover & sync */
 
     /* Start cell hover & sync */
-    .hcg-table td:hover,
-    .hcg-table tr:hover td:hover,
-    .hcg-table td.hcg-hovered-column:hover {
+    .hcg-table tbody :where(.hcg-cell):hover,
+    .hcg-table tbody tr:hover > :where(.hcg-cell):hover,
+    .hcg-table tbody :where(.hcg-cell).hcg-hovered-column:hover {
         --ig-cell-hover-layer:
             color-mix(
                 in srgb,
@@ -884,7 +959,7 @@
         color: var(--ig-cell-hover-text-color);
     }
 
-    .hcg-table tr.hcg-synced-row td.hcg-synced-column {
+    .hcg-table tbody tr.hcg-synced-row > :where(.hcg-cell).hcg-synced-column {
         --ig-cell-hover-layer:
             color-mix(
                 in srgb,
@@ -936,7 +1011,7 @@
     --hcg-button-border-color: transparent;
     --hcg-cell-button-border-color: #d1d1d1;
     --hcg-button-color: #141414;
-    --hcg-header-button-background: transparent;
+    --hcg-icon-border-radius: 6px;
     --hcg-pagination-button-selected-background: #000000;
     --hcg-pagination-button-selected-color: #ffffff;
 }
@@ -974,7 +1049,7 @@
 /* SPDX-License-Identifier: LicenseRef-Highcharts */
 
 /**
- * @license Highcharts Grid Lite v2.3.1
+ * @license Highcharts Grid Lite v3.0.0
  *
  * (c) 2009-2025 Highsoft AS
  *
@@ -1053,14 +1128,11 @@
         }
     }
 
-    &.hcg-icon {
+    &.hcg-icon-search {
         padding-left: 25px;
         appearance: none;
         background-repeat: no-repeat;
         background-position: left 10px center;
-    }
-
-    &.hcg-icon-search {
         background-image: url("data:image/svg+xml,%3csvg xmlns=%27http://www.w3.org/2000/svg%27 width=%2712%27 height=%2712%27 viewBox=%270 0 12 12%27 fill=%27none%27%3e%3cpath d=%27M10.5 10.5L7.50005 7.5M8.5 5C8.5 6.933 6.933 8.5 5 8.5C3.067 8.5 1.5 6.933 1.5 5C1.5 3.067 3.067 1.5 5 1.5C6.933 1.5 8.5 3.067 8.5 5Z%27 stroke=%27%23767676%27 stroke-linecap=%27round%27 stroke-linejoin=%27round%27/%3e%3c/svg%3e");
     }
 
@@ -1078,7 +1150,7 @@
   BUTTON ELEMENT
 ------------------------------------------------------------ */
 
-.hcg-container .hcg-button {
+.hcg-container :is(.hcg-button, .hcg-icon) {
     position: relative;
     display: inline-flex;
     vertical-align: middle;
@@ -1091,8 +1163,8 @@
     transition: background-color 0.2s ease, box-shadow 0.2s ease, border 0.2s ease;
 
     svg {
-        width: 1em;
-        height: 1em;
+        width: 0.9em;
+        height: 0.9em;
         display: block;
     }
 
@@ -1148,58 +1220,58 @@
         position: relative;
     }
 
-    &.hcg-scrollable-content tbody {
+    /* <tbody> */
+    &.hcg-scrollable-content > tbody {
         height: 100%;
         overflow: auto;
         min-height: 0;
         flex: 1;
     }
 
-    &.hcg-virtualization tbody {
+    &.hcg-virtualization > tbody {
         display: block;
         position: relative;
     }
 
-    tbody tr {
+    > tbody > tr {
         overflow: hidden;
         width: 100%;
     }
 
-    tbody tr.hcg-mocked-row td,
-    tbody tr td {
+    > tbody > tr > :where(.hcg-cell) {
         position: relative;
         line-height: 1em;
         overflow: hidden;
     }
 
-    tbody tr.hcg-mocked-row td {
+    > tbody > tr.hcg-mocked-row > :where(.hcg-cell) {
         white-space: nowrap;
         text-overflow: ellipsis;
     }
 
     .hcg-last-header-cell-in-row,
-    td:last-of-type {
+    tbody tr > :where(.hcg-cell):last-child {
         border-right: none;
     }
 
-    tr:last-of-type td {
+    tbody tr:last-of-type > :where(.hcg-cell) {
         border-bottom: none;
     }
 
-    &.hcg-scrollable-content tbody tr {
+    &.hcg-scrollable-content > tbody > tr {
         display: block;
     }
 
-    &.hcg-virtualization tbody tr {
+    &.hcg-virtualization > tbody > tr {
         position: absolute;
     }
 
-    tbody.hcg-rows-content-nowrap td {
+    > tbody.hcg-rows-content-nowrap > tr > :where(.hcg-cell) {
         white-space: nowrap;
         text-overflow: ellipsis;
     }
 
-    tbody td:focus {
+    > tbody > tr > :where(.hcg-cell):focus {
         outline: none;
     }
 }
@@ -1236,7 +1308,7 @@
         transition: max-width 0.3s ease, opacity 0.3s ease;
     }
 
-    .hcg-header-cell-icons .hcg-button.hcg-button-selected::after {
+    .hcg-header-cell-icons .hcg-icon.hcg-icon-selected::after {
         content: "";
         position: absolute;
         top: 2px;
@@ -1244,10 +1316,11 @@
         width: 0.3em;
         height: 0.3em;
         border-radius: 50%;
+        background: currentColor;
     }
 
     :is(:hover, :focus-visible) .hcg-header-cell-icons,
-    .hcg-header-cell-icons:has(.hcg-button:focus-visible, .hcg-button.hcg-button-highlighted, .hcg-button.hcg-button-selected),
+    .hcg-header-cell-icons:has(.hcg-button:focus-visible, .hcg-icon:focus-visible, .hcg-button.hcg-button-selected, .hcg-icon.hcg-icon-highlighted, .hcg-icon.hcg-icon-selected),
     .hcg-header-cell-container.hcg-no-width .hcg-header-cell-icons {
         max-width: 100px;
         opacity: 1;
@@ -1261,7 +1334,7 @@
         margin-left: 0;
     }
 
-    .hcg-header-cell-icons .hcg-header-cell-menu-icon button {
+    .hcg-header-cell-icons .hcg-header-cell-menu-icon .hcg-icon {
         padding-inline: 3px;
     }
 
@@ -1279,6 +1352,7 @@
         right: -5px;
         height: 100%;
         user-select: none;
+        touch-action: none;
         z-index: 10;
         cursor: col-resize;
     }
@@ -1644,17 +1718,17 @@
 /* Start Grid CSS Helpers Classes */
 
 .hcg-table thead tr th.hcg-right .hcg-header-cell-content,
-.hcg-table tbody tr td.hcg-right {
+.hcg-table tbody tr > :where(.hcg-cell).hcg-right {
     text-align: right;
 }
 
 .hcg-table thead tr th.hcg-center .hcg-header-cell-content,
-.hcg-table tbody tr td.hcg-center {
+.hcg-table tbody tr > :where(.hcg-cell).hcg-center {
     text-align: center;
 }
 
 .hcg-table thead tr th.hcg-left .hcg-header-cell-content,
-.hcg-table tbody tr td.hcg-left {
+.hcg-table tbody tr > :where(.hcg-cell).hcg-left {
     text-align: left;
 }
 
@@ -1662,8 +1736,147 @@
 
 /* SPDX-License-Identifier: LicenseRef-Highcharts */
 
+/* Grid Pro TreeView styles */
+
+.hcg-tree {
+    --ig-tree-indent-size: 16px;
+    --ig-tree-toggle-gap: 5px;
+    --ig-tree-toggle-slot-size: 20px;
+
+    display: flex;
+    align-items: center;
+    min-width: 0;
+    padding-left: calc(var(--ig-tree-depth, 0) * var(--ig-tree-indent-size));
+
+    .hcg-tree-toggle {
+        flex: 0 0 var(--ig-tree-toggle-slot-size);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        height: var(--ig-tree-toggle-slot-size);
+        margin-right: var(--ig-tree-toggle-gap);
+
+        button[aria-expanded="true"] > svg {
+            transform: rotate(90deg);
+        }
+    }
+
+    .hcg-tree-value {
+        flex: 1 1 auto;
+        min-width: 0;
+    }
+}
+
+.hcg-container .hcg-table.hcg-scrollable-content,
+.hcg-container .hcg-table.hcg-virtualization,
+.hcg-table {
+    tbody.hcg-tbody-sticky {
+        position: absolute;
+        display: block;
+        border-radius: 0;
+        left: 0;
+        height: 0;
+        min-height: 0;
+        overflow: hidden;
+        flex: none;
+        pointer-events: none;
+        z-index: 3;
+
+        &.hcg-tbody-sticky-active {
+            border-bottom: var(--ig-row-border);
+            box-shadow: 0 3px 5px -2px rgba(0, 0, 0, 0.1);
+        }
+
+        tr {
+            pointer-events: auto;
+
+            &:last-of-type {
+                td:first-child,
+                td:last-child {
+                    border-bottom-left-radius: 0;
+                    border-bottom-right-radius: 0;
+                }
+            }
+        }
+    }
+}
+
+.hcg-table tbody.hcg-tbody-sticky tr {
+    --ig-row-background-current: var(--hcg-row-background, var(--ig-background, var(--ig-default-background)));
+}
+
+.hcg-table tbody.hcg-tbody-sticky tr.hcg-row-even {
+    --ig-row-background-current: var(--hcg-row-even-background, var(--hcg-row-background, var(--ig-background, var(--ig-default-background))));
+}
+
+.hcg-container {
+    .hcg-table {
+        --ig-pinned-border-width: var(--hcg-pinned-border-width, var(--ig-row-border-width));
+        --ig-pinned-border-style: var(--hcg-pinned-border-style, var(--ig-row-border-style));
+        --ig-pinned-border-color: var(--hcg-pinned-border-color, var(--ig-row-border-color));
+        --ig-pinned-border: var(--ig-pinned-border-width) var(--ig-pinned-border-style) var(--ig-pinned-border-color);
+        --ig-pinned-top-shadow: var(--hcg-pinned-top-shadow);
+        --ig-pinned-bottom-shadow: var(--hcg-pinned-bottom-shadow);
+    }
+}
+
+.hcg-container,
+.highcharts-light .hcg-container {
+    --ig-pinned-border-width: var(--hcg-pinned-border-width, var(--ig-row-border-width));
+    --ig-pinned-border-style: var(--hcg-pinned-border-style, var(--ig-row-border-style));
+    --ig-pinned-border-color: var(--hcg-pinned-border-color, var(--ig-row-border-color));
+    --ig-pinned-border: var(--ig-pinned-border-width) var(--ig-pinned-border-style) var(--ig-pinned-border-color);
+    --ig-pinned-top-shadow: var(--hcg-pinned-top-shadow);
+    --ig-pinned-bottom-shadow: var(--hcg-pinned-bottom-shadow);
+}
+
+.hcg-theme-default,
+.highcharts-light .hcg-theme-default {
+    --hcg-pinned-top-shadow: 0 3px 5px -2px rgba(0, 0, 0, 0.1);
+    --hcg-pinned-bottom-shadow: 0 -3px 5px -2px rgba(0, 0, 0, 0.1);
+}
+
+.hcg-container .hcg-table tbody.hcg-tbody-pinned-top {
+    border-bottom: var(--ig-pinned-border);
+    box-shadow: var(--ig-pinned-top-shadow);
+}
+
+.hcg-container .hcg-table tbody.hcg-tbody-pinned-bottom {
+    border-top: var(--ig-pinned-border);
+    box-shadow: var(--ig-pinned-bottom-shadow);
+}
+
+.hcg-container .hcg-table {
+    > tbody.hcg-tbody-pinned {
+        height: auto;
+        display: block;
+        overflow: hidden;
+        min-height: 0;
+        flex: 0 0 auto;
+        position: relative;
+        z-index: 1;
+
+        > tr {
+            display: block;
+            position: static;
+        }
+    }
+
+    > tbody:not(.hcg-tbody-pinned) > tr.hcg-row-pinned td {
+        font-weight: 600;
+    }
+
+    &:has(> tbody.hcg-tbody-pinned) {
+        > tbody:not(.hcg-tbody-pinned) {
+            height: auto;
+        }
+    }
+}
+
+/* SPDX-License-Identifier: LicenseRef-Highcharts */
+
 /**
- * @license Highcharts Grid Pro v2.3.1
+ * @license Highcharts Grid Pro v3.0.0
  *
  * (c) 2009-2025 Highsoft AS
  *
@@ -1787,7 +2000,7 @@
     padding: var(--ig-padding);
 }
 
-.hcg-table tbody td.hcg-edited-cell .hcg-input:not([type="checkbox"]) {
+.hcg-table tbody :where(.hcg-cell).hcg-edited-cell .hcg-input:not([type="checkbox"]) {
     border-width: 0;
     position: absolute;
     top: 0;
@@ -1806,11 +2019,11 @@
     line-height: 1.2em;
 }
 
-.hcg-table tbody td.hcg-edited-cell select {
+.hcg-table tbody :where(.hcg-cell).hcg-edited-cell select {
     appearance: none;
 }
 
-.hcg-table tbody td.hcg-edited-cell-error .hcg-input {
+.hcg-table tbody :where(.hcg-cell).hcg-edited-cell-error .hcg-input {
     color: var(--ig-color);
     box-shadow: inset 0 0 0 var(--ig-focus-ring-width) var(--ig-negative-border-color) !important;
     background-color: var(--ig-negative-background) !important;
