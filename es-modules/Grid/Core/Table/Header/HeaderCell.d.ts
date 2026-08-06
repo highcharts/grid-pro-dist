@@ -33,6 +33,14 @@ declare class HeaderCell extends Cell {
      */
     toolbar?: ColumnToolbar;
     /**
+     * Key used by the header row to reuse the cell.
+     */
+    headerCellKey?: string;
+    /**
+     * Column resize handle rendered inside this header cell.
+     */
+    private resizeHandle?;
+    /**
      * Constructs a cell in the data grid header.
      *
      * @param row
@@ -56,10 +64,19 @@ declare class HeaderCell extends Cell {
     render(): Promise<void>;
     /**
      * Returns merged header styles from defaults and current column options.
-     *
      */
     private getColumnStyles;
     reflow(): void;
+    /**
+     * Synchronizes the columns represented by this header cell.
+     *
+     * @param column
+     * The direct column represented by the cell.
+     *
+     * @param columnsTree
+     * The grouped header tree represented by the cell.
+     */
+    syncColumns(column?: Column, columnsTree?: GroupedHeaderOptions[]): void;
     onKeyDown(e: KeyboardEvent): void;
     onClick(e: MouseEvent): void;
     /**

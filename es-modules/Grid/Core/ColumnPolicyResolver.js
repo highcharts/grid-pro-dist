@@ -4,8 +4,9 @@
  *
  *  (c) 2020-2026 Highsoft AS
  *
- *  A commercial license may be required depending on use.
- *  See www.highcharts.com/license
+ *  Integration of this software requires a license.
+ *  - For commercial use, see www.highcharts.com/license
+ *  - For non-commercial, see www.highcharts.com/license-eula
  *
  *
  *  Authors:
@@ -13,6 +14,7 @@
  *
  * */
 'use strict';
+import { defined } from '../../Shared/Utilities.js';
 /* *
  *
  *  Class
@@ -140,6 +142,18 @@ class ColumnPolicyResolver {
             void 0;
     }
     /**
+     * Sets source column ids that should not be rendered.
+     *
+     * @param columnIds
+     * Source column ids hidden from the rendered column set. If omitted, the
+     * cache is cleared.
+     */
+    setHiddenSourceColumnIds(columnIds) {
+        this.hiddenSourceColumnIds = columnIds?.length ?
+            new Set(columnIds) :
+            void 0;
+    }
+    /**
      * Returns cached source column ids from the data provider.
      */
     getAvailableSourceColumnIds() {
@@ -226,6 +240,42 @@ class ColumnPolicyResolver {
             !!inlineFilteringEnabled;
     }
     /**
+     * Returns whether the filter operator select is hidden.
+     *
+     * @param columnId
+     * Grid column id.
+     */
+    isFilterOperatorSelectHidden(columnId) {
+        const columnOptions = this.getIndividualColumnOptions(columnId);
+        const hideOperatorSelect = (columnOptions?.filtering?.hideOperatorSelect ??
+            this.columnDefaults.filtering?.hideOperatorSelect);
+        if (defined(hideOperatorSelect)) {
+            return hideOperatorSelect;
+        }
+        const operators = (columnOptions?.filtering?.operators ??
+            columnOptions?.filtering?.conditions ??
+            this.columnDefaults.filtering?.operators ??
+            this.columnDefaults.filtering?.conditions);
+        // If there is only one operator, hide the select.
+        return operators?.length === 1;
+    }
+    /**
+     * Returns whether a spacer should reserve the operator select row height
+     * for inline filtering in the given column.
+     *
+     * @param columnId
+     * Grid column id.
+     *
+     * @param enabledColumnIds
+     * Enabled Grid column ids in the filter row.
+     */
+    shouldRenderOperatorSpacer(columnId, enabledColumnIds) {
+        return (this.isColumnInlineFilteringEnabled(columnId) &&
+            this.isFilterOperatorSelectHidden(columnId) &&
+            enabledColumnIds.some((id) => this.isColumnInlineFilteringEnabled(id) &&
+                !this.isFilterOperatorSelectHidden(id)));
+    }
+    /**
      * Returns whether editing should be enabled for the column.
      *
      * @param columnId
@@ -261,7 +311,7 @@ class ColumnPolicyResolver {
         if (!columnsIncluded?.length) {
             return [];
         }
-        return this.filterEnabledColumns(columnsIncluded);
+        return this.filterEnabledColumns(this.filterHiddenSourceColumns(columnsIncluded));
     }
     /**
      * Returns column ids for autogeneration mode:
@@ -279,6 +329,29 @@ class ColumnPolicyResolver {
         const autoColumnIds = new Set(autoColumns);
         const customConfiguredColumns = (configuredColumns || []).filter((columnId) => !autoColumnIds.has(columnId));
         return autoColumns.concat(customConfiguredColumns);
+    }
+    /**
+     * Filters out columns backed by hidden source columns.
+     *
+     * @param columnIds
+     * Candidate column ids.
+     */
+    filterHiddenSourceColumns(columnIds) {
+        const hiddenSourceColumnIds = this.hiddenSourceColumnIds;
+        if (!hiddenSourceColumnIds) {
+            return columnIds;
+        }
+        const result = [];
+        for (let i = 0, iEnd = columnIds.length; i < iEnd; ++i) {
+            const columnId = columnIds[i];
+            const sourceColumnId = this.getColumnSourceId(columnId);
+            if (sourceColumnId &&
+                hiddenSourceColumnIds.has(sourceColumnId)) {
+                continue;
+            }
+            result.push(columnId);
+        }
+        return result;
     }
     /**
      * Filters out duplicate and disabled columns while preserving order.

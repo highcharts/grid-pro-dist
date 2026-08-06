@@ -4,8 +4,9 @@
  *
  *  (c) 2020-2026 Highsoft AS
  *
- *  A commercial license may be required depending on use.
- *  See www.highcharts.com/license
+ *  Integration of this software requires a license.
+ *  - For commercial use, see www.highcharts.com/license
+ *  - For non-commercial, see www.highcharts.com/license-eula
  *
  *
  *  Authors:
@@ -68,20 +69,7 @@ class HeaderCell extends Cell {
             throw new Error('No header found.');
         }
         this.tableHeader = header;
-        if (column) {
-            column.header = this;
-            this.columns.push(column);
-        }
-        else if (columnsTree) {
-            const vp = this.row.viewport;
-            const columnIds = vp.grid.getColumnIds(columnsTree, true);
-            for (const columnId of columnIds) {
-                const column = vp.getColumn(columnId);
-                if (column) {
-                    this.columns.push(column);
-                }
-            }
-        }
+        this.syncColumns(column, columnsTree);
     }
     /* *
     *
@@ -102,7 +90,7 @@ class HeaderCell extends Cell {
      */
     async render() {
         const { column } = this;
-        const options = createOptionsProxy(this.superColumnOptions, column?.options);
+        const options = createOptionsProxy(this.superColumnOptions, column?.options ?? this.row.viewport.grid.options?.columnDefaults);
         const headerCellOptions = options.header || {};
         const headerValue = column ?
             headerCellOptions.formatter?.call(column) : void 0;
@@ -118,7 +106,9 @@ class HeaderCell extends Cell {
             this.value = column?.id || '';
         }
         // Render content of th element
-        this.row.htmlElement.appendChild(this.htmlElement);
+        if (!this.htmlElement.parentElement) {
+            this.row.htmlElement.appendChild(this.htmlElement);
+        }
         // Create flex container for header content and icons
         const container = this.container = makeHTMLElement('div', {
             className: Globals.getClassName('headerCellContainer')
@@ -140,7 +130,8 @@ class HeaderCell extends Cell {
                 this.htmlElement.classList.add(...column.options.className.split(/\s+/g));
             }
             // Add resizing
-            column.viewport.columnsResizer?.renderColumnDragHandles(column, this);
+            this.resizeHandle = column.viewport.columnsResizer
+                ?.renderColumnDragHandles(column, this);
             // Add toolbar
             this.toolbar = new ColumnToolbar(column);
             this.toolbar.add();
@@ -157,14 +148,17 @@ class HeaderCell extends Cell {
     }
     /**
      * Returns merged header styles from defaults and current column options.
-     *
      */
     getColumnStyles() {
         const { column } = this;
-        if (!column) {
-            return resolveStyleValue(this.superColumnOptions.header?.style);
-        }
         const { grid } = this.row.viewport;
+        if (!column) {
+            const options = createOptionsProxy(this.superColumnOptions, grid.options?.columnDefaults);
+            return {
+                ...resolveStyleValue(options.style),
+                ...resolveStyleValue(options.header?.style)
+            };
+        }
         const rawColumnOptions = grid.columnPolicy
             .getIndividualColumnOptions(column.id);
         return {
@@ -186,12 +180,44 @@ class HeaderCell extends Cell {
         th.style.width = th.style.maxWidth = width + 'px';
         this.toolbar?.reflow();
     }
+    /**
+     * Synchronizes the columns represented by this header cell.
+     *
+     * @param column
+     * The direct column represented by the cell.
+     *
+     * @param columnsTree
+     * The grouped header tree represented by the cell.
+     */
+    syncColumns(column, columnsTree) {
+        if (this.column?.header === this && this.column !== column) {
+            delete this.column.header;
+        }
+        this.column = column;
+        this.columns.length = 0;
+        if (column) {
+            column.header = this;
+            this.columns.push(column);
+        }
+        else if (columnsTree) {
+            const vp = this.row.viewport;
+            const columnIds = vp.grid.getColumnIds(columnsTree, false);
+            for (let i = 0, iEnd = columnIds.length; i < iEnd; ++i) {
+                const column = vp.getColumn(columnIds[i]);
+                if (column && vp.isColumnRendered(column.index)) {
+                    this.columns.push(column);
+                }
+            }
+        }
+    }
     onKeyDown(e) {
         if (!this.column || e.target !== this.htmlElement) {
             return;
         }
         if (e.key === 'Enter') {
-            this.toolbar?.focus();
+            this.toolbar?.focus({
+                preventScroll: true
+            });
             e.preventDefault();
             return;
         }
@@ -230,12 +256,21 @@ class HeaderCell extends Cell {
      */
     isLastColumn() {
         const vp = this.row.viewport;
-        const lastViewportColumn = vp.columns[vp.columns.length - 1];
+        const renderedColumns = vp.getRenderedColumns();
+        const lastViewportColumn = renderedColumns[renderedColumns.length - 1];
         const lastCellColumn = this.columns?.[this.columns.length - 1];
         return lastViewportColumn === lastCellColumn;
     }
     destroy() {
+        const columnsResizer = this.column?.viewport.columnsResizer;
+        if (this.resizeHandle && columnsResizer) {
+            columnsResizer.removeHandle(this.resizeHandle);
+            delete this.resizeHandle;
+        }
         this.toolbar?.destroy();
+        if (this.column?.header === this) {
+            delete this.column.header;
+        }
         super.destroy();
     }
 }

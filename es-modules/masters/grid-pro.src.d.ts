@@ -1,11 +1,11 @@
 /**
- * @license Highcharts Grid Pro v3.0.0 (2026-05-06)
+ * @license Highcharts Grid Pro v3.1.0 (2026-08-06)
  * @module grid/grid-pro
  *
  * (c) 2009-2026 Highsoft AS
  *
- * A commercial license may be required depending on use.
- * See www.highcharts.com/license
+ * A commercial license may be required depending on use,
+ * see www.highcharts.com/license
  */
 import type _Options from '../Grid/Core/Options';
 import AST from '../Core/Renderer/HTML/AST.js';
@@ -24,6 +24,7 @@ import Column from '../Grid/Core/Table/Column.js';
 import HeaderCell from '../Grid/Core/Table/Header/HeaderCell.js';
 import TableRow from '../Grid/Core/Table/Body/TableRow.js';
 import TableCell from '../Grid/Core/Table/Body/TableCell.js';
+import CellContextMenuBuiltInActions from '../Grid/Core/Table/CellContextMenu/CellContextMenuBuiltInActions.js';
 import SvgIcons from '../Grid/Core/UI/SvgIcons.js';
 import CellRendererRegistry from '../Grid/Pro/CellRendering/CellRendererRegistry.js';
 import Pagination from '../Grid/Core/Pagination/Pagination.js';
@@ -46,6 +47,7 @@ import '../Grid/Pro/GridEvents.js';
 import '../Grid/Pro/CellEditing/CellEditingComposition.js';
 import '../Grid/Pro/Credits/CreditsProComposition.js';
 import '../Grid/Pro/Export/ExportingComposition.js';
+import '../Grid/Pro/TableEditing/TableEditingComposition.js';
 import '../Grid/Pro/CellRendering/CellRenderer.js';
 import '../Grid/Pro/CellRendering/CellContentPro.js';
 import '../Grid/Pro/CellRendering/CellRenderersComposition.js';
@@ -62,6 +64,11 @@ import '../Grid/Core/Data/LocalDataProvider.js';
 import '../Grid/Pro/Data/RemoteDataProvider.js';
 declare const G: {
     readonly AST: typeof AST;
+    readonly CellContextMenuBuiltInActions: {
+        readonly registerBuiltInAction: typeof import("../Grid/Core/Table/CellContextMenu/CellContextMenuBuiltInActions.js").registerBuiltInAction;
+        readonly registerBuiltInGroup: typeof import("../Grid/Core/Table/CellContextMenu/CellContextMenuBuiltInActions.js").registerBuiltInGroup;
+        readonly resolveCellContextMenuItems: typeof import("../Grid/Core/Table/CellContextMenu/CellContextMenuBuiltInActions.js").resolveCellContextMenuItems;
+    };
     readonly CellContentPro: typeof CellContentPro;
     readonly CellRenderer: typeof CellRenderer;
     readonly CellRendererRegistry: {
@@ -115,11 +122,11 @@ declare const G: {
         helpers: Record<string, Function>;
         numberFormat: (this: Templating.Owner | void, number: number, decimals: number, decimalPoint?: string, thousandsSep?: string) => string;
     };
-    readonly version: "3.0.0";
+    readonly version: "3.1.0";
     readonly win: Window & typeof globalThis;
 };
-export { AST, CellContentPro, CellRenderer, CellRendererRegistry, Column, ColumnResizing, DataConnector, DataConverter, DataCursor, DataModifier, DataProviderRegistry, DataPool, DataTable, _Grid as Grid, HeaderCell, _Options as Options, Pagination, Popup, SvgIcons, Table, TableCell, Templating };
-export declare const classNamePrefix: string, defaultOptions: import("../Shared/Types").DeepPartial<_Options>, grid: typeof _Grid.grid, grids: (_Grid | undefined)[], isHighContrastModeActive: () => boolean, product: "Grid Pro", setOptions: typeof import("../Grid/Core/Defaults.js").setOptions, version: "3.0.0", win: Window & typeof globalThis;
+export { AST, CellContextMenuBuiltInActions, CellContentPro, CellRenderer, CellRendererRegistry, Column, ColumnResizing, DataConnector, DataConverter, DataCursor, DataModifier, DataProviderRegistry, DataPool, DataTable, _Grid as Grid, HeaderCell, _Options as Options, Pagination, Popup, SvgIcons, Table, TableCell, Templating };
+export declare const classNamePrefix: string, defaultOptions: import("../Shared/Types").DeepPartial<_Options>, grid: typeof _Grid.grid, grids: (_Grid | undefined)[], isHighContrastModeActive: () => boolean, product: "Grid Pro", setOptions: typeof import("../Grid/Core/Defaults.js").setOptions, version: "3.1.0", win: Window & typeof globalThis;
 declare namespace G {
     type Options = _Options;
 }

@@ -60,8 +60,11 @@ declare class HeaderCellToolbar implements Toolbar {
     destroy(): void;
     /**
      * Focuses the first button of the toolbar.
+     *
+     * @param options
+     * Native focus options.
      */
-    focus(): void;
+    focus(options?: FocusOptions): void;
     /**
      * Handles the key down event on the toolbar.
      *

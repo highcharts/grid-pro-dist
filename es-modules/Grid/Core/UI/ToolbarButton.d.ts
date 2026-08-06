@@ -45,7 +45,7 @@ declare class ToolbarButton implements Button {
      */
     add(toolbar: Toolbar): this;
     setA11yAttributes(button: HTMLButtonElement): void;
-    focus(): void;
+    focus(options?: FocusOptions): void;
     /**
      * Sets the icon for the button.
      *

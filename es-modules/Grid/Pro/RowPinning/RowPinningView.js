@@ -4,8 +4,9 @@
  *
  *  (c) 2020-2026 Highsoft AS
  *
- *  A commercial license may be required depending on use.
- *  See www.highcharts.com/license
+ *  Integration of this software requires a license.
+ *  - For commercial use, see www.highcharts.com/license
+ *  - For non-commercial, see www.highcharts.com/license-eula
  *
  *
  *  Author:
@@ -19,7 +20,7 @@ import GridUtils from '../../Core/GridUtils.js';
 import Globals from '../../Core/Globals.js';
 import { getGridRowPinningOptions } from './RowPinningController.js';
 import PinnedTableRow from './PinnedTableRow.js';
-const { makeHTMLElement } = GridUtils;
+const { makeHTMLElement, joinClassNames } = GridUtils;
 /**
  * The class names used by the row pinning functionality.
  */
@@ -40,17 +41,11 @@ class RowPinningView {
         this.scrollbarCompensationQueued = false;
         this.viewport = viewport;
         this.pinnedTopTbodyElement = makeHTMLElement('tbody', {
-            className: [
-                classNames.pinnedTbodyElement,
-                classNames.pinnedTopTbodyElement
-            ].join(' ')
+            className: joinClassNames(classNames.pinnedTbodyElement, classNames.pinnedTopTbodyElement)
         });
         this.pinnedTopTbodyElement.setAttribute('aria-label', 'Pinned top rows');
         this.pinnedBottomTbodyElement = makeHTMLElement('tbody', {
-            className: [
-                classNames.pinnedTbodyElement,
-                classNames.pinnedBottomTbodyElement
-            ].join(' ')
+            className: joinClassNames(classNames.pinnedTbodyElement, classNames.pinnedBottomTbodyElement)
         });
         this.pinnedBottomTbodyElement.setAttribute('aria-label', 'Pinned bottom rows');
         viewport.registerBodySection({

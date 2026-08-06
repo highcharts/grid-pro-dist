@@ -1,7 +1,7 @@
-import type { RowId } from '../../Core/Data/DataProvider';
-import type Table from '../../Core/Table/Table';
-import type TableCell from '../../Core/Table/Body/TableCell';
-import TableRow from '../../Core/Table/Body/TableRow.js';
+import type { RowId } from '../../../Core/Data/DataProvider';
+import type Table from '../../../Core/Table/Table';
+import type TableCell from '../../../Core/Table/Body/TableCell';
+import TableRow from '../../../Core/Table/Body/TableRow.js';
 declare class TreeStickyRowController {
     /**
      * The viewport table instance that owns the sticky rows.
@@ -112,6 +112,16 @@ declare class TreeStickyRowController {
      */
     handleScroll(): void;
     /**
+     * Refreshes sticky rows immediately instead of batching on the next frame.
+     *
+     * @param syncRow
+     * Whether sticky rows should be synchronized with source rows.
+     *
+     * @param reflowRow
+     * Whether sticky rows should be reflowed after synchronization.
+     */
+    refreshNow(syncRow?: boolean, reflowRow?: boolean): Promise<void>;
+    /**
      * Schedules sticky row refresh on the next animation frame.
      *
      * @param syncRow
@@ -151,6 +161,10 @@ declare class TreeStickyRowController {
      * Sticky body hosting overlay rows.
      */
     private syncStickyBodyClasses;
+    /**
+     * Returns the current sticky body vertical border height.
+     */
+    private getStickyBodyVerticalBorderHeight;
     /**
      * Finds the first rendered row intersecting the given scroll position.
      *

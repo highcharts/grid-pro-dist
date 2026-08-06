@@ -4,8 +4,9 @@
  *
  *  (c) 2020-2026 Highsoft AS
  *
- *  A commercial license may be required depending on use.
- *  See www.highcharts.com/license
+ *  Integration of this software requires a license.
+ *  - For commercial use, see www.highcharts.com/license
+ *  - For non-commercial, see www.highcharts.com/license-eula
  *
  *
  *  Authors:
@@ -50,26 +51,34 @@ class FilterRow extends HeaderRow {
     }
     async renderContent() {
         const vp = this.viewport;
-        const enabledColumns = vp.grid.enabledColumns || [];
-        vp.theadElement?.appendChild(this.htmlElement);
+        const desiredKeys = {};
+        const orderedCells = [];
+        if (!this.htmlElement.parentElement) {
+            vp.theadElement?.appendChild(this.htmlElement);
+        }
         this.htmlElement.classList.add(Globals.getClassName('headerRow'));
-        for (let i = 0, iEnd = vp.columns.length; i < iEnd; i++) {
-            const column = vp.columns[i];
-            if (enabledColumns?.indexOf(column.id) < 0) {
-                continue;
+        this.clearPositionClasses();
+        const columns = vp.getRenderedColumns();
+        const firstColumn = columns[0];
+        for (let i = 0, iEnd = columns.length; i < iEnd; i++) {
+            const column = columns[i];
+            const { cell, isNew } = this.syncHeaderCell(this.getColumnCellKey(column.id), desiredKeys, orderedCells, column);
+            if (column === firstColumn) {
+                cell.htmlElement.classList.add(Globals.getClassName('columnFirst'));
             }
-            const cell = this.createCell(column);
-            await cell.render();
-            if (vp.grid.columnPolicy.isColumnInlineFilteringEnabled(column.id)) {
-                column.filtering?.renderFilteringContent(cell.htmlElement);
+            if (isNew) {
+                await cell.render();
+                if (vp.grid.columnPolicy
+                    .isColumnInlineFilteringEnabled(column.id)) {
+                    column.filtering?.renderFilteringContent(cell.htmlElement);
+                }
             }
         }
-        const firstCell = this.cells[0];
-        if (firstCell.column?.index === 0) {
-            // Add class to disable left border on first column
-            this.cells[0].htmlElement.classList.add(Globals.getClassName('columnFirst'));
-        }
+        this.destroyStaleCells(desiredKeys);
+        this.syncCellElements(orderedCells);
+        this.cells = orderedCells;
         this.setLastCellClass();
+        this.reflowPosition();
     }
 }
 /* *

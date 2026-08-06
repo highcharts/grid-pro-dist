@@ -4,74 +4,85 @@
  *
  *  (c) 2020-2026 Highsoft AS
  *
- *  A commercial license may be required depending on use.
- *  See www.highcharts.com/license
+ *  Integration of this software requires a license.
+ *  - For commercial use, see www.highcharts.com/license
+ *  - For non-commercial, see www.highcharts.com/license-eula
  *
  *  Authors:
  *  - Dawid Dragula
  *
  * */
 'use strict';
-import { defined, isArray, isFunction, isNumber, isString } from '../../../../Shared/Utilities.js';
+import { buildPathHierarchy, getPathSegments, normalizeRowIdValue } from '../TreeViewCommons.js';
+import { defined, isString } from '../../../../Shared/Utilities.js';
 /**
  * Builds a canonical tree index from full path definitions.
  *
- * @param columns
- * Source columns.
- *
- * @param idColumn
- * Column ID containing stable row IDs.
+ * @param table
+ * Source table.
  *
  * @param input
  * Normalized tree input options.
  *
+ * @param idColumn
+ * Column ID containing stable row IDs, when configured.
+ *
  * @returns
  * Canonical tree index.
  */
-export function buildIndexFromColumns(columns, idColumn, input) {
+export function buildIndexFromColumns(table, input, idColumn) {
+    const { columns } = table;
     const { pathColumn, separator } = input;
-    const idValues = columns[idColumn];
-    if (!idValues) {
-        throw new Error(`TreeView: idColumn "${idColumn}" not found.`);
-    }
     const pathValues = columns[pathColumn];
     if (!pathValues) {
         throw new Error(`TreeView: pathColumn "${pathColumn}" not found.`);
     }
     if (!separator) {
-        throw new Error('TreeView: `data.treeView.input.separator` must not be empty.');
+        throw new Error('TreeView: `treeView.input.separator` must not be empty.');
     }
-    const rowCount = Math.max(idValues.length, pathValues.length);
+    const rowCount = Math.max(table.getRowCount(), pathValues.length);
     const nodes = new Map();
     const rowOrder = [];
     const pathToId = new Map();
     const pathById = new Map();
     const hierarchyById = new Map();
     const parentPathByPath = new Map();
-    const rootIds = [];
     for (let rowIndex = 0; rowIndex < rowCount; ++rowIndex) {
-        const id = normalizeRowIdValue(idValues[rowIndex], idColumn, rowIndex);
+        let nodeId;
+        if (idColumn) {
+            nodeId = normalizeRowIdValue(columns[idColumn]?.[rowIndex], idColumn, rowIndex);
+        }
+        else {
+            nodeId = table.getOriginalRowIndex(rowIndex);
+        }
+        if (!defined(nodeId)) {
+            throw new Error('TreeView: Could not resolve original row index ' +
+                `at row ${rowIndex}.`);
+        }
         const normalizedPath = normalizePathValue(pathValues[rowIndex], pathColumn, rowIndex, separator);
         const { hierarchy, path } = normalizedPath;
-        if (nodes.has(id)) {
-            throw new Error(`TreeView: Duplicate row id "${String(id)}" in column ` +
-                `"${idColumn}" at row ${rowIndex}.`);
+        if (nodes.has(nodeId)) {
+            throw new Error(idColumn ?
+                `TreeView: Duplicate row id "${String(nodeId)}" in column ` +
+                    `"${idColumn}" at row ${rowIndex}.` :
+                `TreeView: Duplicate original row index "${String(nodeId)}" ` +
+                    `at row ${rowIndex}.`);
         }
         if (pathToId.has(path)) {
             throw new Error(`TreeView: Duplicate path "${path}" in column ` +
                 `"${pathColumn}" at row ${rowIndex}.`);
         }
-        nodes.set(id, {
-            id,
+        nodes.set(nodeId, {
+            id: nodeId,
             parentId: null,
             rowIndex,
             path,
             childrenIds: []
         });
-        rowOrder.push(id);
-        pathToId.set(path, id);
-        pathById.set(id, path);
-        hierarchyById.set(id, hierarchy);
+        rowOrder.push(nodeId);
+        pathToId.set(path, nodeId);
+        pathById.set(nodeId, path);
+        hierarchyById.set(nodeId, hierarchy);
         for (let i = 0, iEnd = hierarchy.length; i < iEnd; ++i) {
             const hierarchyPath = hierarchy[i];
             if (parentPathByPath.has(hierarchyPath)) {
@@ -88,7 +99,7 @@ export function buildIndexFromColumns(columns, idColumn, input) {
      * Path to ensure node for.
      *
      * @returns
-     * Existing or generated node ID.
+     * Existing or generated tree node ID.
      */
     function ensureNodeForPath(path) {
         const existingId = pathToId.get(path);
@@ -99,25 +110,22 @@ export function buildIndexFromColumns(columns, idColumn, input) {
         const parentId = (parentPath === null ?
             null :
             ensureNodeForPath(parentPath));
-        const generatedId = createGeneratedRowId(path, nodes);
-        nodes.set(generatedId, {
-            id: generatedId,
+        const generatedNodeId = createGeneratedRowId(path, nodes);
+        nodes.set(generatedNodeId, {
+            id: generatedNodeId,
             parentId,
             rowIndex: null,
             isGenerated: true,
             path,
             childrenIds: []
         });
-        rowOrder.push(generatedId);
-        pathToId.set(path, generatedId);
-        pathById.set(generatedId, path);
-        if (parentId === null) {
-            rootIds.push(generatedId);
+        rowOrder.push(generatedNodeId);
+        pathToId.set(path, generatedNodeId);
+        pathById.set(generatedNodeId, path);
+        if (parentId !== null) {
+            nodes.get(parentId)?.childrenIds.push(generatedNodeId);
         }
-        else {
-            nodes.get(parentId)?.childrenIds.push(generatedId);
-        }
-        return generatedId;
+        return generatedNodeId;
     }
     for (let i = 0, iEnd = sourceRowOrder.length; i < iEnd; ++i) {
         const nodeId = sourceRowOrder[i];
@@ -129,7 +137,6 @@ export function buildIndexFromColumns(columns, idColumn, input) {
         }
         const parentPath = parentPathByPath.get(path) ?? null;
         if (parentPath === null) {
-            rootIds.push(node.id);
             continue;
         }
         const parentId = ensureNodeForPath(parentPath);
@@ -138,34 +145,8 @@ export function buildIndexFromColumns(columns, idColumn, input) {
     }
     return {
         nodes,
-        rowOrder,
-        rootIds
+        rowOrder
     };
-}
-/**
- * Normalizes row ID values to valid `RowId`.
- *
- * @param value
- * Raw cell value.
- *
- * @param columnId
- * Source column ID.
- *
- * @param rowIndex
- * Row index of the value.
- *
- * @returns
- * Normalized row ID.
- */
-function normalizeRowIdValue(value, columnId, rowIndex) {
-    if (!defined(value)) {
-        throw new Error(`TreeView: Missing value in "${columnId}" at row ${rowIndex}.`);
-    }
-    if (isString(value) || isNumber(value)) {
-        return value;
-    }
-    throw new Error(`TreeView: "${columnId}" must contain only string or number values. ` +
-        `Invalid value at row ${rowIndex}.`);
 }
 /**
  * Normalizes and validates path values.
@@ -198,85 +179,6 @@ function normalizePathValue(value, columnId, rowIndex, separator) {
         hierarchy: buildPathHierarchy(value, columnId, rowIndex, segments, separator),
         path: value
     };
-}
-/**
- * Resolves ordered path segments from a raw path value.
- *
- * @param value
- * Raw path value.
- *
- * @param separator
- * Path separator definition.
- *
- * @returns
- * Ordered path segments.
- */
-function getPathSegments(value, separator) {
-    if (isFunction(separator)) {
-        const segments = separator(value);
-        if (!isArray(segments)) {
-            throw new Error('TreeView: `data.treeView.input.separator` callback must ' +
-                'return an array.');
-        }
-        return segments;
-    }
-    if (separator instanceof RegExp) {
-        const regex = new RegExp(separator.source, separator.flags.includes('g') ?
-            separator.flags :
-            separator.flags + 'g');
-        const segments = [];
-        let match;
-        while ((match = regex.exec(value)) !== null) {
-            segments.push(match[0]);
-            if (match[0] === '') {
-                ++regex.lastIndex;
-            }
-        }
-        return segments;
-    }
-    if (!separator) {
-        throw new Error('TreeView: `data.treeView.input.separator` must not be empty.');
-    }
-    return value.split(separator);
-}
-/**
- * Builds cumulative path hierarchy from ordered path segments.
- *
- * @param value
- * Raw path value.
- *
- * @param columnId
- * Source column ID.
- *
- * @param rowIndex
- * Row index of the value.
- *
- * @param segments
- * Ordered path segments.
- *
- * @param separator
- * Path separator definition.
- *
- * @returns
- * Cumulative path hierarchy from root to leaf.
- */
-function buildPathHierarchy(value, columnId, rowIndex, segments, separator) {
-    const hierarchy = [];
-    let path = '';
-    const joinWithSeparator = isString(separator);
-    for (let i = 0, iEnd = segments.length; i < iEnd; ++i) {
-        const segment = segments[i];
-        if (!isString(segment) || !segment.length) {
-            throw new Error(`TreeView: Invalid path "${value}" in "${columnId}" at row ` +
-                `${rowIndex}. Empty path segments are not allowed.`);
-        }
-        if (joinWithSeparator && path.length) {
-            path += separator;
-        }
-        path += segment;
-        hierarchy.push(path);
-    }
-    return hierarchy;
 }
 /**
  * Creates a deterministic generated row ID for a missing path node.

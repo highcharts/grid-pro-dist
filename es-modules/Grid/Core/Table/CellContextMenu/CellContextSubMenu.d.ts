@@ -1,4 +1,4 @@
-import type TableCell from './TableCell';
+import type TableCell from '../Body/TableCell';
 import type { ContextMenu as ContextMenuType } from '../../UI/ContextMenu';
 import type { ResolvedCellContextMenuItemOptions } from './CellContextMenuBuiltInActions';
 import ContextMenu from '../../UI/ContextMenu.js';

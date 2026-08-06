@@ -4,8 +4,9 @@
  *
  *  (c) 2020-2026 Highsoft AS
  *
- *  A commercial license may be required depending on use.
- *  See www.highcharts.com/license
+ *  Integration of this software requires a license.
+ *  - For commercial use, see www.highcharts.com/license
+ *  - For non-commercial, see www.highcharts.com/license-eula
  *
  *
  *  Author:
@@ -159,10 +160,10 @@ class RowPinningController {
             pinningOptions?.resolve);
     }
     /**
-     * Returns whether the `enabled` pinning option is not explicitly `false`.
+     * Returns whether the `enabled` pinning option is explicitly `true`.
      */
     isOptionEnabled() {
-        return this.getPinningOptions()?.enabled !== false;
+        return this.getPinningOptions()?.enabled === true;
     }
     /**
      * Pins a row to the given section.

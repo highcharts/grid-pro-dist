@@ -30,6 +30,10 @@ declare class ColumnPolicyResolver {
      */
     private availableSourceColumnIds?;
     /**
+     * Source column ids hidden by data projection features.
+     */
+    private hiddenSourceColumnIds?;
+    /**
      * Sets the current column options map and rebuilds source id mappings.
      *
      * @param columnOptionsMap
@@ -97,6 +101,14 @@ declare class ColumnPolicyResolver {
      */
     setAvailableSourceColumnIds(columnIds?: string[]): void;
     /**
+     * Sets source column ids that should not be rendered.
+     *
+     * @param columnIds
+     * Source column ids hidden from the rendered column set. If omitted, the
+     * cache is cleared.
+     */
+    setHiddenSourceColumnIds(columnIds?: string[]): void;
+    /**
      * Returns cached source column ids from the data provider.
      */
     getAvailableSourceColumnIds(): string[] | undefined;
@@ -143,6 +155,24 @@ declare class ColumnPolicyResolver {
      */
     isColumnInlineFilteringEnabled(columnId: string): boolean;
     /**
+     * Returns whether the filter operator select is hidden.
+     *
+     * @param columnId
+     * Grid column id.
+     */
+    isFilterOperatorSelectHidden(columnId: string): boolean;
+    /**
+     * Returns whether a spacer should reserve the operator select row height
+     * for inline filtering in the given column.
+     *
+     * @param columnId
+     * Grid column id.
+     *
+     * @param enabledColumnIds
+     * Enabled Grid column ids in the filter row.
+     */
+    shouldRenderOperatorSpacer(columnId: string, enabledColumnIds: string[]): boolean;
+    /**
      * Returns whether editing should be enabled for the column.
      *
      * @param columnId
@@ -178,6 +208,13 @@ declare class ColumnPolicyResolver {
      * Column ids from `options.columns`.
      */
     private static getColumnsForAutogeneration;
+    /**
+     * Filters out columns backed by hidden source columns.
+     *
+     * @param columnIds
+     * Candidate column ids.
+     */
+    private filterHiddenSourceColumns;
     /**
      * Filters out duplicate and disabled columns while preserving order.
      *

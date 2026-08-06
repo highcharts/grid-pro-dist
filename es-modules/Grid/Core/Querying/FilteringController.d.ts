@@ -1,7 +1,29 @@
 import type { FilterCondition } from '../../../Data/Modifiers/FilterModifierOptions.js';
-import type { FilteringCondition } from '../Options.js';
+import type { ColumnFilteringOptions, FilteringCondition } from '../Options.js';
 import FilterModifier from '../../../Data/Modifiers/FilterModifier.js';
 import QueryingController from './QueryingController.js';
+/**
+ * Event that allows data projection features to redirect a filter condition
+ * built for a column, e.g. from a generated column to its source columns.
+ */
+export interface ResolveFilterConditionEvent {
+    /**
+     * Grid column id the filter is applied to.
+     */
+    columnId: string;
+    /**
+     * Condition built from the filtering options. Can be replaced.
+     */
+    condition?: FilterCondition;
+    /**
+     * Filtering options the condition was built from.
+     */
+    options: ColumnFilteringOptions;
+    /**
+     * Source column id resolved for the Grid column.
+     */
+    sourceColumnId: string;
+}
 /**
  * Class that manages one of the data grid querying types - filtering.
  */
@@ -34,7 +56,7 @@ declare class FilteringController {
      * @param options
      * Filtering options.
      */
-    static mapOptionsToFilter(columnId: string, options: FilteringCondition): FilterCondition | undefined;
+    static mapOptionsToFilter(columnId: string, options: ColumnFilteringOptions): FilterCondition | undefined;
     /**
      * Compares two serializable filter conditions produced from Grid options.
      *
@@ -68,6 +90,20 @@ declare class FilteringController {
      * conditions.
      */
     clearColumnFiltering(columnId?: string): void;
+    /**
+     * Builds the filter condition for a column, letting data projection
+     * features redirect it to the columns actually backing the data.
+     *
+     * @param columnId
+     * Grid column id.
+     *
+     * @param sourceColumnId
+     * Source column id resolved for the Grid column.
+     *
+     * @param options
+     * Filtering options of the column.
+     */
+    private createColumnCondition;
     /**
      * Updates the modifier based on the current column conditions.
      */

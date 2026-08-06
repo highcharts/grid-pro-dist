@@ -4,8 +4,9 @@
  *
  *  (c) 2020-2026 Highsoft AS
  *
- *  A commercial license may be required depending on use.
- *  See www.highcharts.com/license
+ *  Integration of this software requires a license.
+ *  - For commercial use, see www.highcharts.com/license
+ *  - For non-commercial, see www.highcharts.com/license-eula
  *
  *
  *  Authors:
@@ -72,12 +73,14 @@ class TableCell extends Cell {
     /**
      * Edits the cell value and updates the dataset. Call this instead of
      * `setValue` when you want it to trigger the cell value user change event.
+     * Does nothing if the cell is not editable or the value is the same as the
+     * current one.
      *
      * @param value
      * The new value to set.
      */
     async editValue(value) {
-        if (this.value === value) {
+        if (!this.isEditable() || this.value === value) {
             return;
         }
         fireEvent(this, 'beforeEditValue');
@@ -133,6 +136,7 @@ class TableCell extends Cell {
             this.content = this.column.createCellContent(this);
         }
         this.htmlElement.setAttribute('data-value', this.value + '');
+        this.updateReadonlyAttribute();
         // Set alignment in column cells based on column data type
         this.htmlElement.classList[this.column.dataType === 'number' ? 'add' : 'remove'](Globals.getClassName('rightAlign'));
         // Add custom class name from column options
@@ -184,11 +188,42 @@ class TableCell extends Cell {
             this.row.data[sourceColumnId] = this.value;
         }
         await dp.setValue(this.value, sourceColumnId, rowId);
-        if (vp.grid.querying.willNotModify()) {
+        const updateRowsEvent = {
+            requiresFullRowsUpdate: false,
+            rowId,
+            sourceColumnId
+        };
+        fireEvent(this, 'afterDataMutation', updateRowsEvent);
+        if (vp.grid.querying.willNotModify() &&
+            !updateRowsEvent.requiresFullRowsUpdate) {
             return false;
         }
         await vp.updateRows();
         return true;
+    }
+    /**
+     * Returns whether the cell is currently editable.
+     */
+    isEditable() {
+        if (!this.column.viewport.grid.columnPolicy.isColumnEditable(this.column.id)) {
+            return false;
+        }
+        const event = {
+            editable: true
+        };
+        fireEvent(this, 'getEditability', event);
+        return event.editable;
+    }
+    /**
+     * Updates the aria-readonly state based on current row/column context.
+     */
+    updateReadonlyAttribute() {
+        if (this.isEditable()) {
+            this.htmlElement.removeAttribute('aria-readonly');
+        }
+        else {
+            this.htmlElement.setAttribute('aria-readonly', 'true');
+        }
     }
     /**
      * Initialize event listeners for table body cells.
@@ -219,6 +254,7 @@ class TableCell extends Cell {
         delete vp.pendingFocusCursor;
         vp.clearDetachedFocus();
         vp.focusCursor = {
+            type: 'body',
             rowId,
             columnIndex: this.column.index
         };

@@ -4,8 +4,9 @@
  *
  *  (c) 2020-2026 Highsoft AS
  *
- *  A commercial license may be required depending on use.
- *  See www.highcharts.com/license
+ *  Integration of this software requires a license.
+ *  - For commercial use, see www.highcharts.com/license
+ *  - For non-commercial, see www.highcharts.com/license-eula
  *
  *
  *  Authors:
@@ -15,12 +16,12 @@
  *
  * */
 'use strict';
-import GU from '../../../GridUtils.js';
+import { makeHTMLElement } from '../../../GridUtils.js';
 import FilteringController from '../../../Querying/FilteringController.js';
 import Globals from '../../../Globals.js';
-import { conditionsMap } from './FilteringTypes.js';
-import { defined, fireEvent } from '../../../../../Shared/Utilities.js';
-const { makeHTMLElement } = GU;
+import { defaultOptions } from '../../../Defaults.js';
+import { conditionsMap, operatorAliases } from './FilteringTypes.js';
+import { defined, fireEvent, pick } from '../../../../../Shared/Utilities.js';
 /* *
  *
  *  Class
@@ -52,6 +53,47 @@ class ColumnFiltering {
             .toLowerCase()
             .split(/\s+/).join(' ');
         return readable.charAt(0).toUpperCase() + readable.slice(1);
+    }
+    /**
+     * Returns the localized label for a filtering operator.
+     *
+     * @param operator
+     * The filtering operator.
+     *
+     * @param dataType
+     * The column data type.
+     *
+     * @param lang
+     * The grid language options.
+     */
+    static getOperatorLabel(operator, dataType, lang) {
+        if (dataType === 'datetime') {
+            const datetimeLabel = lang?.columnFilteringDateTimeOperators?.[operator];
+            if (datetimeLabel) {
+                return datetimeLabel;
+            }
+        }
+        const label = lang?.columnFilteringOperators?.[operator] ??
+            // TODO: Remove, deprecated
+            lang?.columnFilteringConditions?.[operator];
+        if (label) {
+            return label;
+        }
+        return ColumnFiltering.parseCamelCaseToReadable(operator);
+    }
+    /**
+     * Maps legacy filtering operators to their canonical names for UI use.
+     * TODO: Remove, deprecated — only needed for `before`/`after` aliases.
+     *
+     * @param operator
+     * The filtering operator from options or UI.
+     */
+    static mapOperatorAliases(operator) {
+        if (!operator) {
+            return;
+        }
+        return (operatorAliases[operator] ??
+            operator);
     }
     /* *
     *
@@ -111,23 +153,32 @@ class ColumnFiltering {
     *
     * */
     /**
-     * Sets the value and condition for the filtering.
+     * Sets the value and operator for the filtering.
      *
      * @param value
      * The value to set.
      *
-     * @param condition
-     * The condition to set.
+     * @param operator
+     * The operator to set.
      */
-    async set(value, condition) {
+    async set(value, operator) {
         if (this.filterInput) {
             this.filterInput.value = value ?? '';
         }
+        const conditions = this.getAllowedConditions();
+        const normalizedOperator = ColumnFiltering.mapOperatorAliases(operator);
         if (this.filterSelect) {
             this.filterSelect.value =
-                condition ?? conditionsMap[this.column.dataType][0];
+                (normalizedOperator &&
+                    conditions.includes(normalizedOperator)) ?
+                    normalizedOperator :
+                    conditions[0];
         }
-        await this.applyFilter({ value, condition });
+        this.updateFilterInputHint();
+        await this.applyFilter({
+            value,
+            condition: normalizedOperator ?? conditions[0]
+        });
     }
     /**
      * Refreshes the state of the filtering content by updating the select,
@@ -136,18 +187,28 @@ class ColumnFiltering {
      */
     refreshState() {
         const colFilteringOptions = this.column.options.filtering;
+        const operator = colFilteringOptions?.rule?.operator ??
+            colFilteringOptions?.condition;
+        const value = colFilteringOptions?.rule?.value ??
+            colFilteringOptions?.value;
         if (this.filterSelect) {
+            const conditions = this.getAllowedConditions();
+            const normalizedOperator = ColumnFiltering.mapOperatorAliases(operator);
             this.filterSelect.value =
-                colFilteringOptions?.condition ??
-                    conditionsMap[this.column.dataType][0];
+                (normalizedOperator &&
+                    conditions.includes(normalizedOperator)) ?
+                    normalizedOperator :
+                    conditions[0];
         }
         if (this.filterInput) {
-            this.filterInput.value = '' + (colFilteringOptions?.value ?? '');
+            this.filterInput.value =
+                '' + (value ?? '');
         }
         if (this.clearButton) {
             this.clearButton.disabled = !this.isFilteringApplied();
         }
         this.disableInputIfNeeded();
+        this.updateFilterInputHint();
     }
     /**
      * Render the filtering content in the container.
@@ -165,7 +226,14 @@ class ColumnFiltering {
         const inputWrapper = makeHTMLElement('div', {
             className: Globals.getClassName('columnFilterWrapper')
         }, container);
-        this.renderConditionSelect(inputWrapper);
+        if (!column.viewport.grid.columnPolicy
+            .isFilterOperatorSelectHidden(column.id)) {
+            this.renderConditionSelect(inputWrapper);
+        }
+        else if (column.viewport.grid.columnPolicy
+            .shouldRenderOperatorSpacer(column.id, column.viewport.grid.enabledColumns ?? [])) {
+            this.renderOperatorSelectSpacer(inputWrapper);
+        }
         if (columnType !== 'boolean') {
             this.renderFilteringInput(inputWrapper, columnType);
         }
@@ -177,13 +245,13 @@ class ColumnFiltering {
      */
     applyFilterFromForm() {
         const result = {
-            condition: this.filterSelect?.value
+            condition: this.getActiveCondition()
         };
         if (this.filterInput) {
             result.value = this.filterInput.value;
         }
         if (result.condition &&
-            conditionsMap[this.column.dataType].includes(result.condition)) {
+            this.getAllowedConditions().includes(result.condition)) {
             void this.applyFilter(result);
         }
     }
@@ -223,10 +291,22 @@ class ColumnFiltering {
         }
         this.column.setOptions({
             filtering: {
-                condition: condition.condition,
-                value: condition.value
+                rule: {
+                    operator: condition.condition,
+                    value: condition.value
+                }
             }
         });
+        const filteringOptions = this.column.viewport.grid.columnPolicy
+            .getIndividualColumnOptions(this.column.id)
+            ?.filtering;
+        // The setOptions deep-merges filtering, so deprecated keys
+        // would otherwise remain alongside rule after a user interaction.
+        if (filteringOptions) {
+            delete filteringOptions.condition;
+            delete filteringOptions.value;
+            delete filteringOptions.conditions;
+        }
         filteringController.addColumnFilterCondition(columnId, condition);
         this.disableInputIfNeeded();
         await querying.proceed();
@@ -272,7 +352,6 @@ class ColumnFiltering {
         this.filterInput.setAttribute('tabindex', '-1');
         const column = this.column;
         this.filterInput.setAttribute('id', 'filter-input-' + column.viewport.grid.id + '-' + column.id);
-        this.filterInput.placeholder = 'Value...';
         if (columnType === 'number') {
             this.filterInput.type = 'number';
         }
@@ -281,18 +360,17 @@ class ColumnFiltering {
         }
         else {
             this.filterInput.type = 'text';
-            this.filterInput.classList.add(Globals.getClassName('iconSearch'));
         }
         // Assign the default input value.
-        const { value } = this.column.options.filtering ?? {};
+        const value = this.column.options.filtering?.rule?.value ??
+            this.column.options.filtering?.value;
         if (value || value === 0) {
             this.filterInput.value = columnType === 'datetime' ?
                 column.viewport.grid.time.dateFormat('%Y-%m-%d', Number(value)) :
                 value.toString();
         }
-        if (this.filterSelect) {
-            this.disableInputIfNeeded();
-        }
+        this.disableInputIfNeeded();
+        this.updateFilterInputHint();
         const eventTypes = {
             string: ['keyup'],
             number: ['keyup', 'change'],
@@ -303,6 +381,21 @@ class ColumnFiltering {
                 this.applyFilterFromForm();
             });
         }
+    }
+    /**
+     * Reserves the operator select row height in inline filtering when the
+     * select is hidden, so value inputs align across columns.
+     *
+     * @param inputWrapper
+     * Reference to the input wrapper.
+     */
+    renderOperatorSelectSpacer(inputWrapper) {
+        const spacer = makeHTMLElement('div', {
+            className: Globals.getClassName('columnFilterOperatorSpacer') +
+                ' ' + Globals.getClassName('input'),
+            innerText: '\u00a0'
+        }, inputWrapper);
+        spacer.setAttribute('aria-hidden', 'true');
     }
     /**
      * Render the condition select element.
@@ -318,21 +411,20 @@ class ColumnFiltering {
         this.filterSelect.setAttribute('tabindex', '-1');
         const column = this.column;
         this.filterSelect.setAttribute('id', 'filter-select-' + column.viewport.grid.id + '-' + column.id);
-        const conditions = conditionsMap[column.dataType];
-        const langConditions = this.column.viewport.grid.options
-            ?.lang?.columnFilteringConditions ?? {};
+        const conditions = this.getAllowedConditions();
+        const lang = column.viewport.grid.options?.lang;
         // Render the options.
         for (const condition of conditions) {
             const optionElement = document.createElement('option');
             optionElement.value = condition;
-            optionElement.textContent = langConditions[condition] ??
-                ColumnFiltering.parseCamelCaseToReadable(condition);
+            optionElement.textContent = ColumnFiltering.getOperatorLabel(condition, column.dataType, lang);
             this.filterSelect.appendChild(optionElement);
         }
-        // Use condition from options or first available condition as default.
-        const filteringCondition = this.column.options.filtering?.condition;
-        if (filteringCondition && conditions.includes(filteringCondition)) {
-            this.filterSelect.value = filteringCondition;
+        // Use operator from options or first available operator as default.
+        const filteringOperator = ColumnFiltering.mapOperatorAliases(column.options.filtering?.rule?.operator ??
+            column.options.filtering?.condition);
+        if (filteringOperator && conditions.includes(filteringOperator)) {
+            this.filterSelect.value = filteringOperator;
         }
         else {
             this.filterSelect.value = conditions[0];
@@ -361,9 +453,9 @@ class ColumnFiltering {
      * `true` if filtering is applied to the column, `false` otherwise.
      */
     isFilteringApplied() {
-        const { filterSelect: select, filterInput: input } = this;
+        const { filterInput: input } = this;
         const { dataType } = this.column;
-        const condition = select?.value;
+        const condition = this.getActiveCondition();
         if (dataType === 'boolean') {
             return condition !== 'all';
         }
@@ -373,20 +465,98 @@ class ColumnFiltering {
         return input?.value !== '';
     }
     /**
+     * Updates the filter input placeholder or aria-label when the operator
+     * select is hidden.
+     */
+    updateFilterInputHint() {
+        const input = this.filterInput;
+        const column = this.column;
+        if (!input) {
+            return;
+        }
+        const hideOperatorSelect = column.viewport.grid.columnPolicy
+            .isFilterOperatorSelectHidden(column.id);
+        if (!hideOperatorSelect) {
+            input.placeholder = pick(column.viewport.grid.options?.lang?.filterValuePlaceholder, defaultOptions.lang?.filterValuePlaceholder, '');
+            input.removeAttribute('aria-label');
+            return;
+        }
+        const operatorLabel = ColumnFiltering.getOperatorLabel(this.getActiveCondition(), column.dataType, column.viewport.grid.options?.lang);
+        if (column.dataType === 'datetime') {
+            input.setAttribute('aria-label', operatorLabel);
+        }
+        else {
+            input.placeholder = operatorLabel;
+        }
+    }
+    /**
      * Disables the input element if the condition is `empty` or `notEmpty`.
      */
     disableInputIfNeeded() {
-        const { filterSelect: select, filterInput: input } = this;
-        const condition = select?.value;
-        if (!input || !select) {
+        const { filterInput: input } = this;
+        const condition = this.getActiveCondition();
+        if (!input) {
             return;
         }
         if (condition === 'empty' || condition === 'notEmpty') {
             input.disabled = true;
         }
-        else if (input?.disabled) {
+        else if (input.disabled) {
             input.disabled = false;
         }
+    }
+    /**
+     * Returns the current filtering operator from the dropdown or options.
+     */
+    getActiveCondition() {
+        if (this.filterSelect) {
+            return this.filterSelect.value;
+        }
+        const conditions = this.getAllowedConditions();
+        const filteringOperator = ColumnFiltering.mapOperatorAliases(this.column.options.filtering?.rule?.operator ??
+            this.column.options.filtering?.condition);
+        if (filteringOperator && conditions.includes(filteringOperator)) {
+            return filteringOperator;
+        }
+        return conditions[0];
+    }
+    /**
+     * Focuses the first filter control in tab order for inline filtering.
+     */
+    focusFirstControl() {
+        if (!this.filterSelect?.disabled) {
+            this.filterSelect?.focus();
+            return;
+        }
+        if (!this.filterInput?.disabled) {
+            this.filterInput?.focus();
+            return;
+        }
+        if (!this.clearButton?.disabled) {
+            this.clearButton?.focus();
+        }
+    }
+    /**
+     * Returns the list of filtering conditions available for the current
+     * column, optionally restricted by column filtering options.
+     */
+    getAllowedConditions() {
+        const column = this.column;
+        const grid = column.viewport.grid;
+        const defaultTypeConditions = conditionsMap[column.dataType];
+        const columnConditions = grid.columnPolicy.getIndividualColumnOptions(column.id)
+            ?.filtering?.operators ??
+            grid.columnPolicy.getIndividualColumnOptions(column.id)
+                ?.filtering?.conditions ??
+            grid.options?.columnDefaults?.filtering?.operators ??
+            grid.options?.columnDefaults?.filtering?.conditions;
+        if (!columnConditions?.length) {
+            return defaultTypeConditions;
+        }
+        const allowedSet = new Set(columnConditions.map((operator) => ColumnFiltering.mapOperatorAliases(operator) ??
+            operator));
+        const allowed = defaultTypeConditions.filter((c) => allowedSet.has(c));
+        return allowed.length ? allowed : defaultTypeConditions;
     }
 }
 /* *

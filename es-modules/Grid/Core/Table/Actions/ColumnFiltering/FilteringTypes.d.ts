@@ -8,9 +8,9 @@ export type StringCondition = typeof stringConditions[number];
  */
 export type NumberCondition = typeof numberConditions[number];
 /**
- * DateTime filtering conditions.
+ * DateTime filtering conditions (same operators as number).
  */
-export type DateTimeCondition = typeof dateTimeConditions[number];
+export type DateTimeCondition = NumberCondition;
 /**
  * Boolean filtering conditions.
  */
@@ -23,10 +23,6 @@ export type AfterRenderEvent = Event & {
     filtering: boolean;
 };
 /**
- * Combined filtering conditions.
- */
-export type Condition = StringCondition | NumberCondition | DateTimeCondition | BooleanCondition;
-/**
  * String conditions values for the condition select options.
  */
 export declare const stringConditions: readonly ["contains", "doesNotContain", "equals", "doesNotEqual", "beginsWith", "endsWith", "empty", "notEmpty"];
@@ -37,11 +33,22 @@ export declare const numberConditions: readonly ["equals", "doesNotEqual", "grea
 /**
  * DateTime conditions values for the condition select options.
  */
-export declare const dateTimeConditions: readonly ["equals", "doesNotEqual", "before", "after", "empty", "notEmpty"];
+export declare const dateTimeConditions: readonly ["equals", "doesNotEqual", "greaterThan", "greaterThanOrEqualTo", "lessThan", "lessThanOrEqualTo", "empty", "notEmpty"];
 /**
  * Boolean conditions values for the condition select options.
  */
 export declare const booleanConditions: readonly ["all", "true", "false", "empty"];
+/**
+ * Legacy datetime operator aliases (`before` → `lessThan`, `after` → `greaterThan`).
+ */
+export declare const operatorAliases: {
+    readonly before: "lessThan";
+    readonly after: "greaterThan";
+};
+/**
+ * Combined filtering conditions.
+ */
+export type Condition = StringCondition | NumberCondition | BooleanCondition | keyof typeof operatorAliases;
 /**
  * Corresponding values for the boolean select options.
  */

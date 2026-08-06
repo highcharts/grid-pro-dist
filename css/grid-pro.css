@@ -1,7 +1,7 @@
 /* SPDX-License-Identifier: LicenseRef-Highcharts */
 
 /**
- * @license Highcharts Grid Pro v3.0.0
+ * @license Highcharts Grid Pro v3.1.0
  *
  * (c) 2009-2025 Highsoft AS
  *
@@ -66,8 +66,10 @@
     --highcharts-neutral-color-100: #000000;
 }
 
+/* Concrete values (:root:root beats the light-dark() Highcharts injects on
+   :root) so the page stays dark even when the embedder forces color-scheme. */
 @media (prefers-color-scheme: dark) {
-    :root {
+    :root:root {
         --highcharts-background-color: #141414;
         --highcharts-neutral-color-100: #ffffff;
     }
@@ -78,6 +80,15 @@
     --highcharts-neutral-color-100: #ffffff;
 }
 
+/* Restore light-dark() on the chart itself, so a forced scheme
+   (.highcharts-light / .highcharts-dark) still overrides the values above. */
+@supports (color: light-dark(#fff, #000)) {
+    .highcharts-container {
+        --highcharts-background-color: light-dark(#ffffff, #141414);
+        --highcharts-neutral-color-100: light-dark(#000000, #ffffff);
+    }
+}
+
 /*  ==== End Highcharts Variables  ==== */
 
 /* ==== Start Grid Variables ==== */
@@ -85,21 +96,14 @@
     --ig-hover-opacity: var(--hcg-hover-opacity, 100%);
     --ig-sync-opacity: var(--hcg-sync-opacity, var(--ig-hover-opacity));
 
-    /* Global fonts */
+    /* Global fonts — neutral fallbacks when no theme / --hcg-* tokens */
     --ig-default-font-family: -apple-system, "BlinkMacSystemFont", "Segoe UI", "Roboto", "Helvetica", "Arial", "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", sans-serif;
     --ig-font-weight: var(--hcg-font-weight, normal);
-    --ig-font-size: var(--hcg-font-size, 1rem);
+    --ig-font-size: var(--hcg-font-size, 1em);
     --ig-font-family: var(--hcg-font-family, var(--ig-default-font-family));
-    --ig-color: var(--hcg-color, var(--ig-default-color));
+    --ig-color: var(--hcg-color, inherit);
     --ig-font: var(--ig-font-weight) var(--ig-font-size) var(--ig-font-family);
-    --ig-text-align: var(--hcg-text-align, left);
-
-    /* Default borders */
-    --ig-border-radius: var(--hcg-border-radius, 0);
-    --ig-border-width: var(--hcg-border-width, 0);
-    --ig-border-style: var(--hcg-border-style, solid);
-    --ig-border-color: var(--hcg-border-color, var(--ig-color));
-    --ig-border: var(--ig-border-width) var(--ig-border-style) var(--ig-border-color);
+    --ig-text-align: var(--hcg-text-align, inherit);
 
     /* Default padding */
     --ig-horizontal-padding: var(--hcg-horizontal-padding, var(--hcg-padding, 0));
@@ -107,7 +111,7 @@
     --ig-padding: var(--ig-vertical-padding) var(--ig-horizontal-padding);
 
     /* Loading indicator */
-    --ig-loader-color: var(--hcg-loader-color, var(--ig-color));
+    --ig-loader-color: var(--hcg-loader-color, var(--hcg-color));
 
     /* Default backgrounds and colors */
     --ig-background: var(--hcg-background, transparent);
@@ -138,62 +142,68 @@
     --ig-positive-background: var(--hcg-positive-background, var(--ig-positive-default-background));
     --ig-positive-color: var(--hcg-positive-color, var(--ig-color));
 
-    font: var(--ig-font);
+    /* Container font: set via className / inheritance. --hcg-font-* still feed cells. */
 }
 
+/* Popup shell tokens — application always-on; visual defaults live in theme.
+ * Content/header padding keep non-zero fallbacks so unthemed grids
+ * (`theme: ''`) stay usable without setting tokens. */
 .hcg-container .hcg-popup,
 .highcharts-light .hcg-container .hcg-popup {
-    --ig-popup-color: var(--hcg-popup-color, var(--ig-default-color));
-    --ig-popup-background: var(--hcg-popup-background, #f6f6f6);
-    --ig-popup-border-color: var(--hcg-popup-border-color, #e8e8e8);
-}
-
-@media (prefers-color-scheme: dark) {
-    .hcg-container .hcg-popup {
-        --ig-popup-background: var(--hcg-popup-background, #272727);
-        --ig-popup-border-color: var(--hcg-popup-border-color, #4f4f4f);
-    }
-}
-
-.highcharts-dark .hcg-container .hcg-popup {
-    --ig-popup-background: var(--hcg-popup-background, #272727);
-    --ig-popup-border-color: var(--hcg-popup-border-color, #4f4f4f);
+    --ig-popup-color: var(--hcg-popup-color, inherit);
+    --ig-popup-background: var(--hcg-popup-background, transparent);
+    --ig-popup-border-color: var(--hcg-popup-border-color, transparent);
+    --ig-popup-border-radius: var(--hcg-popup-border-radius, 0);
+    --ig-popup-box-shadow: var(--hcg-popup-box-shadow, none);
+    --ig-popup-content-padding: var(--hcg-popup-content-padding, 5px);
+    --ig-popup-header-font-size: var(--hcg-popup-header-font-size, inherit);
+    --ig-popup-header-padding: var(--hcg-popup-header-padding, 3px);
 }
 
 .hcg-container .hcg-popup {
     color: var(--ig-popup-color);
     background: var(--ig-popup-background);
     border-color: var(--ig-popup-border-color);
-}
+    border-radius: var(--ig-popup-border-radius);
+    box-shadow: var(--ig-popup-box-shadow);
 
-.hcg-container .hcg-menu-container,
-.highcharts-light .hcg-container .hcg-menu-container {
-    --ig-menu-item-hover-background: var(--hcg-menu-item-hover-background, #ffffff);
-    --ig-menu-item-hover-border-color: var(--hcg-menu-item-hover-border-color, #e8e8e8);
-    --ig-menu-item-active-background: var(--hcg-menu-item-active-background, #e1e3ff);
-    --ig-menu-item-active-border-color: var(--hcg-menu-item-active-border-color, #c3c8ff);
-    --ig-menu-item-divider-color: var(--hcg-menu-item-divider-color, #e8e8e8);
-}
+    .hcg-popup-content {
+        padding: var(--ig-popup-content-padding);
+    }
 
-@media (prefers-color-scheme: dark) {
-    .hcg-container .hcg-menu-container {
-        --ig-menu-item-hover-background: var(--hcg-menu-item-hover-background, #3b3b3b);
-        --ig-menu-item-hover-border-color: var(--hcg-menu-item-hover-border-color, #4f4f4f);
-        --ig-menu-item-active-background: var(--hcg-menu-item-active-background, #3f4699);
-        --ig-menu-item-active-border-color: var(--hcg-menu-item-active-border-color, #4a55c9);
-        --ig-menu-item-divider-color: var(--hcg-menu-item-divider-color, #4f4f4f);
+    .hcg-menu-header {
+        font-size: var(--ig-popup-header-font-size);
+        padding: var(--ig-popup-header-padding);
     }
 }
 
-.highcharts-dark .hcg-container .hcg-menu-container {
-    --ig-menu-item-hover-background: var(--hcg-menu-item-hover-background, #3b3b3b);
-    --ig-menu-item-hover-border-color: var(--hcg-menu-item-hover-border-color, #4f4f4f);
-    --ig-menu-item-active-background: var(--hcg-menu-item-active-background, #3f4699);
-    --ig-menu-item-active-border-color: var(--hcg-menu-item-active-border-color, #4a55c9);
-    --ig-menu-item-divider-color: var(--hcg-menu-item-divider-color, #4f4f4f);
+/* Menu tokens — application always-on; visual defaults live in theme. */
+.hcg-container .hcg-menu-container,
+.highcharts-light .hcg-container .hcg-menu-container {
+    --ig-menu-item-hover-background: var(--hcg-menu-item-hover-background, transparent);
+    --ig-menu-item-hover-border-color: var(--hcg-menu-item-hover-border-color, transparent);
+    --ig-menu-item-active-background: var(--hcg-menu-item-active-background, transparent);
+    --ig-menu-item-active-border-color: var(--hcg-menu-item-active-border-color, transparent);
+    --ig-menu-item-divider-color: var(--hcg-menu-item-divider-color, transparent);
+    --ig-menu-item-padding: var(--hcg-menu-item-padding, 0);
+    --ig-menu-item-font-size: var(--hcg-menu-item-font-size, inherit);
+    --ig-menu-item-font-weight: var(--hcg-menu-item-font-weight, inherit);
+    --ig-menu-item-border-radius: var(--hcg-menu-item-border-radius, 0);
+    --ig-menu-item-min-height: var(--hcg-menu-item-min-height, 0);
+    --ig-menu-row-gap: var(--hcg-menu-row-gap, 0);
 }
 
 .hcg-container .hcg-menu-container {
+    row-gap: var(--ig-menu-row-gap);
+
+    .hcg-menu-item {
+        padding: var(--ig-menu-item-padding);
+        font-size: var(--ig-menu-item-font-size);
+        font-weight: var(--ig-menu-item-font-weight);
+        border-radius: var(--ig-menu-item-border-radius);
+        min-height: var(--ig-menu-item-min-height);
+    }
+
     .hcg-menu-item:focus-visible {
         box-shadow: var(--ig-focus-ring);
     }
@@ -240,14 +250,14 @@
     /* -------------------------------------------------------------
      Defaults (internal base tokens)
      ------------------------------------------------------------- */
-    --ig-input-padding-base: var(--hcg-input-padding, 5px);
+    --ig-input-padding-base: var(--hcg-input-padding, 0);
     --ig-input-color-base: var(--hcg-input-color, inherit);
     --ig-input-text-align-base: var(--hcg-input-text-align, var(--ig-text-align));
     --ig-input-border-radius-base: var(--hcg-input-border-radius, 0);
     --ig-input-border-width-base: var(--hcg-input-border-width, 1px);
     --ig-input-border-style-base: var(--hcg-input-border-style, solid);
     --ig-input-border-color-base: var(--hcg-input-border-color, currentColor);
-    --ig-input-background-base: var(--hcg-input-background, var(--highcharts-background-color));
+    --ig-input-background-base: var(--hcg-input-background, transparent);
     --ig-input-hover-color-base: var(--hcg-input-hover-color, var(--ig-input-color-base));
     --ig-input-hover-background-base: var(--hcg-input-hover-background, var(--ig-input-background-base));
     --ig-input-hover-border-color-base: var(--hcg-input-hover-border-color, var(--ig-input-border-color-base));
@@ -321,7 +331,10 @@
         --ig-input-hover-background: var(--hcg-pagination-input-hover-background, var(--hcg-input-hover-background, var(--hcg-pagination-input-background, var(--ig-input-background-base))));
         --ig-input-hover-border-color: var(--hcg-pagination-input-hover-border-color, var(--hcg-input-hover-border-color, var(--hcg-pagination-input-border-color, var(--ig-input-border-color-base))));
     }
+}
 
+/* Surface application only when themed — utilities win with theme: ''. */
+.hcg-themed {
     :where(.hcg-input) {
         font-weight: var(--ig-input-font-weight);
         font-size: var(--ig-input-font-size);
@@ -343,6 +356,7 @@
 
         &:focus-visible {
             box-shadow: var(--ig-input-focus-ring);
+            border-color: transparent;
         }
 
         &[type="checkbox"]:checked::before {
@@ -362,11 +376,11 @@
     --ig-button-background-base: var(--hcg-button-background, transparent);
     --ig-button-padding-base: var(--hcg-button-padding, 6px);
     --ig-button-color-base: var(--hcg-button-color, inherit);
-    --ig-button-hover-color-base: var(--hcg-button-hover-color, var(--ig-default-background));
-    --ig-button-hover-background-base: var(--hcg-button-hover-background, var(--ig-default-color));
+    --ig-button-hover-color-base: var(--hcg-button-hover-color, inherit);
+    --ig-button-hover-background-base: var(--hcg-button-hover-background, transparent);
     --ig-button-hover-border-color-base: var(--hcg-button-hover-border-color, var(--ig-button-border-color-base));
-    --ig-button-selected-color-base: var(--hcg-button-selected-color, var(--ig-default-background));
-    --ig-button-selected-background-base: var(--hcg-button-selected-background, var(--ig-default-color));
+    --ig-button-selected-color-base: var(--hcg-button-selected-color, inherit);
+    --ig-button-selected-background-base: var(--hcg-button-selected-background, transparent);
     --ig-button-selected-border-color-base: var(--hcg-button-selected-border-color, var(--ig-button-border-color));
 
     /* ─────────────────────────────────────────────────────────────
@@ -427,7 +441,10 @@
         --ig-button-selected-background: var(--hcg-pagination-button-selected-background, var(--ig-button-selected-background-base));
         --ig-button-selected-border-color: var(--hcg-pagination-button-selected-border-color, var(--ig-button-selected-border-color-base));
     }
+}
 
+/* Surface application only when themed — utilities win with theme: ''. */
+.hcg-themed {
     :where(.hcg-button) {
         font-weight: var(--ig-button-font-weight);
         font-size: var(--ig-button-font-size);
@@ -465,6 +482,7 @@
 
         &:focus-visible {
             box-shadow: var(--ig-button-focus-ring);
+            border-color: transparent;
         }
     }
 }
@@ -568,7 +586,11 @@
     }
 }
 
-.hcg-container .hcg-caption {
+/*
+ * Caption surface applies under `.hcg-themed`. With `theme: ''`, utility
+ * classNames on `caption.className` win without `!important`.
+ */
+.hcg-themed .hcg-caption {
     color: var(--hcg-caption-color, var(--ig-color));
     font-weight: var(--hcg-caption-font-weight, var(--ig-font-weight));
     font-size: var(--hcg-caption-font-size, var(--ig-font-size));
@@ -580,7 +602,11 @@
     padding-left: var(--hcg-caption-horizontal-padding, var(--hcg-caption-padding, var(--ig-horizontal-padding)));
 }
 
-.hcg-container .hcg-description {
+/*
+ * Description surface applies under `.hcg-themed`. With `theme: ''`, utility
+ * classNames on `description.className` win without `!important`.
+ */
+.hcg-themed .hcg-description {
     color: var(--hcg-description-color, var(--ig-color));
     font-weight: var(--hcg-description-font-weight, var(--ig-font-weight));
     font-size: var(--hcg-description-font-size, var(--ig-font-size));
@@ -592,7 +618,7 @@
     padding-left: var(--hcg-description-horizontal-padding, var(--hcg-description-padding, var(--ig-horizontal-padding)));
 }
 
-.hcg-container .hcg-pagination {
+.hcg-themed .hcg-pagination {
     background: var(--hcg-pagination-background, transparent);
     color: var(--hcg-pagination-color, var(--ig-color));
     font-weight: var(--hcg-pagination-font-weight, var(--ig-font-weight));
@@ -603,14 +629,37 @@
     padding-right: var(--hcg-pagination-horizontal-padding, var(--hcg-pagination-padding, var(--ig-horizontal-padding)));
     padding-bottom: var(--hcg-pagination-vertical-padding, var(--hcg-pagination-padding, var(--ig-vertical-padding)));
     padding-left: var(--hcg-pagination-horizontal-padding, var(--hcg-pagination-padding, var(--ig-horizontal-padding)));
+    gap: var(--hcg-pagination-gap, 0.75rem);
+
+    .hcg-pagination-controls,
+    .hcg-pagination-pages {
+        gap: 2px;
+    }
+
+    .hcg-pagination-pages .hcg-button {
+        min-width: 30px;
+    }
+
+    .hcg-pagination-pages span {
+        min-width: 20px;
+    }
+
+    .hcg-pagination-page-size {
+        text-align: right;
+
+        select.hcg-input {
+            width: 60px;
+            margin-left: 8px;
+        }
+    }
 }
 
-.hcg-container {
+.hcg-themed {
     .hcg-table {
         /* Row borders */
-        --ig-row-border-width: var(--hcg-row-border-width, var(--ig-border-width));
-        --ig-row-border-style: var(--hcg-row-border-style, var(--ig-border-style));
-        --ig-row-border-color: var(--hcg-row-border-color, var(--ig-border-color));
+        --ig-row-border-width: var(--hcg-row-border-width, var(--hcg-border-width));
+        --ig-row-border-style: var(--hcg-row-border-style, var(--hcg-border-style, solid));
+        --ig-row-border-color: var(--hcg-row-border-color, var(--hcg-border-color));
         --ig-row-border: var(--ig-row-border-width) var(--ig-row-border-style) var(--ig-row-border-color);
 
         /* Header row borders */
@@ -620,9 +669,9 @@
         --ig-header-row-border: var(--ig-header-row-border-width) var(--ig-header-row-border-style) var(--ig-header-row-border-color);
 
         /* Column borders */
-        --ig-column-border-width: var(--hcg-column-border-width, var(--ig-border-width));
-        --ig-column-border-style: var(--hcg-column-border-style, var(--ig-border-style));
-        --ig-column-border-color: var(--hcg-column-border-color, var(--ig-border-color));
+        --ig-column-border-width: var(--hcg-column-border-width, var(--hcg-border-width));
+        --ig-column-border-style: var(--hcg-column-border-style, var(--hcg-border-style, solid));
+        --ig-column-border-color: var(--hcg-column-border-color, var(--hcg-border-color));
         --ig-column-border: var(--ig-column-border-width) var(--ig-column-border-style) var(--ig-column-border-color);
 
         /* Header column borders */
@@ -630,25 +679,28 @@
         --ig-header-column-border-style: var(--hcg-header-column-border-style, var(--ig-column-border-style));
         --ig-header-column-border-color: var(--hcg-header-column-border-color, var(--ig-column-border-color));
         --ig-header-column-border: var(--ig-header-column-border-width) var(--ig-header-column-border-style) var(--ig-header-column-border-color);
+        --ig-table-border: var(--hcg-border-width) var(--hcg-border-style, solid) var(--hcg-border-color);
 
-        border: var(--ig-border);
-        background: var(--ig-background);
-        border-radius: var(--ig-border-radius);
+        border: var(--ig-table-border);
+        background: var(--hcg-background);
+        border-radius: var(--hcg-border-radius);
     }
 
     .hcg-table thead th {
         --ig-header-column-background: var(--hcg-column-background);
         --ig-header-background: var(--hcg-header-background, var(--hcg-cell-background, var(--ig-header-column-background, transparent)));
-        --ig-header-column-color: var(--hcg-column-color, var(--hcg-cell-color, var(--ig-color, inherit)));
+        --ig-header-column-color: var(--hcg-column-color, var(--hcg-cell-color, var(--hcg-color, inherit)));
         --ig-header-base-color: var(--hcg-header-color, var(--ig-header-column-color));
         --ig-header-current-color: var(--ig-header-base-color);
-        --ig-header-column-font-weight: var(--hcg-column-font-weight, var(--hcg-cell-font-weight, var(--ig-font-weight)));
+
+        /* soft weight/family; size without fallback gates the font shorthand */
+        --ig-header-column-font-weight: var(--hcg-column-font-weight, var(--hcg-cell-font-weight, var(--hcg-font-weight, normal)));
         --ig-header-base-font-weight: var(--hcg-header-font-weight, var(--ig-header-column-font-weight));
         --ig-header-current-font-weight: var(--ig-header-base-font-weight);
-        --ig-header-column-font-size: var(--hcg-column-font-size, var(--hcg-cell-font-size, var(--ig-font-size)));
+        --ig-header-column-font-size: var(--hcg-column-font-size, var(--hcg-cell-font-size, var(--hcg-font-size)));
         --ig-header-base-font-size: var(--hcg-header-font-size, var(--ig-header-column-font-size));
         --ig-header-current-font-size: var(--ig-header-base-font-size);
-        --ig-header-column-font-family: var(--hcg-column-font-family, var(--hcg-cell-font-family, var(--ig-font-family)));
+        --ig-header-column-font-family: var(--hcg-column-font-family, var(--hcg-cell-font-family, var(--hcg-font-family, var(--ig-default-font-family))));
         --ig-header-base-font-family: var(--hcg-header-font-family, var(--ig-header-column-font-family));
         --ig-header-current-font-family: var(--ig-header-base-font-family);
         --ig-header-hover-opacity: var(--hcg-header-hover-opacity, var(--hcg-column-hover-header-opacity, var(--hcg-column-hover-opacity, var(--ig-hover-opacity))));
@@ -657,28 +709,28 @@
         border-bottom: var(--ig-header-row-border);
         background: var(--ig-header-background);
         color: var(--ig-header-current-color);
-        font-weight: var(--ig-header-current-font-weight);
-        font-size: var(--ig-header-current-font-size);
-        font-family: var(--ig-header-current-font-family);
-        padding-top: var(--hcg-header-vertical-padding, var(--hcg-header-padding, var(--ig-vertical-padding)));
-        padding-right: var(--hcg-header-horizontal-padding, var(--hcg-header-padding, var(--ig-horizontal-padding)));
-        padding-bottom: var(--hcg-header-vertical-padding, var(--hcg-header-padding, var(--ig-vertical-padding)));
-        padding-left: var(--hcg-header-horizontal-padding, var(--hcg-header-padding, var(--ig-horizontal-padding)));
+        --ig-header-applied-font: var(--ig-header-current-font-weight) var(--ig-header-current-font-size) var(--ig-header-current-font-family);
+
+        font: var(--ig-header-applied-font);
+        padding-top: var(--hcg-header-vertical-padding, var(--hcg-header-padding, var(--hcg-vertical-padding, var(--hcg-padding))));
+        padding-right: var(--hcg-header-horizontal-padding, var(--hcg-header-padding, var(--hcg-horizontal-padding, var(--hcg-padding))));
+        padding-bottom: var(--hcg-header-vertical-padding, var(--hcg-header-padding, var(--hcg-vertical-padding, var(--hcg-padding))));
+        padding-left: var(--hcg-header-horizontal-padding, var(--hcg-header-padding, var(--hcg-horizontal-padding, var(--hcg-padding))));
     }
 
     .hcg-table thead th:nth-child(even) {
         --ig-header-column-background: var(--hcg-column-even-background, var(--hcg-column-background));
         --ig-header-background: var(--hcg-header-even-background, var(--hcg-header-background, var(--hcg-cell-background, var(--ig-header-column-background, transparent))));
-        --ig-header-column-color: var(--hcg-column-even-color, var(--hcg-column-color, var(--hcg-cell-color, var(--ig-color, inherit))));
+        --ig-header-column-color: var(--hcg-column-even-color, var(--hcg-column-color, var(--hcg-cell-color, var(--hcg-color, inherit))));
         --ig-header-base-color: var(--hcg-header-even-color, var(--hcg-header-color, var(--ig-header-column-color)));
         --ig-header-current-color: var(--ig-header-base-color);
-        --ig-header-column-font-weight: var(--hcg-column-even-font-weight, var(--hcg-column-font-weight, var(--hcg-cell-font-weight, var(--ig-font-weight))));
+        --ig-header-column-font-weight: var(--hcg-column-even-font-weight, var(--hcg-column-font-weight, var(--hcg-cell-font-weight, var(--hcg-font-weight, normal))));
         --ig-header-base-font-weight: var(--hcg-header-even-font-weight, var(--hcg-header-font-weight, var(--ig-header-column-font-weight)));
         --ig-header-current-font-weight: var(--ig-header-base-font-weight);
-        --ig-header-column-font-size: var(--hcg-column-even-font-size, var(--hcg-column-font-size, var(--hcg-cell-font-size, var(--ig-font-size))));
+        --ig-header-column-font-size: var(--hcg-column-even-font-size, var(--hcg-column-font-size, var(--hcg-cell-font-size, var(--hcg-font-size))));
         --ig-header-base-font-size: var(--hcg-header-even-font-size, var(--hcg-header-font-size, var(--ig-header-column-font-size)));
         --ig-header-current-font-size: var(--ig-header-base-font-size);
-        --ig-header-column-font-family: var(--hcg-column-even-font-family, var(--hcg-column-font-family, var(--hcg-cell-font-family, var(--ig-font-family))));
+        --ig-header-column-font-family: var(--hcg-column-even-font-family, var(--hcg-column-font-family, var(--hcg-cell-font-family, var(--hcg-font-family, var(--ig-default-font-family)))));
         --ig-header-base-font-family: var(--hcg-header-even-font-family, var(--hcg-header-font-family, var(--ig-header-column-font-family)));
         --ig-header-current-font-family: var(--ig-header-base-font-family);
     }
@@ -688,23 +740,18 @@
         --ig-header-font-size: var(--ig-header-current-font-size);
         --ig-header-font-family: var(--ig-header-current-font-family);
         --ig-header-font: var(--ig-header-font-weight) var(--ig-header-font-size) var(--ig-header-font-family);
-        --ig-header-text-align: var(--hcg-header-text-align, var(--hcg-cell-text-align, var(--ig-text-align)));
+        --ig-header-text-align: var(--hcg-header-text-align, var(--hcg-cell-text-align, var(--hcg-text-align)));
 
         font: var(--ig-header-font);
         text-align: var(--ig-header-text-align);
     }
 
-    .hcg-column-resizer.hovered::after {
-        width: max(3px, calc(var(--ig-header-column-border-width) + 2px));
-        background: var(--ig-header-color);
-    }
-
     .hcg-table thead tr:first-of-type th:first-child {
-        border-top-left-radius: var(--ig-border-radius);
+        border-top-left-radius: var(--hcg-border-radius);
     }
 
     .hcg-table thead tr:first-of-type th:last-child {
-        border-top-right-radius: var(--ig-border-radius);
+        border-top-right-radius: var(--hcg-border-radius);
     }
 
     .hcg-table thead th:focus-visible {
@@ -739,11 +786,11 @@
 
     /* <tbody> */
     .hcg-table > tbody:last-of-type > tr:last-of-type > :where(.hcg-cell):first-child {
-        border-bottom-left-radius: var(--ig-border-radius);
+        border-bottom-left-radius: var(--hcg-border-radius);
     }
 
     .hcg-table > tbody:last-of-type > tr:last-of-type > :where(.hcg-cell):last-child {
-        border-bottom-right-radius: var(--ig-border-radius);
+        border-bottom-right-radius: var(--hcg-border-radius);
     }
 
     .hcg-table > tbody:last-of-type {
@@ -781,24 +828,26 @@
         --ig-cell-hover-opacity: var(--ig-cell-hover-opacity-helper, var(--ig-hover-opacity));
         --ig-cell-active-opacity: var(--ig-cell-hover-opacity);
         --ig-cell-sync-opacity: var(--hcg-cell-sync-opacity, var(--hcg-sync-opacity, var(--ig-cell-hover-opacity)));
-        --ig-cell-base-color: var(--hcg-cell-color, var(--ig-row-color-current, var(--ig-cell-column-color, var(--ig-color, inherit))));
+        --ig-cell-base-color: var(--hcg-cell-color, var(--ig-row-color-current, var(--ig-cell-column-color, var(--hcg-color, inherit))));
         --ig-column-text-layer: var(--ig-cell-base-color);
         --ig-row-hover-text-color: var(--ig-column-text-layer);
         --ig-cell-hover-text-color: var(--ig-row-hover-text-color);
-        --ig-cell-base-font-weight: var(--hcg-cell-font-weight, var(--ig-row-font-weight-current, var(--ig-cell-column-font-weight, var(--ig-font-weight))));
+        --ig-cell-base-font-weight: var(--hcg-cell-font-weight, var(--ig-row-font-weight-current, var(--ig-cell-column-font-weight, var(--hcg-font-weight, normal))));
         --ig-cell-font-weight: var(--ig-cell-base-font-weight);
-        --ig-cell-base-font-size: var(--hcg-cell-font-size, var(--ig-row-font-size-current, var(--ig-cell-column-font-size, var(--ig-font-size))));
+        --ig-cell-base-font-size: var(--hcg-cell-font-size, var(--ig-row-font-size-current, var(--ig-cell-column-font-size, var(--hcg-font-size))));
         --ig-cell-font-size: var(--ig-cell-base-font-size);
-        --ig-cell-base-font-family: var(--hcg-cell-font-family, var(--ig-row-font-family-current, var(--ig-cell-column-font-family, var(--ig-font-family))));
+        --ig-cell-base-font-family: var(--hcg-cell-font-family, var(--ig-row-font-family-current, var(--ig-cell-column-font-family, var(--hcg-font-family, var(--ig-default-font-family)))));
         --ig-cell-font-family: var(--ig-cell-base-font-family);
         --ig-cell-font: var(--ig-cell-font-weight) var(--ig-cell-font-size) var(--ig-cell-font-family);
-        --ig-cell-text-align: var(--hcg-cell-text-align, var(--ig-text-align));
+        --ig-cell-text-align: var(--hcg-cell-text-align, var(--hcg-text-align));
 
         background: var(--ig-column-layer);
         color: var(--ig-cell-hover-text-color);
         border-right: var(--ig-column-border);
         border-bottom: var(--ig-row-border);
-        padding: var(--ig-padding);
+        --ig-cell-applied-padding: var(--hcg-vertical-padding, var(--hcg-padding)) var(--hcg-horizontal-padding, var(--hcg-padding));
+
+        padding: var(--ig-cell-applied-padding);
         font: var(--ig-cell-font);
         text-align: var(--ig-cell-text-align);
     }
@@ -997,6 +1046,7 @@
     --hcg-border-radius: 5px;
     --hcg-border-width: 1px;
     --hcg-font-size: 15px;
+    --hcg-text-align: left;
     --hcg-caption-font-size: 18px;
     --hcg-padding: 15px;
     --hcg-header-vertical-padding: 10px;
@@ -1005,15 +1055,49 @@
     --hcg-input-border-radius: 6px;
     --hcg-input-border-color: #d1d1d1;
     --hcg-input-hover-border-color: #9d9d9d;
+    --hcg-input-background: var(--highcharts-background-color);
+    --hcg-input-padding: 5px;
     --hcg-button-border-radius: 6px;
     --hcg-button-hover-color: #000000;
     --hcg-button-hover-background: #e8e8e8;
     --hcg-button-border-color: transparent;
+    --hcg-button-selected-color: #ffffff;
+    --hcg-button-selected-background: #000000;
     --hcg-cell-button-border-color: #d1d1d1;
     --hcg-button-color: #141414;
     --hcg-icon-border-radius: 6px;
     --hcg-pagination-button-selected-background: #000000;
     --hcg-pagination-button-selected-color: #ffffff;
+    --hcg-loader-color: light-dark(#000000, #ffffff);
+
+    /* Popup */
+    --hcg-popup-color: var(--hcg-color);
+    --hcg-popup-background: #f6f6f6;
+    --hcg-popup-border-color: #e8e8e8;
+    --hcg-popup-border-radius: 6px;
+    --hcg-popup-box-shadow:
+        0 2px 4px 0 rgba(0, 0, 0, 0.08),
+        0 7px 7px 0 rgba(0, 0, 0, 0.07),
+        0 17px 10px 0 rgba(0, 0, 0, 0.04),
+        0 30px 12px 0 rgba(0, 0, 0, 0.01);
+    --hcg-popup-content-padding: 5px;
+    --hcg-popup-header-font-size: 0.75rem;
+    --hcg-popup-header-padding: 3px;
+    --hcg-menu-item-hover-background: #ffffff;
+    --hcg-menu-item-hover-border-color: #e8e8e8;
+    --hcg-menu-item-active-background: #e1e3ff;
+    --hcg-menu-item-active-border-color: #c3c8ff;
+    --hcg-menu-item-divider-color: #e8e8e8;
+    --hcg-menu-item-padding: 8px 8px 8px 12px;
+    --hcg-menu-item-font-size: 0.75rem;
+    --hcg-menu-item-font-weight: 600;
+    --hcg-menu-item-border-radius: 5px;
+    --hcg-menu-item-min-height: 2rem;
+    --hcg-menu-row-gap: 5px;
+
+    /* Grid Pro: editing / notifications */
+    --hcg-cell-editable-background: #dbeaff;
+    --hcg-notification-box-shadow: 0 0 15px 1px #00000030;
 }
 
 @media (prefers-color-scheme: dark) {
@@ -1023,9 +1107,19 @@
         --hcg-button-color: #ffffff;
         --hcg-button-hover-color: #ffffff;
         --hcg-button-hover-background: #3f3f3f;
+        --hcg-button-selected-color: #000000;
+        --hcg-button-selected-background: #ffffff;
         --hcg-cell-button-border-color: #646464;
         --hcg-pagination-button-selected-background: #ffffff;
         --hcg-pagination-button-selected-color: #000000;
+        --hcg-popup-background: #272727;
+        --hcg-popup-border-color: #4f4f4f;
+        --hcg-menu-item-hover-background: #3b3b3b;
+        --hcg-menu-item-hover-border-color: #4f4f4f;
+        --hcg-menu-item-active-background: #3f4699;
+        --hcg-menu-item-active-border-color: #4a55c9;
+        --hcg-menu-item-divider-color: #4f4f4f;
+        --hcg-cell-editable-background: #2d415e;
     }
 }
 
@@ -1035,9 +1129,19 @@
     --hcg-button-color: #ffffff;
     --hcg-button-hover-color: #ffffff;
     --hcg-button-hover-background: #3f3f3f;
+    --hcg-button-selected-color: #000000;
+    --hcg-button-selected-background: #ffffff;
     --hcg-cell-button-border-color: #646464;
     --hcg-pagination-button-selected-background: #ffffff;
     --hcg-pagination-button-selected-color: #000000;
+    --hcg-popup-background: #272727;
+    --hcg-popup-border-color: #4f4f4f;
+    --hcg-menu-item-hover-background: #3b3b3b;
+    --hcg-menu-item-hover-border-color: #4f4f4f;
+    --hcg-menu-item-active-background: #3f4699;
+    --hcg-menu-item-active-border-color: #4a55c9;
+    --hcg-menu-item-divider-color: #4f4f4f;
+    --hcg-cell-editable-background: #2d415e;
 }
 
 .hcg-theme-default {
@@ -1049,7 +1153,7 @@
 /* SPDX-License-Identifier: LicenseRef-Highcharts */
 
 /**
- * @license Highcharts Grid Lite v3.0.0
+ * @license Highcharts Grid Lite v3.1.0
  *
  * (c) 2009-2025 Highsoft AS
  *
@@ -1106,7 +1210,6 @@
 
     &:focus-visible {
         outline: none;
-        border-color: transparent;
     }
 
     &[type="checkbox"] {
@@ -1128,19 +1231,14 @@
         }
     }
 
-    &.hcg-icon-search {
-        padding-left: 25px;
-        appearance: none;
-        background-repeat: no-repeat;
-        background-position: left 10px center;
-        background-image: url("data:image/svg+xml,%3csvg xmlns=%27http://www.w3.org/2000/svg%27 width=%2712%27 height=%2712%27 viewBox=%270 0 12 12%27 fill=%27none%27%3e%3cpath d=%27M10.5 10.5L7.50005 7.5M8.5 5C8.5 6.933 6.933 8.5 5 8.5C3.067 8.5 1.5 6.933 1.5 5C1.5 3.067 3.067 1.5 5 1.5C6.933 1.5 8.5 3.067 8.5 5Z%27 stroke=%27%23767676%27 stroke-linecap=%27round%27 stroke-linejoin=%27round%27/%3e%3c/svg%3e");
-    }
-
     select& {
         appearance: none;
         background-image: url("data:image/svg+xml,%3csvg width=%2712%27 height=%2712%27 viewBox=%270 0 12 12%27 fill=%27none%27 xmlns=%27http://www.w3.org/2000/svg%27%3e%3cpath d=%27M3.5 7.5L6 10L8.5 7.5M3.5 4.5L6 2L8.5 4.5%27 stroke=%27%23767676%27 stroke-linecap=%27round%27 stroke-linejoin=%27round%27/%3e%3c/svg%3e");
         background-repeat: no-repeat;
         background-position: right 5px center;
+
+        /* Reserve space for the chevron (functional shell, not theme). */
+        padding-inline-end: 1.25rem;
         white-space: nowrap;
         text-overflow: ellipsis;
     }
@@ -1183,7 +1281,6 @@
 
     &:focus-visible {
         outline: none;
-        border-color: transparent;
     }
 
     &:disabled {
@@ -1214,6 +1311,15 @@
     /* <thead> */
     &.hcg-virtualization thead {
         display: block;
+    }
+
+    &.hcg-column-virtualization thead tr {
+        display: block;
+        overflow: visible;
+    }
+
+    &.hcg-column-virtualization thead th .hcg-header-cell-container {
+        height: 100%;
     }
 
     thead th {
@@ -1262,6 +1368,11 @@
         display: block;
     }
 
+    &.hcg-column-virtualization :is(thead tr, tbody tr) > :where(.hcg-cell, .hcg-header-cell) {
+        display: inline-block;
+        vertical-align: top;
+    }
+
     &.hcg-virtualization > tbody > tr {
         position: absolute;
     }
@@ -1304,6 +1415,7 @@
         align-items: center;
         max-width: 0;
         opacity: 0;
+        z-index: 11;
         cursor: pointer;
         transition: max-width 0.3s ease, opacity 0.3s ease;
     }
@@ -1360,6 +1472,8 @@
     .hcg-column-resizer.hovered::after {
         content: "";
         height: 100%;
+        width: max(3px, calc(var(--hcg-header-column-border-width, var(--hcg-border-width, 1px)) + 2px));
+        background: var(--hcg-header-color, var(--hcg-color, currentColor));
     }
 }
 
@@ -1370,7 +1484,6 @@
 .hcg-container .hcg-pagination {
     display: flex;
     align-items: center;
-    gap: 0.75rem;
     flex-wrap: nowrap;
 
     > * {
@@ -1386,36 +1499,31 @@
 
     .hcg-pagination-controls {
         justify-content: center;
-        gap: 2px;
 
         .hcg-pagination-pages {
             display: flex;
             flex-wrap: nowrap;
-            gap: 2px;
 
             .hcg-button {
                 display: inline-flex;
                 align-items: center;
                 justify-content: center;
-                min-width: 30px;
             }
 
             span {
                 display: inline-flex;
                 align-items: center;
                 justify-content: center;
-                min-width: 20px;
             }
         }
     }
 
     .hcg-pagination-page-size {
         justify-content: flex-end;
-        text-align: right;
 
+        /* Override global `.hcg-input { width: 100% }` — themed sets explicit width. */
         select.hcg-input {
-            width: 60px;
-            margin-left: 8px;
+            width: auto;
         }
     }
 
@@ -1450,6 +1558,9 @@
     .hcg-container .hcg-pagination {
         flex-direction: column;
         align-items: stretch;
+
+        /* Row gap when stacked — honor theme token when set. */
+        gap: var(--hcg-pagination-gap, 0.5rem);
         --ig-pagination-stacked-align: center;
 
         &.hcg-pagination-left { --ig-pagination-stacked-align: flex-start; }
@@ -1466,8 +1577,22 @@
             justify-content: var(--ig-pagination-stacked-align);
         }
 
+        .hcg-pagination-controls {
+            /* Keep one row; scroll if controls still overflow. */
+            flex-wrap: nowrap;
+            max-width: 100%;
+            overflow-x: auto;
+            -webkit-overflow-scrolling: touch;
+        }
+
+        .hcg-pagination-pages {
+            flex-wrap: nowrap;
+        }
+
         .hcg-pagination-page-size {
             text-align: center;
+            flex-wrap: wrap;
+            gap: 0.5rem;
         }
         &.hcg-pagination-left .hcg-pagination-page-size { text-align: left; }
         &.hcg-pagination-right .hcg-pagination-page-size { text-align: right; }
@@ -1524,20 +1649,12 @@
 .hcg-container .hcg-popup {
     position: absolute;
     z-index: 1000;
-    border-radius: 6px;
-    box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.08), 0 7px 7px 0 rgba(0, 0, 0, 0.07), 0 17px 10px 0 rgba(0, 0, 0, 0.04), 0 30px 12px 0 rgba(0, 0, 0, 0.01);
     min-width: 200px;
     overflow: auto;
     border-width: 1px;
     border-style: solid;
 
-    .hcg-popup-content {
-        padding: 5px;
-    }
-
     .hcg-menu-header {
-        font-size: 0.75rem;
-        padding: 3px;
         margin-bottom: 5px;
     }
 
@@ -1556,7 +1673,6 @@
     display: flex;
     flex-direction: column;
     list-style: none;
-    row-gap: 5px;
     padding: 0;
 
     .hcg-menu-item {
@@ -1565,13 +1681,8 @@
         gap: 2px;
         width: 100%;
         min-width: 185px;
-        min-height: 2rem;
-        padding: 8px 8px 8px 12px;
-        font-size: 0.75rem;
-        font-weight: 600;
         background-color: transparent;
         border: 1px solid transparent;
-        border-radius: 5px;
     }
 
     .hcg-menu-item:not(:disabled) {
@@ -1628,6 +1739,12 @@
     flex-flow: column;
     row-gap: 5px;
     min-width: 50px;
+}
+
+.hcg-column-filter-operator-spacer {
+    visibility: hidden;
+    pointer-events: none;
+    user-select: none;
 }
 
 .hcg-clear-filter-button {
@@ -1692,13 +1809,13 @@
     width: 100%;
     height: 100%;
     gap: 10px;
-    color: light-dark(#000000, #ffffff);
+    color: var(--ig-loader-color);
 }
 
 .hcg-loading-wrapper .hcg-spinner {
     border-top-width: 5px;
     border-top-style: solid;
-    border-top-color: light-dark(#000000, #ffffff);
+    border-top-color: var(--ig-loader-color);
     border-radius: 50%;
     width: 30px;
     height: 30px;
@@ -1738,7 +1855,7 @@
 
 /* Grid Pro TreeView styles */
 
-.hcg-tree {
+.hcg-cell-tree .hcg-disclosure {
     --ig-tree-indent-size: 16px;
     --ig-tree-toggle-gap: 5px;
     --ig-tree-toggle-slot-size: 20px;
@@ -1748,7 +1865,7 @@
     min-width: 0;
     padding-left: calc(var(--ig-tree-depth, 0) * var(--ig-tree-indent-size));
 
-    .hcg-tree-toggle {
+    .hcg-disclosure-icon {
         flex: 0 0 var(--ig-tree-toggle-slot-size);
         display: flex;
         align-items: center;
@@ -1761,7 +1878,7 @@
         }
     }
 
-    .hcg-tree-value {
+    .hcg-disclosure-value {
         flex: 1 1 auto;
         min-width: 0;
     }
@@ -1876,7 +1993,7 @@
 /* SPDX-License-Identifier: LicenseRef-Highcharts */
 
 /**
- * @license Highcharts Grid Pro v3.0.0
+ * @license Highcharts Grid Pro v3.1.0
  *
  * (c) 2009-2025 Highsoft AS
  *
@@ -1953,7 +2070,7 @@
     --ig-notification-padding: var(--ig-notification-vertical-padding) var(--ig-notification-horizontal-padding);
 
     /* Notification border */
-    --ig-notification-border-radius: var(--hcg-notification-border-radius, var(--ig-border-radius));
+    --ig-notification-border-radius: var(--hcg-notification-border-radius, var(--hcg-border-radius, 0));
     --ig-notification-border-width: var(--hcg-notification-border-width, 1px);
     --ig-notification-border-style: var(--hcg-notification-border-style, solid);
     --ig-notification-border-color: var(--hcg-notification-border-color, var(--ig-color));
@@ -1962,18 +2079,11 @@
             --ig-notification-border-width
         ) var(--ig-notification-border-style) var(--ig-notification-border-color);
 
-    /*  Editable cell */
-    --ig-cell-editable-background: #dbeaff;
-}
+    /* Editable cell — visual default lives in .hcg-theme-default */
+    --ig-cell-editable-background: var(--hcg-cell-editable-background, transparent);
 
-@media (prefers-color-scheme: dark) {
-    .hcg-container {
-        --ig-cell-editable-background: #2d415e;
-    }
-}
-
-.highcharts-dark .hcg-container {
-    --ig-cell-editable-background: #2d415e;
+    /* Notification chrome */
+    --ig-notification-box-shadow: var(--hcg-notification-box-shadow, none);
 }
 
 .hcg-no-padding {
@@ -2023,10 +2133,11 @@
     appearance: none;
 }
 
-.hcg-table tbody :where(.hcg-cell).hcg-edited-cell-error .hcg-input {
+.hcg-table tbody :where(.hcg-cell).hcg-edited-cell-error .hcg-input,
+.hcg-table tbody :where(.hcg-cell).hcg-edited-cell-error .hcg-input:focus-visible {
     color: var(--ig-color);
-    box-shadow: inset 0 0 0 var(--ig-focus-ring-width) var(--ig-negative-border-color) !important;
-    background-color: var(--ig-negative-background) !important;
+    box-shadow: inset 0 0 0 var(--ig-focus-ring-width) var(--ig-negative-border-color);
+    background-color: var(--ig-negative-background);
 }
 
 /* Grid Pro Credits Pro styles */
@@ -2068,7 +2179,7 @@
     background: var(--ig-background);
     border-radius: var(--ig-notification-border-radius);
     border: var(--ig-notification-border);
-    box-shadow: 0 0 15px 1px #00000030;
+    box-shadow: var(--ig-notification-box-shadow);
 }
 
 /* Notification states */

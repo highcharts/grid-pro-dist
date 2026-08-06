@@ -4,8 +4,9 @@
  *
  *  (c) 2020-2026 Highsoft AS
  *
- *  A commercial license may be required depending on use.
- *  See www.highcharts.com/license
+ *  Integration of this software requires a license.
+ *  - For commercial use, see www.highcharts.com/license
+ *  - For non-commercial, see www.highcharts.com/license-eula
  *
  *
  *  Authors:
@@ -503,29 +504,33 @@ class RowsVirtualizer {
                 rows.push(alwaysLastRow);
             }
             // Focus the cell if the focus cursor is set
-            const hadPendingFocusCursor = !!vp.pendingFocusCursor;
             if (vp.pendingFocusCursor) {
                 const [rowIndex, columnIndex] = vp.pendingFocusCursor;
                 const row = rows.find((row) => row.index === rowIndex);
-                if (row) {
+                const cell = row?.getCellByColumnIndex(columnIndex);
+                // Keep the pending cursor until the target cell exists. The
+                // column may still be virtualized when the row renders first,
+                // in which case the column render pass restores focus later.
+                if (row && cell) {
                     delete vp.pendingFocusCursor;
-                    vp.restoreRenderedCellFocus(row.cells[columnIndex], rowIndex, columnIndex);
-                    if (hadPendingFocusCursor) {
-                        vp.ensureRowFullyVisible(row);
-                    }
+                    vp.restoreRenderedCellFocus(cell, rowIndex, columnIndex);
+                    vp.ensureRowFullyVisible(row);
                 }
             }
             else if (vp.focusCursor) {
-                const focusCursor = vp.focusCursor;
-                if (!focusCursor.bodySectionId) {
+                const { focusCursor } = vp;
+                if (focusCursor.type !== 'header' &&
+                    !focusCursor.bodySectionId) {
                     const focusedRow = rows.find((row) => row.id === focusCursor.rowId);
                     if (focusedRow) {
-                        vp.restoreRenderedCellFocus(focusedRow.cells[focusCursor.columnIndex], focusedRow.index, focusCursor.columnIndex);
+                        vp.restoreRenderedCellFocus(focusedRow.getCellByColumnIndex(focusCursor.columnIndex), focusedRow.index, focusCursor.columnIndex, false);
                     }
                 }
             }
             // Set the focus anchor cell.
-            if ((!vp.focusCursor || !vp.focusAnchorCell?.row.rendered) &&
+            if ((!vp.focusCursor ||
+                vp.focusCursor.type === 'header' ||
+                !vp.focusAnchorCell?.row.rendered) &&
                 rows.length > 0) {
                 const anchorRowIndex = Math.max(0, rowCursor - rows[0].index);
                 const anchorRow = rows[anchorRowIndex];
@@ -700,10 +705,14 @@ class RowsVirtualizer {
         if (!nextHeight || nextHeight === this.defaultRowHeight) {
             return false;
         }
+        const prevHeight = this.defaultRowHeight;
         this.defaultRowHeight = nextHeight;
         this.totalGridHeight = this.rowCount * this.defaultRowHeight;
         this.gridHeightOverflow = Math.max(this.totalGridHeight - this.maxElementHeight, 0);
         const target = this.viewport.tbodyElement;
+        if (this.viewport.virtualRows && prevHeight > 0) {
+            target.scrollTop = target.scrollTop * nextHeight / prevHeight;
+        }
         const scrollDenominator = this.maxElementHeight - target.clientHeight;
         const scrollPercentage = scrollDenominator > 0 ?
             target.scrollTop / scrollDenominator :
@@ -750,9 +759,10 @@ class RowsVirtualizer {
      * The row to pool.
      */
     poolRow(row) {
-        const focusCursor = this.viewport.focusCursor;
+        const { focusCursor } = this.viewport;
         const activeElement = document.activeElement;
         if (focusCursor &&
+            focusCursor.type !== 'header' &&
             focusCursor.rowId === row.id &&
             activeElement instanceof Element &&
             row.htmlElement.contains(activeElement)) {

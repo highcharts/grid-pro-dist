@@ -1,12 +1,12 @@
 // SPDX-License-Identifier: LicenseRef-Highcharts
 /**
- * @license Highcharts Grid Pro v3.0.0 (2026-05-06)
+ * @license Highcharts Grid Pro v3.1.0 (2026-08-06)
  * @module grid/grid-pro
  *
  * (c) 2009-2026 Highsoft AS
  *
- * A commercial license may be required depending on use.
- * See www.highcharts.com/license
+ * A commercial license may be required depending on use,
+ * see www.highcharts.com/license
  */
 import AST from '../Core/Renderer/HTML/AST.js';
 import Templating from '../Core/Templating.js';
@@ -27,6 +27,7 @@ import Column from '../Grid/Core/Table/Column.js';
 import HeaderCell from '../Grid/Core/Table/Header/HeaderCell.js';
 import TableRow from '../Grid/Core/Table/Body/TableRow.js';
 import TableCell from '../Grid/Core/Table/Body/TableCell.js';
+import CellContextMenuBuiltInActions from '../Grid/Core/Table/CellContextMenu/CellContextMenuBuiltInActions.js';
 import SvgIcons from '../Grid/Core/UI/SvgIcons.js';
 import ResponsiveComposition from '../Grid/Core/Responsive/ResponsiveComposition.js';
 import GridEvents from '../Grid/Pro/GridEvents.js';
@@ -39,6 +40,7 @@ import CellRendererRegistry from '../Grid/Pro/CellRendering/CellRendererRegistry
 import PaginationComposition from '../Grid/Pro/Pagination/PaginationComposition.js';
 import LicenseValidationComposition from '../Grid/Pro/License/LicenseValidationComposition.js';
 import RowPinningComposition from '../Grid/Pro/RowPinning/RowPinningComposition.js';
+import TableEditingComposition from '../Grid/Pro/TableEditing/TableEditingComposition.js';
 import TreeViewComposition from '../Grid/Pro/TreeView/TreeViewComposition.js';
 import Pagination from '../Grid/Core/Pagination/Pagination.js';
 import CellContentPro from '../Grid/Pro/CellRendering/CellContentPro.js';
@@ -67,6 +69,7 @@ import '../Grid/Pro/GridEvents.js';
 import '../Grid/Pro/CellEditing/CellEditingComposition.js';
 import '../Grid/Pro/Credits/CreditsProComposition.js';
 import '../Grid/Pro/Export/ExportingComposition.js';
+import '../Grid/Pro/TableEditing/TableEditingComposition.js';
 // Cell Renderers
 import '../Grid/Pro/CellRendering/CellRenderer.js';
 import '../Grid/Pro/CellRendering/CellContentPro.js';
@@ -89,6 +92,7 @@ import '../Grid/Pro/Data/RemoteDataProvider.js';
  * */
 const G = {
     AST,
+    CellContextMenuBuiltInActions,
     CellContentPro,
     CellRenderer,
     CellRendererRegistry,
@@ -130,14 +134,15 @@ CellRenderersComposition.compose(G.Column);
 PaginationComposition.compose(G.Pagination);
 LicenseValidationComposition.compose(G.Grid);
 RowPinningComposition.compose(G.Grid, G.Table, G.Column, G.TableRow, G.TableCell);
-TreeViewComposition.compose(G.Grid, G.Table, G.TableCell);
+TableEditingComposition.compose(G.Grid);
+TreeViewComposition.compose(G.Grid, G.Table, G.TableCell, G.HeaderCell);
 ResponsiveComposition.compose(G.Grid);
 /* *
  *
  * Named Exports
  *
  * */
-export { AST, CellContentPro, CellRenderer, CellRendererRegistry, Column, ColumnResizing, DataConnector, DataConverter, DataCursor, DataModifier, DataProviderRegistry, DataPool, DataTable, _Grid as Grid, HeaderCell, Pagination, Popup, SvgIcons, Table, TableCell, Templating };
+export { AST, CellContextMenuBuiltInActions, CellContentPro, CellRenderer, CellRendererRegistry, Column, ColumnResizing, DataConnector, DataConverter, DataCursor, DataModifier, DataProviderRegistry, DataPool, DataTable, _Grid as Grid, HeaderCell, Pagination, Popup, SvgIcons, Table, TableCell, Templating };
 export const { classNamePrefix, defaultOptions, grid, grids, isHighContrastModeActive, product, setOptions, version, win } = G;
 /* *
  *

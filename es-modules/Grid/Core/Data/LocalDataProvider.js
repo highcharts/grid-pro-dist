@@ -19,7 +19,7 @@ import ChainModifier from '../../../Data/Modifiers/ChainModifier.js';
 import DataConnector from '../../../Data/Connectors/DataConnector.js';
 import DataProviderRegistry from './DataProviderRegistry.js';
 import { uniqueKey } from '../../../Core/Utilities.js';
-import { defined, isNumber, isString } from '../../../Shared/Utilities.js';
+import { defined, fireEvent, isNumber, isString } from '../../../Shared/Utilities.js';
 /* *
  *
  *  Class
@@ -84,11 +84,15 @@ export class LocalDataProvider extends DataProvider {
     }
     async handleTableChange(e) {
         this.querying.shouldBeUpdated = true;
+        if (e.type === 'afterDeleteRows' ||
+            e.type === 'afterSetRows') {
+            this.originalRowIndexesMap = this.createOriginalRowIndexesMap();
+        }
         const grid = this.querying.grid;
         if (!grid?.viewport) {
             return;
         }
-        if (e.type === 'afterSetCell' && e.detail?.fromGrid) {
+        if (e.detail?.fromGrid) {
             return;
         }
         if (this.options.updateOnChange) {
@@ -130,20 +134,22 @@ export class LocalDataProvider extends DataProvider {
         this.connectorEventDestructors.push(connector.on('afterLoad', () => {
             this.querying.shouldBeUpdated = true;
         }));
-        this.setDataTable(connector.getTable());
+        if (!connector.loaded) {
+            try {
+                const loadedConnector = await connector.load();
+                connector.converter = loadedConnector.converter;
+                connector.loaded = true;
+            }
+            catch {
+                return;
+            }
+        }
+        this.setDataTable(connector.getTable(this.options.dataTableKey));
         if ('enablePolling' in connector.options &&
             connector.options.enablePolling &&
             !connector.polling &&
             'dataRefreshRate' in connector.options) {
             connector.startPolling(Math.max(connector.options.dataRefreshRate || 0, 1) * 1000);
-        }
-        if (!connector.loaded) {
-            try {
-                await connector.load();
-            }
-            catch {
-                return;
-            }
         }
     }
     getColumnIds() {
@@ -262,17 +268,11 @@ export class LocalDataProvider extends DataProvider {
         else {
             interTable = originalDataTable.getModified();
         }
-        const grid = this.querying.grid;
-        if ('treeView' in grid && grid.treeView) {
-            try {
-                grid.treeView.sync();
-                interTable = grid.treeView.projectTable(interTable);
-            }
-            catch (error) {
-                // eslint-disable-next-line no-console
-                console.error(error.message);
-            }
-        }
+        const projectPresentationTableEvent = {
+            table: interTable
+        };
+        fireEvent(this.querying.grid, 'projectPresentationTable', projectPresentationTableEvent);
+        interTable = projectPresentationTableEvent.table;
         this.prePaginationRowCount = interTable.rowCount;
         // Pagination modifier
         const paginationModifier = controller.pagination.createModifier(interTable.rowCount);

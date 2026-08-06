@@ -11,6 +11,7 @@ import type SVGRendererBase from './SVGRendererBase';
 import type SymbolOptions from './SymbolOptions';
 import type { SymbolKey } from './SymbolType';
 import AST from '../HTML/AST.js';
+import Palette from '../../Color/Palette.js';
 import SVGElement from './SVGElement.js';
 import SVGLabel from './SVGLabel.js';
 import Symbols from './Symbols.js';
@@ -93,6 +94,14 @@ declare class SVGRenderer implements SVGRendererBase {
      * @type {boolean | undefined}
      */
     forExport?: boolean;
+    /**
+     * The palette instance associated with the renderer. Typically the same
+     * as the chart's palette.
+     *
+     * @name Highcharts.SVGRenderer#palette
+     * @type {Highcharts.Palette|undefined}
+     */
+    palette?: Palette;
     /**
      * General method for adding a definition to the SVG `defs` tag. Can be used
      * for gradients, fills, filters etc. Styled mode only. A hook for adding
@@ -496,7 +505,7 @@ declare class SVGRenderer implements SVGRendererBase {
      * // Leave only the lower right quarter visible
      * circle.clip(clipRect);
      *
-     * @deprecated
+     * @deprecated 11.2.0
      *
      * @param x
      *
@@ -648,7 +657,7 @@ interface SVGRenderer extends SVGRendererBase {
      * Dummy function for plugins, called every time the renderer is updated.
      * Prior to Highcharts 5, this was used for the canvg renderer.
      *
-     * @deprecated
+     * @deprecated 5.0.0
      * @function Highcharts.SVGRenderer#draw
      */
     draw: Function;

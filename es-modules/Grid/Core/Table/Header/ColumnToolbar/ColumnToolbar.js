@@ -4,8 +4,9 @@
  *
  *  (c) 2020-2026 Highsoft AS
  *
- *  A commercial license may be required depending on use.
- *  See www.highcharts.com/license
+ *  Integration of this software requires a license.
+ *  - For commercial use, see www.highcharts.com/license
+ *  - For non-commercial, see www.highcharts.com/license-eula
  *
  *
  *  Authors:
@@ -171,9 +172,12 @@ class HeaderCellToolbar {
     }
     /**
      * Focuses the first button of the toolbar.
+     *
+     * @param options
+     * Native focus options.
      */
-    focus() {
-        this.buttons[0]?.focus();
+    focus(options) {
+        this.buttons[0]?.focus(options);
     }
     /**
      * Handles the key down event on the toolbar.
@@ -184,19 +188,27 @@ class HeaderCellToolbar {
     keyDownHandler(e) {
         const len = this.buttons.length;
         const cursor = this.focusCursor;
+        let elementToFocus;
         switch (e.key) {
             case 'ArrowUp':
             case 'ArrowLeft':
-                this.buttons[Math.abs((cursor - 1 + len) % len)].focus();
+                elementToFocus = this.buttons[Math.abs((cursor - 1 + len) % len)];
                 break;
             case 'ArrowDown':
             case 'ArrowRight':
-                this.buttons[(cursor + 1) % len].focus();
+                elementToFocus = this.buttons[(cursor + 1) % len];
                 break;
             case 'Escape':
-                this.column.header?.htmlElement.focus();
+                elementToFocus = this.column.header?.htmlElement;
                 break;
+            default:
+                return;
         }
+        e.preventDefault();
+        e.stopPropagation();
+        elementToFocus?.focus({
+            preventScroll: true
+        });
     }
 }
 /**

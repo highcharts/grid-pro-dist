@@ -93,6 +93,7 @@ declare class Pagination {
     render(): void;
     private getAlignmentClass;
     updateAlignmentClass(): void;
+    updateClassName(): void;
     redraw(): void;
     /**
      * Render pagination in a tfoot element.

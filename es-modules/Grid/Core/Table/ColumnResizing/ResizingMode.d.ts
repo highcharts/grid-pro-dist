@@ -36,6 +36,10 @@ declare abstract class ResizingMode {
      */
     isDirty?: boolean;
     /**
+     * Auto-width metrics reused during a single reflow.
+     */
+    private autoWidthCache?;
+    /**
      * Creates a new column distribution strategy.
      *
      * @param viewport
@@ -88,6 +92,54 @@ declare abstract class ResizingMode {
      * The minimum width in pixels.
      */
     protected static getMinWidth(column: Column): number;
+    /**
+     * Returns the configured width option in pixels.
+     *
+     * @param column
+     * The column to resolve the width for.
+     *
+     * @param width
+     * The width option to resolve.
+     *
+     * @returns
+     * The width in pixels.
+     */
+    protected static getOptionWidth(column: Column, width?: number | string): number | undefined;
+    /**
+     * Returns the maximum width of the column.
+     *
+     * @param column
+     * The column to get the maximum width for.
+     *
+     * @returns
+     * The maximum width in pixels.
+     */
+    protected static getMaxWidth(column: Column): number | undefined;
+    /**
+     * Clamps the width to the column width constraints.
+     *
+     * @param column
+     * The column to clamp the width for.
+     *
+     * @param width
+     * The width in pixels.
+     *
+     * @returns
+     * The clamped width in pixels.
+     */
+    protected static fitWidth(column: Column, width: number): number;
+    /**
+     * Calculates auto-width metrics for columns without configured widths.
+     *
+     * @param columnCount
+     * The number of enabled columns.
+     *
+     * @param definedWidthCount
+     * The number of columns with a configured width.
+     *
+     * @returns The auto-width calculation cache.
+     */
+    private calculateAutoWidthCache;
     /**
      * Calculates defined (px and %) widths of all columns with non-undefined
      * widths in the grid. Total in px.

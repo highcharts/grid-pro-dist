@@ -3,10 +3,11 @@ export type DeepRequired<T> = {
 };
 export type ClassNameKey = keyof typeof rawClassNames;
 export declare const classNamePrefix: string;
-export declare const version = "3.0.0";
-export declare const buildDate = "2026-05-06";
+export declare const version = "3.1.0";
+export declare const buildDate = "2026-08-06";
 export declare const rawClassNames: {
     readonly container: "container";
+    readonly themed: "themed";
     readonly tableElement: "table";
     readonly captionElement: "caption";
     readonly descriptionElement: "description";
@@ -23,9 +24,11 @@ export declare const rawClassNames: {
     readonly syncedCell: "synced-cell";
     readonly syncedColumn: "synced-column";
     readonly editedCell: "edited-cell";
+    readonly cellEditingContainer: "cell-editing-container";
     readonly mockedRow: "mocked-row";
     readonly rowsContentNowrap: "rows-content-nowrap";
     readonly virtualization: "virtualization";
+    readonly columnVirtualization: "column-virtualization";
     readonly scrollableContent: "scrollable-content";
     readonly headerCell: "header-cell";
     readonly headerCellContainer: "header-cell-container";
@@ -60,9 +63,9 @@ export declare const rawClassNames: {
     readonly icon: "icon";
     readonly iconSelected: "icon-selected";
     readonly iconHighlighted: "icon-highlighted";
-    readonly iconSearch: "icon-search";
     readonly popupContent: "popup-content";
     readonly columnFilterWrapper: "column-filter-wrapper";
+    readonly columnFilterOperatorSpacer: "column-filter-operator-spacer";
     readonly menuContainer: "menu-container";
     readonly menuItem: "menu-item";
     readonly menuHeader: "menu-header";
@@ -92,13 +95,16 @@ export declare const composed: Array<string>;
 export declare const userAgent: string;
 export declare const isChrome: boolean;
 export declare const isSafari: boolean;
+export declare const isIos: boolean;
+export declare const isTouchDevice: boolean;
 export declare const getClassName: (classNameKey: ClassNameKey) => string;
 declare const _default: {
     readonly classNamePrefix: string;
-    readonly version: "3.0.0";
-    readonly buildDate: "2026-05-06";
+    readonly version: "3.1.0";
+    readonly buildDate: "2026-08-06";
     readonly rawClassNames: {
         readonly container: "container";
+        readonly themed: "themed";
         readonly tableElement: "table";
         readonly captionElement: "caption";
         readonly descriptionElement: "description";
@@ -115,9 +121,11 @@ declare const _default: {
         readonly syncedCell: "synced-cell";
         readonly syncedColumn: "synced-column";
         readonly editedCell: "edited-cell";
+        readonly cellEditingContainer: "cell-editing-container";
         readonly mockedRow: "mocked-row";
         readonly rowsContentNowrap: "rows-content-nowrap";
         readonly virtualization: "virtualization";
+        readonly columnVirtualization: "column-virtualization";
         readonly scrollableContent: "scrollable-content";
         readonly headerCell: "header-cell";
         readonly headerCellContainer: "header-cell-container";
@@ -152,9 +160,9 @@ declare const _default: {
         readonly icon: "icon";
         readonly iconSelected: "icon-selected";
         readonly iconHighlighted: "icon-highlighted";
-        readonly iconSearch: "icon-search";
         readonly popupContent: "popup-content";
         readonly columnFilterWrapper: "column-filter-wrapper";
+        readonly columnFilterOperatorSpacer: "column-filter-operator-spacer";
         readonly menuContainer: "menu-container";
         readonly menuItem: "menu-item";
         readonly menuHeader: "menu-header";
@@ -184,6 +192,8 @@ declare const _default: {
     readonly userAgent: string;
     readonly isChrome: boolean;
     readonly isSafari: boolean;
+    readonly isIos: boolean;
+    readonly isTouchDevice: boolean;
     readonly getClassName: (classNameKey: ClassNameKey) => string;
 };
 export default _default;

@@ -4,15 +4,17 @@
  *
  *  (c) 2020-2026 Highsoft AS
  *
- *  A commercial license may be required depending on use.
- *  See www.highcharts.com/license
+ *  Integration of this software requires a license.
+ *  - For commercial use, see www.highcharts.com/license
+ *  - For non-commercial, see www.highcharts.com/license-eula
  *
  *  Authors:
  *  - Dawid Dragula
  *
  * */
 'use strict';
-import { defined, isNumber, isString } from '../../../../Shared/Utilities.js';
+import { normalizeRowIdValue } from '../TreeViewCommons.js';
+import { defined } from '../../../../Shared/Utilities.js';
 /* *
  *
  *  Functions
@@ -21,37 +23,43 @@ import { defined, isNumber, isString } from '../../../../Shared/Utilities.js';
 /**
  * Builds a canonical tree index from flat columns using `id` and `parentId`.
  *
- * @param columns
- * Source columns.
- *
- * @param idColumn
- * Column ID containing stable row IDs.
+ * @param table
+ * Source table.
  *
  * @param input
  * Normalized tree input options.
  *
+ * @param idColumn
+ * Column ID containing stable row IDs, when configured.
+ *
  * @returns
  * Canonical tree index.
  */
-export function buildIndexFromColumns(columns, idColumn, input) {
+export function buildIndexFromColumns(table, input, idColumn) {
+    const { columns } = table;
     const { parentIdColumn } = input;
-    const idValues = columns[idColumn];
-    if (!idValues) {
-        throw new Error(`TreeView: idColumn "${idColumn}" not found.`);
-    }
     const parentValues = columns[parentIdColumn];
     if (!parentValues) {
         throw new Error(`TreeView: parentIdColumn "${parentIdColumn}" not found.`);
     }
-    const rowCount = Math.max(idValues.length, parentValues.length);
+    const rowCount = Math.max(table.getRowCount(), parentValues.length);
     const nodes = new Map();
     const rowOrder = [];
     for (let rowIndex = 0; rowIndex < rowCount; ++rowIndex) {
-        const id = normalizeRowIdValue(idValues[rowIndex], idColumn, rowIndex, false);
+        const id = idColumn ?
+            normalizeRowIdValue(columns[idColumn]?.[rowIndex], idColumn, rowIndex, false) :
+            table.getOriginalRowIndex(rowIndex);
+        if (!defined(id)) {
+            throw new Error('TreeView: Could not resolve original row index ' +
+                `at row ${rowIndex}.`);
+        }
         const parentId = normalizeRowIdValue(parentValues[rowIndex], parentIdColumn, rowIndex, true);
         if (nodes.has(id)) {
-            throw new Error(`TreeView: Duplicate row id "${String(id)}" in column ` +
-                `"${idColumn}" at row ${rowIndex}.`);
+            throw new Error(idColumn ?
+                `TreeView: Duplicate row id "${String(id)}" in column ` +
+                    `"${idColumn}" at row ${rowIndex}.` :
+                `TreeView: Duplicate original row index "${String(id)}" ` +
+                    `at row ${rowIndex}.`);
         }
         nodes.set(id, {
             id,
@@ -61,7 +69,6 @@ export function buildIndexFromColumns(columns, idColumn, input) {
         });
         rowOrder.push(id);
     }
-    const rootIds = [];
     for (let i = 0, iEnd = rowOrder.length; i < iEnd; ++i) {
         const id = rowOrder[i];
         const node = nodes.get(id);
@@ -69,7 +76,6 @@ export function buildIndexFromColumns(columns, idColumn, input) {
             continue;
         }
         if (node.parentId === null) {
-            rootIds.push(node.id);
             continue;
         }
         if (!nodes.has(node.parentId)) {
@@ -82,36 +88,8 @@ export function buildIndexFromColumns(columns, idColumn, input) {
     validateAcyclic(nodes, rowOrder);
     return {
         nodes,
-        rowOrder,
-        rootIds
+        rowOrder
     };
-}
-/**
- * Normalizes row ID values to `RowId` or `null`.
- *
- * @param value
- * Raw cell value.
- *
- * @param columnId
- * Source column ID.
- *
- * @param rowIndex
- * Row index of the value.
- *
- * @param allowNull
- * Whether null-like values are allowed.
- */
-function normalizeRowIdValue(value, columnId, rowIndex, allowNull) {
-    if (!defined(value)) {
-        if (allowNull) {
-            return null;
-        }
-        throw new Error(`TreeView: Missing value in "${columnId}" at row ${rowIndex}.`);
-    }
-    if (isString(value) || isNumber(value)) {
-        return value;
-    }
-    throw new Error(`TreeView: "${columnId}" must contain only string, number${allowNull ? ', null, or undefined' : ''} values. Invalid value at row ${rowIndex}.`);
 }
 /**
  * Validates that parent references form an acyclic graph.

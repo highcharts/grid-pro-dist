@@ -1,0 +1,59 @@
+/* *
+ *
+ *  Grid Tree View Cell Context
+ *
+ *  (c) 2020-2026 Highsoft AS
+ *
+ *  A commercial license may be required depending on use.
+ *  See www.highcharts.com/license
+ *
+ *  Authors:
+ *  - Dawid Dragula
+ *
+ * */
+'use strict';
+import { getTreeViewRowId } from '../TreeViewRowResolver.js';
+import { defined } from '../../../../Shared/Utilities.js';
+/* *
+ *
+ *  Functions
+ *
+ * */
+/**
+ * Resolves shared TreeView context for a rendered table cell.
+ *
+ * @param cell
+ * Rendered table cell.
+ *
+ * @returns
+ * Shared TreeView context, or `undefined` when the cell is not currently
+ * associated with a projected tree row.
+ */
+export function getTreeViewCellContext(cell) {
+    const controller = cell.row.viewport.grid.treeView;
+    const options = controller?.options;
+    const projectionState = controller?.getProjectionState();
+    const treeColumnId = (options?.treeColumn ||
+        cell.row.viewport.columns[0]?.id);
+    if (!controller || !options || !projectionState || !treeColumnId) {
+        return;
+    }
+    const rowId = getTreeViewRowId(cell.row, projectionState);
+    if (!defined(rowId)) {
+        return;
+    }
+    const rowState = projectionState.rowsById.get(rowId);
+    if (!rowState) {
+        return;
+    }
+    return {
+        cell,
+        controller,
+        isTreeColumnCell: cell.column.id === treeColumnId,
+        options,
+        projectionState,
+        rowId,
+        rowState,
+        treeColumnId
+    };
+}
