@@ -1,4 +1,5 @@
 import type { CellType as DataTableCellType } from '../../../../Data/DataTable';
+import type { RowId } from '../../Data/DataProvider';
 import type Column from '../Column';
 import type TableRow from './TableRow';
 import Cell from '../Cell.js';
@@ -46,6 +47,8 @@ declare class TableCell extends Cell {
     /**
      * Edits the cell value and updates the dataset. Call this instead of
      * `setValue` when you want it to trigger the cell value user change event.
+     * Does nothing if the cell is not editable or the value is the same as the
+     * current one.
      *
      * @param value
      * The new value to set.
@@ -77,6 +80,14 @@ declare class TableCell extends Cell {
      * content.
      */
     protected updateDataset(): Promise<boolean>;
+    /**
+     * Returns whether the cell is currently editable.
+     */
+    isEditable(): boolean;
+    /**
+     * Updates the aria-readonly state based on current row/column context.
+     */
+    private updateReadonlyAttribute;
     /**
      * Initialize event listeners for table body cells.
      *
@@ -116,5 +127,13 @@ declare class TableCell extends Cell {
  */
 export interface TableCellEvent {
     target: TableCell;
+}
+export interface TableCellGetEditabilityEvent {
+    editable: boolean;
+}
+export interface TableCellAfterDataMutationEvent {
+    requiresFullRowsUpdate: boolean;
+    rowId: RowId;
+    sourceColumnId: string;
 }
 export default TableCell;

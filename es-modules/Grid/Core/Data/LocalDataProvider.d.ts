@@ -146,9 +146,20 @@ export interface LocalDataProviderOptions extends DataProviderOptions {
      * Connector instance or options used to populate the data table.
      *
      * @sample grid-lite/basic/data-connector
-     *         Data from connector
+     *         Grid with CSV connector
+     * @sample grid-lite/basic/data-connector-json
+     *         Grid with JSON connector
+     * @sample grid-lite/basic/data-connector-google-sheets
+     *         Grid with Google Sheets connector
+     * @sample grid-lite/basic/data-connector-html-table
+     *         Grid with HTML table connector
      */
     connector?: GridDataConnectorTypeOptions | DataConnectorType;
+    /**
+     * The connector data table key used as the grid data source. If omitted,
+     * the first connector table is used.
+     */
+    dataTableKey?: string;
     /**
      * Columns data to initialize the Grid with.
      *

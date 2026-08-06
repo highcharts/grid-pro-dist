@@ -4,8 +4,9 @@
  *
  *  (c) 2020-2026 Highsoft AS
  *
- *  A commercial license may be required depending on use.
- *  See www.highcharts.com/license
+ *  Integration of this software requires a license.
+ *  - For commercial use, see www.highcharts.com/license
+ *  - For non-commercial, see www.highcharts.com/license-eula
  *
  *
  *  Authors:
@@ -25,7 +26,9 @@
  * The column to check.
  */
 export function isFiltered(column) {
-    const { condition, value } = column.options.filtering || {};
+    const filtering = column.options.filtering || {};
+    const condition = filtering.rule?.operator ?? filtering.condition;
+    const value = filtering.rule?.value ?? filtering.value;
     return !!(condition && (['empty', 'notEmpty', 'true', 'false'].includes(condition) ||
         (value !== void 0 && value !== '') // Accept null and 0
     ));

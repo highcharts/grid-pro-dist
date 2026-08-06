@@ -4,8 +4,9 @@
  *
  *  (c) 2020-2026 Highsoft AS
  *
- *  A commercial license may be required depending on use.
- *  See www.highcharts.com/license
+ *  Integration of this software requires a license.
+ *  - For commercial use, see www.highcharts.com/license
+ *  - For non-commercial, see www.highcharts.com/license-eula
  *
  *
  *  Authors:
@@ -191,7 +192,7 @@ export class Column {
      * Returns the width of the column in pixels.
      */
     getWidth() {
-        return this.viewport.columnResizing.getColumnWidth(this);
+        return this.viewport.columnLayout.getColumnWidth(this);
     }
     /**
      * Adds or removes the hovered CSS class to the column element

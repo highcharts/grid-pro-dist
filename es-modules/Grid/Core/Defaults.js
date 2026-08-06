@@ -4,8 +4,9 @@
  *
  *  (c) 2009-2026 Highsoft AS
  *
- *  A commercial license may be required depending on use.
- *  See www.highcharts.com/license
+ *  Integration of this software requires a license.
+ *  - For commercial use, see www.highcharts.com/license
+ *  - For non-commercial, see www.highcharts.com/license-eula
  *
  *
  *  Authors:
@@ -14,6 +15,7 @@
  *
  * */
 'use strict';
+import { warnIfDeprecatedOptions } from './DeprecatedOptions.js';
 import Pagination from './Pagination/Pagination.js';
 import { merge } from '../../Shared/Utilities.js';
 /**
@@ -59,6 +61,7 @@ export const defaultLangOptions = {
     sortDescending: 'Sort descending',
     column: 'Column',
     setFilter: 'Set filter',
+    filterValuePlaceholder: 'Value...',
     pagination: {
         pageInfo: 'Showing {start} - {end} of {total} ' +
             '(page {currentPage} of {totalPages})',
@@ -70,7 +73,7 @@ export const defaultLangOptions = {
         pageNumber: 'Page {page}',
         ellipsis: 'More pages'
     },
-    columnFilteringConditions: {
+    columnFilteringOperators: {
         contains: 'Contains',
         doesNotContain: 'Does not contain',
         equals: 'Equals',
@@ -83,11 +86,17 @@ export const defaultLangOptions = {
         greaterThanOrEqualTo: 'Greater than or equal to',
         lessThan: 'Less than',
         lessThanOrEqualTo: 'Less than or equal to',
-        before: 'Before',
-        after: 'After',
         all: 'All',
         'true': 'True',
         'false': 'False'
+    },
+    columnFilteringDateTimeOperators: {
+        equals: 'On',
+        doesNotEqual: 'Not on',
+        greaterThan: 'After',
+        greaterThanOrEqualTo: 'On or after',
+        lessThan: 'Before',
+        lessThanOrEqualTo: 'On or before'
     }
 };
 /**
@@ -127,10 +136,13 @@ export const defaultOptions = {
             enabled: true
         },
         columns: {
+            bufferSize: 2,
             resizing: {
                 enabled: true,
                 mode: 'adjacent'
-            }
+            },
+            strictWidths: false,
+            virtualizationThreshold: 20
         },
         theme: 'hcg-theme-default'
     },
@@ -153,6 +165,7 @@ export const defaultOptions = {
  * The new custom grid options.
  */
 export function setOptions(options) {
+    warnIfDeprecatedOptions(options);
     merge(true, defaultOptions, options);
 }
 /* *

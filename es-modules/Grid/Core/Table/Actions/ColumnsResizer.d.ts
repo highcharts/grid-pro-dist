@@ -31,7 +31,7 @@ declare class ColumnsResizer {
      * @param cell
      * The reference to rendered cell, where hadles should be added
      */
-    renderColumnDragHandles(column: Column, cell: Cell): void;
+    renderColumnDragHandles(column: Column, cell: Cell): HTMLElement | undefined;
     /**
      * Returns the page X coordinate for a mouse or touch event.
      *
@@ -65,5 +65,16 @@ declare class ColumnsResizer {
      * should be called on the destroy of the data grid.
      */
     removeEventListeners(): void;
+    /**
+     * Removes all handle event listeners.
+     */
+    clearHandles(): void;
+    /**
+     * Removes the event listeners for a single resize handle.
+     *
+     * @param handle
+     * The handle element to remove.
+     */
+    removeHandle(handle: HTMLElement): void;
 }
 export default ColumnsResizer;

@@ -4,8 +4,9 @@
  *
  *  (c) 2020-2026 Highsoft AS
  *
- *  A commercial license may be required depending on use.
- *  See www.highcharts.com/license
+ *  Integration of this software requires a license.
+ *  - For commercial use, see www.highcharts.com/license
+ *  - For non-commercial, see www.highcharts.com/license-eula
  *
  *
  *  Authors:
@@ -132,7 +133,8 @@ function afterColumnInit() {
  */
 function onCellKeyDown(e) {
     if (e.originalEvent?.key !== 'Enter' ||
-        !this.column.editModeRenderer) {
+        !this.column.editModeRenderer ||
+        !this.isEditable()) {
         return;
     }
     this.row.viewport.cellEditing?.startEditing(this);
@@ -141,7 +143,7 @@ function onCellKeyDown(e) {
  * Callback function called when a cell is double clicked.
  */
 function onCellDblClick() {
-    if (this.column.editModeRenderer) {
+    if (this.column.editModeRenderer && this.isEditable()) {
         this.row.viewport.cellEditing?.startEditing(this);
     }
 }
@@ -150,13 +152,17 @@ function onCellDblClick() {
  */
 function addEditableCellA11yHint() {
     const a11y = this.row.viewport.grid.accessibility;
-    if (!a11y || this.a11yEditableHint?.isConnected) {
+    if (!a11y) {
         return;
     }
     const editableLang = this.row.viewport.grid.options
         ?.lang?.accessibility?.cellEditing?.editable;
-    if (!this.column.viewport.grid.columnPolicy.isColumnEditable(this.column.id) ||
-        !editableLang) {
+    if (!this.isEditable() || !editableLang) {
+        this.a11yEditableHint?.remove();
+        delete this.a11yEditableHint;
+        return;
+    }
+    if (this.a11yEditableHint?.isConnected) {
         return;
     }
     this.a11yEditableHint = makeHTMLElement('span', {

@@ -3,8 +3,9 @@
  *  (c) 2010-2026 Highsoft AS
  *  Author: Torstein Hønsi
  *
- *  A commercial license may be required depending on use.
- *  See www.highcharts.com/license
+ *  Integration of this software requires a license.
+ *  - For commercial use, see www.highcharts.com/license
+ *  - For non-commercial, see www.highcharts.com/license-eula
  *
  *
  * */
@@ -109,10 +110,10 @@ class StockChart extends Chart {
      * @param {Highcharts.Options} userOptions
      *        Custom options.
      *
-     * @param {Function} [callback]
+     * @param {Function|true} [callback]
      *        Function to run when the chart has loaded and all external
-     *        images are loaded.
-     *
+     *        images are loaded. Set to `true` to return a promise that
+     *        resolves when the chart is ready.
      *
      * @emits Highcharts.StockChart#event:init
      * @emits Highcharts.StockChart#event:afterInit
@@ -297,12 +298,12 @@ addEvent(Chart, 'update', function (e) {
                     .attr({
                     fill: options.backgroundColor ||
                         point?.series?.color || // #14888
-                        "#666666" /* Palette.neutralColor60 */,
+                        'var(--highcharts-neutral-color-60)',
                     stroke: options.borderColor || '',
                     'stroke-width': options.borderWidth || 0
                 })
                     .css(extend({
-                    color: "#ffffff" /* Palette.backgroundColor */,
+                    color: 'var(--highcharts-background-color)',
                     fontWeight: 'normal',
                     fontSize: '0.7em',
                     textAlign: 'center'
@@ -628,7 +629,8 @@ addEvent(Chart, 'update', function (e) {
      *         The chart object.
      */
     function stockChart(a, b, c) {
-        return new StockChart(a, b, c);
+        const chart = new StockChart(a, b, c);
+        return chart.promise || chart;
     }
     StockChart.stockChart = stockChart;
     /* eslint-enable jsdoc/check-param-names */

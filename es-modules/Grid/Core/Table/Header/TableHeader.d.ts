@@ -35,6 +35,10 @@ declare class TableHeader {
      */
     render(): Promise<void>;
     /**
+     * Synchronizes header rows with the currently rendered columns.
+     */
+    syncRenderedColumns(): Promise<void>;
+    /**
      * Reflows the table head's content dimensions.
      */
     reflow(): void;
@@ -47,6 +51,10 @@ declare class TableHeader {
      * @returns
      */
     private getRowLevels;
+    /**
+     * Returns whether inline filtering row should be rendered.
+     */
+    private hasInlineFiltering;
     /**
      * Scrolls the table head horizontally, only when the virtualization
      * is enabled.

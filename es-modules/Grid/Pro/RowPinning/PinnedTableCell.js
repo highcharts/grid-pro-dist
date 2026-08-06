@@ -4,13 +4,14 @@
  *
  *  (c) 2020-2026 Highsoft AS
  *
- *  A commercial license may be required depending on use.
- *  See www.highcharts.com/license
+ *  Integration of this software requires a license.
+ *  - For commercial use, see www.highcharts.com/license
+ *  - For non-commercial, see www.highcharts.com/license-eula
  *
  * */
 'use strict';
 import TableCell from '../../Core/Table/Body/TableCell.js';
-import { defined } from '../../../Shared/Utilities.js';
+import { defined, fireEvent } from '../../../Shared/Utilities.js';
 class PinnedTableCell extends TableCell {
     async setValue(value, updateDataset = false) {
         if (!defined(value)) {
@@ -46,7 +47,14 @@ class PinnedTableCell extends TableCell {
         }
         await dp.setValue(this.value, sourceColumnId, rowId);
         vp.grid.rowPinning?.updatePinnedRowValue(rowId, this.column.id, this.value);
-        if (vp.grid.querying.willNotModify()) {
+        const updateRowsEvent = {
+            requiresFullRowsUpdate: false,
+            rowId,
+            sourceColumnId
+        };
+        fireEvent(this, 'afterDataMutation', updateRowsEvent);
+        if (vp.grid.querying.willNotModify() &&
+            !updateRowsEvent.requiresFullRowsUpdate) {
             await vp.rowPinningView?.syncRenderedMirrors(rowId, this.column.id, this.value, this.row, sourceColumnId);
             return false;
         }

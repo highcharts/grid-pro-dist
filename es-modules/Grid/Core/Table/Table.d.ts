@@ -34,6 +34,14 @@ declare class Table {
      */
     columns: Column[];
     /**
+     * Columns indexed by ID.
+     */
+    private columnsById;
+    /**
+     * The columns that are currently rendered in the DOM.
+     */
+    renderedColumns: Column[];
+    /**
      * The visible rows of the table.
      */
     rows: TableRow[];
@@ -44,7 +52,7 @@ declare class Table {
     /**
      * The column distribution.
      */
-    readonly columnResizing: ColumnResizingMode;
+    readonly columnResizing?: ColumnResizingMode;
     /**
      * The focus cursor position or `undefined` if no table cell is focused.
      */
@@ -60,18 +68,21 @@ declare class Table {
      */
     focusAnchorCell?: Cell;
     /**
-     * Whether the current logical focus belongs to a body cell that has been
-     * detached from the DOM by virtualization.
-     */
-    private hasDetachedFocus;
-    /**
      * The flag that indicates if the table rows are virtualized.
      */
     virtualRows: boolean;
     /**
+     * The flag that indicates if the table columns are virtualized.
+     */
+    virtualColumns: boolean;
+    /**
      * Cell context menu instance (lazy created).
      */
     private cellContextMenu?;
+    /**
+     * The iOS long-press polyfill for cell context menus.
+     */
+    private cellContextMenuLongPress?;
     /**
      * Whether the table body min-height was set by the grid.
      */
@@ -93,6 +104,8 @@ declare class Table {
     init(): Promise<void>;
     private addBodyEventListeners;
     private removeBodyEventListeners;
+    private isContextMenuLongPressed;
+    private getTableCellFromTarget;
     /**
      * Sets the minimum height of the table body.
      */
@@ -117,6 +130,10 @@ declare class Table {
      */
     reflow(): void;
     /**
+     * Reflows column dimensions.
+     */
+    private reflowColumns;
+    /**
      * Handles the focus event on the table body.
      *
      * @param e
@@ -131,6 +148,13 @@ declare class Table {
      * Handles the scroll event.
      */
     private onScroll;
+    /**
+     * Handles wheel scrolling over the table header.
+     *
+     * @param e
+     * The wheel event.
+     */
+    private onHeaderWheel;
     /**
      * Handles document focus changes while a logically focused cell is
      * temporarily detached by virtualization.
@@ -232,8 +256,11 @@ declare class Table {
     /**
      * Marks the current logical focus as temporarily detached by
      * virtualization.
+     *
+     * @param cursor
+     * Focus cursor to restore when the cell is rendered again.
      */
-    preserveFocusDuringDetach(): void;
+    preserveFocusDuringDetach(cursor?: FocusCursor): void;
     /**
      * Returns whether the provided cell currently owns detached logical focus.
      *
@@ -264,8 +291,13 @@ declare class Table {
      *
      * @param columnIndex
      * Target column index.
+     *
+     * @param ensureVisible
+     * Whether to scroll the target column fully into view. Should be `false`
+     * for passive focus re-attachment during scroll-driven virtualization
+     * re-renders, so the user's scroll position is not fought.
      */
-    restoreRenderedCellFocus(cell: Cell | undefined, rowIndex: number, columnIndex: number): void;
+    restoreRenderedCellFocus(cell: Cell | undefined, rowIndex: number, columnIndex: number, ensureVisible?: boolean): void;
     /**
      * Destroys the grid table.
      */
@@ -309,12 +341,34 @@ declare class Table {
     getRow(id: RowId): TableRow | undefined;
     syncAriaRowIndexes(): Promise<void>;
     private focusCellFromCursor;
+    /**
+     * Restores focus to a rendered header cell when its logical focus was
+     * detached by column virtualization.
+     *
+     * @param cursor
+     * Focus cursor to restore.
+     *
+     * @param ensureVisible
+     * Whether to scroll the target column fully into view. Should be `false`
+     * for passive focus re-attachment during scroll-driven virtualization
+     * re-renders, so the user's scroll position is not fought.
+     */
+    private restoreHeaderFocusFromCursor;
 }
-export interface FocusCursor {
-    rowId: RowId;
+export type FocusCursor = {
     columnIndex: number;
+    detached?: boolean;
+    type?: 'body';
+    rowId: RowId;
     bodySectionId?: string;
-}
+} | {
+    cellKey: string;
+    columnIndex: number;
+    detached?: boolean;
+    rowIndex: number;
+    toolbarButtonIndex?: number;
+    type: 'header';
+};
 export interface TableBodySection {
     id: string;
     position: 'before' | 'after';
@@ -330,7 +384,7 @@ export interface TableBodySection {
 export interface ViewportStateMetadata {
     scrollTop: number;
     scrollLeft: number;
-    columnResizing: ColumnResizingMode;
+    columnResizing?: ColumnResizingMode;
     focusCursor?: FocusCursor;
 }
 /**

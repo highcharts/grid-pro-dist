@@ -4,8 +4,9 @@
  *
  *  (c) 2020-2026 Highsoft AS
  *
- *  A commercial license may be required depending on use.
- *  See www.highcharts.com/license
+ *  Integration of this software requires a license.
+ *  - For commercial use, see www.highcharts.com/license
+ *  - For non-commercial, see www.highcharts.com/license-eula
  *
  *
  *  Authors:
@@ -68,7 +69,11 @@ class ColumnsResizer {
             ColumnsResizer.preventTouchDefault(e);
             const diff = pageX - (this.dragStartX || 0);
             const vp = this.viewport;
-            vp.columnResizing.resize(this, diff);
+            const columnResizing = vp.columnResizing;
+            if (!columnResizing) {
+                return;
+            }
+            columnResizing.resize(this, diff);
             vp.reflow();
             fireEvent(this.draggedColumn, 'afterResize', {
                 target: this.draggedColumn,
@@ -121,6 +126,7 @@ class ColumnsResizer {
             }, cell.htmlElement);
             handle.setAttribute('aria-hidden', true);
             vp.columnsResizer?.addHandleListeners(handle, column);
+            return handle;
         }
     }
     /**
@@ -215,11 +221,37 @@ class ColumnsResizer {
         document.removeEventListener('touchmove', this.onDocumentDragMove);
         document.removeEventListener('touchend', this.onDocumentDragEnd);
         document.removeEventListener('touchcancel', this.onDocumentDragEnd);
+        this.clearHandles();
+    }
+    /**
+     * Removes all handle event listeners.
+     */
+    clearHandles() {
         for (let i = 0, iEnd = this.handles.length; i < iEnd; i++) {
             const [handle, listeners] = this.handles[i];
             for (const { eventName, listener } of listeners) {
                 handle.removeEventListener(eventName, listener);
             }
+        }
+        this.handles.length = 0;
+    }
+    /**
+     * Removes the event listeners for a single resize handle.
+     *
+     * @param handle
+     * The handle element to remove.
+     */
+    removeHandle(handle) {
+        for (let i = this.handles.length - 1; i >= 0; --i) {
+            const [registeredHandle, listeners] = this.handles[i];
+            if (registeredHandle !== handle) {
+                continue;
+            }
+            for (const { eventName, listener } of listeners) {
+                registeredHandle.removeEventListener(eventName, listener);
+            }
+            this.handles.splice(i, 1);
+            return;
         }
     }
 }

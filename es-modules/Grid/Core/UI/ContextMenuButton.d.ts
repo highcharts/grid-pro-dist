@@ -48,7 +48,7 @@ export declare class ContextMenuButton implements Button {
      * The context menu to add the button to.
      */
     add(contextMenu: ContextMenu): this | undefined;
-    focus(): void;
+    focus(options?: FocusOptions): void;
     /**
      * Triggers button click programmatically.
      */

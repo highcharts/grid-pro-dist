@@ -1,6 +1,7 @@
-import type { Column } from '../../Column';
+import type { Column, ColumnDataType } from '../../Column';
 import type { Condition } from './FilteringTypes';
-import type FilterCell from './FilterCell.js';
+import type FilterCell from './FilterCell';
+import type { LangOptions } from '../../../Options';
 /**
  * Class that manages filtering for a dedicated column.
  */
@@ -16,6 +17,27 @@ declare class ColumnFiltering {
      * The readable string with the first letter capitalized.
      */
     static parseCamelCaseToReadable(value: string): string;
+    /**
+     * Returns the localized label for a filtering operator.
+     *
+     * @param operator
+     * The filtering operator.
+     *
+     * @param dataType
+     * The column data type.
+     *
+     * @param lang
+     * The grid language options.
+     */
+    static getOperatorLabel(operator: string, dataType: ColumnDataType, lang?: LangOptions): string;
+    /**
+     * Maps legacy filtering operators to their canonical names for UI use.
+     * TODO: Remove, deprecated — only needed for `before`/`after` aliases.
+     *
+     * @param operator
+     * The filtering operator from options or UI.
+     */
+    private static mapOperatorAliases;
     /**
      * The filtered column of the table.
      */
@@ -45,15 +67,15 @@ declare class ColumnFiltering {
      */
     constructor(column: Column);
     /**
-     * Sets the value and condition for the filtering.
+     * Sets the value and operator for the filtering.
      *
      * @param value
      * The value to set.
      *
-     * @param condition
-     * The condition to set.
+     * @param operator
+     * The operator to set.
      */
-    set(value?: string, condition?: Condition): Promise<void>;
+    set(value?: string, operator?: Condition): Promise<void>;
     /**
      * Render the filtering content in the container.
      *
@@ -103,6 +125,14 @@ declare class ColumnFiltering {
      */
     private renderFilteringInput;
     /**
+     * Reserves the operator select row height in inline filtering when the
+     * select is hidden, so value inputs align across columns.
+     *
+     * @param inputWrapper
+     * Reference to the input wrapper.
+     */
+    private renderOperatorSelectSpacer;
+    /**
      * Render the condition select element.
      *
      * @param inputWrapper
@@ -118,8 +148,26 @@ declare class ColumnFiltering {
      */
     private isFilteringApplied;
     /**
+     * Updates the filter input placeholder or aria-label when the operator
+     * select is hidden.
+     */
+    private updateFilterInputHint;
+    /**
      * Disables the input element if the condition is `empty` or `notEmpty`.
      */
     private disableInputIfNeeded;
+    /**
+     * Returns the current filtering operator from the dropdown or options.
+     */
+    private getActiveCondition;
+    /**
+     * Focuses the first filter control in tab order for inline filtering.
+     */
+    focusFirstControl(): void;
+    /**
+     * Returns the list of filtering conditions available for the current
+     * column, optionally restricted by column filtering options.
+     */
+    private getAllowedConditions;
 }
 export default ColumnFiltering;

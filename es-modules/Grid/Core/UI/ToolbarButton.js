@@ -4,8 +4,9 @@
  *
  *  (c) 2020-2026 Highsoft AS
  *
- *  A commercial license may be required depending on use.
- *  See www.highcharts.com/license
+ *  Integration of this software requires a license.
+ *  - For commercial use, see www.highcharts.com/license
+ *  - For non-commercial, see www.highcharts.com/license-eula
  *
  *
  *  Authors:
@@ -88,8 +89,8 @@ class ToolbarButton {
             button.setAttribute('aria-controls', ariaControls);
         }
     }
-    focus() {
-        this.buttonEl?.focus();
+    focus(options) {
+        this.buttonEl?.focus(options);
         const tb = this.toolbar;
         if (tb) {
             tb.focusCursor = tb.buttons.indexOf(this);

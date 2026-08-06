@@ -4,8 +4,9 @@
  *
  *  (c) 2020-2026 Highsoft AS
  *
- *  A commercial license may be required depending on use.
- *  See www.highcharts.com/license
+ *  Integration of this software requires a license.
+ *  - For commercial use, see www.highcharts.com/license
+ *  - For non-commercial, see www.highcharts.com/license-eula
  *
  *
  *  Authors:
@@ -14,6 +15,7 @@
  * */
 'use strict';
 import SortModifier from '../../../Data/Modifiers/SortModifier.js';
+import { resolveActiveGridSortings } from './SortingUtils.js';
 /* *
  *
  *  Class
@@ -149,32 +151,17 @@ class SortingController {
      * Returns the sorting modifier based on the loaded sorting options.
      */
     createModifier() {
-        const sortings = (this.currentSortings ||
-            (this.currentSorting ? [this.currentSorting] : [])).filter((sorting) => !!(sorting.columnId &&
-            sorting.order &&
-            !this.querying.grid.columnPolicy.isColumnUnbound(sorting.columnId)));
-        if (!sortings.length) {
-            return;
-        }
         const grid = this.querying.grid;
-        const sourceSortings = sortings
-            .map((sorting) => ({
-            ...sorting,
-            sourceColumnId: grid.columnPolicy.getColumnSourceId(sorting.columnId)
-        }))
-            .filter((sorting) => !!sorting.sourceColumnId);
+        const sourceSortings = resolveActiveGridSortings(grid, this.currentSortings, this.currentSorting);
         if (!sourceSortings.length) {
             return;
         }
-        const defaultCompare = grid.options?.columnDefaults?.sorting?.compare;
         return new SortModifier({
             direction: sourceSortings[0].order,
             columns: sourceSortings.map((sorting) => ({
                 column: sorting.sourceColumnId,
                 direction: sorting.order,
-                compare: grid.columnPolicy
-                    .getIndividualColumnOptions(sorting.columnId)
-                    ?.sorting?.compare || defaultCompare
+                compare: sorting.customCompare
             }))
         });
     }

@@ -4,8 +4,9 @@
  *
  *  (c) 2020-2026 Highsoft AS
  *
- *  A commercial license may be required depending on use.
- *  See www.highcharts.com/license
+ *  Integration of this software requires a license.
+ *  - For commercial use, see www.highcharts.com/license
+ *  - For non-commercial, see www.highcharts.com/license-eula
  *
  *
  *  Authors:
@@ -18,7 +19,7 @@ import Globals from '../Globals.js';
 import GridUtils from '../GridUtils.js';
 import AST from '../../../Core/Renderer/HTML/AST.js';
 import { defined, fireEvent, isObject, merge } from '../../../Shared/Utilities.js';
-const { makeHTMLElement, formatText } = GridUtils;
+const { makeHTMLElement, formatText, joinClassNames } = GridUtils;
 const paginationAlignments = [
     'left',
     'center',
@@ -93,6 +94,10 @@ class Pagination {
             this.isDirtyAlignment = true;
             delete diff.alignment;
         }
+        if ('className' in diff) {
+            this.isDirtyClassName = true;
+            delete diff.className;
+        }
         // TODO: Optimize more options here.
         if (Object.keys(diff).length > 0) {
             this.grid.dirtyFlags.add('grid');
@@ -125,9 +130,7 @@ class Pagination {
                 this.renderFooter();
             }
             this.contentWrapper = makeHTMLElement('nav', {
-                className: alignmentClass ?
-                    `${Globals.getClassName('pagination')} ${alignmentClass}` :
-                    Globals.getClassName('pagination')
+                className: joinClassNames(Globals.getClassName('pagination'), alignmentClass, this.options?.className)
             }, position === 'footer' ?
                 this.paginationContainer : grid.contentWrapper);
             this.contentWrapper.setAttribute('aria-label', 'Results pagination');
@@ -150,18 +153,28 @@ class Pagination {
         }
         const alignmentClasses = paginationAlignments.map(alignmentClassName);
         wrapper.classList.remove(...alignmentClasses);
-        const alignmentClass = this.getAlignmentClass();
-        wrapper.classList.add(alignmentClass);
+        wrapper.classList.add(this.getAlignmentClass());
+    }
+    updateClassName() {
+        const wrapper = this.contentWrapper;
+        if (!wrapper) {
+            return;
+        }
+        wrapper.className = joinClassNames(Globals.getClassName('pagination'), this.options?.className);
     }
     redraw() {
         if (this.isDirtyQuerying) {
             this.updateControls(true);
+        }
+        if (this.isDirtyClassName) {
+            this.updateClassName();
         }
         if (this.isDirtyAlignment) {
             this.updateAlignmentClass();
         }
         delete this.isDirtyQuerying;
         delete this.isDirtyAlignment;
+        delete this.isDirtyClassName;
     }
     /**
      * Render pagination in a tfoot element.
@@ -194,12 +207,9 @@ class Pagination {
         }
         this.paginationContainer = customContainer;
         const alignmentClass = this.getAlignmentClass();
-        const className = alignmentClass ?
-            `${Globals.getClassName('pagination')} ${alignmentClass}` :
-            Globals.getClassName('pagination');
         // Set content wrapper to the custom container
         this.contentWrapper = makeHTMLElement('div', {
-            className: className
+            className: joinClassNames(Globals.getClassName('pagination'), alignmentClass, this.options?.className)
         }, customContainer);
     }
     /**
@@ -212,7 +222,7 @@ class Pagination {
             return;
         }
         this.pageInfoElement = makeHTMLElement('div', {
-            className: Globals.getClassName('paginationPageInfo')
+            className: joinClassNames(Globals.getClassName('paginationPageInfo'), pageInfo?.className)
         }, this.contentWrapper);
         this.updatePageInfo();
     }
@@ -240,7 +250,7 @@ class Pagination {
      */
     renderControls() {
         const navContainer = makeHTMLElement('div', {
-            className: Globals.getClassName('paginationControls')
+            className: joinClassNames(Globals.getClassName('paginationControls'), this.options?.controls?.className)
         }, this.contentWrapper);
         const controls = this.options?.controls || {};
         // Render first/previous buttons
@@ -578,7 +588,7 @@ class Pagination {
             return;
         }
         const container = makeHTMLElement('div', {
-            className: Globals.getClassName('paginationPageSize')
+            className: joinClassNames(Globals.getClassName('paginationPageSize'), pageSizeSelector?.className)
         }, this.contentWrapper);
         makeHTMLElement('span', {
             innerHTML: this.lang?.pageSizeLabel ?? ''

@@ -1,4 +1,6 @@
-import type { TreeInputPathSeparator, TreeExpandedRowIds, TreeViewOptions } from './TreeViewTypes';
+import type { Options } from '../../Core/Options';
+import type { RowId } from '../../Core/Data/DataProvider';
+import type { DeprecatedTreeViewOptions, TreeInputPathSeparator, TreeExpandedLevels } from './TreeViewTypes';
 export interface NormalizedTreeInputParentIdOptions {
     type: 'parentId';
     parentIdColumn: string;
@@ -9,26 +11,35 @@ export interface NormalizedTreeInputPathOptions {
     separator: TreeInputPathSeparator;
     showFullPath: boolean;
 }
-export type NormalizedTreeInputOptions = (NormalizedTreeInputParentIdOptions | NormalizedTreeInputPathOptions);
+export interface NormalizedTreeInputGroupingOptions {
+    type: 'grouping';
+    groupBy: string[];
+    groupColumnId: string;
+    hideGroupByColumns: boolean;
+}
+export type NormalizedTreeInputOptions = (NormalizedTreeInputGroupingOptions | NormalizedTreeInputParentIdOptions | NormalizedTreeInputPathOptions);
 export interface NormalizedTreeViewOptions {
     input?: NormalizedTreeInputOptions;
     treeColumn?: string;
-    expandedRowIds: TreeExpandedRowIds;
+    expandedLevels: TreeExpandedLevels;
+    expandedRowIds: RowId[];
     stickyParents: boolean;
 }
-export interface ResolvedTreeViewOptions {
+export interface ResolvedTreeViewOptions extends NormalizedTreeViewOptions {
     input: NormalizedTreeInputOptions;
-    treeColumn?: string;
-    expandedRowIds: TreeExpandedRowIds;
-    stickyParents: boolean;
 }
 /**
  * Validates and normalizes TreeView options from Grid config.
  *
- * @param treeView
- * Raw TreeView options.
+ * Tree view takes precedence when both tree view and row grouping are enabled.
+ *
+ * @param options
+ * Grid options.
+ *
+ * @param deprecatedTreeView
+ * Tree view options of the local data provider.
  *
  * @returns
- * Normalized options or `undefined` when TreeView is disabled.
+ * Normalized options or `undefined` when both features are disabled.
  */
-export declare function normalizeTreeViewOptions(treeView?: TreeViewOptions): NormalizedTreeViewOptions | undefined;
+export declare function normalizeTreeViewOptions(options?: Options, deprecatedTreeView?: DeprecatedTreeViewOptions): NormalizedTreeViewOptions | undefined;

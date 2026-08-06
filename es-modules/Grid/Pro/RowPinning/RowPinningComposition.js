@@ -4,8 +4,9 @@
  *
  *  (c) 2020-2026 Highsoft AS
  *
- *  A commercial license may be required depending on use.
- *  See www.highcharts.com/license
+ *  Integration of this software requires a license.
+ *  - For commercial use, see www.highcharts.com/license
+ *  - For non-commercial, see www.highcharts.com/license-eula
  *
  *
  *  Author:
@@ -18,8 +19,8 @@ import Globals from '../../Core/Globals.js';
 import RowPinningController, { hasConfiguredGridRowPinningOptions } from './RowPinningController.js';
 import RowPinningView, { classNames } from './RowPinningView.js';
 import PinnedTableCell from './PinnedTableCell.js';
-import { registerBuiltInAction } from '../../Core/Table/Body/CellContextMenuBuiltInActions.js';
-import { addEvent, merge, pushUnique } from '../../../Shared/Utilities.js';
+import { registerBuiltInAction, registerBuiltInGroup } from '../../Core/Table/CellContextMenu/CellContextMenuBuiltInActions.js';
+import { addEvent, defined, merge, pushUnique } from '../../../Shared/Utilities.js';
 /**
  * Default options for row pinning.
  */
@@ -30,9 +31,12 @@ export const defaultOptions = {
         }
     },
     lang: {
-        pinRowTop: 'Pin row to top',
-        pinRowBottom: 'Pin row to bottom',
-        unpinRow: 'Unpin row',
+        rowPinning: {
+            label: 'Row pinning',
+            pinRowTop: 'Pin row to top',
+            pinRowBottom: 'Pin row to bottom',
+            unpinRow: 'Unpin row'
+        },
         accessibility: {
             rowPinning: {
                 announcements: {
@@ -51,7 +55,7 @@ export const defaultOptions = {
     rendering: {
         rows: {
             pinning: {
-                enabled: true,
+                enabled: false,
                 topIds: [],
                 bottomIds: [],
                 events: {},
@@ -102,43 +106,78 @@ export function compose(GridClass, TableClass, ColumnClass, TableRowClass, Table
     addEvent(TableCellClass, 'afterEditValue', syncEditedCellMirrors);
 }
 /**
- * Registers row pinning built-in context menu actions.
+ * Registers row pinning built-in context menu actions and group.
  */
 function registerBuiltInActions() {
     registerBuiltInAction('pinRowTop', {
-        getLabel: (cell) => cell.row.viewport.grid.options?.lang?.pinRowTop || '',
+        getLabel: (context) => getRowPinningActionLabel(context, 'pinRowTop'),
         icon: 'pin',
-        isVisible: (cell, rowId) => isRowPinningActionVisible(cell, rowId),
-        isDisabled: (cell, rowId) => isRowPinningActionDisabled('pinRowTop', cell, rowId),
-        onClick: (cell, rowId) => {
-            void cell.row.viewport.grid.rowPinning?.pin(rowId, 'top');
+        isVisible: (context) => isRowPinningActionVisible(context),
+        isDisabled: (context) => isRowPinningActionDisabled('pinRowTop', context),
+        onClick: (context) => {
+            if (context.rowId !== void 0) {
+                void context.grid.rowPinning?.pin(context.rowId, 'top');
+            }
         }
-    }, true);
+    });
     registerBuiltInAction('pinRowBottom', {
-        getLabel: (cell) => cell.row.viewport.grid.options?.lang?.pinRowBottom || '',
+        getLabel: (context) => getRowPinningActionLabel(context, 'pinRowBottom'),
         icon: 'pin',
-        isVisible: (cell, rowId) => isRowPinningActionVisible(cell, rowId),
-        isDisabled: (cell, rowId) => isRowPinningActionDisabled('pinRowBottom', cell, rowId),
-        onClick: (cell, rowId) => {
-            void cell.row.viewport.grid.rowPinning?.pin(rowId, 'bottom');
+        isVisible: (context) => isRowPinningActionVisible(context),
+        isDisabled: (context) => isRowPinningActionDisabled('pinRowBottom', context),
+        onClick: (context) => {
+            if (context.rowId !== void 0) {
+                void context.grid.rowPinning?.pin(context.rowId, 'bottom');
+            }
         }
-    }, true);
+    });
     registerBuiltInAction('unpinRow', {
-        getLabel: (cell) => cell.row.viewport.grid.options?.lang?.unpinRow || '',
+        getLabel: (context) => getRowPinningActionLabel(context, 'unpinRow'),
         icon: 'unpin',
-        isVisible: (cell, rowId) => isRowPinningActionVisible(cell, rowId),
-        isDisabled: (cell, rowId) => isRowPinningActionDisabled('unpinRow', cell, rowId),
-        onClick: (cell, rowId) => {
-            void cell.row.viewport.grid.rowPinning?.unpin(rowId);
+        isVisible: (context) => isRowPinningActionVisible(context),
+        isDisabled: (context) => isRowPinningActionDisabled('unpinRow', context),
+        onClick: (context) => {
+            if (context.rowId !== void 0) {
+                void context.grid.rowPinning?.unpin(context.rowId);
+            }
         }
+    });
+    registerBuiltInGroup('pinning', {
+        getLabel: (context) => context.grid.options?.lang?.rowPinning?.label || '',
+        icon: 'pin',
+        isVisible: (context) => isRowPinningActionVisible(context),
+        items: ['pinRowTop', 'pinRowBottom', 'unpinRow']
     }, true);
+}
+/**
+ * Returns a row pinning action label with support for deprecated root lang
+ * keys.
+ *
+ * @param context
+ * Context menu runtime context.
+ *
+ * @param key
+ * Row pinning action language key.
+ */
+function getRowPinningActionLabel(context, key) {
+    const { grid } = context;
+    const lang = grid.options?.lang;
+    const userLang = grid.userOptions?.lang;
+    const userValue = (userLang?.rowPinning?.[key] ||
+        userLang?.[key]);
+    const value = lang?.rowPinning?.[key];
+    const defaultValue = defaultOptions.lang?.rowPinning?.[key];
+    const hasNonDefaultValue = (defined(value) &&
+        value !== defaultValue);
+    return (userValue ||
+        (hasNonDefaultValue ? value : lang?.[key]) ||
+        value ||
+        '');
 }
 /**
  * Initializes row pinning state for a grid instance.
  */
 function initRowPinning() {
-    syncPinningIdColumnOption(this.userOptions);
-    syncPinningIdColumnOption(this.options);
     this.rowPinning = new RowPinningController(this);
     this.rowPinning.loadOptions();
 }
@@ -243,7 +282,6 @@ function onBeforeGridUpdate(e) {
     if (!updateOptions || typeof updateOptions !== 'object') {
         return;
     }
-    syncPinningIdColumnOption(updateOptions);
     if (hasOwnPath(updateOptions, ['rendering', 'rows', 'pinning'])) {
         this.rowPinning?.markOptionsDirty();
     }
@@ -255,23 +293,11 @@ function onBeforeGridUpdate(e) {
 /**
  * Returns whether a row pinning built-in action should be visible.
  *
- * @param cell
- * Context menu cell context.
- *
- * @param cell.row
- * Row context.
- *
- * @param cell.row.viewport
- * Viewport context.
- *
- * @param cell.row.viewport.grid
- * Owning grid instance.
- *
- * @param rowId
- * Current row identifier.
+ * @param context
+ * Context menu runtime context.
  */
-function isRowPinningActionVisible(cell, rowId) {
-    const { grid } = cell.row.viewport;
+function isRowPinningActionVisible(context) {
+    const { grid, rowId } = context;
     return (rowId !== void 0 &&
         hasConfiguredGridRowPinningOptions(grid) &&
         grid.rowPinning?.isOptionEnabled() === true);
@@ -282,26 +308,11 @@ function isRowPinningActionVisible(cell, rowId) {
  * @param actionId
  * Built-in action identifier.
  *
- * @param cell
- * Context menu cell context.
- *
- * @param cell.row
- * Row context.
- *
- * @param cell.row.id
- * Current row identifier.
- *
- * @param cell.row.viewport
- * Viewport context.
- *
- * @param cell.row.viewport.grid
- * Owning grid instance.
- *
- * @param rowId
- * Current row identifier.
+ * @param context
+ * Context menu runtime context.
  */
-function isRowPinningActionDisabled(actionId, cell, rowId) {
-    const { grid } = cell.row.viewport;
+function isRowPinningActionDisabled(actionId, context) {
+    const { grid, rowId } = context;
     if (rowId === void 0 ||
         !hasConfiguredGridRowPinningOptions(grid) ||
         grid.rowPinning?.isOptionEnabled() !== true) {
@@ -339,28 +350,6 @@ function hasOwnPath(obj, path) {
         cursor = cursor[segment];
     }
     return true;
-}
-/**
- * Mirrors `rendering.rows.pinning.idColumn` into `data.idColumn`.
- *
- * @param options
- * Options object to normalize.
- */
-function syncPinningIdColumnOption(options) {
-    if (!options || typeof options !== 'object') {
-        return;
-    }
-    const rendering = options.rendering;
-    const idColumn = rendering?.rows?.pinning?.idColumn;
-    if (!idColumn) {
-        return;
-    }
-    if (!options.data) {
-        options.data = {};
-    }
-    if (options.data?.idColumn === void 0) {
-        options.data.idColumn = idColumn;
-    }
 }
 /**
  * Returns whether an update includes a data source change.

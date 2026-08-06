@@ -4,8 +4,9 @@
  *
  *  (c) 2020-2026 Highsoft AS
  *
- *  A commercial license may be required depending on use.
- *  See www.highcharts.com/license
+ *  Integration of this software requires a license.
+ *  - For commercial use, see www.highcharts.com/license
+ *  - For non-commercial, see www.highcharts.com/license-eula
  *
  *
  *  Authors:
@@ -17,6 +18,7 @@
 import Globals from '../Globals.js';
 import Templating from '../../../Core/Templating.js';
 import { fireEvent } from '../../../Shared/Utilities.js';
+import { applyUserClassNames } from '../GridUtils.js';
 /* *
  *
  *  Abstract Class of Cell
@@ -108,7 +110,10 @@ class Cell {
      * Handles the blur event on the cell.
      */
     onBlur() {
-        delete this.row.viewport.focusCursor;
+        const vp = this.row.viewport;
+        if (!vp.focusCursor?.detached) {
+            delete vp.focusCursor;
+        }
     }
     /**
      * Handles user keydown on the cell.
@@ -156,21 +161,34 @@ class Cell {
             const { header } = vp;
             const localRowIndex = getVerticalPos();
             const nextVerticalDir = localRowIndex + dir[0];
+            const nextColumnIndex = column.index + dir[1];
+            const focusCell = (cell) => {
+                cell.htmlElement.focus({
+                    preventScroll: true
+                });
+                vp.ensureColumnFullyVisible(nextColumnIndex);
+                if (cell.row.index !== void 0) {
+                    vp.ensureRowFullyVisible(cell.row);
+                }
+            };
             if (nextVerticalDir < 0 && header) {
                 const extraRowIdx = header.rows.length + nextVerticalDir;
-                if (extraRowIdx + 1 > header.levels) {
-                    header.rows[extraRowIdx]
-                        .cells[column.index + dir[1]]?.htmlElement.focus();
-                }
-                else {
-                    vp.columns[column.index + dir[1]]
-                        ?.header?.htmlElement.focus();
+                const nextCell = extraRowIdx + 1 > header.levels ? (header.rows[extraRowIdx]
+                    ?.getCellByColumnIndex(nextColumnIndex)) : (vp.getColumnByIndex(nextColumnIndex)?.header);
+                if (nextCell) {
+                    focusCell(nextCell);
                 }
                 return;
             }
             const nextRow = vp.getRenderedRows()[nextVerticalDir];
             if (nextRow) {
-                nextRow.cells[column.index + dir[1]]?.htmlElement.focus();
+                const nextCell = nextRow.getCellByColumnIndex(nextColumnIndex);
+                if (nextCell) {
+                    focusCell(nextCell);
+                }
+                else if (nextRow.index !== void 0) {
+                    vp.focusCellByRowIndex(nextRow.index, nextColumnIndex);
+                }
             }
         }
     }
@@ -234,21 +252,12 @@ class Cell {
      * The template string.
      */
     setCustomClassName(template) {
-        const element = this.htmlElement;
-        if (this.customClassName) {
-            element.classList.remove(...this.customClassName.split(/\s+/g));
-        }
         if (!template) {
-            delete this.customClassName;
+            this.customClassName = applyUserClassNames(this.htmlElement, this.customClassName);
             return;
         }
         const newClassName = this.format(template);
-        if (!newClassName) {
-            delete this.customClassName;
-            return;
-        }
-        element.classList.add(...newClassName.split(/\s+/g));
-        this.customClassName = newClassName;
+        this.customClassName = applyUserClassNames(this.htmlElement, this.customClassName, newClassName || void 0);
     }
     /**
      * Sets custom inline styles from options and removes the previously applied

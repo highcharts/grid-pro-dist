@@ -7,8 +7,11 @@ import type Popup from './Popup.js';
 export interface Button {
     /**
      * Focuses the button.
+     *
+     * @param options
+     * Native focus options.
      */
-    focus(): void;
+    focus(options?: FocusOptions): void;
     /**
      * Sets the highlighted state of the button.
      *

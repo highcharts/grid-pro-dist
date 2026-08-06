@@ -4,8 +4,9 @@
  *
  *  (c) 2020-2026 Highsoft AS
  *
- *  A commercial license may be required depending on use.
- *  See www.highcharts.com/license
+ *  Integration of this software requires a license.
+ *  - For commercial use, see www.highcharts.com/license
+ *  - For non-commercial, see www.highcharts.com/license-eula
  *
  *
  *  Authors:
@@ -84,7 +85,8 @@ class CellEditing {
      * The cell that is to be edited.
      */
     startEditing(cell) {
-        if (this.editedCell === cell || (
+        if (!cell.isEditable() ||
+            this.editedCell === cell || (
         // If value is invalid, do not start new editing
         this.editedCell && !this.stopEditing())) {
             return;
@@ -163,7 +165,7 @@ class CellEditing {
         }
         this.containerElement = this.containerElement ||
             document.createElement('div');
-        this.containerElement.className = classNames.cellEditingContainer;
+        this.containerElement.className = Globals.getClassName('cellEditingContainer');
         this.editedCell?.htmlElement.appendChild(this.containerElement);
         this.editModeContent = cell.column.editModeRenderer?.render(cell, this.containerElement);
         this.editModeContent.getMainElement().focus();
@@ -189,17 +191,6 @@ class CellEditing {
         delete this.containerElement;
     }
 }
-/* *
- *
- *  Declarations
- *
- * */
-/**
- * The class names used by the CellEditing functionality.
- */
-export const classNames = {
-    cellEditingContainer: Globals.classNamePrefix + 'cell-editing-container'
-};
 /* *
  *
  *  Default Export

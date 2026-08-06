@@ -57,6 +57,16 @@ export declare function makeHTMLElement<T extends HTMLElement>(tagName: string, 
  */
 export declare function makeDiv(className: string, id?: string): HTMLElement;
 /**
+ * Measures the horizontal paddings and borders of an element.
+ *
+ * @param el
+ * The element to measure.
+ *
+ * @returns
+ * The overhead in pixels.
+ */
+export declare function measureWidthOverhead(el?: HTMLElement): number;
+/**
  * Check if there's a possibility that the given string is an HTML
  * (contains '<').
  *
@@ -111,6 +121,33 @@ export declare function createOptionsProxy<T extends object>(options: T, default
  */
 export declare function formatText(template: string, values: Record<string, string | number>): string;
 /**
+ * Joins class name parts into a single space-separated string.
+ *
+ * @param parts
+ * Class name parts to join.
+ *
+ * @returns
+ * A space-separated class name string.
+ */
+export declare function joinClassNames(...parts: Array<(string | undefined | null | false)>): string;
+/**
+ * Replaces previously applied user class tokens on an element without touching
+ * other classes (e.g. Core `hcg-*` tokens).
+ *
+ * @param element
+ * The element to update.
+ *
+ * @param previous
+ * Previously applied user class name string.
+ *
+ * @param next
+ * New user class name string.
+ *
+ * @returns
+ * The class name string that was applied, or `undefined` when cleared.
+ */
+export declare function applyUserClassNames(element: Element, previous?: string, next?: string): (string | undefined);
+/**
  * Checks whether two objects have the same own keys and values.
  *
  * Supports nested plain objects and arrays. Functions are compared by
@@ -159,11 +196,14 @@ export declare function waitForAnimationFrame(): Promise<void>;
 declare const _default: {
     readonly makeHTMLElement: typeof makeHTMLElement;
     readonly makeDiv: typeof makeDiv;
+    readonly measureWidthOverhead: typeof measureWidthOverhead;
     readonly isHTML: typeof isHTML;
     readonly sanitizeText: typeof sanitizeText;
     readonly setHTMLContent: typeof setHTMLContent;
     readonly createOptionsProxy: typeof createOptionsProxy;
     readonly formatText: typeof formatText;
+    readonly joinClassNames: typeof joinClassNames;
+    readonly applyUserClassNames: typeof applyUserClassNames;
     readonly isDeepEqual: typeof isDeepEqual;
     readonly resolveStyleValue: typeof resolveStyleValue;
     readonly mergeStyleValues: typeof mergeStyleValues;

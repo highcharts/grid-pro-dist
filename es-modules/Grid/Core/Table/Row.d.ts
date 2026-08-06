@@ -10,6 +10,10 @@ declare abstract class Row {
      */
     cells: Cell[];
     /**
+     * Cells indexed by column ID.
+     */
+    private cellsByColumnId;
+    /**
      * The HTML element of the row.
      */
     htmlElement: HTMLTableRowElement;
@@ -41,9 +45,17 @@ declare abstract class Row {
      */
     render(): Promise<void>;
     /**
+     * Synchronizes the row cells with the currently rendered columns.
+     */
+    syncRenderedCells(): Promise<void>;
+    /**
      * Reflows the row's content dimensions.
      */
     reflow(): void;
+    /**
+     * Reflows row-level dimensions and horizontal offset.
+     */
+    protected reflowPosition(): void;
     /**
      * Destroys the row.
      */
@@ -58,6 +70,33 @@ declare abstract class Row {
      * The cell with the given column ID or undefined if not found.
      */
     getCell(columnId: string): Cell | undefined;
+    /**
+     * Returns the cell with the given column index.
+     *
+     * @param columnIndex
+     * The global column index.
+     *
+     * @returns
+     * The cell with the given column index or undefined if not found.
+     */
+    getCellByColumnIndex(columnIndex: number): Cell | undefined;
+    /**
+     * Inserts a cell only when it is not already at the expected position.
+     *
+     * @param cell
+     * The cell to position.
+     *
+     * @param index
+     * The expected DOM index.
+     */
+    protected insertCellElement(cell: Cell, index: number): void;
+    /**
+     * Handles a cell before it is detached from the row.
+     *
+     * @param cell
+     * The cell that is about to be detached.
+     */
+    protected onCellBeforeDetach(cell: Cell): void;
     /**
      * Registers a cell in the row.
      *

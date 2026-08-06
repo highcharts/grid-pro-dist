@@ -84,6 +84,14 @@ declare class TableRow extends Row {
      */
     protected updateStateClasses(): void;
     /**
+     * Preserves logical focus when column virtualization detaches the active
+     * body cell.
+     *
+     * @param cell
+     * The cell that is about to be detached.
+     */
+    protected onCellBeforeDetach(cell: Cell): void;
+    /**
      * Sets the vertical translation of the row. Used for virtual scrolling.
      *
      * @param value

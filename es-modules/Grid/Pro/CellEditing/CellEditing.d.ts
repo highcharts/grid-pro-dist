@@ -69,10 +69,4 @@ declare class CellEditing {
      */
     private destroy;
 }
-/**
- * The class names used by the CellEditing functionality.
- */
-export declare const classNames: {
-    readonly cellEditingContainer: string;
-};
 export default CellEditing;
