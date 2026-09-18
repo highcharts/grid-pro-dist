@@ -1,5 +1,5 @@
 /**
- * @license Highcharts Grid Pro v3.1.0 (2026-08-06)
+ * @license Highcharts Grid Pro v3.2.0 (2026-09-18)
  * @module grid/grid-pro
  *
  * (c) 2009-2026 Highsoft AS
@@ -122,11 +122,11 @@ declare const G: {
         helpers: Record<string, Function>;
         numberFormat: (this: Templating.Owner | void, number: number, decimals: number, decimalPoint?: string, thousandsSep?: string) => string;
     };
-    readonly version: "3.1.0";
+    readonly version: "3.2.0";
     readonly win: Window & typeof globalThis;
 };
 export { AST, CellContextMenuBuiltInActions, CellContentPro, CellRenderer, CellRendererRegistry, Column, ColumnResizing, DataConnector, DataConverter, DataCursor, DataModifier, DataProviderRegistry, DataPool, DataTable, _Grid as Grid, HeaderCell, _Options as Options, Pagination, Popup, SvgIcons, Table, TableCell, Templating };
-export declare const classNamePrefix: string, defaultOptions: import("./es-modules/Shared/Types").DeepPartial<_Options>, grid: typeof _Grid.grid, grids: (_Grid | undefined)[], isHighContrastModeActive: () => boolean, product: "Grid Pro", setOptions: typeof import("./es-modules/Grid/Core/Defaults.js").setOptions, version: "3.1.0", win: Window & typeof globalThis;
+export declare const classNamePrefix: string, defaultOptions: import("./es-modules/Shared/Types").DeepPartial<_Options>, grid: typeof _Grid.grid, grids: (_Grid | undefined)[], isHighContrastModeActive: () => boolean, product: "Grid Pro", setOptions: typeof import("./es-modules/Grid/Core/Defaults.js").setOptions, version: "3.2.0", win: Window & typeof globalThis;
 declare namespace G {
     type Options = _Options;
 }

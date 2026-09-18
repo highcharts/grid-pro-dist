@@ -3,8 +3,8 @@ export type DeepRequired<T> = {
 };
 export type ClassNameKey = keyof typeof rawClassNames;
 export declare const classNamePrefix: string;
-export declare const version = "3.1.0";
-export declare const buildDate = "2026-08-06";
+export declare const version = "3.2.0";
+export declare const buildDate = "2026-09-18";
 export declare const rawClassNames: {
     readonly container: "container";
     readonly themed: "themed";
@@ -100,8 +100,8 @@ export declare const isTouchDevice: boolean;
 export declare const getClassName: (classNameKey: ClassNameKey) => string;
 declare const _default: {
     readonly classNamePrefix: string;
-    readonly version: "3.1.0";
-    readonly buildDate: "2026-08-06";
+    readonly version: "3.2.0";
+    readonly buildDate: "2026-09-18";
     readonly rawClassNames: {
         readonly container: "container";
         readonly themed: "themed";

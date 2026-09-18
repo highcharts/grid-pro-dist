@@ -28,7 +28,7 @@ import QueryingController from './Querying/QueryingController.js';
 import Globals from './Globals.js';
 import TimeBase from '../../Shared/TimeBase.js';
 import Pagination from './Pagination/Pagination.js';
-import { diffObjects, extend, fireEvent, merge, pick } from '../../Shared/Utilities.js';
+import { diffObjects, erase, extend, fireEvent, merge } from '../../Shared/Utilities.js';
 import { uniqueKey } from '../../Core/Utilities.js';
 /* *
  *
@@ -240,9 +240,17 @@ export class Grid {
     }
     /**
      * Refreshes the cached source column ids available in the data provider.
+     *
+     * A feature that materializes its own column into the queried table can add
+     * its id to the event payload, so that the column counts as bound (and is
+     * therefore sortable, filterable and exportable).
      */
     async refreshAvailableSourceColumnIds() {
-        this.columnPolicy.setAvailableSourceColumnIds((await this.dataProvider?.getColumnIds()) || []);
+        const event = {
+            columnIds: (await this.dataProvider?.getColumnIds()) || []
+        };
+        fireEvent(this, 'refreshSourceColumnIds', event);
+        this.columnPolicy.setAvailableSourceColumnIds(event.columnIds);
     }
     /**
      * Sets the new column options to the userOptions field.
@@ -1087,7 +1095,6 @@ export class Grid {
     destroy(onlyDOM = false) {
         fireEvent(this, 'beforeDestroy', { onlyDOM });
         this.isRendered = false;
-        const dgIndex = Grid.grids.findIndex((dg) => dg === this);
         this.dataProvider?.destroy();
         this.accessibility?.destroy();
         this.pagination?.destroy();
@@ -1103,7 +1110,7 @@ export class Grid {
         Object.keys(this).forEach((key) => {
             delete this[key];
         });
-        Grid.grids.splice(dgIndex, 1);
+        erase(Grid.grids, this);
     }
     /**
      * Grey out the Grid and show a loading indicator.
@@ -1127,7 +1134,9 @@ export class Grid {
         const loadingSpan = makeHTMLElement('span', {
             className: Globals.getClassName('loadingMessage')
         }, this.loadingWrapper);
-        setHTMLContent(loadingSpan, pick(message, this.options?.lang?.loading, ''));
+        setHTMLContent(loadingSpan, (message ??
+            this.options?.lang?.loading ??
+            ''));
     }
     /**
      * Removes the loading indicator.

@@ -24,11 +24,13 @@ export declare const pathDefaults: Partial<PathDefinition>;
  */
 export interface PathDefinition {
     d: string;
+    fill?: string;
     stroke?: string;
     'stroke-width'?: number;
     'stroke-linecap'?: string;
     'stroke-linejoin'?: string;
     opacity?: number;
+    transform?: string;
 }
 /**
  * The definition of an SVG for a Grid Svg icon.

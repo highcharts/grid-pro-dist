@@ -1,4 +1,4 @@
-import type { IndividualColumnOptions } from '../Options';
+import type { CellValueGetterCallback, IndividualColumnOptions } from '../Options';
 import type Cell from './Cell';
 import type CellContent from './CellContent/CellContent';
 import type HeaderCell from './Header/HeaderCell';
@@ -51,6 +51,19 @@ export declare class Column {
      */
     sorting?: ColumnSorting;
     /**
+     * Class names applied to every element of the column (header, body and
+     * filter cells): the ones from the `className` option, plus the ones
+     * features contribute.
+     */
+    readonly classNames: string[];
+    /**
+     * Cell value resolver installed by a feature that derives the column values
+     * from the rest of the row (the Grid Pro `columnAggregator` option). A user
+     * `cells.valueGetter` takes precedence over it, and returning nothing falls
+     * back to the column's own data.
+     */
+    valueResolver?: CellValueGetterCallback;
+    /**
      * Filtering column module.
      */
     filtering?: ColumnFiltering;
@@ -83,6 +96,22 @@ export declare class Column {
      */
     getCellValue(cell: TableCell): Promise<DataTableCellType>;
     /**
+     * Whether the column derives its cell values from the row instead of
+     * reading them from the data, so editing a cell of the row must re-resolve
+     * them.
+     */
+    isDerived(): boolean;
+    /**
+     * Keeps a value the grid resolves for a cell within the column's declared
+     * `dataType`, so cell formatters and renderers written for the column never
+     * receive a foreign type. Values derived by the grid are the usual source:
+     * a numeric aggregator over a text column resolves to `0`.
+     *
+     * @param value
+     * Resolved cell value.
+     */
+    conformValue(value: DataTableCellType): DataTableCellType;
+    /**
      * Creates a cell content instance.
      *
      * @param cell
@@ -95,6 +124,13 @@ export declare class Column {
      * column if not specified.
      */
     private assumeDataType;
+    /**
+     * Adds the column class names to one of its elements.
+     *
+     * @param element
+     * Element of the column (a header, body or filter cell).
+     */
+    applyClassNames(element: HTMLElement): void;
     /**
      * Registers a cell in the column.
      *

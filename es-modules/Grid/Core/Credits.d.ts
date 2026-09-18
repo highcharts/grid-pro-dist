@@ -40,6 +40,14 @@ declare class Credits {
      * from the container.
      */
     render(): void;
+    /**
+     * Set the anchor's href, dropping URLs that are not allowed references.
+     *
+     * @param href
+     * The href to set on the anchor element. If undefined or unsafe, the href
+     * attribute will be removed.
+     */
+    protected setHref(href?: string): void;
     private renderAnchor;
     /**
      * Get the height of the credits container.

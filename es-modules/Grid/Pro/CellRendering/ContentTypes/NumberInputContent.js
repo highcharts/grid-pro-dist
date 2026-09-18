@@ -17,6 +17,7 @@
 import CellContentPro from '../CellContentPro.js';
 import Globals from '../../../Core/Globals.js';
 import { defined } from '../../../../Shared/Utilities.js';
+import { setUserAttributes } from '../../../Core/GridUtils.js';
 /* *
  *
  *  Class
@@ -92,11 +93,7 @@ class NumberInputContent extends CellContentPro {
         input.tabIndex = -1;
         input.name = cell.column.id + '-' + cell.row.id;
         input.classList.add(Globals.getClassName('input'));
-        if (options.attributes) {
-            Object.entries(options.attributes).forEach(([key, value]) => {
-                input.setAttribute(key, value);
-            });
-        }
+        setUserAttributes(input, options.attributes);
         this.update();
         parentElement.appendChild(this.input);
         input.addEventListener('change', this.onChange);

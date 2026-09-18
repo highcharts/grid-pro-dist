@@ -243,7 +243,7 @@ class Pagination {
             currentPage: currentPage,
             totalPages: totalPages
         });
-        this.pageInfoElement.innerHTML = pageInfoText;
+        this.pageInfoElement.textContent = pageInfoText;
     }
     /**
      * Render the controls buttons and page numbers.
@@ -549,7 +549,7 @@ class Pagination {
         }
         const button = makeHTMLElement('button', {
             className: Globals.getClassName('button'),
-            innerHTML: pageNumber.toString()
+            innerText: pageNumber.toString()
         }, this.pageNumbersContainer);
         if (isActive) {
             button.classList.add(Globals.getClassName('buttonSelected'));
@@ -571,7 +571,7 @@ class Pagination {
             return;
         }
         const ellipsisElement = makeHTMLElement('span', {
-            innerHTML: '...'
+            innerText: '...'
         }, this.pageNumbersContainer);
         ellipsisElement.title = this.lang?.ellipsis ?? '';
         // Set aria-label for a11y
@@ -591,7 +591,7 @@ class Pagination {
             className: joinClassNames(Globals.getClassName('paginationPageSize'), pageSizeSelector?.className)
         }, this.contentWrapper);
         makeHTMLElement('span', {
-            innerHTML: this.lang?.pageSizeLabel ?? ''
+            innerText: this.lang?.pageSizeLabel ?? ''
         }, container);
         this.pageSizeSelect = makeHTMLElement('select', {
             className: Globals.getClassName('input'),
@@ -600,7 +600,7 @@ class Pagination {
         this.pageSizeSelectorOptions.forEach((option) => {
             const optionElement = document.createElement('option');
             optionElement.value = option.toString();
-            optionElement.innerHTML = option.toString();
+            optionElement.textContent = option.toString();
             if (option === this.controller.currentPageSize) {
                 optionElement.selected = true;
             }

@@ -96,6 +96,17 @@ export declare function sanitizeText(text: string): string;
  */
 export declare function setHTMLContent(element: HTMLElement, content: string): void;
 /**
+ * Applies attributes coming from the user options to an element, skipping the
+ * ones that are not allowed.
+ *
+ * @param element
+ * The element to apply the attributes to.
+ *
+ * @param attributes
+ * The attributes declared in the options.
+ */
+export declare function setUserAttributes(element: HTMLElement, attributes?: object): void;
+/**
  * Creates a proxy that, when reading a property, first returns the value
  * from the original options of a given entity; if it is not defined, it
  * falls back to the value from the defaults (default options), recursively
@@ -190,6 +201,24 @@ export declare function resolveStyleValue<T>(style?: StyleValue<T>, target?: T):
  */
 export declare function mergeStyleValues<T>(target: T, ...styleValues: Array<(StyleValue<T> | undefined)>): CSSObject;
 /**
+ * Applies inline styles from options to an element, removing the properties
+ * applied by the previous call so that updates stay deterministic and leave
+ * layout styles set elsewhere on the element untouched.
+ *
+ * @param element
+ * Element to style.
+ *
+ * @param previousProperties
+ * CSS property names applied by the previous call.
+ *
+ * @param styles
+ * Style object to apply.
+ *
+ * @returns
+ * CSS property names applied by this call, to pass to the next one.
+ */
+export declare function applyTrackedStyles(element: HTMLElement, previousProperties?: string[], styles?: CSSObject): (string[] | undefined);
+/**
  * Waits for the next animation frame.
  */
 export declare function waitForAnimationFrame(): Promise<void>;
@@ -200,6 +229,7 @@ declare const _default: {
     readonly isHTML: typeof isHTML;
     readonly sanitizeText: typeof sanitizeText;
     readonly setHTMLContent: typeof setHTMLContent;
+    readonly setUserAttributes: typeof setUserAttributes;
     readonly createOptionsProxy: typeof createOptionsProxy;
     readonly formatText: typeof formatText;
     readonly joinClassNames: typeof joinClassNames;
@@ -207,6 +237,7 @@ declare const _default: {
     readonly isDeepEqual: typeof isDeepEqual;
     readonly resolveStyleValue: typeof resolveStyleValue;
     readonly mergeStyleValues: typeof mergeStyleValues;
+    readonly applyTrackedStyles: typeof applyTrackedStyles;
     readonly waitForAnimationFrame: typeof waitForAnimationFrame;
 };
 export default _default;
