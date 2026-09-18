@@ -43,11 +43,16 @@ declare class QueryingController {
      */
     loadOptions(): void;
     /**
-     * Creates a list of modifiers that should be applied to the data table.
+     * Whether the query leaves the data table untouched, so that a cell edit
+     * does not need a requery.
      */
     willNotModify(): boolean;
     /**
      * Returns a list of modifiers that should be applied to the data table.
+     *
+     * Features can contribute their own modifiers through the
+     * `getGroupedModifiers` event. Those run first, so that sorting and
+     * filtering see the columns they produce.
      */
     getGroupedModifiers(): DataModifier[];
     /**

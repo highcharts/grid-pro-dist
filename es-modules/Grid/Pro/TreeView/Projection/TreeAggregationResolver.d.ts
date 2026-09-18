@@ -64,15 +64,5 @@ declare class TreeAggregationResolver {
      * Source cell value before aggregation.
      */
     private resolveAggregatorFunctionName;
-    /**
-     * Executes a registered Formula processor function on direct child values.
-     *
-     * @param functionName
-     * Registered Formula processor function name.
-     *
-     * @param childValues
-     * Direct child values after their own aggregation has been resolved.
-     */
-    private executeAggregateFunction;
 }
 export default TreeAggregationResolver;

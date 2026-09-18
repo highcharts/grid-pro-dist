@@ -18,6 +18,7 @@
 import CellContentPro from '../CellContentPro.js';
 import AST from '../../../../Core/Renderer/HTML/AST.js';
 import Globals from '../../../Core/Globals.js';
+import { setUserAttributes } from '../../../Core/GridUtils.js';
 /* *
  *
  *  Class
@@ -89,11 +90,7 @@ class SelectContent extends CellContentPro {
         select.tabIndex = -1;
         select.name = cell.column.id + '-' + cell.row.id;
         select.classList.add(Globals.getClassName('input'));
-        if (options.attributes) {
-            Object.entries(options.attributes).forEach(([key, value]) => {
-                select.setAttribute(key, value);
-            });
-        }
+        setUserAttributes(select, options.attributes);
         this.update();
         parentElement.appendChild(this.select);
         select.addEventListener('change', this.onChange);

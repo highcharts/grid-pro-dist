@@ -15,6 +15,7 @@
  *
  * */
 'use strict';
+import AST from '../../Core/Renderer/HTML/AST.js';
 import Globals from './Globals.js';
 import GridUtils from './GridUtils.js';
 const { makeHTMLElement, setHTMLContent } = GridUtils;
@@ -72,13 +73,29 @@ class Credits {
             setHTMLContent(this.textElement, text);
         }
         if (href) {
-            this.textElement.setAttribute('href', href || '');
+            this.setHref(href);
         }
         if (grid.descriptionElement) {
             contentWrapper?.insertBefore(this.containerElement, grid.descriptionElement);
         }
         else {
             contentWrapper?.appendChild(this.containerElement);
+        }
+    }
+    /**
+     * Set the anchor's href, dropping URLs that are not allowed references.
+     *
+     * @param href
+     * The href to set on the anchor element. If undefined or unsafe, the href
+     * attribute will be removed.
+     */
+    setHref(href) {
+        const filtered = href && AST.filterUserAttributes({ href }).href;
+        if (filtered) {
+            this.textElement.setAttribute('href', filtered);
+        }
+        else {
+            this.textElement.removeAttribute('href');
         }
     }
     renderAnchor() {

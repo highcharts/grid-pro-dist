@@ -28,6 +28,13 @@ declare class TreeProjectionController {
      */
     get options(): ResolvedTreeViewOptions | undefined;
     /**
+     * Returns whether TreeView or row grouping is configured.
+     *
+     * Resolved from the options alone, so unlike `options` it answers before
+     * `sync()` has run for the current query.
+     */
+    isEnabled(): boolean;
+    /**
      * Warns once when row grouping is ignored, because tree view is enabled at
      * the same time.
      *
@@ -46,6 +53,19 @@ declare class TreeProjectionController {
      * Source column id.
      */
     hasColumnAggregation(columnId: string): boolean;
+    /**
+     * Row indexes of a table whose values roll up other rows of the same table,
+     * so that aggregating both would count them twice. A feature aggregating
+     * whole columns (summary rows) skips them.
+     *
+     * A parent row is only reported when at least one of its descendants is
+     * part of the table, so a parent a filter left on its own keeps counting
+     * with its own value.
+     *
+     * @param table
+     * Table the row indexes address.
+     */
+    getRollupRowIndexes(table: DataTable): Set<number> | undefined;
     /**
      * Returns source column ids hidden from the projected table.
      */

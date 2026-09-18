@@ -1,4 +1,5 @@
 import type { CellType as DataTableCellType } from '../../../../Data/DataTable';
+import type CSSObject from '../../../../Core/Renderer/CSSObject';
 import type { RowId } from '../../Data/DataProvider';
 import type Column from '../Column';
 import type TableRow from './TableRow';
@@ -69,7 +70,7 @@ declare class TableCell extends Cell {
     /**
      * Returns merged styles from defaults and current column options.
      */
-    private getCellStyles;
+    protected getCellStyles(): CSSObject;
     /**
      * Updates the the dataset so that it reflects the current state of the
      * grid.
@@ -80,6 +81,12 @@ declare class TableCell extends Cell {
      * content.
      */
     protected updateDataset(): Promise<boolean>;
+    /**
+     * Re-resolves the cells of the same row that derive their value from it, so
+     * a summary column (for example a row total) follows an edited source cell.
+     * A full rows update covers them already.
+     */
+    protected updateDerivedCells(): Promise<void>;
     /**
      * Returns whether the cell is currently editable.
      */

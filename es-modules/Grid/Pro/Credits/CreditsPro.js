@@ -39,7 +39,7 @@ class CreditsPro extends Credits {
     setContent() {
         const { text, href } = this.options;
         setHTMLContent(this.textElement, text || '');
-        this.textElement.setAttribute('href', href || '');
+        this.setHref(href);
     }
     /**
      * Append the credits to the container. The position of the credits is

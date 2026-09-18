@@ -47,6 +47,11 @@ function getPaginationOffset(table) {
  * Projected row index, if the row belongs to the active projection.
  */
 export function getTreeViewProjectedRowIndex(row, projectionState) {
+    // A summary row is synthetic: its index addresses the summary section, not
+    // the projection, so it must not adopt a projected node identity.
+    if (row.bodySectionId === 'summary') {
+        return;
+    }
     const projectedRowIndex = row.viewport.rows.indexOf(row) > -1 ?
         row.index + getPaginationOffset(row.viewport) :
         row.index;

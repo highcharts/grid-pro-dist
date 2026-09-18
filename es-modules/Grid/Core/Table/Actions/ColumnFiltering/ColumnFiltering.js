@@ -21,7 +21,7 @@ import FilteringController from '../../../Querying/FilteringController.js';
 import Globals from '../../../Globals.js';
 import { defaultOptions } from '../../../Defaults.js';
 import { conditionsMap, operatorAliases } from './FilteringTypes.js';
-import { defined, fireEvent, pick } from '../../../../../Shared/Utilities.js';
+import { defined, fireEvent } from '../../../../../Shared/Utilities.js';
 /* *
  *
  *  Class
@@ -477,7 +477,10 @@ class ColumnFiltering {
         const hideOperatorSelect = column.viewport.grid.columnPolicy
             .isFilterOperatorSelectHidden(column.id);
         if (!hideOperatorSelect) {
-            input.placeholder = pick(column.viewport.grid.options?.lang?.filterValuePlaceholder, defaultOptions.lang?.filterValuePlaceholder, '');
+            input.placeholder =
+                column.viewport.grid.options?.lang?.filterValuePlaceholder ??
+                    defaultOptions.lang?.filterValuePlaceholder ??
+                    '';
             input.removeAttribute('aria-label');
             return;
         }

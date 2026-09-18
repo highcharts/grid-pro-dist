@@ -12,21 +12,8 @@
  *
  * */
 'use strict';
-import Formula from '../../../../Data/Formula/Formula.js';
+import Aggregation from '../../Aggregation/Aggregation.js';
 import { defined } from '../../../../Shared/Utilities.js';
-/**
- * Narrows arbitrary processor results to DataTable-compatible cell values.
- *
- * @param value
- * Candidate processor result.
- */
-function isDataTableCellValue(value) {
-    return (value === null ||
-        typeof value === 'undefined' ||
-        typeof value === 'boolean' ||
-        typeof value === 'number' ||
-        typeof value === 'string');
-}
 /* *
  *
  *  Class
@@ -96,7 +83,7 @@ class TreeAggregationResolver {
                     const childValues = rowState.childrenIds
                         .map(resolveValue)
                         .filter(defined);
-                    resolvedValue = this.executeAggregateFunction(aggregateFunctionName, childValues);
+                    resolvedValue = Aggregation.executeAggregate(aggregateFunctionName, childValues);
                     this.markDerivedCell(derivedCellColumnIdsByRowId, rowId, columnId);
                 }
             }
@@ -148,46 +135,15 @@ class TreeAggregationResolver {
         if (!aggregator || !rowState.childrenIds.length) {
             return;
         }
-        const aggregatorResult = (typeof aggregator === 'function' ?
-            aggregator({
-                childCount: rowState.childrenIds.length,
-                childrenIds: rowState.childrenIds.slice(),
-                columnId,
-                depth: rowState.depth,
-                hasChildren: rowState.hasChildren,
-                rowId: rowState.id,
-                sourceValue
-            }) :
-            aggregator);
-        if (typeof aggregatorResult !== 'string') {
-            return;
-        }
-        const normalizedName = aggregatorResult.trim().toUpperCase();
-        return normalizedName || void 0;
-    }
-    /**
-     * Executes a registered Formula processor function on direct child values.
-     *
-     * @param functionName
-     * Registered Formula processor function name.
-     *
-     * @param childValues
-     * Direct child values after their own aggregation has been resolved.
-     */
-    executeAggregateFunction(functionName, childValues) {
-        const processor = Formula.processorFunctions[functionName];
-        if (!processor) {
-            return null;
-        }
-        try {
-            const result = processor(childValues);
-            return isDataTableCellValue(result) ?
-                result :
-                null;
-        }
-        catch {
-            return null;
-        }
+        return Aggregation.resolveAggregatorName(aggregator, {
+            childCount: rowState.childrenIds.length,
+            childrenIds: rowState.childrenIds.slice(),
+            columnId,
+            depth: rowState.depth,
+            hasChildren: rowState.hasChildren,
+            rowId: rowState.id,
+            sourceValue
+        });
     }
 }
 /* *

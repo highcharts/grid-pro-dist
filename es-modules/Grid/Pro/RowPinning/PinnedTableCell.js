@@ -56,6 +56,7 @@ class PinnedTableCell extends TableCell {
         if (vp.grid.querying.willNotModify() &&
             !updateRowsEvent.requiresFullRowsUpdate) {
             await vp.rowPinningView?.syncRenderedMirrors(rowId, this.column.id, this.value, this.row, sourceColumnId);
+            await this.updateDerivedCells();
             return false;
         }
         await vp.updateRows();

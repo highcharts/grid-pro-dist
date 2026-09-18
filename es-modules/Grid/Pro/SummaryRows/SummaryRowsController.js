@@ -1,0 +1,409 @@
+/* *
+ *
+ *  Grid Summary Rows Controller
+ *
+ *  (c) 2020-2026 Highsoft AS
+ *
+ *  A commercial license may be required depending on use.
+ *  See www.highcharts.com/license
+ *
+ *  Authors:
+ *  - Dawid Dragula
+ *
+ * */
+'use strict';
+import Aggregation from '../Aggregation/Aggregation.js';
+import { hasDataTableProvider } from '../../Core/Data/DataProvider.js';
+import { defined } from '../../../Shared/Utilities.js';
+/* *
+ *
+ *  Class
+ *
+ * */
+/**
+ * Computes the flat summary (total) row objects for the current table. The
+ * objects are rendered in a dedicated frozen section by `SummaryView`.
+ */
+class SummaryRowsController {
+    /* *
+     *
+     *  Constructor
+     *
+     * */
+    constructor(grid) {
+        /**
+         * Summary rows computed for the current queried table (values + formats).
+         */
+        this.rows = [];
+        /**
+         * Whether an unsupported scope was already reported.
+         */
+        this.warnedScope = false;
+        this.grid = grid;
+    }
+    /* *
+     *
+     *  Methods
+     *
+     * */
+    /**
+     * Returns the resolved summary rows (values + per-cell formats).
+     */
+    getRows() {
+        return this.rows;
+    }
+    /**
+     * Returns the computed summary row value objects.
+     */
+    getRowObjects() {
+        return this.rows.map((row) => row.data);
+    }
+    /**
+     * Returns whether a source column is aggregated by any summary row, so
+     * editing it must recompute the totals.
+     *
+     * @param columnId
+     * Source column id.
+     */
+    hasColumnAggregator(columnId) {
+        const rowOptions = this.getSummaryRowOptions();
+        for (let r = 0, rEnd = rowOptions.length; r < rEnd; ++r) {
+            const column = this.getColumnsById(rowOptions[r]).get(columnId);
+            if (defined(this.getColumnAggregator(rowOptions[r], column))) {
+                return true;
+            }
+        }
+        return false;
+    }
+    /**
+     * Recomputes the summary row objects from the queried table.
+     *
+     * Each row aggregates the pipeline stage its `scope` selects, defaulting to
+     * the queried table, after filtering/sorting and before pagination.
+     *
+     * @param table
+     * Queried table after filtering/sorting and before pagination.
+     */
+    updateFromTable(table) {
+        const rowOptions = this.getSummaryRowOptions();
+        if (!rowOptions.length) {
+            this.rows = [];
+            return;
+        }
+        const columnIds = table.getColumnIds();
+        const rows = [];
+        this.rollupCache = new Map();
+        for (let r = 0, rEnd = rowOptions.length; r < rEnd; ++r) {
+            rows.push(this.buildSummaryRow(this.getScopedSource(table, rowOptions[r]), columnIds, rowOptions[r], r));
+        }
+        delete this.rollupCache;
+        this.rows = rows;
+    }
+    /**
+     * Builds a single summary row object. Columns that neither aggregate nor
+     * carry a static value render empty.
+     *
+     * @param source
+     * Rows the aggregation runs over, resolved from the row `scope`.
+     *
+     * @param columnIds
+     * Column ids of the queried table.
+     *
+     * @param options
+     * Options of the summary row.
+     *
+     * @param summaryRowIndex
+     * Zero-based index of the summary row.
+     */
+    buildSummaryRow(source, columnIds, options, summaryRowIndex) {
+        // The second one only costs a pass when the rollups were resolved.
+        const rowCountWithParents = this.getScopedRowCount(source, false);
+        const rowCountWithoutParents = this.getScopedRowCount(source, true);
+        const data = {};
+        const formats = {};
+        const classNames = {};
+        const styles = {};
+        const summaryRowId = options.id ?? String(summaryRowIndex);
+        const columnsById = this.getColumnsById(options);
+        for (let i = 0, iEnd = columnIds.length; i < iEnd; ++i) {
+            const columnId = columnIds[i];
+            const column = columnsById.get(columnId);
+            const format = column?.format ?? options.format;
+            if (format !== void 0) {
+                formats[columnId] = format;
+            }
+            if (column?.className !== void 0) {
+                classNames[columnId] = column.className;
+            }
+            if (column?.style !== void 0) {
+                styles[columnId] = column.style;
+            }
+            if (column && column.value !== void 0) {
+                data[columnId] = column.value;
+                continue;
+            }
+            const skipParents = this.getColumnSkipParents(options, column);
+            const aggregatorName = Aggregation.resolveAggregatorName(this.getColumnAggregator(options, column), {
+                columnId,
+                rowCount: skipParents ?
+                    rowCountWithoutParents :
+                    rowCountWithParents,
+                summaryRowId,
+                summaryRowIndex
+            });
+            data[columnId] = aggregatorName ?
+                Aggregation.executeAggregate(aggregatorName, this.getAggregableValues(source, columnId, skipParents)) :
+                null;
+        }
+        return {
+            data,
+            formats,
+            classNames,
+            styles,
+            className: options.className,
+            style: options.style,
+            position: options.position ?? 'bottom'
+        };
+    }
+    /**
+     * Resolves the rows a `scope` selects, falling back to the queried table.
+     *
+     * @param table
+     * Queried table, after filtering/sorting and before pagination.
+     *
+     * @param options
+     * Options of the summary row.
+     */
+    getScopedSource(table, options) {
+        const scope = options.scope;
+        if (scope === 'all') {
+            const dataProvider = this.grid.dataProvider;
+            const sourceTable = hasDataTableProvider(dataProvider) ?
+                dataProvider.getDataTable() :
+                void 0;
+            if (!sourceTable) {
+                this.warnScope('`scope: \'all\'` requires a local data provider');
+                return this.withRollups({ table }, options);
+            }
+            return this.withRollups({ table: sourceTable }, options);
+        }
+        if (scope === 'page') {
+            return this.withRollups({ table, range: this.getPageRange() }, options);
+        }
+        return this.withRollups({ table }, options);
+    }
+    /**
+     * Resolves the rows of a scoped source that roll up other rows of it, so
+     * that pre-calculated parent values are not counted next to the rows below
+     * them.
+     *
+     * @param source
+     * Resolved scoped source.
+     *
+     * @param options
+     * Options of the summary row.
+     */
+    withRollups(source, options) {
+        if (!this.excludesRollups(options)) {
+            return source;
+        }
+        const cache = this.rollupCache;
+        let rollupRowIndexes = cache?.get(source.table);
+        if (!rollupRowIndexes && !cache?.has(source.table)) {
+            rollupRowIndexes = this.grid.treeView
+                ?.getRollupRowIndexes(source.table);
+            cache?.set(source.table, rollupRowIndexes);
+        }
+        source.rollupRowIndexes = rollupRowIndexes;
+        return source;
+    }
+    /**
+     * Resolves the row range of the current page within the queried table, or
+     * nothing when the page scope does not apply.
+     *
+     * The queried table is the one the pagination modifier slices, so the page
+     * is a plain range of it. A projecting feature (TreeView, row grouping)
+     * replaces that table with the projected rows before pagination, and the
+     * range then addresses rows the aggregation never sees.
+     */
+    getPageRange() {
+        const grid = this.grid;
+        const pagination = grid.querying.pagination;
+        // Resolved from the options, not from the projection state, which this
+        // handler runs before.
+        if (!pagination.enabled || grid.treeView?.isEnabled()) {
+            this.warnScope('`scope: \'page\'` requires pagination and is not supported ' +
+                'with TreeView or row grouping');
+            return;
+        }
+        const pageSize = pagination.currentPageSize;
+        const offset = Math.max(0, pagination.currentPage - 1) * pageSize;
+        return [offset, offset + pageSize];
+    }
+    /**
+     * Number of rows the scoped source holds, surfaced in the aggregator
+     * context so that it matches the aggregated values.
+     *
+     * @param source
+     * Resolved scoped source.
+     *
+     * @param skipParents
+     * Whether rows rolling up other rows are left out.
+     */
+    getScopedRowCount(source, skipParents) {
+        const rowCount = source.table.getRowCount();
+        const range = source.range;
+        const from = range ? range[0] : 0;
+        const to = range ? Math.min(range[1], rowCount) : rowCount;
+        const rollupRowIndexes = skipParents ?
+            source.rollupRowIndexes :
+            void 0;
+        if (!rollupRowIndexes?.size) {
+            return Math.max(0, to - from);
+        }
+        let count = 0;
+        for (let i = Math.max(0, from); i < to; ++i) {
+            if (!rollupRowIndexes.has(i)) {
+                ++count;
+            }
+        }
+        return count;
+    }
+    /**
+     * Collects the values a column contributes to the totals.
+     *
+     * @param source
+     * Resolved scoped source.
+     *
+     * @param columnId
+     * Aggregated column id.
+     *
+     * @param skipParents
+     * Whether rows rolling up other rows are left out.
+     */
+    getAggregableValues(source, columnId, skipParents) {
+        const column = source.table.getColumn(columnId) || [];
+        const range = source.range;
+        const rollupRowIndexes = skipParents ?
+            source.rollupRowIndexes :
+            void 0;
+        if (!rollupRowIndexes?.size) {
+            return Array.from(range ?
+                column.slice(range[0], range[1]) :
+                column).filter(defined);
+        }
+        const from = Math.max(0, range ? range[0] : 0);
+        const to = range ? Math.min(range[1], column.length) : column.length;
+        const values = [];
+        for (let i = from; i < to; ++i) {
+            const value = column[i];
+            if (defined(value) && !rollupRowIndexes.has(i)) {
+                values.push(value);
+            }
+        }
+        return values;
+    }
+    /**
+     * Reports an unsupported scope once, so that a per-query recompute does not
+     * repeat it.
+     *
+     * @param reason
+     * What is unsupported.
+     */
+    warnScope(reason) {
+        if (this.warnedScope) {
+            return;
+        }
+        this.warnedScope = true;
+        // eslint-disable-next-line no-console
+        console.warn(`Summary rows: ${reason}. The row aggregates the filtered rows ` +
+            'instead.');
+    }
+    /**
+     * Resolves the effective aggregator option for a summary column.
+     *
+     * @param options
+     * Summary row options.
+     *
+     * @param column
+     * Column options for the resolved column, when present.
+     */
+    getColumnAggregator(options, column) {
+        if (column && column.aggregator !== void 0) {
+            return column.aggregator;
+        }
+        // A static value suppresses the row default aggregator.
+        if (column && column.value !== void 0) {
+            return;
+        }
+        return options.aggregator;
+    }
+    /**
+     * Resolves whether a summary column leaves out rows that roll up other
+     * rows, falling back to the summary row default.
+     *
+     * @param options
+     * Summary row options.
+     *
+     * @param column
+     * Column options for the resolved column, when present.
+     */
+    getColumnSkipParents(options, column) {
+        return !!(column?.skipParents ?? options.skipParents);
+    }
+    /**
+     * Whether anything in the summary row leaves rollup rows out, so that
+     * resolving them is worth the pass over the tree.
+     *
+     * @param options
+     * Summary row options.
+     */
+    excludesRollups(options) {
+        if (options.skipParents) {
+            return true;
+        }
+        const columns = options.columns;
+        if (!columns) {
+            return false;
+        }
+        for (let i = 0, iEnd = columns.length; i < iEnd; ++i) {
+            if (columns[i].skipParents) {
+                return true;
+            }
+        }
+        return false;
+    }
+    /**
+     * Indexes a summary row's column options by column id.
+     *
+     * @param options
+     * Summary row options.
+     */
+    getColumnsById(options) {
+        const columnsById = new Map();
+        const columns = options.columns;
+        if (columns) {
+            for (let i = 0, iEnd = columns.length; i < iEnd; ++i) {
+                columnsById.set(columns[i].id, columns[i]);
+            }
+        }
+        return columnsById;
+    }
+    /**
+     * Returns the enabled summary rows, normalizing the object-or-array option.
+     */
+    getSummaryRowOptions() {
+        const summary = this.grid.options?.summaryRows;
+        if (!summary) {
+            return [];
+        }
+        return (Array.isArray(summary) ? summary : [summary])
+            .filter((row) => row.enabled !== false);
+    }
+}
+/* *
+ *
+ *  Default Export
+ *
+ * */
+export default SummaryRowsController;

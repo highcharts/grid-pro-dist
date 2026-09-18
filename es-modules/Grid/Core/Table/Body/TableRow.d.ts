@@ -21,6 +21,13 @@ declare class TableRow extends Row {
      */
     id?: RowId;
     /**
+     * Body section the row belongs to, when it is rendered outside the main
+     * scrollable section. Rows of synthetic sections (a summary row) are not
+     * backed by a data row, so their `index` does not address the presentation
+     * table.
+     */
+    bodySectionId?: string;
+    /**
      * The vertical translation of the row.
      */
     translateY: number;

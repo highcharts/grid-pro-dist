@@ -214,6 +214,16 @@ export const pathDefaults = {
     'stroke-linecap': 'round',
     'stroke-linejoin': 'round'
 };
+const allowedPathAttributes = [
+    'd',
+    'fill',
+    'opacity',
+    'stroke',
+    'stroke-width',
+    'stroke-linecap',
+    'stroke-linejoin',
+    'transform'
+];
 /* *
 *
 *  Functions
@@ -257,11 +267,7 @@ function createSvgFromDefinition(def) {
     svg.setAttribute('fill', fill ?? 'none');
     for (const childDefinition of children ?? []) {
         const path = createElement('path');
-        const attrKeys = new Set([
-            ...Object.keys(childDefinition),
-            ...Object.keys(pathDefaults)
-        ]);
-        for (const attr of attrKeys) {
+        for (const attr of allowedPathAttributes) {
             const value = childDefinition[attr] ?? pathDefaults[attr];
             if (value !== void 0) {
                 path.setAttribute(attr, value.toString());
