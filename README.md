@@ -33,6 +33,13 @@ import * as Grid from "@highcharts/grid-pro";
 import "@highcharts/grid-pro/css/grid-pro.css";
 ```
 
+### Using React?
+Use the official React package, which handles Grid setup, cleanup and CSS for you:
+```bash
+npm install @highcharts/grid-pro-react
+```
+See [@highcharts/grid-pro-react](https://www.npmjs.com/package/@highcharts/grid-pro-react) and the [React guide](https://www.highcharts.com/docs/grid/frameworks/react/getting-started). Guides for [Angular](https://www.highcharts.com/docs/grid/frameworks/angular) and [Vue](https://www.highcharts.com/docs/grid/frameworks/vue) are also available.
+
 ### Use CDN
 Instead of downloading, you can use [jsDelivr](https://www.jsdelivr.com/) CDN to access files directly. See [code.highcharts.com](https://code.highcharts.com/#highcharts-grid-pro) for details.
 ```HTML

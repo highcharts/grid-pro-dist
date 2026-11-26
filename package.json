@@ -1,6 +1,6 @@
 {
   "name": "@highcharts/grid-pro",
-  "description": "Highcharts Grid Pro framework",
+  "description": "JavaScript data grid from Highcharts with editing, validation, sparklines and events. Fast, accessible table with sorting, filtering and row virtualization.",
   "homepage": "https://www.highcharts.com/products/grid/",
   "version": "3.2.0",
   "author": "Highsoft AS <support@highcharts.com> (http://www.highcharts.com/about)",
@@ -12,10 +12,25 @@
     "url": "https://github.com/highcharts/grid-pro-dist"
   },
   "keywords": [
-    "data",
-    "table",
+    "highcharts",
+    "highcharts-grid",
+    "data-grid",
+    "datagrid",
+    "data-table",
+    "datatable",
     "grid",
-    "highcharts"
+    "table",
+    "data",
+    "editable",
+    "validation",
+    "sparklines",
+    "javascript",
+    "typescript",
+    "virtualization",
+    "accessibility",
+    "react",
+    "angular",
+    "vue"
   ],
   "bugs": "https://github.com/highcharts/highcharts/issues",
   "license": "https://www.highcharts.com/license"
