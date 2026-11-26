@@ -2,7 +2,7 @@
 
 Highcharts Grid Pro is the commercial version of [Highcharts Grid](https://www.highcharts.com/docs/grid/general), from the creators of the [Highcharts](https://github.com/highcharts/highcharts) charting library. Designed to meet modern web standards optimized for high performance in large datasets, Grid Pro is perfect for creating responsive, interactive and editable data tables.
 
-To use Higcharts Grid Pro, you must have a valid license for Highcharts Dashboards or Highcharts Grid Pro. Please refer to [shop.highcharts.com](https://shop.highcharts.com/) for details on licensing.
+To use Highcharts Grid Pro, you must have a valid Highcharts Grid Pro license and set its [Grid Key](https://www.highcharts.com/docs/grid/grid-key). Highcharts Dashboards licenses purchased before May 6, 2026 also include Grid Pro. Please refer to [shop.highcharts.com](https://shop.highcharts.com/) for details on licensing.
 
 ## Links
 
